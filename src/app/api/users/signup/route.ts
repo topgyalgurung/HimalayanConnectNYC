@@ -2,9 +2,9 @@
 import { connect } from "@/dbConfig/dbConfig";
 import User from "@/models/userModel"
 import {NextRequest, NextResponse} from "next/server"
-import bcryptjs from "bcryptjs"
+import bcryptjs from "bcryptjs";
 
-await connect();
+connect();
 
 export async function POST(request:NextRequest) {
     try {
@@ -25,12 +25,11 @@ export async function POST(request:NextRequest) {
             password: hashedPassword
         })
         const savedUser = await newUser.save()
-        console.log(savedUser) // just to see the savedUser data 
+        console.log(savedUser.username, savedUser.email) // just to see the savedUser data 
 
         return NextResponse.json({
             message: 'User created successfully', 
             success:true, 
-            savedUser
         }, {status: 201})
     } catch (error:any) {
         return NextResponse.json({error: error.message}, {status:500})

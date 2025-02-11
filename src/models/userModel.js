@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema({
   forgotPasswordToken: String,
   forgotPasswordTokenExpiry: Date,
   verifyToken: String,
-  verifyTokenExpiry: String,
+  verifyTokenExpiry: Date,
 });
 
 // some people keep token as separate model but here inside user
