@@ -9,7 +9,7 @@ export async function connect() {
             console.log('MongoDB connected successfully')
         })
         connection.on('error', (err) =>{
-            console.log('MongoDB connection error. Please make suer MongDB is running' +err):
+            console.log('MongoDB connection error. Please make suer MongDB is running',err);
             process.exit();
         })
 
