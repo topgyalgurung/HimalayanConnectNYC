@@ -33,7 +33,7 @@ export default function PasswordReset() {
     try {
       setLoading(true);
       console.log("token to send: ", token);
-      const response = await axios.post("/api/users/passwordreset", {
+      await axios.post("/api/users/passwordreset", {
         token, // pass token from the URL
         password: newPassword,
       });
@@ -49,7 +49,7 @@ export default function PasswordReset() {
       } else if (error instanceof Error) {
         errorMessage = error.message;
       }
-      console.log("Login failed:", errorMessage);
+      console.log("Reset failed:", errorMessage);
       // set error message from backend
       setError(errorMessage);
       toast.error(errorMessage);

@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import { useParams } from "next/navigation";
+// import { useParams } from "next/navigation";
 
 type Params = {
   id: string;
