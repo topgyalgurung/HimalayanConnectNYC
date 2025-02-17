@@ -9,7 +9,7 @@ export const getDataFromToken = (request:NextRequest) =>{
     try {
         const token = request.cookies.get('token')?.value || '';  // encoded token
         // extract response of function
-        const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET!);         // any for now, not good idea, but change 
+        const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET!) as DecodedToken;         // any for now, not good idea, but change 
         return decodedToken.id;     // from api/users/login/route.ts 
     } catch (error: unknown) {
         if (error instanceof Error) {
