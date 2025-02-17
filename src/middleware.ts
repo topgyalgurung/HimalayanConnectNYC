@@ -6,14 +6,13 @@ export function middleware(request: NextRequest) {
 //   return NextResponse.redirect(new URL('/home', request.url))
     const path = request.nextUrl.pathname
 
-    const isPublicPath = path === '/login' || path ==='/signup' || path === "/verifyemail"
+    const isPublicPath = path === '/login' || path ==='/signup' || path === "/verifyemail" || path === "/passwordforgot" || path = "/passwordreset"
     // access cookie 
     const token = request.cookies.get('token')?.value || ''
     // redirect authenticated user to '/'
     if (isPublicPath && token) {
         return NextResponse.redirect( new URL ('/', request.nextUrl))
     }
-
     if (!isPublicPath && !token) {
         return NextResponse.redirect( new URL ('/login', request.nextUrl))
     }
@@ -26,6 +25,9 @@ export const config = {
     '/profile',
     '/login',
     '/signup',
-    '/verifyemail'
+    '/verifyemail',
+    '/passwordforgot',
+    '/passwordreset',
+
   ]
 }

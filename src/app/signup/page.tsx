@@ -15,6 +15,7 @@ export default function SignupPage() {
   });
   const [buttonDisabled, setButtonDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
+  
   const onSignup = async () => {
     try {
       setLoading(true);
