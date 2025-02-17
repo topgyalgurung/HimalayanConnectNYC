@@ -3,6 +3,7 @@
 import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+// import { useSearchParams } from "next/navigation";
 
 export default function VerifyEmailPage() {
   const [token, setToken] = useState("");
@@ -15,7 +16,7 @@ export default function VerifyEmailPage() {
       setVerified(true);
     } catch (error: any) {
       setError(true);
-      console.log(error.response.data);
+      console.error("Verification failed:", error.message);
     }
   };
 
@@ -23,6 +24,9 @@ export default function VerifyEmailPage() {
     const urlToken = window.location.search.split("=")[1];
     setToken(urlToken || "");
   }, []);
+  // improved version using useSearchParams
+  // const searchParams = useSearchParams();
+  // const token = searchParams.get("token") || "";
 
   useEffect(() => {
     if (token.length > 0) {
@@ -44,7 +48,7 @@ export default function VerifyEmailPage() {
       )}
       {error && (
         <div>
-          <h2 className="text-2xl bg-red-500">Error </h2>
+          <h2 className="text-2xl bg-red-500">Error: {error}</h2>
         </div>
       )}
     </div>

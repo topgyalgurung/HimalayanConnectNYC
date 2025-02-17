@@ -8,11 +8,12 @@ import { toast } from "react-hot-toast";
 
 export default function LoginPage() {
   const router = useRouter();
+  const [error, setError] = useState("");
   const [user, setUser] = useState({
     email: "",
     password: "",
   });
-  const [buttonDisabled, setButtonDisabled] = useState(false);
+  // const [buttonDisabled, setButtonDisabled] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const onLogin = async () => {
@@ -23,8 +24,13 @@ export default function LoginPage() {
       toast.success("Login success");
       router.push("/profile");
     } catch (error: any) {
-      console.log("Login failed", error.message);
-      toast.error(error.message);
+      console.log("Login failed", error.response?.data?.error || error.message);
+
+      // Set error message from backend
+      setError(error.response?.data?.error || "Something went wrong");
+
+      // Show toast message
+      toast.error(error.response?.data?.error || "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -36,8 +42,9 @@ export default function LoginPage() {
         {loading ? "Processing" : "Login"}
       </h1>
       <hr />
+      <br />
 
-      <label htmlFor="email"> Email</label>
+      {/* <label htmlFor="email"> Email</label> */}
       <input
         className="text-black p-1 border border-gray-50 rounded-md mb-4 focus:outline-none focus:border-gray-600"
         id="email"
@@ -46,7 +53,15 @@ export default function LoginPage() {
         onChange={(e) => setUser({ ...user, email: e.target.value })}
         placeholder="email"
       />
-      <label htmlFor="password"> password</label>
+      {/* <label htmlFor="password"> password</label> */}
+      <div className="flex justify-end mt-1">
+        <Link
+          href="/passwordforgot"
+          className="text-sm text-blue-400 hover:underline"
+        >
+          Forgot Password?
+        </Link>
+      </div>
       <input
         className="text-black p-1 border border-gray-50 rounded-md mb-4 focus:outline-none focus:border-gray-600"
         id="password"
@@ -55,12 +70,14 @@ export default function LoginPage() {
         onChange={(e) => setUser({ ...user, password: e.target.value })}
         placeholder="password"
       />
+      {error && <p className="text-red-500">{error}</p>}
       <button
         onClick={onLogin}
         className="p-2 border border-gray-300 rounder-lg mb-4 focus:outline-none focus:border-gray-600"
       >
         Login here
       </button>
+
       <Link href="/signup"> Visit Signup page</Link>
     </div>
   );
