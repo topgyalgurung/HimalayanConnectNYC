@@ -40,9 +40,15 @@ export async function POST(request: NextRequest) {
             success:true
         })
 
-    } catch (error: any) {
-        console.error("Password reset error:", error);
-        return NextResponse.json({error:error.message}, {status:500})
-        
-    }
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+          // Safely access the error message if it's an instance of Error
+          console.error("Password reset error:", error);
+          return NextResponse.json({ error: error.message }, { status: 500 });
+        } else {
+          // If it's not an instance of Error, handle the unknown error case
+          console.error("An unknown error occurred during password reset.");
+          return NextResponse.json({ error: 'An unknown error occurred.' }, { status: 500 });
+        }
+      }
 }
