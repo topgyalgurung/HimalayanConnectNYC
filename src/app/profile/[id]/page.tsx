@@ -1,11 +1,16 @@
 "use client";
 import * as React from "react";
+import { useParams } from "next/navigation";
+
+type Params = {
+  id: string;
+};
 
 // https://nextjs.org/docs/messages/sync-dynamic-apis
 // Next 15: APIs have been made asynchronous
 
-export default function ProfilePage({ params }: any) {
-  const { id } = React.use(params); // newer way
+export default function ProfilePage({ params }: { params: Params }) {
+  const { id } = params; // React.use(params); // newer way
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-2">
       <h1>Profile</h1>

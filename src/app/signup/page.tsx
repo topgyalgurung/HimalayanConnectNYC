@@ -15,17 +15,17 @@ export default function SignupPage() {
   });
   const [buttonDisabled, setButtonDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
-  
+
   const onSignup = async () => {
     try {
       setLoading(true);
       const response = await axios.post("/api/users/signup", user);
       console.log("Signup success", response.data);
       router.push("/login");
-    } catch (error: any) {
-      console.log("Sign up failed !!!", error.message);
+    } catch (error: unknown) {
+      console.log("Sign up failed !!!", error);
       // use toast
-      toast.error(error.message);
+      toast.error(error);
     } finally {
       setLoading(false);
     }
