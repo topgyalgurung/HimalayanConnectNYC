@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
@@ -41,10 +41,18 @@ export default function PasswordReset() {
       setTimeout(() => {
         router.push("/login");
       }, 2000);
-    } catch (error: any) {
-      // Handle errors and show the appropriate message
-      setError(error.response?.data?.error || "Something went wrong");
-      toast.error(error.response?.data?.error || "Something went wrong");
+    } catch (error: unknown) {
+      let errorMessage = "Something went wrong";
+      if (axios.isAxiosError(error)) {
+        errorMessage =
+          error.response?.data?.error || "Reset failed. Please try again.";
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      console.log("Login failed:", errorMessage);
+      // set error message from backend
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }

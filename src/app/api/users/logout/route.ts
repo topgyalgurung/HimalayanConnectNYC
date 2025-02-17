@@ -8,8 +8,7 @@ export async function GET() {
         })
         response.cookies.set("token", "",{httpOnly:true, expires:new Date(0)})// expires is optional just httpOnly true will do 
         return response;
-    } catch (error:any) {
-        return NextResponse.json({error:error.message}, {status:500})
-        
+    } catch (error:unknown) { // instead of any use unknown as it forces type checking
+        return NextResponse.json({ error: (error as Error).message }, { status: 500 });
     }
 }

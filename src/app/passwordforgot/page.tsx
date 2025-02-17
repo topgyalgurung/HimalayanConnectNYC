@@ -21,8 +21,9 @@ export default function PasswordForgot() {
         email,
       });
       setSuccess(true);
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error: unknown) {
+      console.error("An error occurred: ", error);
+      setError(true);
     } finally {
       setLoading(false);
     }

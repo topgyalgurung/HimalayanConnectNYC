@@ -14,9 +14,9 @@ export default function ProfilePage() {
       await axios.get("/api/users/logout");
       toast.success("logout successful");
       router.push("/login");
-    } catch (error: any) {
-      console.log(error.message);
-      toast.error(error.message);
+    } catch (error: unknown) {
+      console.log(error);
+      toast.error(error);
     }
   };
   // run it with button click. you can also make it run wiht useEffect as soon as page loads

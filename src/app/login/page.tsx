@@ -23,14 +23,18 @@ export default function LoginPage() {
       console.log("Login success", response.data);
       toast.success("Login success");
       router.push("/profile");
-    } catch (error: any) {
-      console.log("Login failed", error.response?.data?.error || error.message);
-
-      // Set error message from backend
-      setError(error.response?.data?.error || "Something went wrong");
-
-      // Show toast message
-      toast.error(error.response?.data?.error || "Something went wrong");
+    } catch (error: unknown) {
+      let errorMessage = "Something went wrong";
+      if (axios.isAxiosError(error)) {
+        errorMessage =
+          error.response?.data?.error || "Login failed. Please try again.";
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      console.log("Login failed:", errorMessage);
+      // set error message from backend
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }

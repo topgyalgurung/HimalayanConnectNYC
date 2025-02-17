@@ -2,23 +2,23 @@
 
 import axios from "axios";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 // import { useSearchParams } from "next/navigation";
 
 export default function VerifyEmailPage() {
   const [token, setToken] = useState("");
   const [verified, setVerified] = useState(false);
   const [error, setError] = useState(false);
-
-  const verifyUserEmail = async () => {
+  //memoize ensuring it is not re-created on every render, changes only with token
+  const verifyUserEmail = useCallback(async () => {
     try {
       await axios.post("/api/users/verifyemail", { token });
       setVerified(true);
-    } catch (error: any) {
+    } catch (error: unknown) {
       setError(true);
-      console.error("Verification failed:", error.message);
+      console.error("Verification failed:", error);
     }
-  };
+  }, [token]);
 
   useEffect(() => {
     const urlToken = window.location.search.split("=")[1];
@@ -32,7 +32,7 @@ export default function VerifyEmailPage() {
     if (token.length > 0) {
       verifyUserEmail();
     }
-  }, [token]);
+  }, [token, verifyUserEmail]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-2">
