@@ -6,7 +6,7 @@ export function middleware(request: NextRequest) {
 //   return NextResponse.redirect(new URL('/home', request.url))
   const path = request.nextUrl.pathname;
 
-  const isPublicPath = path === '/login' || path === '/signup' || path === "/verifyemail" || path === "/passwordforgot" || path === "/passwordreset";
+  const isPublicPath = path ==='/' || '/login' || path === '/signup' || path === "/verifyemail" || path === "/forgotpassword" || path === "/resetpassword";
     // access cookie 
     const token = request.cookies.get('token')?.value || ''
     // redirect authenticated user to '/'
@@ -26,8 +26,8 @@ export const config = {
     '/login',
     '/signup',
     '/verifyemail',
-    '/passwordforgot',
-    '/passwordreset',
+    '/forgotpassword',
+    '/resetpassword',
 
   ]
 }

@@ -1,0 +1,1 @@
+// get list of resources 
