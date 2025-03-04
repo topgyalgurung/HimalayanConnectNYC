@@ -44,10 +44,7 @@ export default function Home() {
 
       {/* Right: Map Display  */}
       <aside className="w-[800px] bg-white shadow-md p-4 flex flex-col">
-        {/* <MapProvider> */}
-        {console.log("filteredResources: ", filteredResources)}
         <MapView resources={filteredResources} />
-        {/* </MapProvider> */}
       </aside>
     </div>
   );
