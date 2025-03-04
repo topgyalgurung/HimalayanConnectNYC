@@ -23,6 +23,7 @@ export default function ResourceList({
   const searchQuery = searchParams.get("query")?.toLowerCase() || ""; // Get query from URL and convert to lowercase
 
   const resources = useFetchResources(); // use hook to fetch data (it either )
+  console.log("fetched resources ", resources);
 
   // Effect to filter resources when searchParams, resources, or filters change
   useEffect(() => {

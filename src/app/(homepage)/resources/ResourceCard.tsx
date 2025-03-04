@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { format, compareAsc } from "date-fns";
+import { format } from "date-fns";
 
 type Resource = {
   id: string;

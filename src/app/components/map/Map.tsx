@@ -49,7 +49,7 @@ export default function MapView({ resources }: { resources: Resource[] }) {
           style={defaultMapContainerStyle}
           zoom={defaultMapZoom}
           mapId={process.env.NEXT_PUBLIC_MAP_ID}
-          options={defaultMapOptions}
+          // options={defaultMapOptions}
         >
           <Markers points={resources} />
         </Map>
