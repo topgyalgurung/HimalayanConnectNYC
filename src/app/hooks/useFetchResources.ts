@@ -1,12 +1,12 @@
-// src/app/(homepage)/hooks/useFetchResources.ts
+
 import { useState, useEffect } from "react";
-import type { Resource } from "@/app/types/resource"; // Update this import
+import type { Resource } from "@/app/types/resource";
 
 const RESOURCE_CACHE_KEY = "resourcecache"; // key for localStorage
 
 export function useFetchResources() {
   const [resources, setResources] = useState<Resource[]>([]);
-
+// fetch resources from localstorage or API
   useEffect(() => {
 
     const cacheResources = localStorage.getItem(RESOURCE_CACHE_KEY);
