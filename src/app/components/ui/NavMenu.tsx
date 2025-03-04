@@ -28,19 +28,6 @@ export default function NavMenu() {
         <SearchInput />
       </div>
 
-      {/* Home  */}
-      <div>
-        <Link
-          href="/"
-          className={`ml-3 ${
-            pathname === "/"
-              ? "text-white bg-blue-500 hover:bg-blue-600"
-              : "font-bold"
-          } mr-4 font-medium rounded-lg text-sm px-5 py-2.5`}
-        >
-          Home
-        </Link>
-      </div>
       {/* add resource  */}
       <div className="flex items-center ml-4">
         <Link

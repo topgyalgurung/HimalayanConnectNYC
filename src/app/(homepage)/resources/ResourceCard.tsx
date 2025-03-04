@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { format, compareAsc } from "date-fns";
 
 type Resource = {
   id: string;
@@ -58,7 +59,7 @@ export default function ResourceCard({ resources }: { resources: Resource[] }) {
               </p>
               <p>
                 <strong>Hours :</strong>
-                {openTime}-{closeTime}
+                {format(openTime, "hh:mm a")}-{format(closeTime, "hh:mm a")}
               </p>
               <p>
                 <strong>Phone:</strong> {phone}

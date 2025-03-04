@@ -19,6 +19,7 @@ export default function Home() {
     <div className="flex h-[calc(100vh-4rem)] text-black">
       {/* left: filter section  */}
       <aside className="w-52 bg-white shadow-md p-4 flex flex-col">
+        <h2 className="size-9 font-bold text-blue-600"> Filters</h2>
         <ResourceFilter
           onFilterChange={setSelectedCategories}
           selectedCategories={selectedCategories}
