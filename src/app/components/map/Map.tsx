@@ -46,7 +46,7 @@ export default function MapView({ resources }: { resources: Resource[] }) {
 // type Point = google.maps.LatLngLiteral & { key: string };
 // type Props = { points: Point[] };
 const Markers = ({ points }: { points: Resource[] }) => {
-  const [activeMarkerId, setActiveMarkerId] = useState<string | null>(null); // Single state for both click and hover
+  const [activeMarkerId, setActiveMarkerId] = useState<string | null>(null); // state for hover
 
   return (
     <>
@@ -69,8 +69,9 @@ const Markers = ({ points }: { points: Resource[] }) => {
                 lat: location?.latitude ?? 0,
                 lng: location?.longitude ?? 0,
               }}
-              onClick={() => setActiveMarkerId(resource.id)} // Set the clicked marker ID
+              // onClick={() => setActiveMarkerId(resource.id)} // Set the clicked marker ID
             >
+              {/* customize pin color  */}
               <Pin
                 background={"#0f9d58"}
                 borderColor={"#006425"}
@@ -85,7 +86,7 @@ const Markers = ({ points }: { points: Resource[] }) => {
                   lat: location?.latitude ?? 0,
                   lng: location?.longitude ?? 0,
                 }}
-                onCloseClick={() => setActiveMarkerId(null)} // Close the info window
+                // onCloseClick={() => setActiveMarkerId(null)} // Close the info window
               >
                 <p>{resource.name}</p>
                 <p>{resource.address}</p>
