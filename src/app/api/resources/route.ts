@@ -11,12 +11,15 @@ export async function GET() {
                 },
                 Location: {
                     select: {
+                        id: true,
+                        resourceId:true,
                         latitude: true,
                         longitude:true
                     }
                 },
             }
         });
+        console.log("Fetched resources: ", JSON.stringify(resources, null, 2)); // Debug log
         return NextResponse.json(resources)
     } catch (error) {
         console.log("Error fetching resources: ", error);
