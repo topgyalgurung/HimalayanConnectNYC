@@ -23,14 +23,9 @@ type Resource = {
 
 // ResourceCard component: Displays a list of resources
 export default function ResourceCard({ resources }: { resources: Resource[] }) {
-  const [data, setData] = useState<Resource[]>(resources);
-
-  useEffect(() => {
-    setData(resources);
-  }, [resources]);
-
   return (
-    <div className="flex flex-col space-y-4">
+    <div 
+    className="flex flex-col space-y-4 pb-20">
       {resources.map(
         ({
           id,
@@ -43,11 +38,10 @@ export default function ResourceCard({ resources }: { resources: Resource[] }) {
           openDays,
           openTime,
           closeTime,
-          phone,
         }) => (
           <div
             key={id}
-            className="flex p-4 border rounded-md shadow-md bg-white"
+            className="flex p-4 border rounded-md shadow-md bg-white transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:scale-[1.02]"
           >
             <div>
               <h4 className="text-lg font-bold">{name}</h4>
@@ -69,22 +63,15 @@ export default function ResourceCard({ resources }: { resources: Resource[] }) {
                 <strong>Hours :</strong>
                 {format(openTime, "hh:mm a")}-{format(closeTime, "hh:mm a")}
               </p>
-
               <p>
-                <strong>Phone:</strong> {phone}
+                <strong>Location: </strong>
+                {Location.map((location) => (
+                  <span key={location.id}>
+                    Latitude: {location.latitude}, Longitude:{" "}
+                    {location.longitude}
+                  </span>
+                ))}
               </p>
-              {/* Handle multiple locations */}
-
-              {Location && Location.length > 0 ? (
-                Location.map(({ id, latitude, longitude }) => (
-                  <p key={id}>
-                    <strong>Location {id + 1}:</strong> Lat {latitude}, Lng
-                    {longitude}
-                  </p>
-                ))
-              ) : (
-                <p>No location data</p>
-              )}
 
               {/* Navigation links for resource details and suggestions */}
               <div className="pt-4 flex items-center justify-between">

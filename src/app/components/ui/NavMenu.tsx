@@ -8,7 +8,7 @@ import SearchInput from "./SearchInput";
 export default function NavMenu() {
   const pathname = usePathname();
   return (
-    <nav className="flex items-center justify-between p-4 bg-white shadow-md">
+    <nav className="flex items-center justify-between p-2 bg-white shadow-md">
       {/* Logo */}
       <Link
         href="/"
@@ -17,14 +17,14 @@ export default function NavMenu() {
         <Image
           src="/logo.png"
           alt="Himalayan Connect Logo"
-          width={60}
+          width={100}
           height={30}
-          className="cursor-pointer"
+          className="ml-10 w-[100px] h-auto max-w-full object-contain"
         />
       </Link>
 
       {/* Search input  */}
-      <div className="flex-grow mx-10 flex justify-center w-1/2">
+      <div className="flex-grow max-w-xl">
         <SearchInput />
       </div>
 
@@ -35,8 +35,8 @@ export default function NavMenu() {
           className={`ml-3 mr-3 ${
             pathname === "/add-resource"
               ? "text-white bg-blue-500 hover:bg-blue-600"
-              : "font-bold text-3xl text-red-500 "
-          } font-medium rounded-lg text-sm px-5 py-2.5`}
+              : "font-bold text-lg text-black-500"
+          } font-medium rounded-lg text-sm px-5 py-2`}
         >
           Add Resource
         </Link>
@@ -47,7 +47,7 @@ export default function NavMenu() {
             pathname === "/login"
               ? "text-white bg-blue-500 hover:bg-blue-600"
               : "font-bold"
-          } mr-4 font-medium rounded-lg text-sm bg-gray-200  px-5 py-2.5`}
+          } mr-4 font-medium rounded-lg text-sm bg-gray-200  px-5 py-2`}
         >
           Login / Sign up
         </Link>

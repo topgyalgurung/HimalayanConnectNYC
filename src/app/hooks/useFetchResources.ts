@@ -8,9 +8,7 @@ export function useFetchResources() {
   const [resources, setResources] = useState<Resource[]>([]);
 // fetch resources from localstorage or API
   useEffect(() => {
-
     const cacheResources = localStorage.getItem(RESOURCE_CACHE_KEY);
-
     
     if (cacheResources) {
       const parsedResources = JSON.parse(cacheResources);
@@ -38,7 +36,7 @@ export function useFetchResources() {
       }
       
       const data = await response.json();
-      console.log("API Response data:", data);
+      // console.log("API Response data:", data);
       
       if (!Array.isArray(data)) {
         console.error("API returned non-array data:", data);

@@ -8,39 +8,49 @@ import jwt from "jsonwebtoken";
 const prisma = new PrismaClient(); 
 
 export async function POST(request:NextRequest) {
-    try {
+    try { 
         const reqBody = await request.json()
         const {email, password} = reqBody 
 
-        const user = await prisma.user.findFirst({
-            where: { 
-                OR: [{email}]
+        const user = await prisma.user.findUnique({
+          where: { 
+              email:email
              }
         });
+        console.log("User found:", !!user);
         if (!user) {
             return NextResponse.json({error:"User does not exist"}, {status:400}) 
          }
          // check if password is correct
          const validPassword = await bcryptjs.compare(password, user.password)
-         if (!validPassword) {
+      if (!validPassword) {
+            console.log("incorrect password")
             return NextResponse.json({error:'Invalid password'},{status:400})
-         }
-         //create token data
+      }
+      console.log("verified")
+         // Create token data
          const tokenData = {
             id: user.id,
-            // username: user.username,
             email: user.email
-         }
-         // create token
-         const token = await jwt.sign(tokenData, process.env.JWT_SECRET!, {expiresIn:"1d"})
+         };
+      
+         // Create token
+      const token = await jwt.sign(tokenData, process.env.JWT_SECRET!, { expiresIn: '1d' });
+      console.log("token created")
 
-         // set user cookie 
-         const response = NextResponse.json({message:"Login successful", success:true})
-         response.cookies.set("token", token, {httpOnly:true})
-         return response;
-        
-        } catch (error: unknown) {
-            return NextResponse.json({ error: (error as Error).message }, { status: 500 });
-        }
-    
+         // Set the new token with proper options
+         const response = NextResponse.json({
+             message: "Login successful",
+             success: true
+         })
+      response.cookies.set("token", token, { httpOnly: true,
+        sameSite:"strict", // prevents csrf attacks
+        path:'/' // ensure cookie available across app
+      })
+      console.log('cookie set')
+      return response;
+
+    } catch (error: unknown) {
+        return NextResponse.json({ error: (error as Error).message }, { status: 500 });
+    }
 }

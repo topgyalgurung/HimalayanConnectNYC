@@ -47,53 +47,63 @@ export default function SignupPage() {
   }, [user]);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-2 ">
-      <h1 className="text-center text-white text-3xl">
-        {" "}
-        {loading ? "Processing" : "Signup"}
-      </h1>
-      <br />
+    <div className="flex flex-col items-center justify-start min-h-screen py-2">
+      <div className="w-1/3 h-1/2 bg-slate-100 p-6 rounded-lg shadow-lg mt-10">
+        <h1 className="text-left text-black text-3xl">
+          {loading ? "Processing" : "Signup"}
+        </h1>
+        <hr />
+        <br />
 
-      <input
-        className="text-black p-1 border border-gray-50 rounded-md mb-4 focus:outline-none focus:border-gray-600"
-        id="username"
-        type="text"
-        value={user.firstName}
-        onChange={(e) => setUser({ ...user, firstName: e.target.value })}
-        placeholder="first name"
-      />
+        <input
+          className="text-black p-2 border border-gray-50 rounded-md mb-4 focus:outline-none focus:border-gray-600 w-full"
+          id="firstName"
+          type="text"
+          value={user.firstName}
+          onChange={(e) => setUser({ ...user, firstName: e.target.value })}
+          placeholder="First Name"
+        />
 
-      <input
-        className="text-black p-1 border border-gray-50 rounded-md mb-4 focus:outline-none focus:border-gray-600"
-        id="username"
-        type="text"
-        value={user.lastName}
-        onChange={(e) => setUser({ ...user, lastName: e.target.value })}
-        placeholder="last name"
-      />
-      <input
-        className="text-black p-1 border border-gray-50 rounded-md mb-4 focus:outline-none focus:border-gray-600"
-        id="email"
-        type="text"
-        value={user.email}
-        onChange={(e) => setUser({ ...user, email: e.target.value })}
-        placeholder="email"
-      />
-      <input
-        className="text-black p-1 border border-gray-50 rounded-md mb-4 focus:outline-none focus:border-gray-600"
-        id="password"
-        type="password"
-        value={user.password}
-        onChange={(e) => setUser({ ...user, password: e.target.value })}
-        placeholder="password"
-      />
-      <button
-        onClick={onSignup}
-        className="p-2 border border-gray-300 rounder-lg mb-4 focus:outline-none focus:border-gray-600"
-      >
-        {buttonDisabled ? "No signup" : "Signup"}
-      </button>
-      <Link href="/login"> Visit login page</Link>
+        <input
+          className="text-black p-2 border border-gray-50 rounded-md mb-4 focus:outline-none focus:border-gray-600 w-full"
+          id="lastName"
+          type="text"
+          value={user.lastName}
+          onChange={(e) => setUser({ ...user, lastName: e.target.value })}
+          placeholder="Last Name"
+        />
+
+        <input
+          className="text-black p-2 border border-gray-50 rounded-md mb-4 focus:outline-none focus:border-gray-600 w-full"
+          id="email"
+          type="text"
+          value={user.email}
+          onChange={(e) => setUser({ ...user, email: e.target.value })}
+          placeholder="Email"
+        />
+
+        <input
+          className="text-black p-2 border border-gray-50 rounded-md mb-4 focus:outline-none focus:border-gray-600 w-full"
+          id="password"
+          type="password"
+          value={user.password}
+          onChange={(e) => setUser({ ...user, password: e.target.value })}
+          placeholder="Password"
+        />
+
+        <button
+          onClick={onSignup}
+          className="p-2 border text-white border-gray-300 bg-blue-500 rounder-lg mb-4 focus:outline-none focus:border-gray-600 w-full"
+        >
+          {buttonDisabled ? "All Field Required " : "Sign up"}
+        </button>
+
+        <div className="flex justify-end">
+          <Link href="/login" className="text-right">
+            Already have an account?
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }

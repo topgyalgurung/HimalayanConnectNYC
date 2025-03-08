@@ -17,7 +17,7 @@ import {
 
 import { useState } from "react";
 // import type { Marker } from "@googlemaps/markerclusterer";
-import { Resource } from "@/app/types/resource";
+// import { Resource } from "@/app/types/resource";
 
 // const Map = ({ locations }: { locations: Location[] }) => {
 // Map component uses a default-style of width: 100%; height: 100%;
@@ -25,10 +25,10 @@ import { Resource } from "@/app/types/resource";
 // At least the center and zoom props have to be specified for the map to be shown (Advanced Marker).
 export default function MapView({ resources }: { resources: Resource[] }) {
   return (
-    <div>
+    <div className="h-full w-full">
       <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}>
         <Map
-          style={{ height: "100vh", width: "100%" }}
+          className="h-full w-full "
           defaultCenter={{ lat: 40.7564298, lng: -73.8872289 }}
           defaultZoom={12}
           gestureHandling={"greedy"}
@@ -73,9 +73,9 @@ const Markers = ({ points }: { points: Resource[] }) => {
             >
               {/* customize pin color  */}
               <Pin
-                background={"#0f9d58"}
-                borderColor={"#006425"}
-                glyphColor={"#60d98f"}
+                background={"red"}
+                borderColor={"white"}
+                glyphColor={"white"}
               />
             </AdvancedMarker>
 

@@ -27,15 +27,21 @@ export default function RootLayout({
   return (
     <html lang="en" data-theme="winter">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen flex flex-col`}
+        style={{ overflow: "hidden" }}
       >
-        {/* navigation menu on header with improved styling */}
-        <header className="bg-slate-100 text-black p-2 text-center fixed top-0 w-full z-50 h-[50px] shadow-md">
+        {/* navigation menu on header */}
+        <header className="bg-white shadow-lg backdrop-filter backdrop-blur-lg bg-opacity-30 sticky top-0 z-50">
           <NavMenu />
         </header>
-        <main className="mt-[100px]">{children}</main>
+
+        {/* Main Content: adjust for space */}
+        <main className="mt-[20px] flex-1 h-[calc(100vh-90px)] overflow-hidden flex flex-col">
+          {children}
+        </main>
+
         {/* footer with improved styling */}
-        <footer className="bg-slate-900 text-white p-4 text-center shadow-md">
+        <footer className="bg-slate-900 text-white p-4 text-center shadow-md h-[60px] flex-none">
           Himalayan Connect NYC
         </footer>
       </body>

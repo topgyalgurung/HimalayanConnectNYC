@@ -43,10 +43,10 @@ export default function SearchInput() {
   }, [inputValue, router]);
 
   // Function to handle manual search submission
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSearchQuery(inputValue.trim()); // set search query for results
-  };
+  // const handleSearchSubmit = (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   setSearchQuery(inputValue.trim()); // set search query for results
+  // };
 
   // Handle clearing the search input and results
   const handleClear = () => {
@@ -56,20 +56,20 @@ export default function SearchInput() {
   };
 
   return (
-    <form onSubmit={handleSearchSubmit} className="flex space-x-2">
+    <form className="flex space-x-2">
       <input
         type="search"
         placeholder="Search name, category, or location"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
-        className="border-2 border-gray-300 bg-white h-10 px-5 rounded-lg text-m focus:outline-none w-[400px]"
+        className="border-2 border-gray-300 bg-white h-12 px-7  rounded-lg text-m focus:outline-none focus:border-yellow-500   w-full max-w-2xl"
       />
-      <button
+      {/* <button
         type="submit"
         className="font-bold bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
       >
         Search
-      </button>
+      </button> */}
       {/* <button
         type="button"
         onClick={handleClear}

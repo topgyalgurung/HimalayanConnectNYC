@@ -69,9 +69,6 @@ export default function ResourceList({
 
   return (
     <div className="flex flex-col h-full">
-      <h3 className="text-lg font-bold text-white bg-blue-500 mb-2 sticky top-0 z-10 p-2 shadow">
-        Resources
-      </h3>
       {/* Display the filtered resources using the ResourceCard component */}
       <ResourceCard resources={filteredResources} />
     </div>

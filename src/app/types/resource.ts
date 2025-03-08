@@ -1,15 +1,19 @@
-export type Resource = {
+type Location = {
+  id: number;
+  latitude: number;
+  longitude: number;
+};
+type Resource = {
   id: string;
   name: string;
+  description: string;
   address: string;
-  borough: string;
   city: string;
   openDays: string;
   openTime: string;
   closeTime: string;
-  rating: number;
-  ResourceCategory?: {
-    name: string;
-  };
-  // Add other fields as needed
-}; 
+  ResourceCategory?: { name: string } | null;
+  Location: Location[];
+};
+
+export default Resource;

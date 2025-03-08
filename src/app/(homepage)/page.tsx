@@ -5,7 +5,7 @@ import { useState } from "react";
 import ResourceFilter from "./filters/ResourceFilter";
 import BoroughFilter from "./filters/BoroughFilter";
 import ResourceList from "./resources/ResourceList";
-import type { Resource } from "@/app/types/resource"; // Update this import
+import Resource from "@/app/types/resource"; // Updated import
 
 // import { MapProvider } from "@/app/providers/MapProvider";
 import { MapView } from "@/app/components/map/Map";
@@ -16,10 +16,12 @@ export default function Home() {
   const [filteredResources, setFilteredResources] = useState<Resource[]>([]); // storing filtered resources based on the search query
 
   return (
-    <div className="flex h-[calc(100vh-4rem)] text-black">
-      {/* left: filter section  */}
-      <aside className="w-52 bg-white shadow-md p-4 flex flex-col">
-        <h2 className="size-9 font-bold text-blue-600"> Filters</h2>
+    <div className="flex h-[calc(100vh-90px)] text-black p-1">
+      {/* Left: Filter Section */}
+      <aside className="w-[20%] pl-4 bg-white shadow-md flex flex-col min-h-0 mb-4">
+        <h2 className="text-lg text-center font-bold text-white bg-green-500 mb-2 sticky top-0 z-10 p-2 shadow">
+          FILTERS
+        </h2>
         <ResourceFilter
           onFilterChange={setSelectedCategories}
           selectedCategories={selectedCategories}
@@ -30,9 +32,12 @@ export default function Home() {
         />
       </aside>
 
-      {/* Middle Section: Resource List */}
-      <div className="flex-1 flex flex-col">
-        <main className="flex-1 bg-gray-50 p-4 overflow-y-auto">
+      {/* Middle: Resource List */}
+      <aside className="w-[30%] pl-4 flex-1 flex flex-col min-h-0 mb-4">
+        <h3 className="text-lg px-4 text-center font-bold text-white bg-blue-500 mb-2 sticky top-0 z-10 p-2 shadow">
+          RESOURCES
+        </h3>
+        <main className="flex-1 bg-gray-50 p-4 overflow-y-auto mb-4">
           <ResourceList
             selectedCategories={selectedCategories}
             selectedBoroughs={selectedBoroughs}
@@ -40,11 +45,13 @@ export default function Home() {
             filteredResources={filteredResources}
           />
         </main>
-      </div>
+      </aside>
 
-      {/* Right: Map Display  */}
-      <aside className="w-[800px] bg-white shadow-md p-4 flex flex-col">
-        <MapView resources={filteredResources} />
+      {/* Right: Map Display */}
+      <aside className="w-[50%] bg-white shadow-md pl-4 flex flex-col h-full border-2 border-gray-300 ">
+        <div className="flex-1 relative border border-gray-400 rounded-lg overflow-hidden">
+          <MapView resources={filteredResources} />
+        </div>
       </aside>
     </div>
   );

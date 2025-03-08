@@ -37,28 +37,29 @@ export default function BoroughFilter({
   // Render the BoroughFilter component
   return (
     <div className="p-4 border rounded-md text-black mt-4">
-      <div className="flex items-center mb-1">
-        <h3 className="text-blue-500 font-bold mb-2"> Borough </h3>
+      <div className="flex items-center mb-1 justify-center">
+        <h3 className="text-green-500 font-bold mb-2 mr-3"> NYC Borough </h3>
         <span className="mx-2 border-l border-gray-300 h-6 ml-4" />
 
         <button
           onClick={clearFilters}
-          className="text-black-900 ml-4
+          className="text-black-900 ml-2
          "
         >
           &times;
         </button>
       </div>
       <hr className="border-t border-gray-300 w-full mb-3" />
-      <div className="flex flex-col space-y-2">
+      <div className="flex flex-col ml-10 space-y-2">
         {boroughs.map((borough) => (
           <label key={borough.id} className="flex items-center space-x-2">
             <input
               type="checkbox"
               id={`borough-${borough.id}`}
-              className="mr-2"
+              className="mr-2 w-4 h-4"
               checked={selectedBoroughs.includes(borough.name)}
               onChange={() => handleBoroughCheckboxChange(borough.name)}
+              
             />
             <span className="capitalize">{borough.name}</span>
           </label>

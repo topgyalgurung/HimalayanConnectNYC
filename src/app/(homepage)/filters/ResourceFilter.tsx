@@ -34,20 +34,15 @@ export default function ResourceFilter({
   };
   return (
     <div className="p-4 border rounded-md text-black mt-4">
-      <div className="flex items-center mb-1">
-        <h3 className="text-blue-500 font-bold mb-2">Category</h3>
+      <div className="flex items-center mb-1 justify-center">
+        <h3 className="text-green-500 font-bold mb-2 mr-3">Category</h3>
         <span className="mx-2 border-l border-gray-300 h-6 ml-4" />
-
-        <button
-          onClick={clearFilters}
-          className="text-black-900 ml-4
-         "
-        >
+        <button onClick={clearFilters} className="ml-2 text-black-900">
           &times;
         </button>
       </div>
       <hr className="border-t border-gray-300 w-full mb-3" />
-      <div className="flex flex-col space-y-2">
+      <div className="flex flex-col ml-10 space-y-2">
         {categories.map((cat) => (
           <label key={cat.id} className="flex items-center space-x-2">
             <input
@@ -55,7 +50,7 @@ export default function ResourceFilter({
               value={cat.name}
               checked={selectedCategories.includes(cat.name)}
               onChange={() => handleCategoryCheckboxChange(cat.name)}
-              className="w-4 h-4"
+              className="mr-2 w-4 h-4"
             />
             <span className="capitalize">{cat.name}</span>
           </label>
