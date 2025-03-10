@@ -3,12 +3,25 @@
 // add new resource
 
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 export default function AddResource() {
   const [image, setImage] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState("");
+
+  const [openTime, setOpenTime] = useState("09:00");
+  const [closeTime, setCloseTime] = useState("17:00");
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const data = {
+      openTime: openTime, // time is saved in HH:mm format
+      closeTime: closeTime, // time is saved in HH:mm format
+    };
+    console.log("Submitted Data:", data);
+    // Here you would send the data to your backend, e.g., via an API request
+  };
 
   const handleImageUpload = async () => {
     if (!image) return;
@@ -29,18 +42,23 @@ export default function AddResource() {
     };
   };
   return (
-    <div>
+    <form onSubmit={handleSubmit}>
       <input
         type="file"
         onChange={(e) => setImage(e.target.files?.[0] || null)}
       />
       <button onClick={handleImageUpload}>Upload</button>
       {imageUrl && <img src={imageUrl} alt="Uploaded preview" width="200" />}
-    </div>
+      <TimePicker label="Open Time" value={openTime} onChange={setOpenTime} />
+      <TimePicker
+        label="Close Time"
+        value={closeTime}
+        onChange={setCloseTime}
+      />
+      <button type="submit">Save Resource</button>
+    </form>
   );
 }
-
-import React, { useState } from "react";
 
 function TimePicker({ label, value, onChange }) {
   return (
@@ -53,33 +71,6 @@ function TimePicker({ label, value, onChange }) {
         className="border-2 border-gray-300 bg-white h-10 px-5 rounded-lg text-sm focus:outline-none"
       />
     </div>
-  );
-}
-
-export default function ResourceForm() {
-  const [openTime, setOpenTime] = useState("09:00");
-  const [closeTime, setCloseTime] = useState("17:00");
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = {
-      openTime: openTime, // time is saved in HH:mm format
-      closeTime: closeTime, // time is saved in HH:mm format
-    };
-    console.log("Submitted Data:", data);
-    // Here you would send the data to your backend, e.g., via an API request
-  };
-
-  return (
-    <form onSubmit={handleSubmit}>
-      <TimePicker label="Open Time" value={openTime} onChange={setOpenTime} />
-      <TimePicker
-        label="Close Time"
-        value={closeTime}
-        onChange={setCloseTime}
-      />
-      <button type="submit">Save Resource</button>
-    </form>
   );
 }
 

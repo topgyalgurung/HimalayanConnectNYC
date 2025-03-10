@@ -21,13 +21,16 @@ By offering a streamlined platform with categorized listings, search functionali
 
 #### Wireframe 
 - [Himalayan Connect NYC FIGMA wireframe](https://www.figma.com/design/rv1wIJmRVMcct15TuFCCBe/Himalayan-Connect-NYC-Website-UI?m=auto&t=NicB32WCserygMbc-1)
-![Homepage](public/homepage-figma.png)
+<img src ="public/homepage-figma.png" width="400" >
 
 ### Progress
+<p align="center">
 ##### v0:
-![Home page v0](public/homepage-v0.png)
+<img src= "public/homepage-v0.png" width="300">
+
 ##### v1:
-![Home page v1](public/homepage-v1.png)
+<img src= "public/homepage-v1.png" width="300">
+</p>
 
 |Task Name|Description|Example|
 |--- | --- |---|

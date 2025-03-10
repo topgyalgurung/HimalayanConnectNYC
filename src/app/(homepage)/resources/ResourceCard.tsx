@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { format } from "date-fns";
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 
 type Location = {
   id: number;
@@ -24,8 +24,7 @@ type Resource = {
 // ResourceCard component: Displays a list of resources
 export default function ResourceCard({ resources }: { resources: Resource[] }) {
   return (
-    <div 
-    className="flex flex-col space-y-4 pb-20">
+    <div className="flex flex-col space-y-4 pb-20">
       {resources.map(
         ({
           id,
@@ -63,7 +62,7 @@ export default function ResourceCard({ resources }: { resources: Resource[] }) {
                 <strong>Hours :</strong>
                 {format(openTime, "hh:mm a")}-{format(closeTime, "hh:mm a")}
               </p>
-              <p>
+              {/* <p>
                 <strong>Location: </strong>
                 {Location.map((location) => (
                   <span key={location.id}>
@@ -71,7 +70,7 @@ export default function ResourceCard({ resources }: { resources: Resource[] }) {
                     {location.longitude}
                   </span>
                 ))}
-              </p>
+              </p> */}
 
               {/* Navigation links for resource details and suggestions */}
               <div className="pt-4 flex items-center justify-between">

@@ -1,5 +1,7 @@
+"use client";
+
 interface CategoryFilterProps {
-  onFilterChange: (category: string[]) => void;
+  onFilterChangeAction: (category: string[]) => void;
   selectedCategories?: string[];
 }
 
@@ -13,7 +15,7 @@ const categories = [
 ];
 
 export default function ResourceFilter({
-  onFilterChange,
+  onFilterChangeAction,
   selectedCategories = [],
 }: CategoryFilterProps) {
   const handleCategoryCheckboxChange = (category: string) => {
@@ -27,10 +29,10 @@ export default function ResourceFilter({
         )
       : [...selectedCategories, category];
 
-    onFilterChange(updatedCategories);
+    onFilterChangeAction(updatedCategories);
   };
   const clearFilters = () => {
-    onFilterChange([]);
+    onFilterChangeAction([]);
   };
   return (
     <div className="p-4 border rounded-md text-black mt-4">

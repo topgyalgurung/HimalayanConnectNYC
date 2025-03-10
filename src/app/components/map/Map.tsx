@@ -11,6 +11,7 @@ import {
   // useAdvancedMarkerRef,
   // ColorScheme,
   // ControlPosition,
+  CollisionBehavior,
   Pin,
   InfoWindow,
 } from "@vis.gl/react-google-maps";
@@ -57,6 +58,31 @@ const Markers = ({ points }: { points: Resource[] }) => {
         // Determine if we should show the InfoWindow
         const shouldShowInfoWindow = activeMarkerId === resource.id;
 
+        // Customize pin background color based on resource category
+        let pinBackground = "red"; // Default color
+        switch (resource.ResourceCategory?.name) {
+          case "Community":
+            pinBackground = "blue";
+            break;
+          case "Legal":
+            pinBackground = "green";
+            break;
+          case "Health":
+            pinBackground = "yellow";
+            break;
+          case "Education":
+            pinBackground = "purple";
+            break;
+          case "Finance":
+            pinBackground = "orange";
+            break;
+          case "Real estate":
+            pinBackground = "pink";
+            break;
+          default:
+            pinBackground = "red"; // Default color
+        }
+
         return (
           <div
             key={resource.id}
@@ -65,15 +91,16 @@ const Markers = ({ points }: { points: Resource[] }) => {
             style={{ cursor: "pointer" }}
           >
             <AdvancedMarker
+              collisionBehavior={CollisionBehavior.REQUIRED_AND_HIDES_OPTIONAL}
               position={{
                 lat: location?.latitude ?? 0,
                 lng: location?.longitude ?? 0,
               }}
               // onClick={() => setActiveMarkerId(resource.id)} // Set the clicked marker ID
             >
-              {/* customize pin color  */}
+              {/* customize pin color based on resource category */}
               <Pin
-                background={"red"}
+                background={pinBackground}
                 borderColor={"white"}
                 glyphColor={"white"}
               />
@@ -86,11 +113,16 @@ const Markers = ({ points }: { points: Resource[] }) => {
                   lat: location?.latitude ?? 0,
                   lng: location?.longitude ?? 0,
                 }}
-                // onCloseClick={() => setActiveMarkerId(null)} // Close the info window
+                options={{
+                  disableAutoPan: true, // Disables the auto pan effect
+                  closeBoxURL: "", // // Removes the close button (X)
+                }}
               >
-                <p>{resource.name}</p>
-                <p>{resource.address}</p>
-                <p>{resource.description}</p>
+                <div className="m-0 p-0">
+                  <h1>{resource.name}</h1>
+                  <p>{resource.address}</p>
+                  <p>{resource.description}</p>
+                </div>
               </InfoWindow>
             )}
           </div>

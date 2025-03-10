@@ -1,6 +1,7 @@
-// Define the structure of the BoroughFilterProps
+"use client";
+
 interface BoroughFilterProps {
-  onFilterChange: (boroughs: string[]) => void; // Function to handle filter change
+  onFilterChangeAction: (boroughs: string[]) => void; // Function to handle filter change
   selectedBoroughs?: string[]; // Optional array of selected boroughs
 }
 
@@ -14,7 +15,7 @@ const boroughs = [
 ];
 
 export default function BoroughFilter({
-  onFilterChange,
+  onFilterChangeAction,
   selectedBoroughs = [],
 }: BoroughFilterProps) {
   // Function to handle borough checkbox change
@@ -26,12 +27,12 @@ export default function BoroughFilter({
       ? selectedBoroughs.filter((b) => b !== borough)
       : [...selectedBoroughs, borough];
 
-    onFilterChange(updatedBoroughs);
+    onFilterChangeAction(updatedBoroughs);
   };
 
   // Function to clear all filters
   const clearFilters = () => {
-    onFilterChange([]);
+    onFilterChangeAction([]);
   };
 
   // Render the BoroughFilter component
@@ -59,7 +60,6 @@ export default function BoroughFilter({
               className="mr-2 w-4 h-4"
               checked={selectedBoroughs.includes(borough.name)}
               onChange={() => handleBoroughCheckboxChange(borough.name)}
-              
             />
             <span className="capitalize">{borough.name}</span>
           </label>

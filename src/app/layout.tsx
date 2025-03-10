@@ -1,8 +1,13 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
+
 import "./globals.css";
-import NavMenu from "./components/ui/NavMenu";
+import NavMenu from "@/app/components/NavMenu";
 // import { MapProvider } from "@/app/providers/MapProvider";
+
+// const alegreya = Alegreya({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"] });
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,18 +32,17 @@ export default function RootLayout({
   return (
     <html lang="en" data-theme="winter">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen flex flex-col`}
+        // className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen flex flex-col`}
+        className={inter.className}
         style={{ overflow: "hidden" }}
       >
         {/* navigation menu on header */}
-        <header className="bg-white shadow-lg backdrop-filter backdrop-blur-lg bg-opacity-30 sticky top-0 z-50">
-          <NavMenu />
-        </header>
+        <NavMenu />
 
         {/* Main Content: adjust for space */}
-        <main className="mt-[20px] flex-1 h-[calc(100vh-90px)] overflow-hidden flex flex-col">
-          {children}
-        </main>
+        {/* <main className="mt-[20px] flex-1 h-[calc(100vh-90px)] overflow-hidden flex flex-col"> */}
+        {children}
+        {/* </main> */}
 
         {/* footer with improved styling */}
         <footer className="bg-slate-900 text-white p-4 text-center shadow-md h-[60px] flex-none">
