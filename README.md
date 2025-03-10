@@ -25,11 +25,18 @@ By offering a streamlined platform with categorized listings, search functionali
 
 ### Progress
 <p align="center">
-##### v0:
-<img src= "public/homepage-v0.png" width="300">
-
-##### v1:
-<img src= "public/homepage-v1.png" width="300">
+  <figure style="display: inline-block; text-align: center; margin: 10px;">
+    <img src="./public/homepage-v0.png" width="250">
+    <figcaption>Homepage v0</figcaption>
+  </figure>
+  <figure style="display: inline-block; text-align: center; margin: 10px;">
+    <img src="./public/homepage-v1.png" width="250">
+    <figcaption>Homepage v1</figcaption>
+  </figure>
+   <figure style="display: inline-block; text-align: center; margin: 10px;">
+    <img src="./public/homepage-v2.png" width="250">
+    <figcaption>Homepage v2</figcaption>
+  </figure>
 </p>
 
 |Task Name|Description|Example|
