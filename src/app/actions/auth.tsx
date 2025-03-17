@@ -112,6 +112,7 @@ export async function login(state: LoginFormState, formData: FormData) {
         email: true,
         password: true,
         role: true,
+        image: true,
       },
     });
 
@@ -139,7 +140,11 @@ export async function login(state: LoginFormState, formData: FormData) {
       status: 200,
       message: "Logged in successfully",
       redirect: "/",
-      user, // include user data to avoid re-fetching
+      user: {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+      }, // include user data to avoid re-fetching
     };
   } catch (error) {
     console.error("Error in login:", error);

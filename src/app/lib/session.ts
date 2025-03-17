@@ -20,6 +20,7 @@ const key = new TextEncoder().encode(secretKey);
 
 // make role as role of user 
 
+// i need to store image in session for faster load and avoid extra database queries 
 export type SessionPayload = {
     userId: string; // Stored as string in JWT but converted to number when used with database
     role: Role |string;
