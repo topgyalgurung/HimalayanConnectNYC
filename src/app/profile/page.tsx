@@ -5,7 +5,7 @@
  * redirect: redirect user after a mutation or event, in server component, server action
  * useRouter: perform client side navigation, in client
  */
-import { logout } from "../actions/auth";
+
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import AdminDashboard from "../profile/AdminDashboard";
@@ -28,29 +28,7 @@ export default function Profile() {
     fetchSession();
   }, [router]);
 
-  const handleLogout = async () => {
-    try {
-      await logout();
-      router.replace("/");
-      router.refresh();
-    } catch (error) {
-      console.error("logout failed", error);
-    }
-  };
-
   return (
-    <div>
-      <div>
-        <h1>Profile</h1>
-        <button
-          onClick={handleLogout}
-          className="px-4 py-2 text-red rounded-lg transition-colors flex items-center"
-        >
-          Logout
-        </button>
-      </div>
-      <div> Dashboard</div>
-      {userRole === "ADMIN" ? <AdminDashboard /> : <UserDashboard />}
-    </div>
+    <div>{userRole === "ADMIN" ? <AdminDashboard /> : <UserDashboard />}</div>
   );
 }

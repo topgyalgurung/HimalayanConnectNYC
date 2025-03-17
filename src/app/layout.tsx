@@ -25,15 +25,15 @@ export default function RootLayout({
   // const user = await getUser();
   return (
     <html lang="en" data-theme="winter">
-      <body className={`${inter.className} overflow-hidden`}>
+      <body className={`${inter.className} overflow-hidden `}>
         <UserProvider>
           <NavMenu />
           <Toaster position="bottom-center" toastOptions={{ duration: 5000 }} />
-          {children}
+          <main className="flex-grow">{children}</main>
         </UserProvider>
-        <footer className="bg-slate-900 text-white p-4 text-center shadow-md h-[60px] flex-none">
+        {/* <footer className="bg-slate-900 text-white p-4 text-center shadow-md h-[60px] flex-none">
           © Himalayan Connect NYC
-        </footer>
+        </footer> */}
       </body>
     </html>
   );
