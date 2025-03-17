@@ -1,10 +1,12 @@
 // add a new resource
 // •	This allows you to handle file uploads and save image URLs to the database
 import { v2 as cloudinary } from "cloudinary";
-import prisma from "@/lib/prisma"; // Adjust path
+import prisma from "@/app/lib/prisma"; // Adjust path
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
+    // check session server side next.auth
+    const session = await getServerSession();
     try {
       const { name, description, imageUrl } = req.body;
 

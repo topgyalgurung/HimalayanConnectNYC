@@ -4,9 +4,20 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import SearchInput from "./SearchInput";
+// import { logout } from "../actions/auth";
 
 export default function NavMenu() {
   const pathname = usePathname();
+  // const router = useRouter();
+
+  // const handleLogout = async () => {
+  //   try {
+  //     await logout();
+  //   } catch (error) {
+  //     console.error("logout failed", error);
+  //   }
+  // };
+
   return (
     <header>
       <nav className="flex items-center justify-between p-2 bg-white shadow-md flex-wrap border-b-1 w-full">
@@ -27,12 +38,14 @@ export default function NavMenu() {
         </Link>
 
         {/* Search input  */}
-        <div className="flex-grow max-w-xl">
-          <SearchInput />
+        <div className="flex-grow flex justify-center">
+          <div className="flex-grow max-w-xl">
+            <SearchInput />
+          </div>
         </div>
 
         {/* add resource  */}
-        <ul className="flex flex-1 items-center justify-end gap-8 ml-4">
+        <div className="flex flex-1 items-center justify-end gap-8 ml-4">
           <Link
             href="/resources/add"
             className={`flex-nowrap cursor-pointer ${
@@ -43,18 +56,24 @@ export default function NavMenu() {
           >
             Add Resource ➕
           </Link>
-
-          <Link
-            href="/login"
-            className={`flex-nowrap cursor-pointer ${
-              pathname === "/login"
-                ? "text-white bg-blue-500 hover:bg-blue-600"
-                : "font-bold"
-            } mr-4 font-medium rounded-lg text-sm bg-gray-200  px-5 py-2`}
-          >
-            Login / Sign up
-          </Link>
-        </ul>
+          {/* {user ? ( */}
+          {/* <button
+              onClick={handleLogout}
+              className="px-4 py-2 text-red rounded-lg transition-colors flex items-center"
+            >
+              Logout{" "}
+            </button>
+          ) : ( */}
+          <div className="flex items-center gap-4">
+            <Link
+              href="/login"
+              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+            >
+              Login / Sign Up
+            </Link>
+          </div>
+          {/* )} */}
+        </div>
       </nav>
     </header>
   );

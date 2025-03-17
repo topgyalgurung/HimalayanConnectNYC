@@ -1,5 +1,5 @@
 import { connect } from "@/dbConfig/dbConfig";
-import prisma from "@/lib/prisma";
+import prisma from "@/app/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 

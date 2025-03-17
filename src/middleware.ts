@@ -1,33 +1,40 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
- 
-// This function can be marked `async` if using `await` inside
-export function middleware(request: NextRequest) {
-//   return NextResponse.redirect(new URL('/home', request.url))
+import { NextRequest, NextResponse } from "next/server";
+import { decrypt } from "./app/lib/session";
+import { cookies } from "next/headers";
+import toast from "react-hot-toast";
+
+const authRoutes = ['/login', '/signup'];
+const protectedRoutes = ["/dashboard", "/resources/add", "/profile"];
+// const publicRoutes = ["/", "/login", "/signup", "/verifyemail", "/forgotpassword", "/resetpassword"];
+
+export default async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
+  const isProtectedRoute = protectedRoutes.includes(path);
+  const isAuthRoute = authRoutes.includes(path);
 
-  const isPublicPath = path ==='/' || '/login' || path === '/signup' || path === "/verifyemail" || path === "/forgotpassword" || path === "/resetpassword";
-    // access cookie 
-    const token = request.cookies.get('token')?.value || ''
-    // redirect authenticated user to '/'
-    if (isPublicPath && token) {
-      return NextResponse.redirect(new URL('/', request.nextUrl));
-    }
-    if (!isPublicPath && !token) {
-      return NextResponse.redirect(new URL('/login', request.nextUrl));
-    }
+
+  // get session from cookie 
+  const cookie = (await cookies()).get("session")?.value;
+  const session = await decrypt(cookie);
+
+   // If session is undefined or decryption fails, user is treated as NOT logged in
+  const isAuthenticated = !!session?.userId;
+
+   // If user is NOT authenticated and tries to access a PROTECTED route → Redirect to /login
+  if (isProtectedRoute && !isAuthenticated) {
+    // toast.error("🔒 Unauthorized access attempt. Redirecting to /login");
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
+  // if user authenticated should not be able to access login and signup
+  if (isAuthenticated && isAuthRoute) {
+    return NextResponse.redirect(new URL('/profile', request.url))
+    
+  }
+
+// Allow request to continue if no redirection is needed
+  return NextResponse.next();
 }
- 
-// See "Matching Paths" below to learn more
+
 export const config = {
-  matcher: [ 
-    '/',
-    '/profile',
-    '/login',
-    '/signup',
-    '/verifyemail',
-    '/forgotpassword',
-    '/resetpassword',
-
-  ]
-}
+  matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
+};

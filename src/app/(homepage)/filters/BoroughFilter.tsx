@@ -15,7 +15,7 @@ const boroughs = [
 ];
 
 export default function BoroughFilter({
-  onFilterChangeAction,
+  onFilterChange,
   selectedBoroughs = [],
 }: BoroughFilterProps) {
   // Function to handle borough checkbox change
@@ -27,12 +27,12 @@ export default function BoroughFilter({
       ? selectedBoroughs.filter((b) => b !== borough)
       : [...selectedBoroughs, borough];
 
-    onFilterChangeAction(updatedBoroughs);
+    onFilterChange(updatedBoroughs);
   };
 
   // Function to clear all filters
   const clearFilters = () => {
-    onFilterChangeAction([]);
+    onFilterChange([]);
   };
 
   // Render the BoroughFilter component

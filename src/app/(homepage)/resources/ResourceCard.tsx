@@ -22,7 +22,13 @@ type Resource = {
 };
 
 // ResourceCard component: Displays a list of resources
-export default function ResourceCard({ resources }: { resources: Resource[] }) {
+export default function ResourceCard({ 
+  resources, 
+  onSelectResource 
+}: { 
+  resources: Resource[]
+  onSelectResource?: (resource: Resource) => void 
+}) {
   return (
     <div className="flex flex-col space-y-4 pb-20">
       {resources.map(
@@ -74,10 +80,17 @@ export default function ResourceCard({ resources }: { resources: Resource[] }) {
 
               {/* Navigation links for resource details and suggestions */}
               <div className="pt-4 flex items-center justify-between">
-                <div className=" text-white py-2 px-3 bg-blue-600">
-                  <Link href={`/resources/${id}`}>View Details</Link>
-                </div>
-                <div className="text-white py-2 px-3 bg-blue-600">
+                <button 
+                  className="text-white py-2 px-3 bg-blue-600 rounded hover:bg-blue-700"
+                  onClick={() => onSelectResource?.({ 
+                    id, name, description, ResourceCategory, 
+                    address, city, Location, openDays, 
+                    openTime, closeTime 
+                  })}
+                >
+                  View Details
+                </button>
+                <div className="text-white py-2 px-3 bg-blue-600 rounded hover:bg-blue-700">
                   <Link href={`/suggestions/edit/${id}`}>Edit Resource</Link>
                 </div>
               </div>

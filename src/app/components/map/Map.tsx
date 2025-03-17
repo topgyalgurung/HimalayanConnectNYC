@@ -8,37 +8,43 @@ import {
   Map,
   APIProvider,
   AdvancedMarker,
-  // useAdvancedMarkerRef,
-  // ColorScheme,
-  // ControlPosition,
   CollisionBehavior,
   Pin,
   InfoWindow,
 } from "@vis.gl/react-google-maps";
 
 import { useState } from "react";
-// import type { Marker } from "@googlemaps/markerclusterer";
-// import { Resource } from "@/app/types/resource";
+import type { Resource } from "@/app/types/resource";
+import ResourceDetailsCard from "../ResourceDetailsCard";
 
-// const Map = ({ locations }: { locations: Location[] }) => {
-// Map component uses a default-style of width: 100%; height: 100%;
-// api provider component to load Google Maps Javascript api
-// At least the center and zoom props have to be specified for the map to be shown (Advanced Marker).
-export default function MapView({ resources }: { resources: Resource[] }) {
+interface MapViewProps {
+  resources: Resource[];
+}
+
+export default function MapView({ resources }: MapViewProps) {
+  const [selectedResource, setSelectedResource] = useState<Resource | null>(null);
+
   return (
-    <div className="h-full w-full">
-      <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}>
+    <div className="h-full w-full relative">
+      <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? ""}>
         <Map
-          className="h-full w-full "
+          className="h-full w-full"
           defaultCenter={{ lat: 40.7564298, lng: -73.8872289 }}
           defaultZoom={12}
           gestureHandling={"greedy"}
           disableDefaultUI={true}
-          mapId={process.env.NEXT_PUBLIC_MAP_ID}
+          mapId={process.env.NEXT_PUBLIC_MAP_ID ?? ""}
         >
-          <Markers points={resources} />
+          <Markers 
+            points={resources} 
+            onSelectResource={setSelectedResource}
+          />
         </Map>
       </APIProvider>
+      <ResourceDetailsCard 
+        resource={selectedResource} 
+        onCloseAction={() => setSelectedResource(null)} 
+      />
     </div>
   );
 }
@@ -46,8 +52,13 @@ export default function MapView({ resources }: { resources: Resource[] }) {
 //each point
 // type Point = google.maps.LatLngLiteral & { key: string };
 // type Props = { points: Point[] };
-const Markers = ({ points }: { points: Resource[] }) => {
-  const [activeMarkerId, setActiveMarkerId] = useState<string | null>(null); // state for hover
+interface MarkersProps {
+  points: Resource[];
+  onSelectResource: (resource: Resource | null) => void;
+}
+
+const Markers = ({ points, onSelectResource }: MarkersProps) => {
+  const [activeMarkerId, setActiveMarkerId] = useState<string | null>(null);
 
   return (
     <>
@@ -88,7 +99,7 @@ const Markers = ({ points }: { points: Resource[] }) => {
             key={resource.id}
             onMouseOver={() => setActiveMarkerId(resource.id)}
             onMouseOut={() => setActiveMarkerId(null)}
-            style={{ cursor: "pointer" }}
+            className="cursor-pointer"
           >
             <AdvancedMarker
               collisionBehavior={CollisionBehavior.REQUIRED_AND_HIDES_OPTIONAL}
@@ -96,7 +107,7 @@ const Markers = ({ points }: { points: Resource[] }) => {
                 lat: location?.latitude ?? 0,
                 lng: location?.longitude ?? 0,
               }}
-              // onClick={() => setActiveMarkerId(resource.id)} // Set the clicked marker ID
+              onClick={() => onSelectResource(resource)}
             >
               {/* customize pin color based on resource category */}
               <Pin
@@ -113,15 +124,18 @@ const Markers = ({ points }: { points: Resource[] }) => {
                   lat: location?.latitude ?? 0,
                   lng: location?.longitude ?? 0,
                 }}
-                options={{
-                  disableAutoPan: true, // Disables the auto pan effect
-                  closeBoxURL: "", // // Removes the close button (X)
-                }}
+                onCloseClick={() => setActiveMarkerId(null)}
               >
-                <div className="m-0 p-0">
-                  <h1>{resource.name}</h1>
-                  <p>{resource.address}</p>
-                  <p>{resource.description}</p>
+                <div className="bg-white shadow-lg rounded-lg p-1 w-[250px]">
+                  <h1 className="text-lg font-semibold text-gray-800">
+                    {resource.name}
+                  </h1>
+                  <p className="text-sm text-gray-600"> 📍{resource.address}</p>
+                  <p className="text-sm text-gray-500 mt-2">
+                    {resource.description.length > 200
+                      ? `${resource.description.slice(0, 200)}...`
+                      : resource.description}
+                  </p>
                 </div>
               </InfoWindow>
             )}

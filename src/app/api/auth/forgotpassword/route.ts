@@ -1,9 +1,7 @@
-import { connect } from "@/dbConfig/dbConfig";
-import { NextRequest, NextResponse } from "next/server"
-import prisma from "@/lib/prisma";
-import { sendEmail } from "@/helpers/mailer";
 
-connect()
+import { NextRequest, NextResponse } from "next/server"
+import prisma from "@/app/lib/prisma";
+import { sendEmail } from "@/helpers/mailer";
 
 // backend generates a token, stores in db and sends email with token using nodemailer 
 export async function POST(request: NextRequest) {
@@ -16,7 +14,12 @@ export async function POST(request: NextRequest) {
         }
 
         // create validation if user exists
-        const user = await prisma.user.findOne({ email });
+        const user = await prisma.user.findUnique({
+            where: {
+                email: email
+            }
+        });
+
         if (!user) {
             return NextResponse.json({ error: "Account with this email does not exist." }, { status: 404 });
         }
@@ -27,7 +30,7 @@ export async function POST(request: NextRequest) {
          await sendEmail({
             email,
             emailType: "RESET",
-            userId: user._id
+            userId: user.id
         })
         
         return NextResponse.json({

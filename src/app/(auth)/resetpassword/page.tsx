@@ -33,7 +33,7 @@ export default function ResetPassword() {
     try {
       setLoading(true);
       console.log("token to send: ", token);
-      await axios.post("/api/users/resetpassword", {
+      await axios.post("/api/auth/resetpassword", {
         token, // pass token from the URL
         password: newPassword,
       });

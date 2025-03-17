@@ -1,9 +1,10 @@
-type Location = {
+export type Location = {
   id: number;
   latitude: number;
   longitude: number;
 };
-type Resource = {
+
+export type Resource = {
   id: string;
   name: string;
   description: string;
@@ -15,5 +16,3 @@ type Resource = {
   ResourceCategory?: { name: string } | null;
   Location: Location[];
 };
-
-export default Resource;

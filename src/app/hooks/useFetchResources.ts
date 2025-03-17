@@ -28,7 +28,13 @@ export function useFetchResources() {
   async function fetchResources() {
     try {
       console.log("Fetching resources from API...");
-      const response = await fetch("/api/resources");
+      const response = await fetch("/api/resources", {
+        cache:'no-cache'
+      });
+        // {cache: 'no-store' // on demand: not to cache anything and get fresh data everytime
+        // or cache depending on time 
+        // ,{ next: { revalidate: false | 0 | number }});
+        // choose a certain number for how long to keep a page in memory
       console.log("API Response status:", response.status);
       
       if (!response.ok) {
@@ -54,3 +60,5 @@ export function useFetchResources() {
 
   return resources;
 }
+
+

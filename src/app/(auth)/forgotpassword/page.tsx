@@ -17,7 +17,7 @@ export default function ForgotPassword() {
     // e.preventDefault();
     setLoading(true);
     try {
-      await axios.post("/api/users/forgotpassword", {
+      await axios.post("/api/auth/forgotpassword", {
         email,
       });
       setSuccess(true);
