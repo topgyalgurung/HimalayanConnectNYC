@@ -18,20 +18,23 @@ if (!secretKey) {
 
 const key = new TextEncoder().encode(secretKey);
 
+// make role as role of user 
+
 export type SessionPayload = {
-    userId: string; // Stored as string in JWT but converted to number when used with database
+    userId: string | number; // Stored as string in JWT but converted to number when used with database
     role: Role;
+    email: string;
     expiresAt: Date;
 }
 
 // to store session in a cookie
-export async function createSession(userId: string | number, role: Role = Role.USER) {
+export async function createSession(userId: string | number, email:string, role:Role) {
     try {
         // Ensure userId is string for JWT token
         const userIdStr = userId.toString();
         const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
 
-        const session = await encrypt({ userId: userIdStr, role, expiresAt });
+        const session = await encrypt({ userId: userIdStr, email, role, expiresAt });
         const cookieStore = await cookies();
 
         // Set HTTP-only cookie for security
@@ -40,7 +43,6 @@ export async function createSession(userId: string | number, role: Role = Role.U
             secure: true,
             expires: expiresAt,
             path: '/',
-            sameSite: 'lax',
         });
 
         console.log(`Session created for user ${userIdStr} with role ${role}`);
@@ -71,20 +73,23 @@ export async function decrypt(session: string | undefined): Promise<SessionPaylo
         });
 
         // Validate all required fields
-        if (!payload.userId || !payload.role || !payload.expiresAt) {
+        if (!payload.userId || !payload.email || !payload.role || !payload.expiresAt) {
             console.warn("⚠ Invalid session payload - missing required fields:", {
                 hasUserId: !!payload.userId,
                 hasRole: !!payload.role,
+                hasEmail:!!payload.email,
                 hasExpiresAt: !!payload.expiresAt
             });
             return null;
         }
 
+        /** 
         // Validate role is a valid enum value
         if (!Object.values(Role).includes(payload.role)) {
             console.warn("⚠ Invalid role in session:", payload.role);
             return null;
         }
+        */
 
         // Check expiration date
         if (new Date(payload.expiresAt) < new Date()) {

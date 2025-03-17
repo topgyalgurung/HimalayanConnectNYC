@@ -9,7 +9,7 @@ import {
 import { createSession, deleteSession } from "@/app/lib/session";
 import bcrypt from "bcryptjs";
 import prisma from "../lib/prisma";
-
+import { Role } from "@prisma/client";
 // cookie should be set on the server to prevent client side tampering
 
 // SIGN UP
@@ -56,6 +56,7 @@ export async function signup(state: FormState, formData: FormData) {
         firstName,
         lastName,
         email,
+        role: Role["USER"],
         password: hashedPassword,
       },
     });
@@ -107,6 +108,7 @@ export async function login(state: LoginFormState, formData: FormData) {
       where: { email },
       select: {
         id: true,
+        email: true,
         password: true,
         role: true,
       },
@@ -129,7 +131,7 @@ export async function login(state: LoginFormState, formData: FormData) {
     }
 
     // Create JWT session
-    await createSession(user.id, user.role);
+    await createSession(user.id, user.email, user.role);
 
     // Return success status
     return {
