@@ -9,7 +9,7 @@ import {
 import { createSession, deleteSession } from "@/app/lib/session";
 import bcrypt from "bcryptjs";
 import prisma from "../lib/prisma";
-
+import { Role } from "@prisma/client";
 // cookie should be set on the server to prevent client side tampering
 
 // SIGN UP
@@ -56,8 +56,10 @@ export async function signup(state: FormState, formData: FormData) {
         firstName,
         lastName,
         email,
+        role: Role.USER,
         password: hashedPassword,
       },
+      select: { id: true, email: true, role: true },
     });
 
     if (!newUser?.id) {
@@ -65,7 +67,7 @@ export async function signup(state: FormState, formData: FormData) {
     }
 
     // Create JWT session
-    await createSession(newUser.id, newUser.role);
+    await createSession(newUser.id, newUser.email, newUser.role);
 
     // Return success status
     return {
@@ -107,8 +109,10 @@ export async function login(state: LoginFormState, formData: FormData) {
       where: { email },
       select: {
         id: true,
+        email: true,
         password: true,
         role: true,
+        image: true,
       },
     });
 
@@ -129,14 +133,18 @@ export async function login(state: LoginFormState, formData: FormData) {
     }
 
     // Create JWT session
-    await createSession(user.id, user.role);
+    await createSession(user.id, user.email, user.role);
 
     // Return success status
     return {
       status: 200,
       message: "Logged in successfully",
       redirect: "/",
-      user, // include user data to avoid re-fetching
+      user: {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+      }, // include user data to avoid re-fetching
     };
   } catch (error) {
     console.error("Error in login:", error);

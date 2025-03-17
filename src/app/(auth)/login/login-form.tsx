@@ -5,17 +5,21 @@ import { login } from "@/app/actions/auth";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useUser } from "@/app/context/UserProvider";
 
 export default function LoginForm() {
+  const { setUser } = useUser(); // Get context
   const [state, action] = useActionState(login, undefined);
   const [showPassword, setShowPassword] = useState(false); // Add this line
   const router = useRouter();
 
   useEffect(() => {
-    if (state?.status === 200) {
+    if (state?.status === 200 && state.user) {
+      setUser(state.user); // Update global state
+      router.refresh();
       router.push("/profile");
     }
-  }, [state, router]);
+  }, [state, router, setUser]);
 
   return (
     <div className="flex flex-col items-center justify-start min-h-screen py-2">
