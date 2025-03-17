@@ -56,9 +56,10 @@ export async function signup(state: FormState, formData: FormData) {
         firstName,
         lastName,
         email,
-        role: Role["USER"],
+        role: Role.USER,
         password: hashedPassword,
       },
+      select: { id: true, email: true, role: true },
     });
 
     if (!newUser?.id) {
@@ -66,7 +67,7 @@ export async function signup(state: FormState, formData: FormData) {
     }
 
     // Create JWT session
-    await createSession(newUser.id, newUser.role);
+    await createSession(newUser.id, newUser.email, newUser.role);
 
     // Return success status
     return {
