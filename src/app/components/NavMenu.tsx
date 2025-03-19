@@ -48,7 +48,7 @@ export default function NavMenu() {
         </Link>
 
         {/* Search input  */}
-        <div className="flex-grow flex justify-center">
+        <div className="ml-24 flex-grow flex justify-center">
           <div className="flex-grow max-w-xl">
             <SearchInput />
           </div>
@@ -61,7 +61,7 @@ export default function NavMenu() {
             className={`flex-nowrap cursor-pointer ${
               pathname === "/add-resource"
                 ? "text-white bg-blue-500 hover:bg-blue-600"
-                : "font-bold text-lg text-black-500"
+                : "font-bold bg-orange-500 hover:bg-orange-600 text-lg text-white"
             } font-medium rounded-lg text-sm px-5 py-2`}
           >
             Add Resource ➕

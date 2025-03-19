@@ -19,7 +19,7 @@ export default function Home() {
     <div className="flex h-[calc(100vh-90px)] text-black p-1">
       {/* Left: Filter Section */}
       <aside className="w-[20%] pl-4 bg-white shadow-md flex flex-col min-h-0 mb-4">
-        <h2 className="text-lg text-center font-bold text-white bg-green-500 mb-2 sticky top-0 z-10 p-2 shadow">
+        <h2 className="text-lg text-center font-bold text-white bg-amber-500 mb-2 sticky top-0 z-10 p-2 shadow">
           FILTERS
         </h2>
         <ResourceFilter

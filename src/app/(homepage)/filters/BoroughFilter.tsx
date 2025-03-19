@@ -39,7 +39,7 @@ export default function BoroughFilter({
   return (
     <div className="p-4 border rounded-md text-black mt-4">
       <div className="flex items-center mb-1 justify-center">
-        <h3 className="text-green-500 font-bold mb-2 mr-3"> NYC Borough </h3>
+        <h3 className="text-amber-600 font-bold mb-2 mr-3"> NYC Borough </h3>
         <span className="mx-2 border-l border-gray-300 h-6 ml-4" />
 
         <button

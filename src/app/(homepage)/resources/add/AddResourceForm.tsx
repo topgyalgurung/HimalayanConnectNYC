@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { addResource, getCategories } from "@/app/actions/forms";
 import { CldUploadWidget } from "next-cloudinary";
 
@@ -11,6 +12,7 @@ export default function AddResourceForm({ user }: any) {
     []
   );
   const [imageUrl, setImageUrl] = useState<string | null>(null); // State to hold the image URL
+  const router = useRouter();
 
   // Fetch categories from the server action
   useEffect(() => {
@@ -42,6 +44,7 @@ export default function AddResourceForm({ user }: any) {
       if (result.success) {
         setMessage(result.success);
         setImageUrl(null); // reset image url after successful submission
+        router.push("/profile"); // '/profile/$user.id}
       } else {
         setMessage(result.error || "Failed to add resource.");
       }
