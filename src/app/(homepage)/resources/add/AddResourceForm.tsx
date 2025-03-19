@@ -1,57 +1,72 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
+import { addResource, getCategories } from "@/app/actions/forms";
+import { CldUploadWidget } from "next-cloudinary";
 
 export default function AddResourceForm({ user }: any) {
-  const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
-  const updateResource = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const [loading, setLoading] = useState(false);
+  const [categories, setCategories] = useState<{ id: number; name: string }[]>(
+    []
+  );
+  const [imageUrl, setImageUrl] = useState<string | null>(null); // State to hold the image URL
 
-    const formData = new FormData(e.currentTarget);
-
-    setLoading(true);
-    setMessage("");
-
-    const body = {
-      name: formData.get("name"),
-      address: formData.get("address"),
-    };
-
-    setLoading(true);
-    setMessage("");
-
-    try {
-      const response = await fetch("/api/resources/add", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json", // ensure request is sent as json
-        },
-        body: JSON.stringify(body), // send request body as JSON
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        setMessage("Resource submitted successfully!");
-      } else {
-        setMessage("Submission failed: " + data.message);
-      }
-    } catch (error: any) {
-      setMessage("Submission error: " + error.message);
+  // Fetch categories from the server action
+  useEffect(() => {
+    async function fetchCategories() {
+      const data = await getCategories();
+      setCategories(data);
     }
+    fetchCategories();
+  }, []);
 
-    setLoading(false);
+  function handleUploadSuccess(result: any) {
+    const url = result?.info?.secure_url;
+    if (url) {
+      setImageUrl(url);
+      console.log("image url: ", url); // Use 'image' to match addResource
+    }
+  }
+
+  const handleFormAction = async (formData: FormData) => {
+    setLoading(true);
+    setMessage("");
+    // Append the image URL to the FormData with the key 'image' (matching server action)
+    if (imageUrl) {
+      formData.append("image", imageUrl);
+    }
+    try {
+      const result = await addResource(formData);
+      setLoading(false);
+      if (result.success) {
+        setMessage(result.success);
+        setImageUrl(null); // reset image url after successful submission
+      } else {
+        setMessage(result.error || "Failed to add resource.");
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      setMessage("An error occurred while submitting the form.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white shadow-lg rounded-md">
       <h2 className="text-2xl font-bold mb-4">Add a New Resource</h2>
-
+      <h4>Provide some information about this place</h4>
       {message && (
-        <p className="text-sm text-center text-green-500">{message}</p>
+        <p
+          className={`text-sm text-center ${
+            message.includes("success") ? "text-green-500" : "text-red-500"
+          }`}
+        >
+          {message}
+        </p>
       )}
-
-      <form onSubmit={updateResource} className="space-y-4">
+      <form action={handleFormAction} className="space-y-4">
         <input
           type="text"
           name="name"
@@ -60,18 +75,18 @@ export default function AddResourceForm({ user }: any) {
           className="w-full p-2 border rounded"
         />
 
-        {/* <select
-          name="category"
-          value={formData.category}
-          onChange={handleChange}
+        <select
+          name="categoryId"
           required
           className="w-full p-2 border rounded"
         >
-          <option value="">Select Category</option>
-          <option value="Health">Health</option>
-          <option value="Legal">Legal</option>
-          <option value="Community">Community</option>
-        </select> */}
+          <option value="">Select a category</option>
+          {categories.map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.name}
+            </option>
+          ))}
+        </select>
 
         <input
           type="text"
@@ -80,54 +95,81 @@ export default function AddResourceForm({ user }: any) {
           required
           className="w-full p-2 border rounded"
         />
-        {/* 
+        <input
+          type="text"
+          name="city"
+          placeholder="City"
+          className="w-full p-2 border rounded"
+        />
+        <input
+          type="text"
+          name="openDays"
+          placeholder="Open Days (e.g., Mon-Fri)"
+          className="w-full p-2 border rounded"
+        />
+        <input
+          type="time"
+          name="openTime"
+          placeholder="opening time"
+          className="w-full p-2 border rounded"
+        />
+        <input
+          type="time"
+          name="closeTime"
+          placeholder="closing time"
+          className="w-full p-2 border rounded"
+        />
+
         <input
           type="tel"
           name="phone"
           placeholder="Phone Number"
-          value={formData.phone}
-          onChange={handleChange}
           className="w-full p-2 border rounded"
         />
 
         <input
           type="url"
-          name="website"
+          name="url"
           placeholder="Website"
-          value={formData.website}
-          onChange={handleChange}
-          className="w-full p-2 border rounded"
-        />
-
-        <input
-          type="time"
-          name="openingTime"
-          value={formData.openingTime}
-          onChange={handleChange}
           className="w-full p-2 border rounded"
         />
         <input
-          type="time"
-          name="closingTime"
-          value={formData.closingTime}
-          onChange={handleChange}
+          type="url"
+          name="facebookLink"
+          placeholder="Facebook Link"
           className="w-full p-2 border rounded"
         />
 
         <textarea
           name="description"
           placeholder="Description"
-          value={formData.description}
-          onChange={handleChange}
           className="w-full p-2 border rounded"
         />
 
-        <input
-          type="file"
-          name="image"
-          onChange={handleFileChange}
-          className="w-full p-2 border rounded"
-        /> */}
+        {/* Cloudinary image upload widget */}
+        {imageUrl && <input type="hidden" name="image" value={imageUrl} />}
+        <CldUploadWidget
+          signatureEndpoint="/api/sign-image"
+          options={{ sources: ["local", "url"] }}
+          onSuccess={handleUploadSuccess}
+        >
+          {({ open }) => (
+            <button
+              type="button"
+              className="bg-indigo-500 rounded py-2 px-4 mb-4 text-white"
+              onClick={() => open()}
+            >
+              Upload an Image
+            </button>
+          )}
+        </CldUploadWidget>
+
+        {/* Display the uploaded image URL (optional) */}
+        {/* {imageUrl && (
+          <div className="mt-2">
+            <p className="text-sm">Uploaded Image: {imageUrl}</p>
+          </div>
+        )} */}
 
         <button
           type="submit"

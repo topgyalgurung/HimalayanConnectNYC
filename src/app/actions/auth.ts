@@ -6,6 +6,10 @@ import {
   LoginFormState,
 } from "@/app/lib/definitions";
 
+// login
+// signup
+// logout 
+
 import { createSession, deleteSession } from "@/app/lib/session";
 import bcrypt from "bcryptjs";
 import prisma from "../lib/prisma";

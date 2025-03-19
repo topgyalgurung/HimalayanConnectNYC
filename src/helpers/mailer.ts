@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import User from 'prisma'
+import User from '@/models/userModel' // need to import user from prisma 
 import bcryptjs from 'bcryptjs'
 
 interface sendEmailParams{

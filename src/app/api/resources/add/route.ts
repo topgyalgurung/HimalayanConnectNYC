@@ -1,5 +1,5 @@
 // add a new resource
-// •	This allows you to handle file uploads and save image URLs to the database
+// This allows you to handle file uploads and save image URLs to the database
 // import { v2 as cloudinary } from "cloudinary";
 
 import prisma from "@/app/lib/prisma"; // Adjust path
@@ -18,7 +18,7 @@ export async function POST(request: NextRequest, response:NextResponse) {
   const currentUserId = session?.userId!;
 
   try {
-      // acess req body to get data  submitted on form 
+      // access req body to get data submitted on form 
     const data = await request.json();
     
     // check where createdbyid equals currentuseiD 
@@ -30,7 +30,7 @@ export async function POST(request: NextRequest, response:NextResponse) {
         },
         
     });
-    return NextResponse.json(resource, { status: 201 })
+    return NextResponse.json({ message: "Resource added successfully" ,resource , status: 201 })
   } catch (error:any) {
     return NextResponse.json({ error: "Failed to save resource" }, {status:500});
     }
