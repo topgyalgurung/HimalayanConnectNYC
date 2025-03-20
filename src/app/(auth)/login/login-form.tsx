@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/app/context/UserProvider";
+import { SignIn } from "@/app/components/auth/signin-button";
 
 export default function LoginForm() {
   const { setUser } = useUser(); // Get context
@@ -68,6 +69,9 @@ export default function LoginForm() {
               Login
             </button>
           </form>
+          <div>
+            <SignIn />
+          </div>
           <div className="flex justify-end">
             <Link href="/signup" className="text-right">
               Don't have an account?

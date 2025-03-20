@@ -4,15 +4,18 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import SearchInput from "./SearchInput";
-import { useState } from "react";
+// import { useState } from "react";
 import { useUser } from "../context/UserProvider";
 import { logout } from "../actions/auth";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 
 export default function NavMenu() {
   const pathname = usePathname();
   const router = useRouter();
   const { user, setUser } = useUser();
+  const { data: session, status } = useSession();
   // const [loading, setLoading] = useState(true); // track loading state
 
   // Logout handler
@@ -27,6 +30,8 @@ export default function NavMenu() {
       console.error("Logout failed", error);
     }
   };
+
+  // signout handler google auth
 
   return (
     <header>
@@ -69,10 +74,10 @@ export default function NavMenu() {
         </div>
         {/* Conditional UI based on authentication status */}
         <div className="flex flex-1 items-center justify-end gap-8 ml-4">
-          {/* {loading ? (
+          {/* {status === loading ? (
             <p> Loading... </p>
           ) : */}
-          {user ? (
+          {user || session?.user ? (
             <div className="flex items-center gap-4">
               {/* Profile Image */}
               <Link
@@ -80,7 +85,9 @@ export default function NavMenu() {
                 className="hover:opacity-80 transition-opacity"
               >
                 <Image
-                  src={"/default-avatar.jpg"} // will show image later user.image ||
+                  src={
+                    session?.user?.image || user?.image || "/default-avatar.jpg"
+                  } // will show image later user.image ||
                   alt="User Avatar"
                   width={40}
                   height={40}
@@ -90,7 +97,9 @@ export default function NavMenu() {
 
               {/* Logout Button */}
               <button
-                onClick={handleLogout}
+                onClick={() =>
+                  session?.user ? signOut({ callbackUrl: "/" }) : handleLogout
+                }
                 className="px-4 py-2 text-white bg-red-500 rounded-lg transition-colors hover:bg-red-600"
               >
                 Logout

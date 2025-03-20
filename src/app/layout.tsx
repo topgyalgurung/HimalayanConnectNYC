@@ -6,6 +6,8 @@ import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import NavMenu from "./components/NavMenu";
 import { UserProvider } from "./context/UserProvider";
+import { SessionProvider } from "next-auth/react";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -23,13 +25,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   // const user = await getUser();
+  // Fetch the session to pass into SessionProvider
+
   return (
     <html lang="en" data-theme="winter">
       <body className={`${inter.className} overflow-hidden `}>
         <UserProvider>
-          <NavMenu />
-          <Toaster position="bottom-center" toastOptions={{ duration: 5000 }} />
-          <main className="flex-grow">{children}</main>
+          <SessionProvider>
+            <NavMenu />
+            <Toaster
+              position="bottom-center"
+              toastOptions={{ duration: 5000 }}
+            />
+            <main className="flex-grow">{children}</main>
+          </SessionProvider>
         </UserProvider>
         {/* <footer className="bg-slate-900 text-white p-4 text-center shadow-md h-[60px] flex-none">
           © Himalayan Connect NYC
