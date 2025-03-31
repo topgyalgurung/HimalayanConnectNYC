@@ -4,15 +4,20 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import SearchInput from "./SearchInput";
-import { useState } from "react";
+// import { useState } from "react";
 import { useUser } from "../context/UserProvider";
 import { logout } from "../actions/auth";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
+
+import Button from "@mui/material/Button";
 
 export default function NavMenu() {
   const pathname = usePathname();
   const router = useRouter();
   const { user, setUser } = useUser();
+  const { data: session, status } = useSession();
   // const [loading, setLoading] = useState(true); // track loading state
 
   // Logout handler
@@ -27,6 +32,8 @@ export default function NavMenu() {
       console.error("Logout failed", error);
     }
   };
+
+  // signout handler google auth
 
   return (
     <header>
@@ -55,24 +62,26 @@ export default function NavMenu() {
         </div>
 
         {/* add resource  */}
-        <div className="flex flex-1 items-center justify-end gap-8 ml-4">
+        <Button
+          variant="contained"
+          className="flex flex-1 items-center justify-end gap-4 ml-4 capitalize"
+        >
           <Link
             href="/resources/add"
-            className={`flex-nowrap cursor-pointer ${
-              pathname === "/add-resource"
-                ? "text-white bg-blue-500 hover:bg-blue-600"
-                : "font-bold bg-orange-500 hover:bg-orange-600 text-lg text-white"
-            } font-medium rounded-lg text-sm px-5 py-2`}
+            className={`flex items-center px-1 py-1 rounded-lg text-sm font-semibold transition-all 
+          ${pathname === "/add-resource" ? "text-red-400" : "text-white"}
+        `}
           >
             Add Resource ➕
           </Link>
-        </div>
+        </Button>
+
         {/* Conditional UI based on authentication status */}
         <div className="flex flex-1 items-center justify-end gap-8 ml-4">
-          {/* {loading ? (
+          {/* {status === loading ? (
             <p> Loading... </p>
           ) : */}
-          {user ? (
+          {user || session?.user ? (
             <div className="flex items-center gap-4">
               {/* Profile Image */}
               <Link
@@ -80,7 +89,9 @@ export default function NavMenu() {
                 className="hover:opacity-80 transition-opacity"
               >
                 <Image
-                  src={"/default-avatar.jpg"} // will show image later user.image ||
+                  src={
+                    session?.user?.image || user?.image || "/default-avatar.jpg"
+                  } // will show image later user.image ||
                   alt="User Avatar"
                   width={40}
                   height={40}
@@ -90,7 +101,9 @@ export default function NavMenu() {
 
               {/* Logout Button */}
               <button
-                onClick={handleLogout}
+                onClick={() =>
+                  session?.user ? signOut({ callbackUrl: "/" }) : handleLogout
+                }
                 className="px-4 py-2 text-white bg-red-500 rounded-lg transition-colors hover:bg-red-600"
               >
                 Logout

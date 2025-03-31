@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/app/context/UserProvider";
+import { SignIn } from "@/app/components/auth/signin-button";
 
 export default function LoginForm() {
   const { setUser } = useUser(); // Get context
@@ -24,10 +25,14 @@ export default function LoginForm() {
   return (
     <div className="flex flex-col items-center justify-start min-h-screen py-2">
       <div className="w-1/3 h-1/2 bg-slate-100 p-6 rounded-lg shadow-lg mt-10">
-        <h1 className="text-left text-black text-3xl">Login</h1>
+        <h1 className="text-left text-black text-3xl">Login to your account</h1>
         <hr />
         <br />
         <section>
+          {/* <div>
+            <SignIn />
+          </div> */}
+          {/* <div>OR</div> */}
           <form action={action}>
             <input
               type="email"
@@ -68,10 +73,15 @@ export default function LoginForm() {
               Login
             </button>
           </form>
-          <div className="flex justify-end">
-            <Link href="/signup" className="text-right">
-              Don't have an account?
-            </Link>
+          <div>
+            {/* <div>
+              <SignIn />
+            </div> */}
+            <div className="flex justify-end">
+              <Link href="/signup" className="text-right">
+                Don't have an account? Register
+              </Link>
+            </div>
           </div>
         </section>
       </div>
