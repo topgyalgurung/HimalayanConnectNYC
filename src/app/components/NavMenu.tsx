@@ -11,6 +11,8 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
 
+import Button from "@mui/material/Button";
+
 export default function NavMenu() {
   const pathname = usePathname();
   const router = useRouter();
@@ -60,18 +62,20 @@ export default function NavMenu() {
         </div>
 
         {/* add resource  */}
-        <div className="flex flex-1 items-center justify-end gap-8 ml-4">
+        <Button
+          variant="contained"
+          className="flex flex-1 items-center justify-end gap-4 ml-4 capitalize"
+        >
           <Link
             href="/resources/add"
-            className={`flex-nowrap cursor-pointer ${
-              pathname === "/add-resource"
-                ? "text-white bg-blue-500 hover:bg-blue-600"
-                : "font-bold bg-orange-500 hover:bg-orange-600 text-lg text-white"
-            } font-medium rounded-lg text-sm px-5 py-2`}
+            className={`flex items-center px-1 py-1 rounded-lg text-sm font-semibold transition-all 
+          ${pathname === "/add-resource" ? "text-red-400" : "text-white"}
+        `}
           >
             Add Resource ➕
           </Link>
-        </div>
+        </Button>
+
         {/* Conditional UI based on authentication status */}
         <div className="flex flex-1 items-center justify-end gap-8 ml-4">
           {/* {status === loading ? (

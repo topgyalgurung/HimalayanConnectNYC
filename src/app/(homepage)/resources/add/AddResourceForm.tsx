@@ -98,6 +98,7 @@ export default function AddResourceForm({ user }: any) {
           required
           className="w-full p-2 border rounded"
         />
+        {/* optional  */}
         <input
           type="text"
           name="city"
