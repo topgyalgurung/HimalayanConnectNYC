@@ -2,7 +2,11 @@ import Image from "next/image";
 import { logout } from "../actions/auth";
 import { useRouter } from "next/navigation";
 
+// import {getUser} from '@/auth'
+// import cookies from 'next/headers'
+
 export default function AdminDashboard() {
+  // const user = getUser(await cookies())
   const router = useRouter();
   const handleLogout = async () => {
     try {

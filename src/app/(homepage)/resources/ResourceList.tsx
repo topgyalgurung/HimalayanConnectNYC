@@ -10,6 +10,7 @@ interface ResourceListProps {
   selectedBoroughs: string[];
   setFilteredResources: (resources: Resource[]) => void; // Add setter for filtered resources
   filteredResources: Resource[]; // Add filteredResources prop
+  onViewDetails: (resource: Resource) => void;
   // setLocations: (locations: { latitude: number; longitude: number }[]) => void;
 }
 
@@ -18,6 +19,7 @@ export default function ResourceList({
   selectedBoroughs,
   setFilteredResources,
   filteredResources, // Use the passed filteredResources
+  onViewDetails,
 }: ResourceListProps) {
   const searchParams = useSearchParams(); // access search params from url /resources?query=name
   const searchQuery = searchParams.get("query")?.toLowerCase() || ""; // Get query from URL and convert to lowercase
@@ -70,9 +72,10 @@ export default function ResourceList({
   return (
     <div className="flex flex-col h-full">
       {/* Display the filtered resources using the ResourceCard component */}
-      <ResourceCard resources={filteredResources} />
+      <ResourceCard
+        resources={filteredResources}
+        onViewDetails={onViewDetails}
+      />
     </div>
   );
 }
-
-

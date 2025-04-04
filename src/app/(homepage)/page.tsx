@@ -14,6 +14,9 @@ export default function Home() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedBoroughs, setSelectedBoroughs] = useState<string[]>([]);
   const [filteredResources, setFilteredResources] = useState<Resource[]>([]); // storing filtered resources based on the search query
+  const [selectedResource, setSelectedResource] = useState<Resource | null>(
+    null
+  );
 
   return (
     <div className="flex h-[calc(100vh-90px)] text-black p-1">
@@ -43,6 +46,7 @@ export default function Home() {
             selectedBoroughs={selectedBoroughs}
             setFilteredResources={setFilteredResources}
             filteredResources={filteredResources}
+            onViewDetails={setSelectedResource}
           />
         </main>
       </aside>
@@ -51,6 +55,17 @@ export default function Home() {
       <aside className="w-[50%] bg-white shadow-md pl-4 flex flex-col h-full border-2 border-gray-300 ">
         <div className="flex-1 relative border border-gray-400 rounded-lg overflow-hidden">
           <MapView resources={filteredResources} />
+          {selectedResource && (
+            <div>
+              <div>
+                <h2>{selectedResource.name}</h2>
+                <button onClick={() => setSelectedResource(null)}>Close</button>
+              </div>
+              <p>{selectedResource.description}</p>
+              <p> {selectedResource.city}</p>
+              {/* more details */}
+            </div>
+          )}
         </div>
       </aside>
     </div>

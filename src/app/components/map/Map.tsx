@@ -22,7 +22,9 @@ interface MapViewProps {
 }
 
 export default function MapView({ resources }: MapViewProps) {
-  const [selectedResource, setSelectedResource] = useState<Resource | null>(null);
+  const [selectedResource, setSelectedResource] = useState<Resource | null>(
+    null
+  );
 
   return (
     <div className="h-full w-full relative">
@@ -35,16 +37,17 @@ export default function MapView({ resources }: MapViewProps) {
           disableDefaultUI={true}
           mapId={process.env.NEXT_PUBLIC_MAP_ID ?? ""}
         >
-          <Markers 
-            points={resources} 
-            onSelectResource={setSelectedResource}
-          />
+          <Markers points={resources} onSelectResource={setSelectedResource} />
         </Map>
       </APIProvider>
-      <ResourceDetailsCard 
-        resource={selectedResource} 
-        onCloseAction={() => setSelectedResource(null)} 
-      />
+      {selectedResource && (
+        <div>
+          <ResourceDetailsCard
+            resource={selectedResource}
+            onCloseAction={() => setSelectedResource(null)}
+          />
+        </div>
+      )}
     </div>
   );
 }

@@ -4,7 +4,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import SearchInput from "./SearchInput";
-// import { useState } from "react";
 import { useUser } from "../context/UserProvider";
 import { logout } from "../actions/auth";
 import { useRouter } from "next/navigation";
