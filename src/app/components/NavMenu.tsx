@@ -10,14 +10,14 @@ import { logout } from "../actions/auth";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
-
-import Button from "@mui/material/Button";
+import * as React from "react";
+import { Button } from "@mui/material";
 
 export default function NavMenu() {
   const pathname = usePathname();
   const router = useRouter();
   const { user, setUser } = useUser();
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   // const [loading, setLoading] = useState(true); // track loading state
 
   // Logout handler
@@ -37,6 +37,9 @@ export default function NavMenu() {
 
   return (
     <header>
+      {/* <AppBar position="static">
+        <Container maxWidth="xl">
+          <Toolbar disableGutters> */}
       <nav className="flex items-center justify-between p-2 bg-white shadow-md flex-wrap border-b-1 w-full">
         {/* Logo */}
         <Link
@@ -77,6 +80,7 @@ export default function NavMenu() {
         </Button>
 
         {/* Conditional UI based on authentication status */}
+
         <div className="flex flex-1 items-center justify-end gap-8 ml-4">
           {/* {status === loading ? (
             <p> Loading... </p>
@@ -84,20 +88,20 @@ export default function NavMenu() {
           {user || session?.user ? (
             <div className="flex items-center gap-4">
               {/* Profile Image */}
-              <Link
-                href="/profile"
-                className="hover:opacity-80 transition-opacity"
-              >
-                <Image
-                  src={
-                    session?.user?.image || user?.image || "/default-avatar.jpg"
-                  } // will show image later user.image ||
-                  alt="User Avatar"
-                  width={40}
-                  height={40}
-                  className="rounded-full"
-                />
-              </Link>
+              {/* <Link
+                      href="/profile"
+                      className="hover:opacity-80 transition-opacity"
+                    > */}
+              <Image
+                src={
+                  session?.user?.image || user?.image || "/default-avatar.jpg"
+                } // will show image later user.image ||
+                alt="User Avatar"
+                width={40}
+                height={40}
+                className="rounded-full"
+              />
+              {/* </Link> */}
 
               {/* Logout Button */}
               <button
