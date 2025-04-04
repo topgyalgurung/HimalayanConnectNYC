@@ -4,6 +4,10 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { addResource, getCategories } from "@/app/actions/forms";
 import { CldUploadWidget } from "next-cloudinary";
+import Accordion from "@mui/material/Accordion";
+import { AccordionSummary, Typography } from "@mui/material";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 export default function AddResourceForm({ user }: any) {
   const [message, setMessage] = useState("");
@@ -99,74 +103,88 @@ export default function AddResourceForm({ user }: any) {
           className="w-full p-2 border rounded"
         />
         {/* optional  */}
-        <input
-          type="text"
-          name="city"
-          placeholder="City"
-          className="w-full p-2 border rounded"
-        />
-        <input
-          type="text"
-          name="openDays"
-          placeholder="Open Days (e.g., Mon-Fri)"
-          className="w-full p-2 border rounded"
-        />
-        <input
-          type="time"
-          name="openTime"
-          placeholder="opening time"
-          className="w-full p-2 border rounded"
-        />
-        <input
-          type="time"
-          name="closeTime"
-          placeholder="closing time"
-          className="w-full p-2 border rounded"
-        />
+        <Accordion>
+          <AccordionSummary
+            expandIcon={<ArrowDropDownIcon />}
+            aria-controls="optional-content"
+            id="optional-content"
+          >
+            <Typography component="span"> Add more details</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Typography>
+              Add phone, hours, website, photos to verify this place{" "}
+            </Typography>
+            <input
+              type="text"
+              name="city"
+              placeholder="City"
+              className="w-full p-2 border rounded"
+            />
+            <input
+              type="text"
+              name="openDays"
+              placeholder="Open Days (e.g., Mon-Fri)"
+              className="w-full p-2 border rounded"
+            />
+            <input
+              type="time"
+              name="openTime"
+              placeholder="opening time"
+              className="w-full p-2 border rounded"
+            />
+            <input
+              type="time"
+              name="closeTime"
+              placeholder="closing time"
+              className="w-full p-2 border rounded"
+            />
 
-        <input
-          type="tel"
-          name="phone"
-          placeholder="Phone Number"
-          className="w-full p-2 border rounded"
-        />
+            <input
+              type="tel"
+              name="phone"
+              placeholder="Phone Number"
+              className="w-full p-2 border rounded"
+            />
 
-        <input
-          type="url"
-          name="url"
-          placeholder="Website"
-          className="w-full p-2 border rounded"
-        />
-        <input
-          type="url"
-          name="facebookLink"
-          placeholder="Facebook Link"
-          className="w-full p-2 border rounded"
-        />
+            <input
+              type="url"
+              name="url"
+              placeholder="Website"
+              className="w-full p-2 border rounded"
+            />
+            <input
+              type="url"
+              name="facebookLink"
+              placeholder="Facebook Link"
+              className="w-full p-2 border rounded"
+            />
 
-        <textarea
-          name="description"
-          placeholder="Description"
-          className="w-full p-2 border rounded"
-        />
+            <textarea
+              name="description"
+              placeholder="Description"
+              className="w-full p-2 border rounded"
+            />
 
-        {/* Cloudinary image upload widget */}
-        {imageUrl && <input type="hidden" name="image" value={imageUrl} />}
-        <CldUploadWidget
-          signatureEndpoint="/api/sign-image"
-          options={{ sources: ["local", "url"] }}
-          onSuccess={handleUploadSuccess}
-        >
-          {({ open }) => (
-            <button
-              type="button"
-              className="bg-indigo-500 rounded py-2 px-4 mb-4 text-white"
-              onClick={() => open()}
+            {/* Cloudinary image upload widget */}
+            {imageUrl && <input type="hidden" name="image" value={imageUrl} />}
+            <CldUploadWidget
+              signatureEndpoint="/api/sign-image"
+              options={{ sources: ["local", "url"] }}
+              onSuccess={handleUploadSuccess}
             >
-              Upload an Image
-            </button>
-          )}
-        </CldUploadWidget>
+              {({ open }) => (
+                <button
+                  type="button"
+                  className="bg-indigo-500 rounded py-2 px-4 mb-4 text-white"
+                  onClick={() => open()}
+                >
+                  Upload an Image
+                </button>
+              )}
+            </CldUploadWidget>
+          </AccordionDetails>
+        </Accordion>
 
         {/* Display the uploaded image URL (optional) */}
         {/* {imageUrl && (
