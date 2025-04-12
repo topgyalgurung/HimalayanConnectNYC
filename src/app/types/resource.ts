@@ -15,4 +15,5 @@ export type Resource = {
   closeTime: string;
   ResourceCategory?: { name: string } | null;
   Location: Location[];
+  status: string;
 };
