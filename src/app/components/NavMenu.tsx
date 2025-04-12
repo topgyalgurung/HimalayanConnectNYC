@@ -1,15 +1,18 @@
 "use client";
 
+import * as React from "react";
+
 import Link from "next/link";
 import Image from "next/image";
+
 import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import SearchInput from "./SearchInput";
 import { useUser } from "../context/UserProvider";
 import { logout } from "../actions/auth";
-import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
-import * as React from "react";
+
 import { Button } from "@mui/material";
 
 export default function NavMenu() {

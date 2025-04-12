@@ -123,10 +123,8 @@ export default function AdminDashboard() {
         <div className="w-full md:w-2/3 p-4">
           <div className="bg-white shadow-lg rounded-lg p-6">
             <h2 className="text-2xl font-bold mb-4">Dashboard</h2>
-            <p className="text-gray-600">
-              Welcome to your dashboard! Here you can manage your resources and
-              account settings.
-            </p>
+            <p className="text-gray-600">Manage your resources</p>
+
             {/* More dashboard content here */}
             <div className=" flex space-x-4 mb-4">
               <button
