@@ -14,13 +14,13 @@ interface ResourceListProps {
   // setLocations: (locations: { latitude: number; longitude: number }[]) => void;
 }
 
-export default function ResourceList({
+const ResourceList = ({
   selectedCategories,
   selectedBoroughs,
   setFilteredResources,
-  filteredResources, // Use the passed filteredResources
   onViewDetails,
-}: ResourceListProps) {
+  filteredResources, // Use the passed filteredResources
+}: ResourceListProps) => {
   const searchParams = useSearchParams(); // access search params from url /resources?query=name
   const searchQuery = searchParams.get("query")?.toLowerCase() || ""; // Get query from URL and convert to lowercase
 
@@ -78,4 +78,6 @@ export default function ResourceList({
       />
     </div>
   );
-}
+};
+
+export default ResourceList;

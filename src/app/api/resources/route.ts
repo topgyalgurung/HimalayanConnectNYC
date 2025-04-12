@@ -11,7 +11,7 @@ export const dynamic = 'force-dynamic'
 export async function GET() {
     try {
         const resources = await prisma.resource.findMany({
-            include: {
+          include: {
                 ResourceCategory: {
                     select: {name:true},
                 },
@@ -20,7 +20,8 @@ export async function GET() {
                         id: true,
                         resourceId:true,
                         latitude: true,
-                        longitude:true
+                        longitude: true,
+                        
                     }
                 },
             }

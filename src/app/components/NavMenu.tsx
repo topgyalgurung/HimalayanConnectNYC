@@ -1,15 +1,18 @@
 "use client";
 
+import * as React from "react";
+
 import Link from "next/link";
 import Image from "next/image";
+
 import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import SearchInput from "./SearchInput";
 import { useUser } from "../context/UserProvider";
 import { logout } from "../actions/auth";
-import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
-import * as React from "react";
+
 import { Button } from "@mui/material";
 
 export default function NavMenu() {
@@ -87,25 +90,25 @@ export default function NavMenu() {
           {user || session?.user ? (
             <div className="flex items-center gap-4">
               {/* Profile Image */}
-              {/* <Link
-                      href="/profile"
-                      className="hover:opacity-80 transition-opacity"
-                    > */}
-              <Image
-                src={
-                  session?.user?.image || user?.image || "/default-avatar.jpg"
-                } // will show image later user.image ||
-                alt="User Avatar"
-                width={40}
-                height={40}
-                className="rounded-full"
-              />
-              {/* </Link> */}
+              <Link
+                href="/profile"
+                className="hover:opacity-80 transition-opacity"
+              >
+                <Image
+                  src={
+                    session?.user?.image || user?.image || "/default-avatar.jpg"
+                  } // will show image later user.image ||
+                  alt="User Avatar"
+                  width={40}
+                  height={40}
+                  className="rounded-full"
+                />
+              </Link>
 
               {/* Logout Button */}
               <button
                 onClick={() =>
-                  session?.user ? signOut({ callbackUrl: "/" }) : handleLogout
+                  session?.user ? signOut({ callbackUrl: "/" }) : handleLogout()
                 }
                 className="px-4 py-2 text-white bg-red-500 rounded-lg transition-colors hover:bg-red-600"
               >

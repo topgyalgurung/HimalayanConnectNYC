@@ -19,13 +19,15 @@ import ResourceDetailsCard from "../ResourceDetailsCard";
 
 interface MapViewProps {
   resources: Resource[];
+  selectedResource: Resource | null;
+  onClose: (resource: Resource | null) => void;
 }
 
-export default function MapView({ resources }: MapViewProps) {
-  const [selectedResource, setSelectedResource] = useState<Resource | null>(
-    null
-  );
-
+export default function MapView({
+  resources,
+  selectedResource,
+  onClose,
+}: MapViewProps) {
   return (
     <div className="h-full w-full relative">
       <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? ""}>
@@ -37,14 +39,15 @@ export default function MapView({ resources }: MapViewProps) {
           disableDefaultUI={true}
           mapId={process.env.NEXT_PUBLIC_MAP_ID ?? ""}
         >
-          <Markers points={resources} onSelectResource={setSelectedResource} />
+          <Markers points={resources} />
         </Map>
       </APIProvider>
+      {/* show resource detail card on selectedResource */}
       {selectedResource && (
-        <div>
+        <div className="absolute top-0 left-0 h-full w-[400px] z-50 shadow-lg overflow-y-auto">
           <ResourceDetailsCard
             resource={selectedResource}
-            onCloseAction={() => setSelectedResource(null)}
+            onCloseAction={onClose}
           />
         </div>
       )}
@@ -57,10 +60,9 @@ export default function MapView({ resources }: MapViewProps) {
 // type Props = { points: Point[] };
 interface MarkersProps {
   points: Resource[];
-  onSelectResource: (resource: Resource | null) => void;
 }
 
-const Markers = ({ points, onSelectResource }: MarkersProps) => {
+const Markers = ({ points }: MarkersProps) => {
   const [activeMarkerId, setActiveMarkerId] = useState<string | null>(null);
 
   return (
@@ -100,8 +102,8 @@ const Markers = ({ points, onSelectResource }: MarkersProps) => {
         return (
           <div
             key={resource.id}
-            onMouseOver={() => setActiveMarkerId(resource.id)}
-            onMouseOut={() => setActiveMarkerId(null)}
+            onClick={() => setActiveMarkerId(resource.id)}
+            // onMouseOut={() => setActiveMarkerId(null)}
             className="cursor-pointer"
           >
             <AdvancedMarker
@@ -110,7 +112,6 @@ const Markers = ({ points, onSelectResource }: MarkersProps) => {
                 lat: location?.latitude ?? 0,
                 lng: location?.longitude ?? 0,
               }}
-              onClick={() => onSelectResource(resource)}
             >
               {/* customize pin color based on resource category */}
               <Pin
