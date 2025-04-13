@@ -143,7 +143,6 @@ export async function updateSession() {
     })
 }
   
-
 export async function deleteSession() {
     try {
         const cookieStore = await cookies();

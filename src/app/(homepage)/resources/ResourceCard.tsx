@@ -1,34 +1,37 @@
 "use client";
 import Link from "next/link";
 import { format } from "date-fns";
-// import { useEffect, useState } from "react";
 
-type Location = {
-  id: number;
-  latitude: number;
-  longitude: number;
-};
-type Resource = {
-  id: string;
-  name: string;
-  description: string;
-  address: string;
-  city: string;
-  openDays: string;
-  openTime: string;
-  closeTime: string;
-  ResourceCategory?: { name: string } | null;
-  Location: Location[];
-};
+import { type Resource } from "@/app/types/resource";
 
+// type Location = {
+//   id: number;
+//   latitude: number;
+//   longitude: number;
+// };
+// type Resource = {
+//   id: string;
+//   name: string;
+//   description: string;
+//   address: string;
+//   city: string;
+//   openDays: string;
+//   openTime: string;
+//   closeTime: string;
+//   ResourceCategory?: { name: string } | null;
+//   Location: Location[];
+// };
+interface ResourceCardProps {
+  resources: Resource[];
+  onViewDetails?: (resource: Resource) => void;
+  onSuggestEdit?: (resource: Resource) => void;
+}
 // ResourceCard component: Displays a list of resources
 export default function ResourceCard({
   resources,
   onViewDetails,
-}: {
-  resources: Resource[];
-  onViewDetails?: (resource: Resource) => void;
-}) {
+  onSuggestEdit,
+}: ResourceCardProps) {
   // function showDetail() {}
 
   return (
@@ -69,23 +72,26 @@ export default function ResourceCard({
                 ))}
               </p> */}
 
-            {/* view details */}
-
             <div className="pt-4 flex items-center justify-between">
-              {/* update selectedResource in parent passed down to mapview */}
+              {/* view details */}
+
               <button
                 className="text-white py-2 px-3 bg-blue-600 rounded hover:bg-blue-700"
-                onClick={() => onViewDetails(resource)}
+                onClick={() => onViewDetails?.(resource)}
               >
-                {resources?.id === resource.id ? "Close" : "View Details"}
+                View Details
+                {/* {resource?.id === resource.id ? "Close" : "View Details"} */}
               </button>
 
               {/* suggest edit  */}
 
               <div className="text-white py-2 px-3 bg-blue-600 rounded hover:bg-blue-700">
-                <Link href={`/suggestions/edit/${resource.id}`}>
+                <button onClick={() => onSuggestEdit?.(resource)}>
                   Suggest Edit
-                </Link>
+                </button>
+                {/* <Link href={`/suggestions/edit/${resource.id}`}>
+                  Suggest Edit
+                </Link> */}
               </div>
             </div>
           </div>

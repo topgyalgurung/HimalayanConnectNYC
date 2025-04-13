@@ -16,17 +16,22 @@ import {
 import { useState } from "react";
 import type { Resource } from "@/app/types/resource";
 import ResourceDetailsCard from "../ResourceDetailsCard";
+import ResourceSuggestCard from "../ResourceSuggestCard";
 
 interface MapViewProps {
   resources: Resource[];
   selectedResource: Resource | null;
-  onClose: (resource: Resource | null) => void;
+  editResource: Resource | null;
+  onCloseAction: (resource: Resource | null) => void;
+  onEditCloseAction: (resource: Resource | null) => void;
 }
 
 export default function MapView({
   resources,
   selectedResource,
-  onClose,
+  editResource,
+  onCloseAction,
+  onEditCloseAction,
 }: MapViewProps) {
   return (
     <div className="h-full w-full relative">
@@ -47,7 +52,15 @@ export default function MapView({
         <div className="absolute top-0 left-0 h-full w-[400px] z-50 shadow-lg overflow-y-auto">
           <ResourceDetailsCard
             resource={selectedResource}
-            onCloseAction={onClose}
+            onCloseAction={onCloseAction}
+          />
+        </div>
+      )}
+      {editResource && (
+        <div className="absolute top-0 left-0 h-full w-[400px] z-50 shadow-lg overflow-y-auto">
+          <ResourceSuggestCard
+            resource={editResource}
+            onEditCloseAction={onEditCloseAction}
           />
         </div>
       )}

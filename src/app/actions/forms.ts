@@ -18,51 +18,43 @@ export async function getCategories() {
 }
 
 export async function addResource(formData: FormData) {
-  console.log("Received FormData entries: ", Object.fromEntries(formData)); // Debug log
-  try {
-    const name = formData.get("name") as string;
-    const categoryId = formData.get("categoryId")
-      ? parseInt(formData.get("categoryId") as string, 10)
-      : null;
-    const address = formData.get("address") as string;
-    const city = formData.get("city") as string | null;
-    const openDays = formData.get("openDays") as string | null;
-    const openTime = formData.get("openTime")
-      ? new Date(`1970-01-01T${formData.get("openTime")}:00Z`)
-      : null;
-    const closeTime = formData.get("closeTime")
-      ? new Date(`1970-01-01T${formData.get("closeTime")}:00Z`)
-      : null;
-    const phone = formData.get("phone") as string | null;
-    const email = formData.get("email") as string | null;
-    const url = formData.get("url") as string | null;
-    const facebookLink = formData.get("facebookLink") as string | null;
-    const description = formData.get("description") as string | null;
-    const image = formData.get("image") as string | null;
 
-    if (!name || !address ) {
-      return { error: "Name, Address are required" };
+  const data = Object.fromEntries(formData.entries());
+  console.log("Received FormData entries: ", data); // Debug log
+  try {
+    const name = data.name as string;
+    const address = data.address as string;
+    if (!name || !address) {
+      return { error: "Name and Address are required." };
     }
 
-
-    const newResource = await prisma.resource.create({
-      data: {
-        name,
-        address,
-        categoryId,
-        city,
-        openDays,
-        openTime,
-        closeTime,
-        phone,
-        email,
-        url,
-        facebookLink,
-        description,
-        status: "PENDING",
-        imageUrl: image, // Store Cloudinary URL
-      },
-    });
+    const categoryId = data.categoryId
+      ? parseInt(data.categoryId as string, 10)
+      : null;
+    
+      const newResource = await prisma.resource.create({
+        data: {
+          name,
+          address,
+          categoryId,
+          city: data.city as string | null,
+          openDays: data.openDays as string | null,
+          openTime: data.openTime
+            ? new Date(`1970-01-01T${data.openTime}:00Z`)
+            : null,
+          closeTime: data.closeTime
+            ? new Date(`1970-01-01T${data.closeTime}:00Z`)
+            : null,
+          phone: data.phone as string | null,
+          email: data.email as string | null,
+          url: data.url as string | null,
+          facebookLink: data.facebookLink as string | null,
+          description: data.description as string | null,
+          imageUrl: data.image as string | null, // Cloudinary URL if used
+          status: "PENDING",
+        },
+      });
+  
     /**
      * Prisma returns the rating field as a Decimal object (from the @db.Decimal(2, 1) in your schema), 
      * but Next.js Server Actions can only return plain JavaScript objects to Client Components. 

@@ -17,12 +17,25 @@ export default function Home() {
   const [selectedResource, setSelectedResource] = useState<Resource | null>(
     null
   ); // moved to parent from ResourceCard to show details
+  const [editResource, setEditResource] = useState<Resource | null>(null); // for suggest edit
 
   const handleToggleDetails = (resource: Resource) => {
     if (selectedResource?.id === resource.id) {
       setSelectedResource(null); // close if already selected
     } else {
+      // if selecting resourceDetails close editresource card
+      setEditResource(null);
       setSelectedResource(resource); // open if different or closed
+    }
+  };
+
+  const handleSuggestEdit = (resource: Resource) => {
+    if (editResource?.id === resource.id) {
+      setEditResource(null);
+    } else {
+      // if selecting editResourceCard close resourceDetails card
+      setSelectedResource(null);
+      setEditResource(resource);
     }
   };
   return (
@@ -56,6 +69,7 @@ export default function Home() {
             setFilteredResources={setFilteredResources}
             filteredResources={filteredResources}
             onViewDetails={handleToggleDetails} // pass down to resourceList
+            onSuggestEdit={handleSuggestEdit}
           />
         </main>
       </aside>
@@ -66,7 +80,9 @@ export default function Home() {
           <MapView
             resources={filteredResources}
             selectedResource={selectedResource}
-            onClose={() => setSelectedResource(null)}
+            editResource={editResource}
+            onCloseAction={() => setSelectedResource(null)}
+            onEditCloseAction={() => setEditResource(null)}
           />
         </div>
       </aside>
