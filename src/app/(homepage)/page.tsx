@@ -17,30 +17,51 @@ export default function Home() {
   const [selectedResource, setSelectedResource] = useState<Resource | null>(
     null
   ); // moved to parent from ResourceCard to show details
+  const [editResource, setEditResource] = useState<Resource | null>(null); // for suggest edit
 
   const handleToggleDetails = (resource: Resource) => {
     if (selectedResource?.id === resource.id) {
       setSelectedResource(null); // close if already selected
     } else {
+      // if selecting resourceDetails close editresource card
+      setEditResource(null);
       setSelectedResource(resource); // open if different or closed
+    }
+  };
+
+  const handleSuggestEdit = (resource: Resource) => {
+    if (editResource?.id === resource.id) {
+      setEditResource(null);
+    } else {
+      // if selecting editResourceCard close resourceDetails card
+      setSelectedResource(null);
+      setEditResource(resource);
     }
   };
   return (
     <div className="flex h-[calc(100vh-90px)] text-black p-1">
       {/* Left: Filter Section */}
 
-      <aside className="w-[20%] pl-4 bg-white shadow-md flex flex-col min-h-0 mb-4">
-        <h2 className="text-lg text-center font-bold text-white bg-amber-500 mb-2 sticky top-0 z-10 p-2 shadow">
+      <aside className="w-[20%] pl-4 bg-white shadow-md flex flex-col gap-4 overflow-y-auto min-h-0">
+        <h2 className="text-lg text-center font-bold text-black mb-2 sticky top-0 z-10 p-2 shadow bg-white">
           FILTERS
         </h2>
-        <ResourceFilter
-          onFilterChange={setSelectedCategories}
-          selectedCategories={selectedCategories}
-        />
-        <BoroughFilter
-          onFilterChange={setSelectedBoroughs}
-          selectedBoroughs={selectedBoroughs}
-        />
+
+        {/* Resource Filter */}
+        <div className="flex-1">
+          <ResourceFilter
+            onFilterChange={setSelectedCategories}
+            selectedCategories={selectedCategories}
+          />
+        </div>
+
+        {/* Borough Filter */}
+        <div className="flex-1">
+          <BoroughFilter
+            onFilterChange={setSelectedBoroughs}
+            selectedBoroughs={selectedBoroughs}
+          />
+        </div>
       </aside>
 
       {/* Middle: Resource List */}
@@ -56,6 +77,7 @@ export default function Home() {
             setFilteredResources={setFilteredResources}
             filteredResources={filteredResources}
             onViewDetails={handleToggleDetails} // pass down to resourceList
+            onSuggestEdit={handleSuggestEdit}
           />
         </main>
       </aside>
@@ -66,7 +88,9 @@ export default function Home() {
           <MapView
             resources={filteredResources}
             selectedResource={selectedResource}
-            onClose={() => setSelectedResource(null)}
+            editResource={editResource}
+            onCloseAction={() => setSelectedResource(null)}
+            onEditCloseAction={() => setEditResource(null)}
           />
         </div>
       </aside>

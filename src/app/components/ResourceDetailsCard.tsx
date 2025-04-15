@@ -1,7 +1,8 @@
 "use client";
+import * as React from "react";
 
 import { format } from "date-fns";
-import { type Resource } from "../types/resource";
+import { type Resource } from "@/app/types/resource";
 import { useState } from "react";
 
 import { FaFacebook } from "react-icons/fa";
@@ -10,18 +11,27 @@ import { IoLinkSharp } from "react-icons/io5";
 import { MdFavoriteBorder } from "react-icons/md";
 import { IoNavigateCircleOutline } from "react-icons/io5";
 
+import Rating from "@mui/material/Rating";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+
 interface ResourceDetailsCardProps {
   resource: Resource | null;
+  editResource: Resource[];
+  onSuggestEdit?: (resource: Resource) => void;
   onCloseAction: (resource: Resource | null) => void;
 }
 
 export default function ResourceDetailsCard({
   resource,
+  editResource,
+  onSuggestEdit,
   onCloseAction,
 }: ResourceDetailsCardProps) {
   if (!resource) return null;
 
   const [activeTab, setActiveTab] = useState("overview");
+  const [value, setValue] = React.useState<number | null>(5);
 
   return (
     <div className="absolute top-4 right-4 z-50 w-96 bg-white rounded-lg shadow-xl p-6">
@@ -38,7 +48,8 @@ export default function ResourceDetailsCard({
         <p className="text-sm font-medium text-blue-600">
           {resource.ResourceCategory?.name || "No category"}
         </p>
-        <p>{resource.rating}</p>
+        <Rating name="read-only" value={resource.rating} readOnly />
+        {/* <p>{resource.rating}</p> */}
       </div>
 
       {/* Tab Buttons */}
@@ -107,15 +118,38 @@ export default function ResourceDetailsCard({
             {format(resource.openTime, "hh:mm a")} -{" "}
             {format(resource.closeTime, "hh:mm a")}
           </p>
-          <div>
-            <button className=" text-blue-500 text-xl">Suggest Edit</button>
-          </div>
+          {/* suggest edit button */}
+          {/* <div className="text-white py-2 px-3 bg-blue-600 rounded hover:bg-blue-700"> */}
+          {/* NOTE: for now have suggest edit from resource card only, 
+            later implement to have it on ResourceDetailsCard not on ResourceCard on the ResourceList  */}
+
+          {/* {editResource.map((res) => (
+              <button onClick={() => onSuggestEdit?.(res)}>
+                Suggest Edit
+              </button>
+          ))} */}
+          {/* </div> */}
         </div>
       )}
 
       {activeTab === "review" && (
         <div>
-          <p> No reviews yet</p>
+          <Rating name="read-only" value={resource.rating} readOnly />
+          {/* SHOW USER REVIEWS */}
+
+          {/* post review  */}
+          <h2> Submit a review</h2>
+          <Box sx={{ "& > legend": { mt: 2 } }}>
+            <Rating
+              name="simple-controlled"
+              value={value}
+              defaultValue={5}
+              precision={0.5}
+              onClick={(event, newValue) => {
+                setValue(newValue);
+              }}
+            />
+          </Box>
         </div>
       )}
 

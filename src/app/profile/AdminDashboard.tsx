@@ -106,6 +106,7 @@ export default function AdminDashboard() {
                 priority
               />
             </div>
+            {/* show names */}
             <h2 className="text-xl font-bold mb-4">Hello Admin</h2>
 
             <div className="mt-6">

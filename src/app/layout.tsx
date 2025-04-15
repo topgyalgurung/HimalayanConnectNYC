@@ -3,8 +3,9 @@ import { Inter } from "next/font/google";
 
 import "./globals.css";
 
-import { Toaster } from "react-hot-toast";
 import NavMenu from "./components/NavMenu";
+
+import { Toaster } from "react-hot-toast";
 import { UserProvider } from "./context/UserProvider";
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "@mui/material/styles";
@@ -28,7 +29,6 @@ export default function RootLayout({
 }>) {
   // const user = await getUser();
   // Fetch the session to pass into SessionProvider
-
   return (
     <html lang="en" data-theme="winter">
       <head>

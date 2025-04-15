@@ -11,6 +11,7 @@ interface ResourceListProps {
   setFilteredResources: (resources: Resource[]) => void; // Add setter for filtered resources
   filteredResources: Resource[]; // Add filteredResources prop
   onViewDetails: (resource: Resource) => void;
+  onSuggestEdit: (resource: Resource) => void;
   // setLocations: (locations: { latitude: number; longitude: number }[]) => void;
 }
 
@@ -19,6 +20,7 @@ const ResourceList = ({
   selectedBoroughs,
   setFilteredResources,
   onViewDetails,
+  onSuggestEdit,
   filteredResources, // Use the passed filteredResources
 }: ResourceListProps) => {
   const searchParams = useSearchParams(); // access search params from url /resources?query=name
@@ -75,6 +77,7 @@ const ResourceList = ({
       <ResourceCard
         resources={filteredResources}
         onViewDetails={onViewDetails}
+        onSuggestEdit={onSuggestEdit}
       />
     </div>
   );

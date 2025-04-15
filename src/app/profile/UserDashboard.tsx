@@ -1,9 +1,21 @@
 import Image from "next/image";
+import { useState } from "react";
 import { logout } from "../actions/auth";
 import { useRouter } from "next/navigation";
 
+import { useFetchUser } from "../hooks/useFetchUsers";
+
 export default function UserDashboard() {
+  const [activeTab, setActiveTab] = useState("new");
   const router = useRouter();
+  const user = useFetchUser();
+
+  if (!user) return <p>Loading user data...</p>;
+
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+  };
+
   const handleLogout = async () => {
     try {
       await logout();
@@ -32,7 +44,9 @@ export default function UserDashboard() {
                 priority
               />
             </div>
-            <h2 className="text-xl font-bold mb-4">Hello User</h2>
+            <h2 className="text-xl font-bold mb-4">
+              Hello User: {user.firstName}
+            </h2>
 
             <div className="mt-6">
               <button
@@ -52,23 +66,112 @@ export default function UserDashboard() {
             <p className="text-gray-600">
               Welcome to your dashboard! Here you can manage your resources
             </p>
+
             {/* More dashboard content here */}
+            <div className=" flex space-x-4 mb-4">
+              <button
+                className={`px-4 py-2 ${
+                  activeTab === "new" ? "bg-blue-500 text-white" : "bg-gray-200"
+                }`}
+                onClick={() => handleTabChange("new")}
+              >
+                New
+              </button>
+              <button
+                className={`px-4 py-2 ${
+                  activeTab === "suggest"
+                    ? "bg-green-500 text-white"
+                    : "bg-gray-200"
+                }`}
+                onClick={() => handleTabChange("suggest")}
+              >
+                Suggest Edit
+              </button>
+              <button
+                className={`px-4 py-2 ${
+                  activeTab === "reviews"
+                    ? "bg-green-500 text-white"
+                    : "bg-gray-200"
+                }`}
+                onClick={() => handleTabChange("reviews")}
+              >
+                Reviews
+              </button>
+              <button
+                className={`px-4 py-2 ${
+                  activeTab === "likes"
+                    ? "bg-green-500 text-white"
+                    : "bg-gray-200"
+                }`}
+                onClick={() => handleTabChange("likes")}
+              >
+                Favorites
+              </button>
+            </div>
 
-            <div className="flex flex-row space-x-6">
-              <div className="flex flex-row items-center">
-                <h3 className="text-xl font-semibold">Reviews</h3>
-                {/* Add content here for reviews */}
-              </div>
+            {/* Add content here for submissions */}
+            <div className="overflow-x-auto">
+              <table className="min-w-full border-collapse">
+                <thead>
+                  <tr className="bg-gray-100">
+                    <th className="px-6 py-3 border-b text-left text-xl font-semibold">
+                      Index
+                    </th>
+                    <th className="px-6 py-3 border-b text-left text-xl font-semibold">
+                      Details
+                    </th>
+                    <th className="px-6 py-3 border-b text-left text-xl font-semibold">
+                      Status
+                    </th>
+                    <th className="px-6 py-3 border-b text-left text-xl font-semibold">
+                      Edit
+                    </th>
+                  </tr>
+                  <tbody>
+                    {/* Resources submitted by user */}
 
-              <div className="flex flex-row items-center">
-                <h3 className="text-xl font-semibold">Likes</h3>
-                {/* Add content here for likes */}
-              </div>
+                    {activeTab === "new" &&
+                      (user.resources.length === 0 ? (
+                        <p>No resources submitted yet.</p>
+                      ) : (
+                        user.resources.map((res, index) => (
+                          <tr
+                            key={res.id}
+                            className="border-b hover:bg-gray-50"
+                          >
+                            <td className="px6 py-4">{index + 1}</td>
+                            <td>{res.name}</td>
+                            <td className="text-sm text-gray-600">
+                              {res.status}
+                            </td>
+                            <td>Edit</td>
+                          </tr>
+                        ))
+                      ))}
 
-              <div className="flex flex-row items-center">
-                <h3 className="text-xl font-semibold">Submissions</h3>
-                {/* Add content here for submissions */}
-              </div>
+                    {/* Edit suggestions by user */}
+                    {activeTab === "suggest" &&
+                      (user.ResourceEditSuggestion.length === 0 ? (
+                        <p>No edit suggestions submitted yet.</p>
+                      ) : (
+                        user.ResourceEditSuggestion.map((edit, index) => (
+                          <tr key={edit.id}>
+                            <td>{index + 1} </td>
+                            <td>{edit.name}</td>
+                            <span className="text-sm text-gray-600">
+                              {edit.status}
+                            </span>
+                            <td>Edit</td>
+                          </tr>
+                        ))
+                      ))}
+
+                    {/* reviews */}
+
+                    {/* favorites */}
+                  </tbody>
+                </thead>
+              </table>
             </div>
           </div>
         </div>

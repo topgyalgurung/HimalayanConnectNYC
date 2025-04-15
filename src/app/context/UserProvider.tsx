@@ -1,3 +1,5 @@
+// client side session management
+// wraps app and stores  user session data on the client
 "use client";
 
 import { createContext, useContext, useState, useEffect } from "react";
