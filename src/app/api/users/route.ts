@@ -22,12 +22,14 @@ export async function GET() {
                 image: true,
                 resources: {
                     select: {
+                        id:true,
                         name: true,
                         status: true,
                     }
                 },
                 ResourceEditSuggestion: {
                     select: {
+                        id:true,
                         name: true,
                         status: true,
                     }

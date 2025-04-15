@@ -13,7 +13,7 @@ export async function GET() {
         const resources = await prisma.resource.findMany({
           include: {
                 ResourceCategory: {
-                    select: {name:true},
+                    select: {id:true,name:true},
                 },
                 Location: {
                     select: {

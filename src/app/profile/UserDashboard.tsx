@@ -173,14 +173,18 @@ export default function UserDashboard() {
 
                     {activeTab === "new" &&
                       (user.resources.length === 0 ? (
-                        <p>No resources submitted yet.</p>
+                        <TableRow>
+                          <TableCell colSpan={4}>
+                            No resources submitted yet.
+                          </TableCell>
+                        </TableRow>
                       ) : (
                         user.resources.map((res, index) => (
                           <TableRow
+                            key={res.id}
                             hover
                             role="checkbox"
                             tabIndex={-1}
-                            key={res.id}
                           >
                             <TableCell className="px6 py-4">
                               {index + 1}
@@ -195,14 +199,18 @@ export default function UserDashboard() {
                     {/* Edit suggestions by user */}
                     {activeTab === "suggest" &&
                       (user.ResourceEditSuggestion.length === 0 ? (
-                        <p>No edit suggestions submitted yet.</p>
+                        <TableRow>
+                          <TableCell colSpan={4}>
+                            No edit suggestions submitted yet.
+                          </TableCell>
+                        </TableRow>
                       ) : (
                         user.ResourceEditSuggestion.map((edit, index) => (
                           <TableRow
+                            key={edit.id}
                             hover
                             role="checkbox"
                             tabIndex={-1}
-                            key={edit.id}
                           >
                             <TableCell>{index + 1} </TableCell>
                             <TableCell>{edit.name}</TableCell>
