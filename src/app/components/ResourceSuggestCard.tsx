@@ -33,6 +33,7 @@ export default function ResourceSuggestCard({
     address: resource?.address || "",
     phone: resource?.phone || "",
     url: resource?.url || "",
+    openDays: resource?.openDays || "",
     openTime: resource?.openTime || "",
     closeTime: resource?.closeTime || "",
   });
@@ -126,6 +127,12 @@ export default function ResourceSuggestCard({
           <TextField
             name="url"
             value={formData?.url}
+            onChange={handleChange}
+            variant="standard"
+          />
+          <TextField
+            name="openDays"
+            value={formData?.openDays}
             onChange={handleChange}
             variant="standard"
           />

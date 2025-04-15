@@ -123,7 +123,7 @@ export async function addEditResource(formData: FormData) {
   const data = Object.fromEntries(formData.entries()) as unknown as EditResourceInput;
   console.log("form data received for edit: ", data);
   
-  const {  name, address, phone, url, openTime, closeTime } = data;
+  const {  name, address, phone, url,openDays, openTime, closeTime } = data;
   const resourceId = parseInt(data.resourceId as string, 10);
   if (isNaN(resourceId)) {
     return { error: "Invalid or missing resource ID" };
@@ -138,6 +138,7 @@ export async function addEditResource(formData: FormData) {
         address: address || "Unknown",
         phone: phone || null,
         url: url || null,
+        openDays: openDays || null,
         openTime: openTime ? new Date(openTime): null,
         closeTime: closeTime ? new Date(closeTime) : null,
         status:"PENDING"
