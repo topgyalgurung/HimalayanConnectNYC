@@ -5,6 +5,46 @@ import { useRouter } from "next/navigation";
 
 import { useFetchUser } from "../hooks/useFetchUsers";
 
+import * as React from "react";
+import Paper from "@mui/material/Paper";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TablePagination from "@mui/material/TablePagination";
+import TableRow from "@mui/material/TableRow";
+
+interface Column {
+  id: "index" | "name" | "status" | "edit";
+  label: string;
+  minWidth?: number;
+  align?: "right";
+  format?: (value: number) => string;
+}
+const columns: readonly Column[] = [
+  {
+    id: "index",
+    label: "Index",
+    minWidth: 170,
+  },
+  {
+    id: "name",
+    label: "Name",
+    minWidth: 100,
+  },
+  {
+    id: "status",
+    label: "Status",
+    minWidth: 170,
+  },
+  {
+    id: "edit",
+    label: "Edit",
+    minWidth: 100,
+  },
+];
+
 export default function UserDashboard() {
   const [activeTab, setActiveTab] = useState("new");
   const router = useRouter();
@@ -110,24 +150,25 @@ export default function UserDashboard() {
             </div>
 
             {/* Add content here for submissions */}
-            <div className="overflow-x-auto">
-              <table className="min-w-full border-collapse">
-                <thead>
-                  <tr className="bg-gray-100">
-                    <th className="px-6 py-3 border-b text-left text-xl font-semibold">
-                      Index
-                    </th>
-                    <th className="px-6 py-3 border-b text-left text-xl font-semibold">
-                      Details
-                    </th>
-                    <th className="px-6 py-3 border-b text-left text-xl font-semibold">
-                      Status
-                    </th>
-                    <th className="px-6 py-3 border-b text-left text-xl font-semibold">
-                      Edit
-                    </th>
-                  </tr>
-                  <tbody>
+            {/* <div className="overflow-x-auto"> */}
+            <Paper sx={{ width: "100%", overflow: "hidden" }}>
+              <TableContainer sx={{ maxHeight: 440 }}>
+                <Table stickyHeader aria-label="sticky table">
+                  <TableHead>
+                    <TableRow>
+                      {columns.map((column) => (
+                        <TableCell
+                          key={column.id}
+                          align={column.align}
+                          style={{ minWidth: column.minWidth }}
+                        >
+                          {column.label}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  </TableHead>
+
+                  <TableBody>
                     {/* Resources submitted by user */}
 
                     {activeTab === "new" &&
@@ -135,17 +176,19 @@ export default function UserDashboard() {
                         <p>No resources submitted yet.</p>
                       ) : (
                         user.resources.map((res, index) => (
-                          <tr
+                          <TableRow
+                            hover
+                            role="checkbox"
+                            tabIndex={-1}
                             key={res.id}
-                            className="border-b hover:bg-gray-50"
                           >
-                            <td className="px6 py-4">{index + 1}</td>
-                            <td>{res.name}</td>
-                            <td className="text-sm text-gray-600">
-                              {res.status}
-                            </td>
-                            <td>Edit</td>
-                          </tr>
+                            <TableCell className="px6 py-4">
+                              {index + 1}
+                            </TableCell>
+                            <TableCell>{res.name}</TableCell>
+                            <TableCell>{res.status}</TableCell>
+                            <TableCell>Edit</TableCell>
+                          </TableRow>
                         ))
                       ))}
 
@@ -155,24 +198,37 @@ export default function UserDashboard() {
                         <p>No edit suggestions submitted yet.</p>
                       ) : (
                         user.ResourceEditSuggestion.map((edit, index) => (
-                          <tr key={edit.id}>
-                            <td>{index + 1} </td>
-                            <td>{edit.name}</td>
-                            <span className="text-sm text-gray-600">
-                              {edit.status}
-                            </span>
-                            <td>Edit</td>
-                          </tr>
+                          <TableRow
+                            hover
+                            role="checkbox"
+                            tabIndex={-1}
+                            key={edit.id}
+                          >
+                            <TableCell>{index + 1} </TableCell>
+                            <TableCell>{edit.name}</TableCell>
+                            <TableCell>{edit.status}</TableCell>
+                            <TableCell>Edit</TableCell>
+                          </TableRow>
                         ))
                       ))}
 
                     {/* reviews */}
 
                     {/* favorites */}
-                  </tbody>
-                </thead>
-              </table>
-            </div>
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              {/* <TablePagination
+                rowsPerPageOptions={[10, 25, 100]}
+                component="div"
+                count={user.ResourceEditSuggestion.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              /> */}
+            </Paper>
+            {/* </div> */}
           </div>
         </div>
       </div>
