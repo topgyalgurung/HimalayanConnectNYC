@@ -95,6 +95,12 @@ model ResourceCategory {
   ResourceEditSuggestion ResourceEditSuggestion[]
 }
 
+enum EditStatus{
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 // EDIT SUGGESTION
 model ResourceEditSuggestion {
   id               Int               @id @default(autoincrement())
@@ -108,7 +114,7 @@ model ResourceEditSuggestion {
   closeTime        DateTime?
   phone            String?
   url              String?
-  status           String            @default("pending")
+  status           String            @default("PENDING")
   createdAt        DateTime          @default(now())
   //relation
   ResourceCategory ResourceCategory? @relation(fields: [categoryId], references: [id])

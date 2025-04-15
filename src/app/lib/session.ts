@@ -1,5 +1,7 @@
 // JWT utils
 
+// server only session utility to be used on the server not directly on client 
+
 // jose library compatible with edge runtime and react's server only package 
 // to ensure server management logic executed only on server 
 
@@ -7,7 +9,7 @@
 "use server"
 
 import { SignJWT, jwtVerify } from "jose";
-import { cookies } from "next/headers";
+import { cookies } from "next/headers"; // server only  e.g in server actions, page, route
 import { Role } from '@prisma/client';
 
 // Ensure JWT_SECRET is set

@@ -2,7 +2,7 @@
 import {
   SignupFormSchema,
   LoginFormSchema,
-  FormState,
+  SignupFormState,
   LoginFormState,
 } from "@/app/lib/definitions";
 
@@ -17,7 +17,7 @@ import { Role } from "@prisma/client";
 // cookie should be set on the server to prevent client side tampering
 
 // SIGN UP
-export async function signup(state: FormState, formData: FormData) {
+export async function signup(state: SignupFormState, formData: FormData) {
   // Validate form fields
   const validatedFields = SignupFormSchema.safeParse({
     firstName: formData.get("firstName"),

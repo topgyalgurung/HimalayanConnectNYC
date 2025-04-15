@@ -2,6 +2,8 @@
 
 import * as React from "react";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { addEditResource } from "../actions/forms";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import dayjs from "dayjs";
@@ -22,19 +24,23 @@ export default function ResourceSuggestCard({
   resource,
   onEditCloseAction,
 }: ResourceSuggestCardProps) {
-  const [value, setValue] = useState<[dayjs.Dayjs | null, dayjs.Dayjs | null]>([
-    dayjs(resource?.openTime),
-    dayjs(resource?.closeTime),
-  ]);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const router = useRouter();
 
   const [formData, setFormData] = useState({
     name: resource?.name || "",
     address: resource?.address || "",
     phone: resource?.phone || "",
-    website: resource?.url || "",
+    url: resource?.url || "",
     openTime: resource?.openTime || "",
     closeTime: resource?.closeTime || "",
   });
+
+  const [value, setValue] = useState<[dayjs.Dayjs | null, dayjs.Dayjs | null]>([
+    dayjs(resource?.openTime),
+    dayjs(resource?.closeTime),
+  ]);
 
   // for open and close time
   useEffect(() => {
@@ -55,24 +61,24 @@ export default function ResourceSuggestCard({
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleFormAction = async (formData: FormData) => {
+    setLoading(true);
+    setMessage("");
+
     try {
-      const res = await fetch("/api/suggestions/${resource.id}", {
-        method: "POST",
-        headers: { "Content-Type": "applications/json" },
-        body: JSON.stringify(formData),
-      });
-      const result = await res.json();
+      const result = await addEditResource(formData);
+      setLoading(true);
       if (result.success) {
-        alert("Suggestion submitted!");
-        onEditCloseAction();
+        setMessage(result.success);
+        router.push("/profile");
       } else {
-        alert("Something went wrong.");
+        setMessage(result.error || "Failed to edit resource");
       }
-    } catch (err) {
-      console.error("Submit error", err);
-      alert("Submission failed.");
+    } catch (error) {
+      console.error("error submitting edit form: ", error);
+      setMessage("An error occurred while submitting edit form");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -87,13 +93,15 @@ export default function ResourceSuggestCard({
 
       <h1>Suggest an Edit</h1>
 
-      {/* <form action={updateResource}> */}
-      <form onSubmit={handleSubmit}>
+      <form action={handleFormAction}>
+        {/* <form onSubmit={handleSubmit}> */}
         <Box
           sx={{ "& .MuiTextField-root": { m: 1, width: "25ch" } }}
           noValidate
           autoComplete="off"
         >
+          {/* backend needs to know which resourceId suggestion belongs to so it can link suggestion to original resource  */}
+          <input name="resourceId" value={resource?.id ?? ""} type="hidden" />
           <TextField
             name="name"
             label="Name"
@@ -116,9 +124,8 @@ export default function ResourceSuggestCard({
             variant="standard"
           />
           <TextField
-            name="website"
-            label="Website"
-            value={formData.website}
+            name="url"
+            value={formData?.url}
             onChange={handleChange}
             variant="standard"
           />
@@ -134,8 +141,9 @@ export default function ResourceSuggestCard({
           <button
             type="submit"
             className="bg-blue-600 mt-4 text-white px-4 py-2 rounded hover:bg-blue-700"
+            disabled={loading}
           >
-            Save and continue
+            {loading ? "Submitting..." : "Submit your Edit"}
           </button>
         </Box>
       </form>

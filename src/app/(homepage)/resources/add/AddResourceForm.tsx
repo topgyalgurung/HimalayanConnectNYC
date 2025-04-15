@@ -12,6 +12,7 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 export default function AddResourceForm({ user }: any) {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  // const [state, formAction, pending] = useActionState(addResource, initialState)
   const [categories, setCategories] = useState<{ id: number; name: string }[]>(
     []
   );
@@ -61,7 +62,7 @@ export default function AddResourceForm({ user }: any) {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white shadow-lg rounded-md">
+    <div className="max-w-2xl mt-5 mx-auto p-6 bg-white shadow-lg rounded-md">
       <h2 className="text-2xl font-bold mb-4">Add a New Resource</h2>
       <h4>Provide some information about this place</h4>
       {message && (
@@ -73,6 +74,7 @@ export default function AddResourceForm({ user }: any) {
           {message}
         </p>
       )}
+
       <form action={handleFormAction} className="space-y-4">
         <input
           type="text"
@@ -197,6 +199,7 @@ export default function AddResourceForm({ user }: any) {
           type="submit"
           className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
           disabled={loading}
+          // disabled = {pending}
         >
           {loading ? "Submitting..." : "Submit Resource"}
         </button>

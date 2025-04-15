@@ -42,18 +42,26 @@ export default function Home() {
     <div className="flex h-[calc(100vh-90px)] text-black p-1">
       {/* Left: Filter Section */}
 
-      <aside className="w-[20%] pl-4 bg-white shadow-md flex flex-col min-h-0 mb-4">
-        <h2 className="text-lg text-center font-bold text-white bg-amber-500 mb-2 sticky top-0 z-10 p-2 shadow">
+      <aside className="w-[20%] pl-4 bg-white shadow-md flex flex-col gap-4 overflow-y-auto min-h-0">
+        <h2 className="text-lg text-center font-bold text-black mb-2 sticky top-0 z-10 p-2 shadow bg-white">
           FILTERS
         </h2>
-        <ResourceFilter
-          onFilterChange={setSelectedCategories}
-          selectedCategories={selectedCategories}
-        />
-        <BoroughFilter
-          onFilterChange={setSelectedBoroughs}
-          selectedBoroughs={selectedBoroughs}
-        />
+
+        {/* Resource Filter */}
+        <div className="flex-1">
+          <ResourceFilter
+            onFilterChange={setSelectedCategories}
+            selectedCategories={selectedCategories}
+          />
+        </div>
+
+        {/* Borough Filter */}
+        <div className="flex-1">
+          <BoroughFilter
+            onFilterChange={setSelectedBoroughs}
+            selectedBoroughs={selectedBoroughs}
+          />
+        </div>
       </aside>
 
       {/* Middle: Resource List */}

@@ -1,14 +1,26 @@
 // approve suggested edits
-import prisma from "@/app/lib/prisma";
-import{NextRequest, NextResponse} from 'next/server'
+export async function addSuggestion(formData: FormData) {
+    // extract all form fields into plain javascript object
+    const data = Object.entries(formData.entries)
+    try {
+        const newEditResource = await 
+        const name = data.name as string;
+        const address = data.address as string;
+        const phone: data.phone as string | null,
+       co url: data.url as string | null,
 
-export async function POST(req: NextRequest, { params }:{params:{id:string}}) {
+
+        
+        
+    } catch (error) {
+        
+    }
     const body = await req.json();
     const resourceId = parseInt(params.id);
 
     // update your db
     try {
-        await prisma.resourceEditSuggestion.update({
+        await prisma.resourceEditSuggestion.create({
             where: { id:resourceId },
             data:body
         }) 

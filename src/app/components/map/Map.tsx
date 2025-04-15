@@ -52,6 +52,7 @@ export default function MapView({
         <div className="absolute top-0 left-0 h-full w-[400px] z-50 shadow-lg overflow-y-auto">
           <ResourceDetailsCard
             resource={selectedResource}
+            editResource= {editResource}
             onCloseAction={onCloseAction}
           />
         </div>
