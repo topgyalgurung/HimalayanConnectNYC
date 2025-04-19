@@ -26,7 +26,7 @@ const ResourceList = ({
   const searchParams = useSearchParams(); // access search params from url /resources?query=name
   const searchQuery = searchParams.get("query")?.toLowerCase() || ""; // Get query from URL and convert to lowercase
 
-  const resources = useFetchResources(); // use hook to fetch data (it either )
+  const { resources } = useFetchResources(); // use hook to fetch data (it either )
   console.log("fetched resources ", resources);
 
   // Effect to filter resources when searchParams, resources, or filters change

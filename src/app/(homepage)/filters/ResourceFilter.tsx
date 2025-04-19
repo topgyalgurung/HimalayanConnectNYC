@@ -42,38 +42,31 @@ export default function ResourceFilter({
     onFilterChange([]);
   };
   return (
-    <div className="p-1 border rounded-md text-black mt-2">
-      <div className="flex items-center mb-1 justify-center">
-        <h3 className="font-bold mb-2 mr-3">Category</h3>
+    <div className="p-2 border rounded-md text-black text-sm">
+      <div className="flex items-center justify-center mb-1">
+        <h3 className="font-semibold text-sm">Category</h3>
         <span className="mx-2 border-l border-gray-300 h-6 ml-4" />
-        <button onClick={clearFilters} className="ml-2 text-black-900">
-          &times;
+        <button onClick={clearFilters} className="text-gray-500">
+          Clear ×
         </button>
       </div>
-      <hr className="border-t border-gray-300 w-full mb-3" />
+      <hr className="mb-2" />
 
-      <div className="flex flex-col ml-10 space-x-0 ">
-        <List
-          sx={{ width: "100%", maxWidth: 150, bgColor: "background.paper" }}
-        >
-          {categories.map((cat) => (
-            <ListItem key={cat.id} className="flex items-center space-x-2 p-0">
-              <ListItemButton role={undefined}>
-                <ListItemIcon>
-                  <Checkbox
-                    type="checkbox"
-                    value={cat.name}
-                    checked={selectedCategories.includes(cat.name)}
-                    onChange={() => handleCategoryCheckboxChange(cat.name)}
-                    className="mr-2 w-4 h-2"
-                  />
-                </ListItemIcon>
-                <ListItemText className="capitalize" primary={cat.name} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-      </div>
+      <List dense sx={{ width: "100%", maxWidth: 140 }}>
+        {categories.map((cat) => (
+          <ListItem key={cat.id} disablePadding>
+            <ListItemButton>
+              <ListItemIcon className="min-w-0 mr-2">
+                <Checkbox
+                  checked={selectedCategories.includes(cat.name)}
+                  onChange={() => handleCategoryCheckboxChange(cat.name)}
+                />
+              </ListItemIcon>
+              <ListItemText primary={cat.name} className="capitalize" />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
     </div>
   );
 }

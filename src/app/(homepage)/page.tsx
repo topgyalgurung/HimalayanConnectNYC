@@ -42,21 +42,17 @@ export default function Home() {
     <div className="flex h-[calc(100vh-90px)] text-black p-1">
       {/* Left: Filter Section */}
 
-      <aside className="w-[20%] pl-4 bg-white shadow-md flex flex-col gap-4 overflow-y-auto min-h-0">
+      <aside className="w-full md:w-[20%] pl-4 bg-white shadow-md flex flex-col overflow-hidden">
         <h2 className="text-lg text-center font-bold text-black mb-2 sticky top-0 z-10 p-2 shadow bg-white">
           FILTERS
         </h2>
 
-        {/* Resource Filter */}
-        <div className="flex-1">
+        {/* Scrollable filter content */}
+        <div className="flex-1 overflow-y-auto pr-2 space-y-4">
           <ResourceFilter
             onFilterChange={setSelectedCategories}
             selectedCategories={selectedCategories}
           />
-        </div>
-
-        {/* Borough Filter */}
-        <div className="flex-1">
           <BoroughFilter
             onFilterChange={setSelectedBoroughs}
             selectedBoroughs={selectedBoroughs}

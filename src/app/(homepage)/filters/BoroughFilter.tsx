@@ -45,37 +45,31 @@ export default function BoroughFilter({
 
   // Render the BoroughFilter component
   return (
-    <div className="p-1 border rounded-md text-black mt-4">
-      <div className="flex items-center mb-1 justify-center">
-        <h3 className="font-bold mb-2 mr-3">NYC Borough</h3>
+    <div className="p-1 border rounded-md text-black text-sm mt-2">
+      <div className="flex items-center justify-center mb-1">
+        <h3 className="font-semibold text-sm">NYC Borough</h3>
         <span className="mx-2 border-l border-gray-300 h-6 ml-4" />
-        <button onClick={clearFilters} className="ml-2 text-black-900">
-          &times;
+        <button onClick={clearFilters} className="text-gray-500">
+          Clear ×
         </button>
       </div>
-      <hr className="border-t border-gray-300 w-full mb-3" />
-      <div className="flex flex-col ml-10 space-y-2">
-        <List
-          sx={{ width: "100%", maxWidth: 150, bgColor: "background.paper" }}
-        >
-          {boroughs.map((borough) => (
-            <ListItem key={borough.id} className="flex items-center space-x-2">
-              <ListItemButton role={undefined}>
-                <ListItemIcon>
-                  <Checkbox
-                    type="checkbox"
-                    id={`borough-${borough.id}`}
-                    className="mr-2 w-4 h-4"
-                    checked={selectedBoroughs.includes(borough.name)}
-                    onChange={() => handleBoroughCheckboxChange(borough.name)}
-                  />
-                </ListItemIcon>
-                <ListItemText className="capitalize" primary={borough.name} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-      </div>
+      <hr className="mb-2" />
+      <List dense sx={{ width: "100%", maxWidth: 140 }}>
+        {boroughs.map((borough) => (
+          <ListItem key={borough.id} disablePadding>
+            <ListItemButton>
+              <ListItemIcon className="min-w-0 mr-2">
+                <Checkbox
+                  checked={selectedBoroughs.includes(borough.name)}
+                  onChange={() => handleBoroughCheckboxChange(borough.name)}
+                  size="small"
+                />
+              </ListItemIcon>
+              <ListItemText className="capitalize" primary={borough.name} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
     </div>
   );
 }
