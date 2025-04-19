@@ -68,12 +68,11 @@ export default function UserDashboard() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-2">
-      <h1 className="text-4xl font-bold text-center mt-1">Profile</h1>
-
       {/* Profile card and dashboard container */}
       <div className="flex flex-row w-full">
         {/* Profile card (takes 30% width) */}
         <div className="w-full md:w-1/3 p-4">
+          <h1 className="text-4xl font-bold text-center mt-1">Profile</h1>
           <div className="flex flex-col items-center bg-white shadow-lg rounded-lg p-6">
             <div className="relative w-32 h-32 mb-4">
               <Image

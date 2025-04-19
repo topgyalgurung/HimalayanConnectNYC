@@ -12,7 +12,7 @@ import {
   Pin,
   InfoWindow,
 } from "@vis.gl/react-google-maps";
-
+import Image from "next/image";
 import { useState } from "react";
 import type { Resource } from "@/app/types/resource";
 import ResourceDetailsCard from "../ResourceDetailsCard";
@@ -52,7 +52,7 @@ export default function MapView({
         <div className="absolute top-0 left-0 h-full w-[400px] z-50 shadow-lg overflow-y-auto">
           <ResourceDetailsCard
             resource={selectedResource}
-            editResource= {editResource}
+            editResource={editResource}
             onCloseAction={onCloseAction}
           />
         </div>
@@ -89,28 +89,28 @@ const Markers = ({ points }: MarkersProps) => {
         const shouldShowInfoWindow = activeMarkerId === resource.id;
 
         // Customize pin background color based on resource category
-        let pinBackground = "red"; // Default color
-        switch (resource.ResourceCategory?.name) {
-          case "Community":
-            pinBackground = "blue";
+        // let pinBackground = "red"; // Default color
+        let image = "https://cdn-icons-png.flaticon.com/512/1946/1946436.png"; // default
+
+        switch (resource.ResourceCategory?.name?.toLowerCase()) {
+          case "community":
+            image = "https://cdn-icons-png.flaticon.com/512/7829/7829198.png";
             break;
-          case "Legal":
-            pinBackground = "green";
+          case "legal":
+            image = "https://cdn-icons-png.flaticon.com/512/4052/4052204.png";
             break;
-          case "Health":
-            pinBackground = "yellow";
+          case "health":
+            image = "https://cdn-icons-png.flaticon.com/512/2382/2382533.png";
             break;
-          case "Education":
-            pinBackground = "purple";
+          case "education":
+            image = "https://cdn-icons-png.flaticon.com/512/4406/4406319.png";
             break;
-          case "Finance":
-            pinBackground = "orange";
+          case "finance":
+            image = "https://cdn-icons-png.flaticon.com/512/4256/4256900.png";
             break;
-          case "Real estate":
-            pinBackground = "pink";
+          case "real estate":
+            image = "https://cdn-icons-png.flaticon.com/512/2238/2238337.png";
             break;
-          default:
-            pinBackground = "red"; // Default color
         }
 
         return (
@@ -128,10 +128,10 @@ const Markers = ({ points }: MarkersProps) => {
               }}
             >
               {/* customize pin color based on resource category */}
-              <Pin
-                background={pinBackground}
-                borderColor={"white"}
-                glyphColor={"white"}
+              <img
+                src={image}
+                alt={`${resource.ResourceCategory?.name} icon`}
+                style={{ width: "30px", height: "30px", objectFit: "contain" }}
               />
             </AdvancedMarker>
 
