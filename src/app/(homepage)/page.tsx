@@ -18,6 +18,7 @@ export default function Home() {
     null
   ); // moved to parent from ResourceCard to show details
   const [editResource, setEditResource] = useState<Resource | null>(null); // for suggest edit
+  const [reviewResource, setReviewResource] = useState<Resource | null>(null);
 
   const handleToggleDetails = (resource: Resource) => {
     if (selectedResource?.id === resource.id) {
@@ -38,6 +39,15 @@ export default function Home() {
       setEditResource(resource);
     }
   };
+
+  const handleReviewResource = (resource: Resource) => {
+    if (reviewResource?.id === resource.id) {
+      setReviewResource(null);
+    } else {
+      setReviewResource(resource);
+    }
+  };
+
   return (
     <div className="flex h-[calc(100vh-90px)] text-black p-1">
       {/* Left: Filter Section */}
@@ -74,6 +84,7 @@ export default function Home() {
             filteredResources={filteredResources}
             onViewDetails={handleToggleDetails} // pass down to resourceList
             onSuggestEdit={handleSuggestEdit}
+            onReviewClick={handleReviewResource}
           />
         </main>
       </aside>
@@ -84,9 +95,12 @@ export default function Home() {
           <MapView
             resources={filteredResources}
             selectedResource={selectedResource}
+            reviewResource={reviewResource}
+            onReviewResource={setReviewResource}
             editResource={editResource}
             onCloseAction={() => setSelectedResource(null)}
             onEditCloseAction={() => setEditResource(null)}
+            onReviewCloseAction={() => setReviewResource(null)}
           />
         </div>
       </aside>

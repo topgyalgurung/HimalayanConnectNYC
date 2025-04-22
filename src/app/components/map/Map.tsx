@@ -17,20 +17,27 @@ import { useState } from "react";
 import type { Resource } from "@/app/types/resource";
 import ResourceDetailsCard from "../ResourceDetailsCard";
 import ResourceSuggestCard from "../ResourceSuggestCard";
-
+import ReviewSubmitCard from "../ReviewSubmitCard";
 interface MapViewProps {
   resources: Resource[];
   selectedResource: Resource | null;
   editResource: Resource | null;
+  reviewResource: Resource | null;
+  setReviewResource: Resource | null;
+  onReviewResource: (resource: Resource) => void;
   onCloseAction: (resource: Resource | null) => void;
   onEditCloseAction: (resource: Resource | null) => void;
+  onReviewCloseAction: (resource: Resource | null) => void;
 }
 
 export default function MapView({
   resources,
   selectedResource,
   editResource,
+  reviewResource,
+  onReviewResource,
   onCloseAction,
+  onReviewCloseAction,
   onEditCloseAction,
 }: MapViewProps) {
   return (
@@ -53,10 +60,12 @@ export default function MapView({
           <ResourceDetailsCard
             resource={selectedResource}
             editResource={editResource}
+            onReviewResource={onReviewResource}
             onCloseAction={onCloseAction}
           />
         </div>
       )}
+      {/* show edit resource card */}
       {editResource && (
         <div className="absolute top-0 left-0 h-full w-[400px] z-50 shadow-lg overflow-y-auto">
           <ResourceSuggestCard
@@ -64,6 +73,14 @@ export default function MapView({
             onEditCloseAction={onEditCloseAction}
           />
         </div>
+      )}
+
+      {/* show submit review card */}
+      {reviewResource && (
+        <ReviewSubmitCard
+          resource={reviewResource}
+          onReviewCloseAction={onReviewCloseAction}
+        />
       )}
     </div>
   );

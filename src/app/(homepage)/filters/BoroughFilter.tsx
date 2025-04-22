@@ -62,7 +62,7 @@ export default function BoroughFilter({
                 <Checkbox
                   checked={selectedBoroughs.includes(borough.name)}
                   onChange={() => handleBoroughCheckboxChange(borough.name)}
-                  size="small"
+                  size="medium"
                 />
               </ListItemIcon>
               <ListItemText className="capitalize" primary={borough.name} />

@@ -31,7 +31,7 @@ export type SessionPayload = {
 }
 
 // to store session in a cookie
-export async function createSession(userId: string | number, email:string, role:Role) {
+export async function createSession(userId: string | number, email:string,  role:Role) {
     try {
         // Ensure userId is string for JWT token
         const userIdStr = userId.toString();
@@ -40,6 +40,7 @@ export async function createSession(userId: string | number, email:string, role:
         const session = await encrypt({
             userId: userIdStr,
             email,
+
             role: role.toString(),
             expiresAt
         });

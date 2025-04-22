@@ -14,6 +14,7 @@ import { createSession, deleteSession } from "@/app/lib/session";
 import bcrypt from "bcryptjs";
 import prisma from "../lib/prisma";
 import { Role } from "@prisma/client";
+// import { Yesteryear } from "next/font/google";
 // cookie should be set on the server to prevent client side tampering
 
 // SIGN UP
@@ -114,6 +115,7 @@ export async function login(state: LoginFormState, formData: FormData) {
       select: {
         id: true,
         email: true,
+        firstName: true,
         password: true,
         role: true,
         image: true,
