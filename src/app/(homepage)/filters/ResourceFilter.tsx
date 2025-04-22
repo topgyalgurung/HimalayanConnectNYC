@@ -12,13 +12,38 @@ interface CategoryFilterProps {
   selectedCategories?: string[];
 }
 
+// Add icon URLs for each category
 const categories = [
-  { id: 1, name: "community" },
-  { id: 2, name: "legal" },
-  { id: 3, name: "health" },
-  { id: 4, name: "education" },
-  { id: 5, name: "finance" },
-  { id: 6, name: "real estate" },
+  {
+    id: 1,
+    name: "community",
+    icon: "https://cdn-icons-png.flaticon.com/512/7829/7829198.png",
+  },
+  {
+    id: 2,
+    name: "legal",
+    icon: "https://cdn-icons-png.flaticon.com/512/4052/4052204.png",
+  },
+  {
+    id: 3,
+    name: "health",
+    icon: "https://cdn-icons-png.flaticon.com/512/2382/2382533.png",
+  },
+  {
+    id: 4,
+    name: "education",
+    icon: "https://cdn-icons-png.flaticon.com/512/4406/4406319.png",
+  },
+  {
+    id: 5,
+    name: "finance",
+    icon: "https://cdn-icons-png.flaticon.com/512/4256/4256900.png",
+  },
+  {
+    id: 6,
+    name: "real estate",
+    icon: "https://cdn-icons-png.flaticon.com/512/2238/2238337.png",
+  },
 ];
 
 export default function ResourceFilter({
@@ -42,38 +67,33 @@ export default function ResourceFilter({
     onFilterChange([]);
   };
   return (
-    <div className="p-1 border rounded-md text-black mt-2">
-      <div className="flex items-center mb-1 justify-center">
-        <h3 className="font-bold mb-2 mr-3">Category</h3>
+    <div className="p-2 border rounded-md text-black text-sm">
+      <div className="flex items-center justify-center mb-1">
+        <h3 className="font-semibold text-sm">Category</h3>
         <span className="mx-2 border-l border-gray-300 h-6 ml-4" />
-        <button onClick={clearFilters} className="ml-2 text-black-900">
-          &times;
+        <button onClick={clearFilters} className="text-gray-500">
+          Clear ×
         </button>
       </div>
-      <hr className="border-t border-gray-300 w-full mb-3" />
+      <hr className="mb-2" />
 
-      <div className="flex flex-col ml-10 space-x-0 ">
-        <List
-          sx={{ width: "100%", maxWidth: 150, bgColor: "background.paper" }}
-        >
-          {categories.map((cat) => (
-            <ListItem key={cat.id} className="flex items-center space-x-2 p-0">
-              <ListItemButton role={undefined}>
-                <ListItemIcon>
-                  <Checkbox
-                    type="checkbox"
-                    value={cat.name}
-                    checked={selectedCategories.includes(cat.name)}
-                    onChange={() => handleCategoryCheckboxChange(cat.name)}
-                    className="mr-2 w-4 h-2"
-                  />
-                </ListItemIcon>
-                <ListItemText className="capitalize" primary={cat.name} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-      </div>
+      <List dense sx={{ width: "100%", maxWidth: 140 }}>
+        {categories.map((cat) => (
+          <ListItem key={cat.id} disablePadding>
+            <ListItemButton>
+              <ListItemIcon className="min-w-0 mr-2">
+                <Checkbox
+                  checked={selectedCategories.includes(cat.name)}
+                  onChange={() => handleCategoryCheckboxChange(cat.name)}
+                  size="medium"
+                />
+              </ListItemIcon>
+              <img src={cat.icon} alt={cat.name} className="w-5 h-5 mr-2" />
+              <ListItemText primary={cat.name} className="capitalize" />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
     </div>
   );
 }

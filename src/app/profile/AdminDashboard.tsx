@@ -3,8 +3,10 @@ import Image from "next/image";
 import { logout } from "../actions/auth";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import type { Resource } from "@/app/types/resource";
 
 import { useFetchResources } from "../hooks/useFetchResources";
+import { useFetchResourceEdit } from "../hooks/useFetchResourceEdit";
 // import Resource from "@/app/types/resource";
 // import ResourceCard from "../(homepage)/resources/ResourceCard";
 //  import {redirect} from 'next/navigation'
@@ -20,22 +22,14 @@ export default function AdminDashboard() {
 
   const [activeTab, setActiveTab] = useState("new");
   const router = useRouter();
-  const [filteredResources, setFilteredResources] = useState<Resource[]>([]);
-  const resources = useFetchResources();
+  // const [filteredResources, setFilteredResources] = useState<Resource[]>([]);
+  const { resources, refetch: refetchResources } = useFetchResources();
+  const { editResources, refetch: refetchEditResources } =
+    useFetchResourceEdit();
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
   };
-
-  // useEffect(() => {
-  //   // Filter resources to only include those with a status of "PENDING"
-  //   if (resources && resources.length > 0) {
-  //     const filtered = resources.filter(
-  //       (resource) => resource.status === "PENDING"
-  //     );
-  //     setFilteredResources(filtered);
-  //   }
-  // }, [resources]);
 
   // Function to update the status of a resource
   const handleStatusChange = async (resourceId: string, newStatus: string) => {
@@ -55,16 +49,25 @@ export default function AdminDashboard() {
         return;
       }
 
-      const updatedResource = await response.json();
+      await refetchResources();
+      await refetchEditResources();
+
+      // const updatedResource = await response.json();
 
       // Update state with the new resource status
-      setFilteredResources((prevResources) =>
-        prevResources.map((resource) =>
-          resource.id === resourceId
-            ? { ...resource, status: updatedResource.status }
-            : resource
-        )
-      );
+      // setFilteredResources((prevResources) =>
+      //   prevResources.map((resource) =>
+      //     resource.id === resourceId
+      //       ? { ...resource, status: updatedResource.status }
+      //       : resource
+      //   )
+      // );
+
+      // setResources((prev) =>
+      //   prev.map((res) =>
+      //     res.id === resourceId ? { ...res, status: newStatus } : res
+      //   )
+      // );
     } catch (error) {
       console.error("Error updating status:", error);
     }
@@ -86,6 +89,9 @@ export default function AdminDashboard() {
     if (activeTab == "new") return resource.status == "PENDING";
     if (activeTab == "approved") return resource.status == "APPROVED";
     if (activeTab == "rejected") return resource.status == "REJECTED";
+  });
+  const filteredByEditStatus = editResources.filter((res) => {
+    if (activeTab == "edit") return res.status == "PENDING";
   });
 
   return (
@@ -128,14 +134,25 @@ export default function AdminDashboard() {
 
             {/* More dashboard content here */}
             <div className=" flex space-x-4 mb-4">
+              {/* new  */}
               <button
                 className={`px-4 py-2 ${
                   activeTab === "new" ? "bg-blue-500 text-white" : "bg-gray-200"
                 }`}
                 onClick={() => handleTabChange("new")}
               >
-                {" "}
                 New Submissions
+              </button>
+              {/* edit */}
+              <button
+                className={`px-4 py-2 ${
+                  activeTab === "edit"
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-200"
+                }`}
+                onClick={() => handleTabChange("edit")}
+              >
+                Edit Submissions
               </button>
               <button
                 className={`px-4 py-2 ${
@@ -158,6 +175,7 @@ export default function AdminDashboard() {
                 Rejected
               </button>
             </div>
+
             <div className="overflow-x-auto">
               <table className="min-w-full border-collapse">
                 <thead>
@@ -179,8 +197,50 @@ export default function AdminDashboard() {
                     </th>
                   </tr>
                 </thead>
+
+                {/* content  */}
                 <tbody>
                   {filteredByStatus.map((resource, index) => (
+                    <tr key={resource.id} className="border-b hover:bg-gray-50">
+                      <td className="px-6 py-4">{index + 1}</td>
+                      <td className="px-6 py-4">{resource.name}</td>
+                      {/* add link to view details  */}
+                      <td className="px-6 py-4"></td>
+                      <td className="px-6 py-4 space-x-2">
+                        {(resource.status === "PENDING" ||
+                          resource.status === "REJECTED") && (
+                          <button
+                            onClick={() =>
+                              handleStatusChange(resource.id, "APPROVED")
+                            }
+                            className="px-3 py-1 text-white bg-green-500 rounded-md hover:bg-green-600"
+                          >
+                            👍
+                          </button>
+                        )}
+                      </td>
+
+                      <td>
+                        {(resource.status === "APPROVED" ||
+                          resource.status === "PENDING") && (
+                          <button
+                            onClick={() =>
+                              handleStatusChange(resource.id, "REJECTED")
+                            }
+                            className="px-3 py-1 text-white bg-red-500 rounded-md hover:bg-red-600"
+                          >
+                            👎
+                          </button>
+                        )}
+                      </td>
+                      {/* get submitted by name and email */}
+                    </tr>
+                  ))}
+                </tbody>
+
+                {/* edit resource */}
+                <tbody>
+                  {filteredByEditStatus.map((resource, index) => (
                     <tr key={resource.id} className="border-b hover:bg-gray-50">
                       <td className="px-6 py-4">{index + 1}</td>
                       <td className="px-6 py-4">{resource.name}</td>
@@ -210,24 +270,6 @@ export default function AdminDashboard() {
                   ))}
                 </tbody>
               </table>
-            </div>
-
-            <h1> Edit Submission</h1>
-            <div className="flex flex-row space-x-6">
-              <div className="flex flex-row items-center">
-                <h3 className="text-xl font-semibold">Edit Submissions</h3>
-                {/* Add content here for reviews */}
-              </div>
-
-              <div className="flex flex-row items-center">
-                <h3 className="text-xl font-semibold">Rejected</h3>
-                {/* Add content here for likes */}
-              </div>
-
-              <div className="flex flex-row items-center">
-                <h3 className="text-xl font-semibold">Approved</h3>
-                {/* Add content here for submissions */}
-              </div>
             </div>
           </div>
         </div>

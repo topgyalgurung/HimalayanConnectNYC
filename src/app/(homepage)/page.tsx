@@ -18,6 +18,7 @@ export default function Home() {
     null
   ); // moved to parent from ResourceCard to show details
   const [editResource, setEditResource] = useState<Resource | null>(null); // for suggest edit
+  const [reviewResource, setReviewResource] = useState<Resource | null>(null);
 
   const handleToggleDetails = (resource: Resource) => {
     if (selectedResource?.id === resource.id) {
@@ -38,25 +39,30 @@ export default function Home() {
       setEditResource(resource);
     }
   };
+
+  const handleReviewResource = (resource: Resource) => {
+    if (reviewResource?.id === resource.id) {
+      setReviewResource(null);
+    } else {
+      setReviewResource(resource);
+    }
+  };
+
   return (
     <div className="flex h-[calc(100vh-90px)] text-black p-1">
       {/* Left: Filter Section */}
 
-      <aside className="w-[20%] pl-4 bg-white shadow-md flex flex-col gap-4 overflow-y-auto min-h-0">
+      <aside className="w-full md:w-[20%] pl-4 bg-white shadow-md flex flex-col overflow-hidden">
         <h2 className="text-lg text-center font-bold text-black mb-2 sticky top-0 z-10 p-2 shadow bg-white">
           FILTERS
         </h2>
 
-        {/* Resource Filter */}
-        <div className="flex-1">
+        {/* Scrollable filter content */}
+        <div className="flex-1 overflow-y-auto pr-2 space-y-4">
           <ResourceFilter
             onFilterChange={setSelectedCategories}
             selectedCategories={selectedCategories}
           />
-        </div>
-
-        {/* Borough Filter */}
-        <div className="flex-1">
           <BoroughFilter
             onFilterChange={setSelectedBoroughs}
             selectedBoroughs={selectedBoroughs}
@@ -78,6 +84,7 @@ export default function Home() {
             filteredResources={filteredResources}
             onViewDetails={handleToggleDetails} // pass down to resourceList
             onSuggestEdit={handleSuggestEdit}
+            onReviewClick={handleReviewResource}
           />
         </main>
       </aside>
@@ -88,9 +95,12 @@ export default function Home() {
           <MapView
             resources={filteredResources}
             selectedResource={selectedResource}
+            reviewResource={reviewResource}
+            onReviewResource={setReviewResource}
             editResource={editResource}
             onCloseAction={() => setSelectedResource(null)}
             onEditCloseAction={() => setEditResource(null)}
+            onReviewCloseAction={() => setReviewResource(null)}
           />
         </div>
       </aside>

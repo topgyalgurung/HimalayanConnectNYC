@@ -12,6 +12,7 @@ interface ResourceListProps {
   filteredResources: Resource[]; // Add filteredResources prop
   onViewDetails: (resource: Resource) => void;
   onSuggestEdit: (resource: Resource) => void;
+  onReviewClick: (resource: Resource) => void;
   // setLocations: (locations: { latitude: number; longitude: number }[]) => void;
 }
 
@@ -21,12 +22,13 @@ const ResourceList = ({
   setFilteredResources,
   onViewDetails,
   onSuggestEdit,
+  onReviewClick,
   filteredResources, // Use the passed filteredResources
 }: ResourceListProps) => {
   const searchParams = useSearchParams(); // access search params from url /resources?query=name
   const searchQuery = searchParams.get("query")?.toLowerCase() || ""; // Get query from URL and convert to lowercase
 
-  const resources = useFetchResources(); // use hook to fetch data (it either )
+  const { resources } = useFetchResources(); // use hook to fetch data (it either )
   console.log("fetched resources ", resources);
 
   // Effect to filter resources when searchParams, resources, or filters change
@@ -78,6 +80,7 @@ const ResourceList = ({
         resources={filteredResources}
         onViewDetails={onViewDetails}
         onSuggestEdit={onSuggestEdit}
+        onReviewClick={onReviewClick}
       />
     </div>
   );

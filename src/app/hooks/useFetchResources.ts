@@ -57,8 +57,7 @@ export function useFetchResources() {
       setResources([]);
     }
   }
-
-  return resources;
+  // refetch resources manually after
+  return { resources, refetch: fetchResources };
 }
-
 

@@ -2,6 +2,8 @@
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
+import TextField from "@mui/material/TextField";
+
 /**
  *  The user types into this input field, and the search query is updated instantly.
  * The query is saved in the browser’s URL as ?query=value, and whenever the user types,
@@ -49,19 +51,21 @@ export default function SearchInput() {
   // };
 
   // Handle clearing the search input and results
-  const handleClear = () => {
-    setInputValue(""); // Clear input
-    setSearchQuery(""); // Clear search results
-    router.push("/"); // Reset URL
-  };
+  // const handleClear = () => {
+  //   setInputValue(""); // Clear input
+  //   setSearchQuery(""); // Clear search results
+  //   router.push("/"); // Reset URL
+  // };
 
   return (
     <form className="flex space-x-2">
-      <input
+      <TextField
+        id="search-bar"
         type="search"
         placeholder="Search name, category, or location"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
+        variant="outlined"
         className="border-2 border-gray-300 bg-white h-12 px-7  rounded-lg text-m focus:outline-none focus:border-yellow-500   w-full max-w-2xl"
       />
       {/* <button
