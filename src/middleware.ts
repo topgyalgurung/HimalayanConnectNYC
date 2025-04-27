@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { decrypt } from "./app/lib/session";
 import { cookies } from "next/headers";
-import toast from "react-hot-toast";
+// import toast from "react-hot-toast";
 
 const authRoutes = ['/login', '/signup'];
 const protectedRoutes = ["/dashboard", "/resources/add", "/profile"];

@@ -10,6 +10,8 @@ export type User = {
     createdAt: string,
     updatedAt: string,
     resources: Resource[],
-    ResourceEditSuggestion: ResourceEditSuggestion[]  
+    ResourceEditSuggestion: ResourceEditSuggestion[] 
+    reviews: { id: number, content: string, resource:Resource[],rating: number, createdAt:string}[]
+    likes:{id:number,user:User,resource:Resource }
     
 }

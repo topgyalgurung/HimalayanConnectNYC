@@ -3,6 +3,9 @@ import Link from "next/link";
 import { format } from "date-fns";
 
 import { type Resource } from "@/app/types/resource";
+import { useUser } from "@/app/context/UserProvider";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 // type Location = {
 //   id: number;
@@ -33,6 +36,8 @@ export default function ResourceCard({
   onSuggestEdit,
 }: ResourceCardProps) {
   // function showDetail() {}
+  const { user } = useUser();
+  const router = useRouter();
 
   return (
     <div className="flex flex-col space-y-4 pb-20">
@@ -84,9 +89,25 @@ export default function ResourceCard({
               </button>
 
               {/* suggest edit  */}
+              {/* make active only user logged in  */}
+              <div
+              // className="text-white py-2 px-3 bg-blue-600 rounded hover:bg-blue-700"
+              >
+                <button
+                  // disabled={!user}
+                  onClick={() => {
+                    if (!user) {
+                      toast.error("Please log in to submit a review.");
+                      router.push("/login");
+                      return;
+                    }
 
-              <div className="text-white py-2 px-3 bg-blue-600 rounded hover:bg-blue-700">
-                <button onClick={() => onSuggestEdit?.(resource)}>
+                    onSuggestEdit?.(resource);
+                  }}
+                  className={`${
+                    user ? "bg-blue-500" : "bg-blue-500 cursor-not-allowed"
+                  } text-white py-2 px-3 rounded`}
+                >
                   Suggest Edit
                 </button>
                 {/* <Link href={`/suggestions/edit/${resource.id}`}>
