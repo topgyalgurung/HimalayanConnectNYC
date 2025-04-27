@@ -1,3 +1,7 @@
+"use client";
+
+import * as React from "react";
+
 import Image from "next/image";
 import { useState } from "react";
 import { logout } from "../actions/auth";
@@ -5,24 +9,26 @@ import { useRouter } from "next/navigation";
 
 import { useFetchUser } from "../hooks/useFetchUsers";
 
-import * as React from "react";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
+import DeleteIcon from "@mui/icons-material/Delete";
+import Button from "@mui/material/Button";
 // import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 
-interface Column {
+interface resourceColumn {
   id: "index" | "name" | "status" | "edit";
   label: string;
   minWidth?: number;
   align?: "right";
   format?: (value: number) => string;
 }
-const columns: readonly Column[] = [
+
+const columns: readonly resourceColumn[] = [
   {
     id: "index",
     label: "Index",
@@ -40,7 +46,7 @@ const columns: readonly Column[] = [
   },
   {
     id: "edit",
-    label: "Edit",
+    label: "Action",
     minWidth: 100,
   },
 ];
@@ -67,7 +73,7 @@ export default function UserDashboard() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-2">
+    <div className="flex flex-col items-center justify-center ">
       {/* Profile card and dashboard container */}
       <div className="flex flex-row w-full">
         {/* Profile card (takes 30% width) */}
@@ -149,27 +155,41 @@ export default function UserDashboard() {
             </div>
 
             {/* Add content here for submissions */}
-            {/* <div className="overflow-x-auto"> */}
+
+            {/* table headers  */}
+
             <Paper sx={{ width: "100%", overflow: "hidden" }}>
               <TableContainer sx={{ maxHeight: 440 }}>
                 <Table stickyHeader aria-label="sticky table">
                   <TableHead>
-                    <TableRow>
-                      {columns.map((column) => (
-                        <TableCell
-                          key={column.id}
-                          align={column.align}
-                          style={{ minWidth: column.minWidth }}
-                        >
-                          {column.label}
-                        </TableCell>
-                      ))}
-                    </TableRow>
+                    {activeTab === "new" || activeTab === "suggest" ? (
+                      <TableRow>
+                        {columns.map((column) => (
+                          <TableCell
+                            key={column.id}
+                            align={column.align}
+                            style={{ minWidth: column.minWidth }}
+                          >
+                            {column.label}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ) : (
+                      <TableRow>
+                        <TableCell>Index</TableCell>
+                        <TableCell>Resource Name</TableCell>
+                        <TableCell>Reviews</TableCell>
+                        <TableCell>Rating</TableCell>
+                        <TableCell>Date</TableCell>
+                        <TableCell>Action</TableCell>
+                      </TableRow>
+                    )}
                   </TableHead>
 
-                  <TableBody>
-                    {/* Resources submitted by user */}
+                  {/* table content */}
 
+                  <TableBody>
+                    {/* new Resources submitted by user */}
                     {activeTab === "new" &&
                       (user.resources.length === 0 ? (
                         <TableRow>
@@ -190,12 +210,20 @@ export default function UserDashboard() {
                             </TableCell>
                             <TableCell>{res.name}</TableCell>
                             <TableCell>{res.status}</TableCell>
-                            <TableCell>Edit</TableCell>
+                            <TableCell>
+                              <Button
+                                variant="outlined"
+                                startIcon={<DeleteIcon />}
+                              >
+                                Delete
+                              </Button>
+                            </TableCell>
                           </TableRow>
                         ))
                       ))}
 
                     {/* Edit suggestions by user */}
+
                     {activeTab === "suggest" &&
                       (user.ResourceEditSuggestion.length === 0 ? (
                         <TableRow>
@@ -214,12 +242,56 @@ export default function UserDashboard() {
                             <TableCell>{index + 1} </TableCell>
                             <TableCell>{edit.name}</TableCell>
                             <TableCell>{edit.status}</TableCell>
-                            <TableCell>Edit</TableCell>
+                            <TableCell>
+                              {" "}
+                              <Button
+                                variant="outlined"
+                                startIcon={<DeleteIcon />}
+                              >
+                                Delete
+                              </Button>
+                            </TableCell>
                           </TableRow>
                         ))
                       ))}
 
                     {/* reviews */}
+
+                    {activeTab === "reviews" &&
+                      (user.reviews.length === 0 ? (
+                        <TableRow>
+                          <TableCell colSpan={4}>
+                            No edit suggestions submitted yet.
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        user.reviews.map((review, index) => (
+                          <TableRow
+                            key={review.id}
+                            hover
+                            role="checkbox"
+                            tabIndex={-1}
+                          >
+                            <TableCell>{index + 1} </TableCell>
+
+                            <TableCell>{review.resource.name}</TableCell>
+
+                            <TableCell>{review.content}</TableCell>
+
+                            <TableCell>{review.rating}</TableCell>
+                            <TableCell>{review.createdAt}</TableCell>
+                            <TableCell>
+                              {" "}
+                              <Button
+                                variant="outlined"
+                                startIcon={<DeleteIcon />}
+                              >
+                                Delete
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      ))}
 
                     {/* favorites */}
                   </TableBody>

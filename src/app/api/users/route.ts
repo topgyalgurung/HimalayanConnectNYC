@@ -34,6 +34,20 @@ export async function GET() {
                         status: true,
                     }
                     
+                },
+                reviews: {
+                    select: {
+                        id: true,
+                        rating: true,
+                        content: true,
+                        createdAt: true,
+                        resource: {
+                            select: {
+                                name:true
+                            }
+                        }
+                    }
+                    
                 }
                 
             }

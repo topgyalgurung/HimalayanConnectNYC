@@ -10,12 +10,24 @@ export async function GET() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const suggestions = await prisma.resourceEditSuggestion.findMany({
-      where: { suggestedById: Number(session.userId) },
+    // check if admin
+    if (session.role !== "ADMIN") {
+      const suggestions = await prisma.resourceEditSuggestion.findMany({
+        where: { suggestedById: Number(session.userId) },
+        orderBy: { createdAt: 'desc' },
+      });
+  
+      return NextResponse.json(suggestions);
+      
+    }
+    // If admin, fetch ALL suggestions
+    const allSuggestions = await prisma.resourceEditSuggestion.findMany({
       orderBy: { createdAt: 'desc' },
     });
 
-    return NextResponse.json(suggestions);
+    return NextResponse.json(allSuggestions);
+
+   
   } catch (error) {
     console.error('Failed to fetch resource edit suggestions:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

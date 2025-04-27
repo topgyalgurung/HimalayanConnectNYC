@@ -5,8 +5,21 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import type { Resource } from "@/app/types/resource";
 
+import React from "react";
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
+
 import { useFetchResources } from "../hooks/useFetchResources";
 import { useFetchResourceEdit } from "../hooks/useFetchResourceEdit";
+import Button from "@mui/material/Button";
+import Paper from "@mui/material/Paper";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import { Typography } from "@mui/material";
 // import Resource from "@/app/types/resource";
 // import ResourceCard from "../(homepage)/resources/ResourceCard";
 //  import {redirect} from 'next/navigation'
@@ -94,8 +107,12 @@ export default function AdminDashboard() {
     if (activeTab == "edit") return res.status == "PENDING";
   });
 
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-2">
+    <div className="flex flex-col items-center justify-center ">
       <h1 className="text-4xl font-bold text-center mt-1">Profile</h1>
 
       {/* Profile card and dashboard container */}
@@ -176,101 +193,225 @@ export default function AdminDashboard() {
               </button>
             </div>
 
-            <div className="overflow-x-auto">
-              <table className="min-w-full border-collapse">
-                <thead>
-                  <tr className="bg-gray-100">
-                    <th className="px-6 py-3 border-b text-left text-xl font-semibold">
-                      Index
-                    </th>
-                    <th className="px-6 py-3 border-b text-left text-xl font-semibold">
-                      Name
-                    </th>
-                    <th className="px-6 py-3 border-b text-left text-xl font-semibold">
-                      View Details
-                    </th>
-                    <th className="px-6 py-3 border-b text-left text-xl font-semibold">
-                      Approve
-                    </th>
-                    <th className="px-6 py-3 border-b text-left text-xl font-semibold">
-                      Reject
-                    </th>
-                  </tr>
-                </thead>
+            {/* table column names  */}
 
-                {/* content  */}
-                <tbody>
-                  {filteredByStatus.map((resource, index) => (
-                    <tr key={resource.id} className="border-b hover:bg-gray-50">
-                      <td className="px-6 py-4">{index + 1}</td>
-                      <td className="px-6 py-4">{resource.name}</td>
-                      {/* add link to view details  */}
-                      <td className="px-6 py-4"></td>
-                      <td className="px-6 py-4 space-x-2">
-                        {(resource.status === "PENDING" ||
-                          resource.status === "REJECTED") && (
-                          <button
+            <Paper sx={{ width: "100%", overflow: "hidden" }}>
+              <TableContainer sx={{ maxHeight: 440 }}>
+                <Table stickyHeader aria-label="sticky table">
+                  <TableHead>
+                    {activeTab === "new" || activeTab === "edit" ? (
+                      <TableRow>
+                        <TableCell>Index</TableCell>
+                        <TableCell>Name</TableCell>
+                        <TableCell>View Details</TableCell>
+                        <TableCell>Approve</TableCell>
+                        <TableCell>Reject</TableCell>
+                      </TableRow>
+                    ) : (
+                      <TableRow>
+                        <TableCell>Index</TableCell>
+                        <TableCell>Name</TableCell>
+                        <TableCell>View Details</TableCell>
+                        <TableCell>Actions</TableCell>
+                      </TableRow>
+                    )}
+                  </TableHead>
+
+                  {/* table columns */}
+
+                  <TableBody>
+                    {/*  */}
+                    {filteredByStatus.map((resource, index) => (
+                      <TableRow
+                        key={resource.id}
+                        hover
+                        role="checkbox"
+                        tabIndex={-1}
+                      >
+                        <TableCell>{index + 1}</TableCell>
+                        <TableCell>{resource.name}</TableCell>
+                        <TableCell>
+                          <Button onClick={handleOpen}>View</Button>
+                          <Modal
+                            open={open}
+                            onClose={handleClose}
+                            aria-labelledby="modal-modal-title"
+                            aria-describedby="modal-modal-description"
+                          >
+                            <Box className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 bg-white border-2 border-black shadow-2xl pt-2 px-4 pb-3">
+                              <Typography
+                                id="modal-modal-title"
+                                variant="h6"
+                                component="h2"
+                              >
+                                {resource.name}
+                              </Typography>
+                              <Typography
+                                id="modal-modal-description"
+                                className="mt-2"
+                              >
+                                {resource.description}
+                                {resource.address}
+                                {resource.city}
+                                {resource.imageUrl}
+                              </Typography>
+                            </Box>
+                          </Modal>
+                        </TableCell>
+                        {activeTab === "new" && (
+                          <>
+                            <TableCell>
+                              <Button
+                                variant="contained"
+                                color="success"
+                                onClick={() =>
+                                  handleStatusChange(resource.id, "APPROVED")
+                                }
+                              >
+                                Approve
+                              </Button>
+                            </TableCell>
+                            <TableCell>
+                              <Button
+                                variant="contained"
+                                color="error"
+                                onClick={() =>
+                                  handleStatusChange(resource.id, "REJECTED")
+                                }
+                              >
+                                Reject
+                              </Button>
+                            </TableCell>
+                          </>
+                        )}
+                        {activeTab === "approved" && (
+                          <TableCell>
+                            <Button
+                              variant="contained"
+                              color="error"
+                              onClick={() =>
+                                handleStatusChange(resource.id, "REJECTED")
+                              }
+                            >
+                              Reject
+                            </Button>
+                          </TableCell>
+                        )}
+                        {activeTab === "rejected" && (
+                          <TableCell>
+                            <Button
+                              variant="contained"
+                              color="success"
+                              onClick={() =>
+                                handleStatusChange(resource.id, "APPROVED")
+                              }
+                            >
+                              Approve
+                            </Button>
+                          </TableCell>
+                        )}
+                      </TableRow>
+                    ))}
+
+                    {/* <TableCell>
+                          {(resource.status === "PENDING" ||
+                            resource.status === "REJECTED") && (
+                            <Button
+                              variant="contained"
+                              color="success"
+                              onClick={() =>
+                                handleStatusChange(resource.id, "APPROVED")
+                              }
+                            >
+                              Approve
+                            </Button>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {(resource.status === "APPROVED" ||
+                            resource.status === "PENDING") && (
+                            <Button
+                              variant="contained"
+                              color="error"
+                              onClick={() =>
+                                handleStatusChange(resource.id, "REJECTED")
+                              }
+                            >
+                              Reject
+                            </Button>
+                          )}
+                        </TableCell> */}
+
+                    {/* Edit submission */}
+                    {filteredByEditStatus.map((resource, index) => (
+                      <TableRow
+                        key={resource.id}
+                        hover
+                        role="checkbox"
+                        tabIndex={-1}
+                      >
+                        <TableCell>{index + 1}</TableCell>
+                        <TableCell>{resource.name}</TableCell>
+                        <TableCell>
+                          <Button onClick={handleOpen}>View</Button>
+                          <Modal
+                            open={open}
+                            onClose={handleClose}
+                            aria-labelledby="modal-modal-title"
+                            aria-describedby="modal-modal-description"
+                          >
+                            <Box className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 bg-white border-2 border-black shadow-2xl pt-2 px-4 pb-3">
+                              <Typography
+                                id="modal-modal-title"
+                                variant="h6"
+                                component="h2"
+                              >
+                                {resource.name}
+                              </Typography>
+                              <Typography
+                                id="modal-modal-description"
+                                className="mt-2"
+                              >
+                                {resource.description}
+                                {resource.address}
+                                {resource.city}
+                                {resource.imageUrl}
+                              </Typography>
+                            </Box>
+                          </Modal>
+                        </TableCell>
+                        <TableCell>
+                          <Button
+                            variant="contained"
+                            color="success"
                             onClick={() =>
                               handleStatusChange(resource.id, "APPROVED")
                             }
-                            className="px-3 py-1 text-white bg-green-500 rounded-md hover:bg-green-600"
                           >
-                            👍
-                          </button>
-                        )}
-                      </td>
-
-                      <td>
-                        {(resource.status === "APPROVED" ||
-                          resource.status === "PENDING") && (
-                          <button
+                            Approve
+                          </Button>
+                        </TableCell>
+                        <TableCell>
+                          <Button
+                            variant="contained"
+                            color="error"
                             onClick={() =>
                               handleStatusChange(resource.id, "REJECTED")
                             }
-                            className="px-3 py-1 text-white bg-red-500 rounded-md hover:bg-red-600"
                           >
-                            👎
-                          </button>
-                        )}
-                      </td>
-                      {/* get submitted by name and email */}
-                    </tr>
-                  ))}
-                </tbody>
+                            Reject
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
 
-                {/* edit resource */}
-                <tbody>
-                  {filteredByEditStatus.map((resource, index) => (
-                    <tr key={resource.id} className="border-b hover:bg-gray-50">
-                      <td className="px-6 py-4">{index + 1}</td>
-                      <td className="px-6 py-4">{resource.name}</td>
-                      {/* add link to view details  */}
-                      <td className="px-6 py-4"></td>
-                      <td className="px-6 py-4 space-x-2">
-                        <button
-                          onClick={() =>
-                            handleStatusChange(resource.id, "APPROVED")
-                          }
-                          className="px-3 py-1 text-white bg-green-500 rounded-md hover:bg-green-600"
-                        >
-                          👍
-                        </button>
-                      </td>
-                      <td>
-                        <button
-                          onClick={() =>
-                            handleStatusChange(resource.id, "REJECTED")
-                          }
-                          className="px-3 py-1 text-white bg-red-500 rounded-md hover:bg-red-600"
-                        >
-                          👎
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  {/* Approved  */}
+
+                  {/* rejected */}
+                </Table>
+              </TableContainer>
+            </Paper>
           </div>
         </div>
       </div>

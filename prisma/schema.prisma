@@ -11,27 +11,27 @@ datasource db {
 
 // USER 
 model User {
-  id                     Int                      @id @default(autoincrement())  
-  firstName               String
-  lastName             String
-  email                  String                   @unique
-  password               String
-  image         String?
-  role                  Role                  @default(USER)
-  isVerified           Boolean   @default(false)
-  forgotPasswordToken       String?  
+  id                        Int       @id @default(autoincrement())
+  firstName                 String
+  lastName                  String
+  email                     String    @unique
+  password                  String
+  image                     String?
+  role                      Role      @default(USER)
+  isVerified                Boolean   @default(false)
+  forgotPasswordToken       String?
   forgotPasswordTokenExpiry DateTime?
-  verifyToken               String?  
+  verifyToken               String?
   verifyTokenExpiry         DateTime?
 
-  createdAt              DateTime                 @default(now())
-  updatedAt             DateTime                  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   //relations
   resources              Resource[]               @relation("UserResources")
   ResourceEditSuggestion ResourceEditSuggestion[]
-  likes           ResourceLike[]
-  reviews         ResourceReview[]
+  likes                  ResourceLike[]
+  reviews                ResourceReview[]         @relation("UserReviews") // add relation name 
 }
 
 enum Role {
@@ -50,29 +50,29 @@ model Location {
 
 // RESOURCE
 model Resource {
-  id                     Int                      @id @default(autoincrement())
-  name                  String
-  description            String?
-  address                String
-  city                   String?
-  openDays               String?
-  openTime               DateTime? @db.Time // store just time 
-  closeTime              DateTime? @db.Time // store just time 
-  phone                  String?
-  rating                 Decimal                  @default(0) @db.Decimal(2, 1)
-  imageUrl               String? // store the image url
-  facebookLink           String?
-  email                  String?
-  status                 ResourceStatus  @default(PENDING)
-  url                String?
-  categoryId             Int?
-  createdById            Int?
-  createdAt              DateTime                 @default(now())
+  id           Int            @id @default(autoincrement())
+  name         String
+  description  String?
+  address      String
+  city         String?
+  openDays     String?
+  openTime     DateTime?      @db.Time // store just time 
+  closeTime    DateTime?      @db.Time // store just time 
+  phone        String?
+  rating       Decimal        @default(0) @db.Decimal(2, 1)
+  imageUrl     String? // store the image url
+  facebookLink String?
+  email        String?
+  status       ResourceStatus @default(PENDING)
+  url          String?
+  categoryId   Int?
+  createdById  Int?
+  createdAt    DateTime       @default(now())
 
   //relation
   Location               Location[]
   ResourceCategory       ResourceCategory?        @relation(fields: [categoryId], references: [id])
-  User                   User?                    @relation("UserResources",fields: [createdById], references: [id])
+  User                   User?                    @relation("UserResources", fields: [createdById], references: [id])
   ResourceEditSuggestion ResourceEditSuggestion[]
   ResourceLike           ResourceLike[]
   ResourceReview         ResourceReview[]
@@ -81,7 +81,7 @@ model Resource {
   @@index([name, description, city])
 }
 
-enum ResourceStatus{
+enum ResourceStatus {
   PENDING
   APPROVED
   REJECTED
@@ -95,7 +95,7 @@ model ResourceCategory {
   ResourceEditSuggestion ResourceEditSuggestion[]
 }
 
-enum EditStatus{
+enum EditStatus {
   PENDING
   APPROVED
   REJECTED
@@ -140,12 +140,12 @@ model ResourceReview {
   id         Int      @id @default(autoincrement())
   resourceId Int
   userId     Int
-  rating     Int      // 1-5 rating
-  content     String?
+  rating     Int // 1-5 rating
+  content    String?
   // isAnonymous  Boolean @default(false)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   // relation
   resource   Resource @relation(fields: [resourceId], references: [id])
-  user       User     @relation(fields: [userId], references: [id])
+  user       User     @relation("UserReviews", fields: [userId], references: [id]) // match relation name 
 }
