@@ -2,15 +2,15 @@
 import Image from "next/image";
 import { logout } from "../actions/auth";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { Resource } from "@/app/types/resource";
 
 import React from "react";
-import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
 
 import { useFetchResources } from "../hooks/useFetchResources";
 import { useFetchResourceEdit } from "../hooks/useFetchResourceEdit";
+import { useModal } from "../hooks/useModal";
+
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
@@ -19,26 +19,18 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { Typography } from "@mui/material";
-// import Resource from "@/app/types/resource";
-// import ResourceCard from "../(homepage)/resources/ResourceCard";
-//  import {redirect} from 'next/navigation'
 
-// import {getUser} from '@/auth'
-// import cookies from 'next/headers'
+import { Typography } from "@mui/material";
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
 
 export default function AdminDashboard() {
-  // const user = getUser(await cookies())
-  // if (user == null || !user.admin) {
-  //   return redirect('/login')
-  // }
-
   const [activeTab, setActiveTab] = useState("new");
   const router = useRouter();
-  // const [filteredResources, setFilteredResources] = useState<Resource[]>([]);
   const { resources, refetch: refetchResources } = useFetchResources();
   const { editResources, refetch: refetchEditResources } =
     useFetchResourceEdit();
+  const { isOpen, data: selectedResource, openModal, closeModal } = useModal();
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
@@ -64,23 +56,6 @@ export default function AdminDashboard() {
 
       await refetchResources();
       await refetchEditResources();
-
-      // const updatedResource = await response.json();
-
-      // Update state with the new resource status
-      // setFilteredResources((prevResources) =>
-      //   prevResources.map((resource) =>
-      //     resource.id === resourceId
-      //       ? { ...resource, status: updatedResource.status }
-      //       : resource
-      //   )
-      // );
-
-      // setResources((prev) =>
-      //   prev.map((res) =>
-      //     res.id === resourceId ? { ...res, status: newStatus } : res
-      //   )
-      // );
     } catch (error) {
       console.error("Error updating status:", error);
     }
@@ -193,7 +168,7 @@ export default function AdminDashboard() {
               </button>
             </div>
 
-            {/* table column names  */}
+            {/* table header or column names  */}
 
             <Paper sx={{ width: "100%", overflow: "hidden" }}>
               <TableContainer sx={{ maxHeight: 440 }}>
@@ -217,10 +192,9 @@ export default function AdminDashboard() {
                     )}
                   </TableHead>
 
-                  {/* table columns */}
+                  {/* table content */}
 
                   <TableBody>
-                    {/*  */}
                     {filteredByStatus.map((resource, index) => (
                       <TableRow
                         key={resource.id}
@@ -231,32 +205,9 @@ export default function AdminDashboard() {
                         <TableCell>{index + 1}</TableCell>
                         <TableCell>{resource.name}</TableCell>
                         <TableCell>
-                          <Button onClick={handleOpen}>View</Button>
-                          <Modal
-                            open={open}
-                            onClose={handleClose}
-                            aria-labelledby="modal-modal-title"
-                            aria-describedby="modal-modal-description"
-                          >
-                            <Box className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 bg-white border-2 border-black shadow-2xl pt-2 px-4 pb-3">
-                              <Typography
-                                id="modal-modal-title"
-                                variant="h6"
-                                component="h2"
-                              >
-                                {resource.name}
-                              </Typography>
-                              <Typography
-                                id="modal-modal-description"
-                                className="mt-2"
-                              >
-                                {resource.description}
-                                {resource.address}
-                                {resource.city}
-                                {resource.imageUrl}
-                              </Typography>
-                            </Box>
-                          </Modal>
+                          <Button onClick={() => openModal(resource)}>
+                            View
+                          </Button>
                         </TableCell>
                         {activeTab === "new" && (
                           <>
@@ -313,35 +264,6 @@ export default function AdminDashboard() {
                       </TableRow>
                     ))}
 
-                    {/* <TableCell>
-                          {(resource.status === "PENDING" ||
-                            resource.status === "REJECTED") && (
-                            <Button
-                              variant="contained"
-                              color="success"
-                              onClick={() =>
-                                handleStatusChange(resource.id, "APPROVED")
-                              }
-                            >
-                              Approve
-                            </Button>
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          {(resource.status === "APPROVED" ||
-                            resource.status === "PENDING") && (
-                            <Button
-                              variant="contained"
-                              color="error"
-                              onClick={() =>
-                                handleStatusChange(resource.id, "REJECTED")
-                              }
-                            >
-                              Reject
-                            </Button>
-                          )}
-                        </TableCell> */}
-
                     {/* Edit submission */}
                     {filteredByEditStatus.map((resource, index) => (
                       <TableRow
@@ -353,32 +275,9 @@ export default function AdminDashboard() {
                         <TableCell>{index + 1}</TableCell>
                         <TableCell>{resource.name}</TableCell>
                         <TableCell>
-                          <Button onClick={handleOpen}>View</Button>
-                          <Modal
-                            open={open}
-                            onClose={handleClose}
-                            aria-labelledby="modal-modal-title"
-                            aria-describedby="modal-modal-description"
-                          >
-                            <Box className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 bg-white border-2 border-black shadow-2xl pt-2 px-4 pb-3">
-                              <Typography
-                                id="modal-modal-title"
-                                variant="h6"
-                                component="h2"
-                              >
-                                {resource.name}
-                              </Typography>
-                              <Typography
-                                id="modal-modal-description"
-                                className="mt-2"
-                              >
-                                {resource.description}
-                                {resource.address}
-                                {resource.city}
-                                {resource.imageUrl}
-                              </Typography>
-                            </Box>
-                          </Modal>
+                          <Button onClick={() => openModal(resource)}>
+                            View
+                          </Button>
                         </TableCell>
                         <TableCell>
                           <Button
@@ -412,6 +311,25 @@ export default function AdminDashboard() {
                 </Table>
               </TableContainer>
             </Paper>
+
+            <Modal
+              open={isOpen}
+              onClose={closeModal}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+            >
+              <Box className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 bg-white border-2 border-black shadow-2xl pt-2 px-4 pb-3">
+                <Typography id="modal-modal-title" variant="h6" component="h2">
+                  {selectedResource?.name || "No Title"}
+                </Typography>
+                <Typography id="modal-modal-description" className="mt-2">
+                  {selectedResource?.description}
+                  {selectedResource?.city && ` - ${selectedResource.city}`}
+                  {selectedResource?.address &&
+                    ` - ${selectedResource.address}`}
+                </Typography>
+              </Box>
+            </Modal>
           </div>
         </div>
       </div>

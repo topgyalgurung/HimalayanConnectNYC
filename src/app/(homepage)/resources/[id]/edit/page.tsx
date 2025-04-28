@@ -1,11 +1,12 @@
 import prisma from "@/app/lib/prisma";
 import { revalidatePath } from "next/cache";
 
-export default async function ResourceEditPage({
-  params,
-}: {
-  params: { id: string };
-}) {
+export default async function ResourceEditPage(
+  props: {
+    params: Promise<{ id: string }>;
+  }
+) {
+  const params = await props.params;
   const key = `resources: ${params.id}`;
 
   // Fetch resource data by ID from the database

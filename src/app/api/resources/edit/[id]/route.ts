@@ -1,0 +1,67 @@
+import { NextRequest, NextResponse } from "next/server";
+import prisma from "@/app/lib/prisma";
+import { getSession } from "@/app/lib/session";
+
+export async function DELETE(
+  req: NextRequest,
+  props: { params: Promise<{ id: string }> }
+) {
+  try {
+    const params = await props.params;
+    const resourceId = parseInt(params.id, 10);
+    if (isNaN(resourceId)) {
+      return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
+    }
+
+    console.log(`Attempting to delete resource ID: ${resourceId}`);
+
+    const session = await getSession();
+    if (!session || !session.userId) {
+      console.error("Unauthorized access: No session");
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const userId = parseInt(session.userId, 10);
+    console.log(`User ID: ${userId}`);
+
+    const suggestion = await prisma.resourceEditSuggestion.findUnique({
+      where: { id: resourceId },
+    });
+
+    if (!suggestion) {
+      console.log(`Resource ID: ${resourceId} not found`);
+      return NextResponse.json(
+        { error: "Resource not found" },
+        { status: 404 }
+      );
+    }
+
+    // Handle case where resource has no createdById
+    if (!suggestion.suggestedById) {
+      console.log(`Resource ID: ${resourceId} has no associated user`);
+      return NextResponse.json(
+        { error: "Cannot delete resource with no associated user" },
+        { status: 403 }
+      );
+    }
+
+    if (suggestion.suggestedById !== userId) {
+      console.log(
+        `Forbidden: User ID ${userId} does not own resource ID ${resourceId}`
+      );
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
+    await prisma.resourceEditSuggestion.delete({ where: { id: resourceId } });
+
+    console.log(`Resource ID: ${resourceId} deleted successfully`);
+    return NextResponse.json({ success: true });
+  } catch (error: any) {
+    console.error("Error deleting resource:", {
+      message: error.message,
+      stack: error.stack,
+    
+    });
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
+  }
+}

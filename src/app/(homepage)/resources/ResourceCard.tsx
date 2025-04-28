@@ -7,23 +7,6 @@ import { useUser } from "@/app/context/UserProvider";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
-// type Location = {
-//   id: number;
-//   latitude: number;
-//   longitude: number;
-// };
-// type Resource = {
-//   id: string;
-//   name: string;
-//   description: string;
-//   address: string;
-//   city: string;
-//   openDays: string;
-//   openTime: string;
-//   closeTime: string;
-//   ResourceCategory?: { name: string } | null;
-//   Location: Location[];
-// };
 interface ResourceCardProps {
   resources: Resource[];
   onViewDetails?: (resource: Resource) => void;
@@ -69,15 +52,6 @@ export default function ResourceCard({
                 {format(resource.openTime, "hh:mm a")}-
                 {format(resource.closeTime, "hh:mm a")}
               </p>
-              {/* <p>
-                <strong>Location: </strong>
-                {Location.map((location) => (
-                  <span key={location.id}>
-                    Latitude: {location.latitude}, Longitude:{" "}
-                    {location.longitude}
-                  </span>
-                ))}
-              </p> */}
 
               <div className="pt-4 flex items-center justify-between">
                 {/* view details */}

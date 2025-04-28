@@ -45,7 +45,7 @@ model Location {
   resourceId Int
   latitude   Float
   longitude  Float
-  Resource   Resource @relation(fields: [resourceId], references: [id])
+  Resource   Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
 }
 
 // RESOURCE
@@ -69,7 +69,7 @@ model Resource {
   createdById  Int?
   createdAt    DateTime       @default(now())
 
-  //relation
+  // relations
   Location               Location[]
   ResourceCategory       ResourceCategory?        @relation(fields: [categoryId], references: [id])
   User                   User?                    @relation("UserResources", fields: [createdById], references: [id])
@@ -118,7 +118,7 @@ model ResourceEditSuggestion {
   createdAt        DateTime          @default(now())
   //relation
   ResourceCategory ResourceCategory? @relation(fields: [categoryId], references: [id])
-  resource         Resource          @relation(fields: [resourceId], references: [id])
+  resource         Resource          @relation(fields: [resourceId], references: [id], onDelete: Cascade)
   User             User?             @relation(fields: [suggestedById], references: [id])
 }
 
@@ -129,7 +129,7 @@ model ResourceLike {
   userId     Int
   createdAt  DateTime @default(now())
   //relation
-  resource   Resource @relation(fields: [resourceId], references: [id])
+  resource   Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
   User       User     @relation(fields: [userId], references: [id])
 
   @@unique([resourceId, userId])
@@ -146,6 +146,6 @@ model ResourceReview {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   // relation
-  resource   Resource @relation(fields: [resourceId], references: [id])
+  resource   Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
   user       User     @relation("UserReviews", fields: [userId], references: [id]) // match relation name 
 }
