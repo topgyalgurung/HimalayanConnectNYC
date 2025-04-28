@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 
 import { useFetchUser } from "../hooks/useFetchUsers";
 import { useModal } from "../hooks/useModal";
+import { useDeleteItem } from "../hooks/useDeleteResource";
 
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
@@ -23,6 +24,7 @@ import TableRow from "@mui/material/TableRow";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import { Typography } from "@mui/material";
+import toast from "react-hot-toast";
 
 interface resourceColumn {
   id: "index" | "name" | "status" | "view" | "edit";
@@ -64,8 +66,9 @@ export default function UserDashboard() {
   const [activeTab, setActiveTab] = useState("new");
 
   const router = useRouter();
-  const user = useFetchUser();
+  const { data: user, refetch } = useFetchUser();
   const { isOpen, data: selectedResource, openModal, closeModal } = useModal();
+  const { deleteItem, deletingId } = useDeleteItem();
 
   if (!user) return <p>Loading user data...</p>;
 
@@ -166,8 +169,6 @@ export default function UserDashboard() {
               </button>
             </div>
 
-            {/* Add content here for submissions */}
-
             {/* table headers  */}
 
             <Paper sx={{ width: "100%", overflow: "hidden" }}>
@@ -194,6 +195,7 @@ export default function UserDashboard() {
                         <TableCell>Reviews</TableCell>
                         <TableCell>Rating</TableCell>
                         <TableCell>Date</TableCell>
+                        <TableCell>Action</TableCell>
                       </TableRow>
                     )}
                     {activeTab === "likes" && (
@@ -235,12 +237,21 @@ export default function UserDashboard() {
                                 View
                               </Button>
                             </TableCell>
+                            {/* delete button */}
                             <TableCell>
                               <Button
                                 variant="outlined"
                                 startIcon={<DeleteIcon />}
+                                disabled={deletingId === res.id.toString()}
+                                onClick={() =>
+                                  deleteItem("resources", res.id, {
+                                    refetchUser: refetch,
+                                  })
+                                }
                               >
-                                Delete
+                                {deletingId === res.id.toString()
+                                  ? "Deleting..."
+                                  : "Delete"}
                               </Button>
                             </TableCell>
                           </TableRow>
@@ -275,8 +286,16 @@ export default function UserDashboard() {
                               <Button
                                 variant="outlined"
                                 startIcon={<DeleteIcon />}
+                                disabled={deletingId === edit.id.toString()}
+                                onClick={() =>
+                                  deleteItem("resources/edit", edit.id, {
+                                    refetchUser: refetch,
+                                  })
+                                }
                               >
-                                Delete
+                                {deletingId === edit.id.toString()
+                                  ? "Deleting..."
+                                  : "Delete"}
                               </Button>
                             </TableCell>
                           </TableRow>
@@ -304,6 +323,22 @@ export default function UserDashboard() {
                             <TableCell>{review.content}</TableCell>
                             <TableCell>{review.rating}</TableCell>
                             <TableCell>{review.createdAt}</TableCell>
+                            <TableCell>
+                              <Button
+                                variant="outlined"
+                                startIcon={<DeleteIcon />}
+                                disabled={deletingId === review.id.toString()}
+                                onClick={() =>
+                                  deleteItem("resources/review", review.id, {
+                                    refetchUser: refetch,
+                                  })
+                                }
+                              >
+                                {deletingId === review.id.toString()
+                                  ? "Deleting..."
+                                  : "Delete"}
+                              </Button>
+                            </TableCell>
                           </TableRow>
                         ))
                       ))}
@@ -333,8 +368,16 @@ export default function UserDashboard() {
                               <Button
                                 variant="outlined"
                                 startIcon={<DeleteIcon />}
+                                disabled={deletingId === like.id.toString()}
+                                onClick={() =>
+                                  deleteItem("resources/favorite", like.id, {
+                                    refetchUser: refetch,
+                                  })
+                                }
                               >
-                                Delete
+                                {deletingId === like.id.toString()
+                                  ? "Deleting..."
+                                  : "Delete"}
                               </Button>
                             </TableCell>
                           </TableRow>

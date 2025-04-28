@@ -4,6 +4,9 @@ import prisma from "@/app/lib/prisma";
 import { getSession } from "@/app/lib/session";
 import { NextResponse } from "next/server";
 
+// export const dynamic = 'force-dynamic';
+// already cache:"no-store"
+
 export async function GET() {
     try {
         const session = await getSession();
@@ -51,6 +54,7 @@ export async function GET() {
                 },
                 likes: {
                     select: {
+                        id:true,
                         resource: { // get the resource info
                             select: {
                                 id: true,

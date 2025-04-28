@@ -36,3 +36,16 @@ export async function POST(request: NextRequest, response:NextResponse) {
     }
 
 }
+
+export async function DELETE(request: NextRequest, response: NextResponse) {
+   // authenticate the request 
+   const session = await getSession();
+   // check if session exists, otherwise deny access
+   if (!session?.userId) {
+     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+   }
+ // check if access to user email, make sure access on server 
+ // client side hacker can use any email to update record of another user   
+ const currentUserId = session?.userId!;
+  
+}

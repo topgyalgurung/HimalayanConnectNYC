@@ -1,6 +1,7 @@
 import React from "react";
 
-const page = ({ params }: { params: { id: string } }) => {
+const page = async (props: { params: Promise<{ id: string }> }) => {
+  const params = await props.params;
   const { id } = params;
   return (
     <div>
