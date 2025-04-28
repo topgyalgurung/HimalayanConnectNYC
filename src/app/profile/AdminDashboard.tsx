@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { logout } from "../actions/auth";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import type { Resource } from "@/app/types/resource";
 
 import React from "react";

@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import React from "react";
 
 import Image from "next/image";
 import { useState } from "react";
@@ -8,6 +8,7 @@ import { logout } from "../actions/auth";
 import { useRouter } from "next/navigation";
 
 import { useFetchUser } from "../hooks/useFetchUsers";
+import { useModal } from "../hooks/useModal";
 
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
@@ -19,9 +20,12 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Button from "@mui/material/Button";
 // import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
+import { Typography } from "@mui/material";
 
 interface resourceColumn {
-  id: "index" | "name" | "status" | "edit";
+  id: "index" | "name" | "status" | "view" | "edit";
   label: string;
   minWidth?: number;
   align?: "right";
@@ -45,6 +49,11 @@ const columns: readonly resourceColumn[] = [
     minWidth: 170,
   },
   {
+    id: "view",
+    label: "view",
+    minWidth: 170,
+  },
+  {
     id: "edit",
     label: "Action",
     minWidth: 100,
@@ -53,8 +62,10 @@ const columns: readonly resourceColumn[] = [
 
 export default function UserDashboard() {
   const [activeTab, setActiveTab] = useState("new");
+
   const router = useRouter();
   const user = useFetchUser();
+  const { isOpen, data: selectedResource, openModal, closeModal } = useModal();
 
   if (!user) return <p>Loading user data...</p>;
 
@@ -107,9 +118,10 @@ export default function UserDashboard() {
         {/* Dashboard (takes 70% width) */}
         <div className="w-full md:w-2/3 p-4">
           <div className="bg-white shadow-lg rounded-lg p-6">
-            <h2 className="text-2xl font-bold mb-4">Dashboard</h2>
+            <h2 className="text-2xl font-bold mb-4">Your Dashboard</h2>
             <p className="text-gray-600">
-              Welcome to your dashboard! Here you can manage your resources
+              Welcome to your dashboard! Here you can manage your resource
+              submissions
             </p>
 
             {/* More dashboard content here */}
@@ -162,7 +174,7 @@ export default function UserDashboard() {
               <TableContainer sx={{ maxHeight: 440 }}>
                 <Table stickyHeader aria-label="sticky table">
                   <TableHead>
-                    {activeTab === "new" || activeTab === "suggest" ? (
+                    {(activeTab === "new" || activeTab === "suggest") && (
                       <TableRow>
                         {columns.map((column) => (
                           <TableCell
@@ -174,13 +186,21 @@ export default function UserDashboard() {
                           </TableCell>
                         ))}
                       </TableRow>
-                    ) : (
+                    )}
+                    {activeTab === "reviews" && (
                       <TableRow>
                         <TableCell>Index</TableCell>
                         <TableCell>Resource Name</TableCell>
                         <TableCell>Reviews</TableCell>
                         <TableCell>Rating</TableCell>
                         <TableCell>Date</TableCell>
+                      </TableRow>
+                    )}
+                    {activeTab === "likes" && (
+                      <TableRow>
+                        <TableCell>Index</TableCell>
+                        <TableCell>Resource Name</TableCell>
+                        <TableCell>View Details</TableCell>
                         <TableCell>Action</TableCell>
                       </TableRow>
                     )}
@@ -193,7 +213,7 @@ export default function UserDashboard() {
                     {activeTab === "new" &&
                       (user.resources.length === 0 ? (
                         <TableRow>
-                          <TableCell colSpan={4}>
+                          <TableCell colSpan={5}>
                             No resources submitted yet.
                           </TableCell>
                         </TableRow>
@@ -211,6 +231,11 @@ export default function UserDashboard() {
                             <TableCell>{res.name}</TableCell>
                             <TableCell>{res.status}</TableCell>
                             <TableCell>
+                              <Button onClick={() => openModal(res)}>
+                                View
+                              </Button>
+                            </TableCell>
+                            <TableCell>
                               <Button
                                 variant="outlined"
                                 startIcon={<DeleteIcon />}
@@ -223,11 +248,10 @@ export default function UserDashboard() {
                       ))}
 
                     {/* Edit suggestions by user */}
-
                     {activeTab === "suggest" &&
                       (user.ResourceEditSuggestion.length === 0 ? (
                         <TableRow>
-                          <TableCell colSpan={4}>
+                          <TableCell colSpan={5}>
                             No edit suggestions submitted yet.
                           </TableCell>
                         </TableRow>
@@ -243,7 +267,11 @@ export default function UserDashboard() {
                             <TableCell>{edit.name}</TableCell>
                             <TableCell>{edit.status}</TableCell>
                             <TableCell>
-                              {" "}
+                              <Button onClick={() => openModal(edit)}>
+                                View
+                              </Button>
+                            </TableCell>
+                            <TableCell>
                               <Button
                                 variant="outlined"
                                 startIcon={<DeleteIcon />}
@@ -256,12 +284,11 @@ export default function UserDashboard() {
                       ))}
 
                     {/* reviews */}
-
                     {activeTab === "reviews" &&
                       (user.reviews.length === 0 ? (
                         <TableRow>
-                          <TableCell colSpan={4}>
-                            No edit suggestions submitted yet.
+                          <TableCell colSpan={5}>
+                            No reviews submitted yet.
                           </TableCell>
                         </TableRow>
                       ) : (
@@ -273,15 +300,36 @@ export default function UserDashboard() {
                             tabIndex={-1}
                           >
                             <TableCell>{index + 1} </TableCell>
-
                             <TableCell>{review.resource.name}</TableCell>
-
                             <TableCell>{review.content}</TableCell>
-
                             <TableCell>{review.rating}</TableCell>
                             <TableCell>{review.createdAt}</TableCell>
+                          </TableRow>
+                        ))
+                      ))}
+
+                    {/* favorites */}
+                    {activeTab === "likes" &&
+                      (user.likes.length === 0 ? (
+                        <TableRow>
+                          <TableCell colSpan={5}>No favorites yet.</TableCell>
+                        </TableRow>
+                      ) : (
+                        user.likes.map((like, index) => (
+                          <TableRow
+                            key={like.resource.id}
+                            hover
+                            role="checkbox"
+                            tabIndex={-1}
+                          >
+                            <TableCell>{index + 1}</TableCell>
+                            <TableCell>{like.resource.name}</TableCell>
                             <TableCell>
-                              {" "}
+                              <Button onClick={() => openModal(like.resource)}>
+                                View
+                              </Button>
+                            </TableCell>
+                            <TableCell>
                               <Button
                                 variant="outlined"
                                 startIcon={<DeleteIcon />}
@@ -292,8 +340,6 @@ export default function UserDashboard() {
                           </TableRow>
                         ))
                       ))}
-
-                    {/* favorites */}
                   </TableBody>
                 </Table>
               </TableContainer>
@@ -307,7 +353,25 @@ export default function UserDashboard() {
                 onRowsPerPageChange={handleChangeRowsPerPage}
               /> */}
             </Paper>
-            {/* </div> */}
+            {/* Single Modal for all tabs */}
+            <Modal
+              open={isOpen}
+              onClose={closeModal}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+            >
+              <Box className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 bg-white border-2 border-black shadow-2xl pt-2 px-4 pb-3">
+                <Typography id="modal-modal-title" variant="h6" component="h2">
+                  {selectedResource?.name || "No Title"}
+                </Typography>
+                <Typography id="modal-modal-description" className="mt-2">
+                  {selectedResource?.description}
+                  {selectedResource?.city && ` - ${selectedResource.city}`}
+                  {selectedResource?.address &&
+                    ` - ${selectedResource.address}`}
+                </Typography>
+              </Box>
+            </Modal>
           </div>
         </div>
       </div>

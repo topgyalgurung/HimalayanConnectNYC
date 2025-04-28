@@ -6,16 +6,20 @@ import { type Resource } from "@/app/types/resource";
 import { useState } from "react";
 import { useUser } from "../context/UserProvider";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 
 import { FaFacebook } from "react-icons/fa";
 import { TfiEmail } from "react-icons/tfi";
 import { IoLinkSharp } from "react-icons/io5";
-import { MdFavoriteBorder } from "react-icons/md";
 import { IoNavigateCircleOutline } from "react-icons/io5";
+import IconButton from "@mui/material/IconButton";
+import FavoriteIcon from "@mui/icons-material/Favorite"; // filled heart
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder"; // empty heart
 
 import Rating from "@mui/material/Rating";
 import { Box } from "@mui/material";
 import toast from "react-hot-toast";
+import { useFavorites } from "../hooks/useFavorites";
 
 interface ResourceDetailsCardProps {
   resource: Resource | null;
@@ -35,15 +39,12 @@ export default function ResourceDetailsCard({
   const [activeTab, setActiveTab] = useState("overview");
   const { user } = useUser();
   const router = useRouter();
-  if (!resource) return null;
-  // const [value, setValue] = React.useState<number | null>(5);
 
-  // get average rating
-  // getAverageRating = () => {
-  //   const sum = (accumulator, currentValue) => accumulator + currentValue;
-  //   const ratingsArr = this.props.showPark.reviews.map(reviewObj => reviewObj.rating)
-  //   return ratingsArr.reduce(sum)/ratingsArr.length
-  // };
+  const { isFavorite, toggleFavorite } = useFavorites();
+  if (!resource) return null;
+  const liked = isFavorite(Number(resource.id));
+
+  // Removed handleLikeToggle and likedResourceId state
 
   return (
     <div className="absolute top-4 right-4 z-50 w-96 bg-white rounded-lg shadow-xl p-6">
@@ -112,10 +113,19 @@ export default function ResourceDetailsCard({
               <IoLinkSharp className="text-green-600 text-xl" />
               Website
             </a>
-            <div className="favorite" className="text-blue-600 hover:underline">
-              <MdFavoriteBorder />
-              Favorite
-            </div>
+            {/* favorite on click, it should call api to register into database user favorite resource */}
+            <motion.div
+              whileTap={{ scale: 1.3 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <IconButton
+                onClick={() => toggleFavorite(resource.id)}
+                color="error"
+              >
+                {liked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+              </IconButton>
+            </motion.div>
+            Favorite
           </div>
           <hr className="my-4 border-gray-300" />
           <p className="text-gray-600">
