@@ -1,8 +1,7 @@
 // GET, POST
 import prisma from "@/app/lib/prisma";
+import { getSession } from "@/app/lib/session";
 import { NextResponse } from "next/server";
-import { writeFile } from "fs/promises";
-import path from "path";
 
 // to disable default cached GET routes of next.js to prevent getting same results even after adding new data through api
 // second option: you can use  revalidate option for time based validation to determine when you want to revaildate an api route
@@ -10,24 +9,37 @@ export const dynamic = 'force-dynamic'
 
 export async function GET() {
     try {
+        const session = await getSession();
+        const userId = session?.userId ? Number(session.userId) : null;
+    
         const resources = await prisma.resource.findMany({
-          include: {
+            include: {
                 ResourceCategory: {
-                    select: {id:true,name:true},
+                    select: { id: true, name: true },
                 },
                 Location: {
                     select: {
                         id: true,
-                        resourceId:true,
+                        resourceId: true,
                         latitude: true,
                         longitude: true,
                         
-                    }
+                    },
                 },
-            }
+                ResourceLike: userId
+                    ? {
+                        where: { userId: userId },
+                        select: { id: true },
+                    }
+                    : false,
+            },
         });
-        console.log("Fetched resources: ", JSON.stringify(resources, null, 2)); // Debug log
-        return NextResponse.json(resources)
+        const resourcesWithLikeStatus = resources.map((res) => ({
+            ...res,
+            isLiked: res.ResourceLike && res.ResourceLike.length > 0,
+        }));
+        console.log("Fetched resources:", JSON.stringify(resourcesWithLikeStatus, null, 2));
+        return NextResponse.json(resourcesWithLikeStatus);
     } catch (error) {
         console.log("Error fetching resources: ", error);
         return NextResponse.json({error: "Failed to fetch resources"},{status: 500})

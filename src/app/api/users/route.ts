@@ -22,14 +22,14 @@ export async function GET() {
                 image: true,
                 resources: {
                     select: {
-                        id:true,
+                        id: true,
                         name: true,
                         status: true,
                     }
                 },
                 ResourceEditSuggestion: {
                     select: {
-                        id:true,
+                        id: true,
                         name: true,
                         status: true,
                     }
@@ -43,14 +43,28 @@ export async function GET() {
                         createdAt: true,
                         resource: {
                             select: {
-                                name:true
+                                name: true
                             }
                         }
                     }
                     
-                }
-                
+                },
+                likes: {
+                    select: {
+                        resource: { // get the resource info
+                            select: {
+                                id: true,
+                                name: true,
+                                status: true,
+                                address: true,
+                                city: true,
+                                imageUrl: true,
+                            }
+                        }
+                    }
+                },
             }
+                 
         });
         if (!user) {
             return NextResponse.json({ error: "User not found" }, { status: 404 });
