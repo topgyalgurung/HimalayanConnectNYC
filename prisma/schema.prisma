@@ -80,8 +80,8 @@ model ResourceEditSuggestion {
   categoryId       Int?
   address          String?
   openDays         String?
-  openTime         DateTime?
-  closeTime        DateTime?
+  openTime         DateTime?         @db.Time
+  closeTime        DateTime?         @db.Time
   phone            String?
   url              String?
   createdAt        DateTime          @default(now())

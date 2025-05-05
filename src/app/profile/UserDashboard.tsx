@@ -23,6 +23,7 @@ import Button from "@mui/material/Button";
 // import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import Popup from "../components/Popup";
+import { format } from "date-fns";
 
 interface resourceColumn {
   id: "index" | "name" | "status" | "view" | "edit";
@@ -351,7 +352,9 @@ export default function UserDashboard() {
                             <TableCell>{review.resource.name}</TableCell>
                             <TableCell>{review.content}</TableCell>
                             <TableCell>{review.rating}</TableCell>
-                            <TableCell>{review.createdAt}</TableCell>
+                            <TableCell>
+                              {format(new Date(review.createdAt), "yyyy-MM-dd")}
+                            </TableCell>
                             <TableCell>
                               <Button
                                 variant="outlined"

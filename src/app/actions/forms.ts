@@ -12,7 +12,7 @@ import { Resource } from "@prisma/client";
 
 import prisma from "../lib/prisma";
 import { getSession } from '@/app/lib/session';
-
+import { parse } from "date-fns";
 // Define strong input typing for clarity and safety
 interface EditResourceInput {
   name: string;
@@ -76,10 +76,10 @@ export async function addResource(formData: FormData) {
           city: data.city as string | null,
           openDays: data.openDays as string | null,
           openTime: data.openTime
-            ? new Date(`1970-01-01T${data.openTime}:00Z`)
+            ? parse(data.openTime, "hh:mm a", new Date())
             : null,
           closeTime: data.closeTime
-            ? new Date(`1970-01-01T${data.closeTime}:00Z`)
+            ? parse(data.closeTime, "hh:mm a", new Date())
             : null,
           phone: data.phone as string | null,
           email: data.email as string | null,
@@ -145,8 +145,12 @@ export async function addEditResource(formData: FormData) {
         phone: phone || null,
         url: url || null,
         openDays: openDays || null,
-        openTime: openTime ? new Date(openTime): null,
-        closeTime: closeTime ? new Date(closeTime) : null,
+        openTime: openTime
+        ? parse(openTime, "hh:mm a", new Date())
+        : null,
+      closeTime: closeTime
+        ? parse(closeTime, "hh:mm a", new Date())
+        : null,
         status:"PENDING"
       }
     })

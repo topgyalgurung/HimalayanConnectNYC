@@ -16,6 +16,7 @@ import type { Resource } from "@/app/types/resource";
 import ResourceDetailsCard from "../ResourceDetailsCard";
 import ResourceSuggestCard from "../ResourceSuggestCard";
 import ReviewSubmitCard from "../ReviewSubmitCard";
+import Image from "next/image";
 interface MapViewProps {
   resources: Resource[];
   selectedResource: Resource | null;
@@ -137,6 +138,7 @@ const Markers = ({ points }: MarkersProps) => {
             key={resource.id}
             onClick={() => setActiveMarkerId(resource.id)}
             // onMouseOut={() => setActiveMarkerId(null)}
+            onMouseOver={() => setActiveMarkerId(resource.id)}
             className="cursor-pointer"
           >
             <AdvancedMarker
@@ -147,10 +149,12 @@ const Markers = ({ points }: MarkersProps) => {
               }}
             >
               {/* customize pin color based on resource category */}
-              <img
+              <Image
                 src={image}
                 alt={`${resource.ResourceCategory?.name} icon`}
                 style={{ width: "30px", height: "30px", objectFit: "contain" }}
+                height={30}
+                width={30}
               />
             </AdvancedMarker>
 

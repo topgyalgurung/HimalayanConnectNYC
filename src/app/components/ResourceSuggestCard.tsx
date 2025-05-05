@@ -4,17 +4,15 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { addEditResource } from "../actions/forms";
-import Box from "@mui/material/Box";
 import dayjs from "dayjs";
+import { type Resource } from "@/app/types/resource";
+
+import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-
-import { type Resource } from "@/app/types/resource";
-
-// import { useForm } from "react-hook-form";
 
 interface ResourceSuggestCardProps {
   resource: Resource | null;
@@ -31,13 +29,12 @@ export default function ResourceSuggestCard({
   const [openTime, setOpenTime] = useState<dayjs.Dayjs | null>(null);
   const [closeTime, setCloseTime] = useState<dayjs.Dayjs | null>(null);
   const router = useRouter();
-  const cleanOpenDays = Array.from(new Set(selectedDays)).join(",");
+  const cleanOpenDays = Array.from(
+    new Set(selectedDays.map((d) => d.trim().slice(0, 3))) // standardize to "Mon", "Tue", etc.
+  ).join(",");
 
   useEffect(() => {
     if (resource) {
-      if (resource.openDays) {
-        setSelectedDays(resource.openDays.split(","));
-      }
       if (resource.openTime) {
         setOpenTime(dayjs(resource.openTime));
       }
@@ -58,26 +55,7 @@ export default function ResourceSuggestCard({
     address: resource?.address || "",
     phone: resource?.phone || "",
     url: resource?.url || "",
-    openDays: resource?.openDays || "",
-    openTime: resource?.openTime || "",
-    closeTime: resource?.closeTime || "",
   });
-
-  // const [value, setValue] = useState<[dayjs.Dayjs | null, dayjs.Dayjs | null]>([
-  //   dayjs(resource?.openTime),
-  //   dayjs(resource?.closeTime),
-  // ]);
-
-  // for open and close time
-  // useEffect(() => {
-  //   if (value[0] && value[1]) {
-  //     setFormData((prev): typeof prev => ({
-  //       ...prev,
-  //       openTime: value[0]?.toISOString() || "",
-  //       closeTime: value[1]?.toISOString() || "",
-  //     }));
-  //   }
-  // }, [value]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -151,6 +129,7 @@ export default function ResourceSuggestCard({
           />
           <TextField
             name="url"
+            label="website"
             value={formData?.url}
             onChange={handleChange}
             variant="standard"
@@ -182,7 +161,7 @@ export default function ResourceSuggestCard({
               <input
                 type="hidden"
                 name="openDays"
-                value={selectedDays.join(",")}
+                value={Array.from(new Set(selectedDays.map((d) => d.trim().slice(0, 3)))).join(",")}
               />
             </div>
             <div>
@@ -199,12 +178,12 @@ export default function ResourceSuggestCard({
               <input
                 type="hidden"
                 name="openTime"
-                value={openTime ? openTime.toDate().toISOString() : ""}
+                value={openTime ? openTime.format("hh:mm A") : ""}
               />
               <input
                 type="hidden"
                 name="closeTime"
-                value={closeTime ? closeTime.toDate().toISOString() : ""}
+                value={closeTime ? closeTime.format("hh:mm A") : ""}
               />
             </div>
           </LocalizationProvider>

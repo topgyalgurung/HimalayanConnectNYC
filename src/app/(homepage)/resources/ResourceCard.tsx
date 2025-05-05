@@ -3,7 +3,7 @@
 import { format } from "date-fns";
 
 import { type Resource } from "@/app/types/resource";
-
+import { formatOpenDays } from "@/helpers/formatOpenDays";
 interface ResourceCardProps {
   resources: Resource[];
   onViewDetails?: (resource: Resource) => void;
@@ -36,7 +36,7 @@ export default function ResourceCard({
                 {resource.address ? resource.address : "No address available"}
               </p>
               <p>
-                <strong>Open Days :</strong> {resource.openDays}
+                <strong>Open Days :</strong> {formatOpenDays(resource.openDays)}
               </p>
               <p>
                 <strong>Hours :</strong>

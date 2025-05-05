@@ -264,6 +264,7 @@ export default function AdminDashboard() {
                     ))}
 
                     {/* Edit submission */}
+
                     {filteredByEditStatus.map((resource, index) => (
                       <TableRow
                         key={resource.id}
@@ -313,10 +314,6 @@ export default function AdminDashboard() {
                       </TableRow>
                     ))}
                   </TableBody>
-
-                  {/* Approved  */}
-
-                  {/* rejected */}
                 </Table>
               </TableContainer>
             </Paper>
