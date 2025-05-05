@@ -9,15 +9,27 @@ import { AccordionSummary, Typography } from "@mui/material";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+
 export default function AddResourceForm({ user }: any) {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [selectedDays, setSelectedDays] = useState<string[]>([]);
+  const [openTime, setOpenTime] = useState<dayjs.Dayjs | null>(null);
+  const [closeTime, setCloseTime] = useState<dayjs.Dayjs | null>(null);
+
   // const [state, formAction, pending] = useActionState(addResource, initialState)
   const [categories, setCategories] = useState<{ id: number; name: string }[]>(
     []
   );
   const [imageUrl, setImageUrl] = useState<string | null>(null); // State to hold the image URL
   const router = useRouter();
+  const cleanOpenDays = Array.from(
+    new Set(selectedDays.map((d) => d.trim().slice(0, 3))) // standardize to "Mon", "Tue", etc.
+  ).join(",");
 
   // Fetch categories from the server action
   useEffect(() => {
@@ -27,6 +39,21 @@ export default function AddResourceForm({ user }: any) {
     }
     fetchCategories();
   }, []);
+
+  const handleDayChange = (
+    event: React.MouseEvent<HTMLElement>,
+    newDays: string[]
+  ) => {
+    setSelectedDays(newDays);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
   function handleUploadSuccess(result: any) {
     const url = result?.info?.secure_url;
@@ -105,7 +132,7 @@ export default function AddResourceForm({ user }: any) {
           className="w-full p-2 border rounded"
         />
         {/* optional  */}
-        <Accordion>
+        <Accordion defaultExpanded>
           <AccordionSummary
             expandIcon={<ArrowDropDownIcon />}
             aria-controls="optional-content"
@@ -123,7 +150,7 @@ export default function AddResourceForm({ user }: any) {
               placeholder="City"
               className="w-full p-2 border rounded"
             />
-            <input
+            {/* <input
               type="text"
               name="openDays"
               placeholder="Open Days (e.g., Mon-Fri)"
@@ -140,7 +167,53 @@ export default function AddResourceForm({ user }: any) {
               name="closeTime"
               placeholder="closing time"
               className="w-full p-2 border rounded"
-            />
+            /> */}
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <div className="space-y-4">
+                <p className="font-semibold mb-1">Open Days </p>
+                <ToggleButtonGroup
+                  value={selectedDays}
+                  onChange={handleDayChange}
+                  aria-label="Weekdays"
+                  size="small"
+                >
+                  {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
+                    (day) => (
+                      <ToggleButton key={day} value={day}>
+                        {day}
+                      </ToggleButton>
+                    )
+                  )}
+                </ToggleButtonGroup>
+                <input
+                  type="hidden"
+                  name="openDays"
+                  value={Array.from(new Set(selectedDays.map((d) => d.trim().slice(0, 3)))).join(",")}
+                />
+              </div>
+              <div>
+                <TimePicker
+                  label="Open Time"
+                  value={openTime}
+                  onChange={(newTime) => setOpenTime(newTime)}
+                />
+                <TimePicker
+                  label="Close Time"
+                  value={closeTime}
+                  onChange={(newTime) => setCloseTime(newTime)}
+                />
+                <input
+                  type="hidden"
+                  name="openTime"
+                  value={openTime ? openTime.format("hh:mm A") : ""}
+                />
+                <input
+                  type="hidden"
+                  name="closeTime"
+                  value={closeTime ? closeTime.format("hh:mm A") : ""}
+                />
+              </div>
+            </LocalizationProvider>
 
             <input
               type="tel"

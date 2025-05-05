@@ -8,7 +8,8 @@ import { logout } from "../actions/auth";
 import { useRouter } from "next/navigation";
 
 import { useFetchUser } from "../hooks/useFetchUsers";
-import { useModal } from "../hooks/useModal";
+import { useUser } from "../context/UserProvider";
+import { usePopup } from "../hooks/usePopup";
 import { useDeleteItem } from "../hooks/useDeleteResource";
 
 import Paper from "@mui/material/Paper";
@@ -21,10 +22,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Button from "@mui/material/Button";
 // import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
-import { Typography } from "@mui/material";
-import toast from "react-hot-toast";
+import Popup from "../components/Popup";
+import { format } from "date-fns";
 
 interface resourceColumn {
   id: "index" | "name" | "status" | "view" | "edit";
@@ -64,10 +63,14 @@ const columns: readonly resourceColumn[] = [
 
 export default function UserDashboard() {
   const [activeTab, setActiveTab] = useState("new");
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const router = useRouter();
+  const { setUser } = useUser();
+
   const { data: user, refetch } = useFetchUser();
-  const { isOpen, data: selectedResource, openModal, closeModal } = useModal();
+  const { isOpen, data: selectedResource, openPopup, closePopup } = usePopup();
+
   const { deleteItem, deletingId } = useDeleteItem();
 
   if (!user) return <p>Loading user data...</p>;
@@ -79,11 +82,18 @@ export default function UserDashboard() {
   const handleLogout = async () => {
     try {
       await logout();
+      setUser(null); // Clear user session for NavMenu
       router.replace("/");
       router.refresh();
     } catch (error) {
       console.error("logout failed", error);
     }
+  };
+
+  // Close popup when modal closes
+  const handleClosePopup = () => {
+    setAnchorEl(null);
+    closePopup();
   };
 
   return (
@@ -233,7 +243,17 @@ export default function UserDashboard() {
                             <TableCell>{res.name}</TableCell>
                             <TableCell>{res.status}</TableCell>
                             <TableCell>
-                              <Button onClick={() => openModal(res)}>
+                              <Button
+                                onClick={(e) => {
+                                  if (anchorEl === e.currentTarget) {
+                                    setAnchorEl(null);
+                                    closePopup();
+                                  } else {
+                                    setAnchorEl(e.currentTarget);
+                                    openPopup(res);
+                                  }
+                                }}
+                              >
                                 View
                               </Button>
                             </TableCell>
@@ -278,7 +298,17 @@ export default function UserDashboard() {
                             <TableCell>{edit.name}</TableCell>
                             <TableCell>{edit.status}</TableCell>
                             <TableCell>
-                              <Button onClick={() => openModal(edit)}>
+                              <Button
+                                onClick={(e) => {
+                                  if (anchorEl === e.currentTarget) {
+                                    setAnchorEl(null);
+                                    closePopup();
+                                  } else {
+                                    setAnchorEl(e.currentTarget);
+                                    openPopup(edit);
+                                  }
+                                }}
+                              >
                                 View
                               </Button>
                             </TableCell>
@@ -322,7 +352,9 @@ export default function UserDashboard() {
                             <TableCell>{review.resource.name}</TableCell>
                             <TableCell>{review.content}</TableCell>
                             <TableCell>{review.rating}</TableCell>
-                            <TableCell>{review.createdAt}</TableCell>
+                            <TableCell>
+                              {format(new Date(review.createdAt), "yyyy-MM-dd")}
+                            </TableCell>
                             <TableCell>
                               <Button
                                 variant="outlined"
@@ -360,7 +392,17 @@ export default function UserDashboard() {
                             <TableCell>{index + 1}</TableCell>
                             <TableCell>{like.resource.name}</TableCell>
                             <TableCell>
-                              <Button onClick={() => openModal(like.resource)}>
+                              <Button
+                                onClick={(e) => {
+                                  if (anchorEl === e.currentTarget) {
+                                    setAnchorEl(null);
+                                    closePopup();
+                                  } else {
+                                    setAnchorEl(e.currentTarget);
+                                    openPopup(like.resource);
+                                  }
+                                }}
+                              >
                                 View
                               </Button>
                             </TableCell>
@@ -396,25 +438,20 @@ export default function UserDashboard() {
                 onRowsPerPageChange={handleChangeRowsPerPage}
               /> */}
             </Paper>
-            {/* Single Modal for all tabs */}
-            <Modal
+            {/* Popup for resource details */}
+            <Popup
+              anchor={anchorEl}
               open={isOpen}
-              onClose={closeModal}
-              aria-labelledby="modal-modal-title"
-              aria-describedby="modal-modal-description"
-            >
-              <Box className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 bg-white border-2 border-black shadow-2xl pt-2 px-4 pb-3">
-                <Typography id="modal-modal-title" variant="h6" component="h2">
-                  {selectedResource?.name || "No Title"}
-                </Typography>
-                <Typography id="modal-modal-description" className="mt-2">
-                  {selectedResource?.description}
-                  {selectedResource?.city && ` - ${selectedResource.city}`}
-                  {selectedResource?.address &&
-                    ` - ${selectedResource.address}`}
-                </Typography>
-              </Box>
-            </Modal>
+              onClose={handleClosePopup}
+              title={selectedResource?.name || "No Title"}
+              content={[
+                selectedResource?.description,
+                selectedResource?.city,
+                selectedResource?.address,
+              ]
+                .filter(Boolean)
+                .join(" - ")}
+            />
           </div>
         </div>
       </div>

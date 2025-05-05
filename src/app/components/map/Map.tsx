@@ -9,21 +9,21 @@ import {
   APIProvider,
   AdvancedMarker,
   CollisionBehavior,
-  Pin,
   InfoWindow,
 } from "@vis.gl/react-google-maps";
-import Image from "next/image";
 import { useState } from "react";
 import type { Resource } from "@/app/types/resource";
 import ResourceDetailsCard from "../ResourceDetailsCard";
 import ResourceSuggestCard from "../ResourceSuggestCard";
 import ReviewSubmitCard from "../ReviewSubmitCard";
+import Image from "next/image";
 interface MapViewProps {
   resources: Resource[];
   selectedResource: Resource | null;
   editResource: Resource | null;
   reviewResource: Resource | null;
   setReviewResource: Resource | null;
+  onSuggestEdit: (resource: Resource) => void;
   onReviewResource: (resource: Resource) => void;
   onCloseAction: (resource: Resource | null) => void;
   onEditCloseAction: (resource: Resource | null) => void;
@@ -35,6 +35,7 @@ export default function MapView({
   selectedResource,
   editResource,
   reviewResource,
+  onSuggestEdit,
   onReviewResource,
   onCloseAction,
   onReviewCloseAction,
@@ -60,6 +61,7 @@ export default function MapView({
           <ResourceDetailsCard
             resource={selectedResource}
             editResource={editResource}
+            onSuggestEdit={onSuggestEdit}
             onReviewResource={onReviewResource}
             onCloseAction={onCloseAction}
           />
@@ -70,6 +72,7 @@ export default function MapView({
         <div className="absolute top-0 left-0 h-full w-[400px] z-50 shadow-lg overflow-y-auto">
           <ResourceSuggestCard
             resource={editResource}
+            onSuggestEdit={onSuggestEdit}
             onEditCloseAction={onEditCloseAction}
           />
         </div>
@@ -135,6 +138,7 @@ const Markers = ({ points }: MarkersProps) => {
             key={resource.id}
             onClick={() => setActiveMarkerId(resource.id)}
             // onMouseOut={() => setActiveMarkerId(null)}
+            onMouseOver={() => setActiveMarkerId(resource.id)}
             className="cursor-pointer"
           >
             <AdvancedMarker
@@ -145,10 +149,12 @@ const Markers = ({ points }: MarkersProps) => {
               }}
             >
               {/* customize pin color based on resource category */}
-              <img
+              <Image
                 src={image}
                 alt={`${resource.ResourceCategory?.name} icon`}
                 style={{ width: "30px", height: "30px", objectFit: "contain" }}
+                height={30}
+                width={30}
               />
             </AdvancedMarker>
 

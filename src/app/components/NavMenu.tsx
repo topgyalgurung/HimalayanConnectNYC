@@ -1,43 +1,42 @@
 "use client";
 
-import * as React from "react";
-
+import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 
-import { usePathname } from "next/navigation";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import SearchInput from "./SearchInput";
-import { useUser } from "../context/UserProvider";
-// import { logout } from "../actions/auth";
-// import { useSession } from "next-auth/react";
-// import { signOut } from "next-auth/react";
+import { useUser } from "@/app/context/UserProvider";
+import { useLogout } from "../hooks/useLogout";
+
+import Box from "@mui/material/Box";
+
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import Divider from "@mui/material/Divider";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
+import Logout from "@mui/icons-material/Logout";
 
 // import { Button } from "@mui/material"; to be used for Add Resource, note: currently gets frozen when called add resource if material ui button
-import { deleteSession } from "../lib/session";
+// import { deleteSession } from "@/app/lib/session";
 
 export default function NavMenu() {
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+
   const pathname = usePathname();
-  const router = useRouter();
-  const { user, setUser } = useUser(); // custom session hook
-  // const { data: session } = useSession();
-  // const [loading, setLoading] = useState(true); // track loading state
 
-  // Logout handler
-  const handleLogout = async () => {
-    try {
-      // await logout();
-      await deleteSession(); // delete secure cookie
-      setUser(null); // Clear user state
+  const { user } = useUser(); // custom session hook
+  const { handleLogout } = useLogout();
 
-      router.refresh(); // Rerender menu
-      router.push("/"); // Redirect to home
-    } catch (error) {
-      console.error("Logout failed", error);
-    }
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
   };
-
-  // signout handler google auth
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <header>
@@ -46,6 +45,7 @@ export default function NavMenu() {
           <Toolbar disableGutters> */}
       <nav className="flex items-center justify-between p-2 bg-white shadow-md flex-wrap border-b-1 w-full">
         {/* Logo */}
+
         <Link
           href="/"
           className={`font-bold mr-4 ${
@@ -62,6 +62,7 @@ export default function NavMenu() {
         </Link>
 
         {/* Search input  */}
+
         <div className="ml-24 flex-grow flex justify-center">
           <div className="flex-grow max-w-xl">
             <SearchInput />
@@ -84,40 +85,74 @@ export default function NavMenu() {
           </Link>
         </button>
 
-        {/* Conditional UI based on authentication status */}
-
+        {/* material UI profile on click show  button to go profile or logout */}
         <div className="flex flex-1 items-center justify-end gap-8 ml-4">
-          {/* {status === loading ? (
-            <p> Loading... </p>
-          ) : */}
           {user ? (
-            // || session?.user ? (
             <div className="flex items-center gap-4">
-              {/* Profile Image */}
-              <Link
-                href="/profile"
-                className="hover:opacity-80 transition-opacity"
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  textAlign: "center",
+                }}
               >
-                <Image
-                  src={
-                    // session?.user?.image ||
-                    user?.image || "/default-avatar.jpg"
-                  } // will show image later user.image ||
-                  alt="User Avatar"
-                  width={40}
-                  height={40}
-                  className="rounded-full"
-                />
-              </Link>
+                <Tooltip title="Account">
+                  <IconButton
+                    onClick={handleClick}
+                    size="medium"
+                    sx={{ ml: 2 }}
+                    aria-controls={open ? "account-menu" : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? "true" : undefined}
+                  >
+                    <Image
+                      src={user?.image || "/default-avatar.jpg"} // will show image later user.image ||
+                      alt="User Avatar"
+                      width={40}
+                      height={40}
+                      className="rounded-full"
+                    />
+                  </IconButton>
+                </Tooltip>
+              </Box>
 
-              {/* Logout Button */}
-              <button
-                onClick={handleLogout}
-                // () => session?.user ? signOut({ callbackUrl: "/" }) : handleLogout()}
-                className="px-4 py-2 text-white bg-red-500 rounded-lg transition-colors hover:bg-red-600"
+              <Menu
+                anchorEl={anchorEl}
+                id="account-menu"
+                open={open}
+                onClose={handleClose}
+                onClick={handleClose}
+                transformOrigin={{ horizontal: "right", vertical: "top" }}
+                anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
               >
-                Logout
-              </button>
+                <MenuItem onClick={handleClose}>
+                  <Link
+                    href="/profile"
+                    className="hover:opacity-80 transition-opacity"
+                  >
+                    <Image
+                      src={
+                        // session?.user?.image ||
+                        user?.image || "/default-avatar.jpg"
+                      } // will show image later user.image ||
+                      alt="User Avatar"
+                      width={40}
+                      height={40}
+                      className="rounded-full"
+                    />
+                    Profile
+                  </Link>
+                </MenuItem>
+
+                <Divider />
+
+                <MenuItem onClick={handleLogout}>
+                  <ListItemIcon>
+                    <Logout fontSize="small" />
+                  </ListItemIcon>
+                  Logout
+                </MenuItem>
+              </Menu>
             </div>
           ) : (
             <div className="flex items-center gap-4">

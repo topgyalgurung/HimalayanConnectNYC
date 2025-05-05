@@ -2,16 +2,15 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
 import "./globals.css";
+import theme from "../../theme";
+const inter = Inter({ subsets: ["latin"] });
 
-import NavMenu from "./components/NavMenu";
+import NavMenu from "@/app/components/NavMenu";
 
 import { Toaster } from "react-hot-toast";
-import { UserProvider } from "./context/UserProvider";
-import { SessionProvider } from "next-auth/react";
-import { ThemeProvider } from "@mui/material/styles";
-import theme from "../../theme";
+import { UserProvider } from "@/app/context/UserProvider";
 
-const inter = Inter({ subsets: ["latin"] });
+import { ThemeProvider } from "@mui/material/styles";
 
 export const metadata: Metadata = {
   title: "Himalayan Connect NYC",
@@ -21,34 +20,32 @@ export const metadata: Metadata = {
 /***Due to Partial Rendering, be cautious when doing checks in Layouts as these don't re-render on navigation,
  *  meaning the user session won't be checked on every route change.
  */
+// UserProvider supports client side session based personalization showing user's name and role based UI (admin/user)
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // const user = await getUser();
-  // Fetch the session to pass into SessionProvider
   return (
     <html lang="en" data-theme="winter">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body className={`${inter.className} overflow-hidden `}>
+        {/* wrap entire app ensures user data is accessible across all pages via useUser */}
         <UserProvider>
-          <SessionProvider>
-            <ThemeProvider theme={theme}>
-              <NavMenu />
-              <Toaster
-                position="bottom-center"
-                toastOptions={{ duration: 5000 }}
-              />
-              <main className="flex-grow">{children}</main>
-              {/* <footer className="bg-slate-900 text-white p-4 text-center shadow-md h-[60px] flex-none">
+          <ThemeProvider theme={theme}>
+            <NavMenu />
+            <Toaster
+              position="bottom-center"
+              toastOptions={{ duration: 5000 }}
+            />
+            <main className="flex-grow">{children}</main>
+            {/* <footer className="bg-slate-900 text-white p-4 text-center shadow-md h-[60px] flex-none">
               © Himalayan Connect NYC
             </footer> */}
-            </ThemeProvider>
-          </SessionProvider>
+          </ThemeProvider>
         </UserProvider>
       </body>
     </html>

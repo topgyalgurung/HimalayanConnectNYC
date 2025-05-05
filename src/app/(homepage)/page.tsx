@@ -7,7 +7,6 @@ import BoroughFilter from "./filters/BoroughFilter";
 import ResourceList from "./resources/ResourceList";
 import type { Resource } from "@/app/types/resource";
 
-// import { MapProvider } from "@/app/providers/MapProvider";
 import MapView from "@/app/components/map/Map";
 
 export default function Home() {
@@ -60,11 +59,11 @@ export default function Home() {
         {/* Scrollable filter content */}
         <div className="flex-1 overflow-y-auto pr-2 space-y-4">
           <ResourceFilter
-            onFilterChange={setSelectedCategories}
+            onFilterChangeAction={setSelectedCategories}
             selectedCategories={selectedCategories}
           />
           <BoroughFilter
-            onFilterChange={setSelectedBoroughs}
+            onFilterChangeAction={setSelectedBoroughs}
             selectedBoroughs={selectedBoroughs}
           />
         </div>
@@ -98,6 +97,7 @@ export default function Home() {
             reviewResource={reviewResource}
             onReviewResource={setReviewResource}
             editResource={editResource}
+            onSuggestEdit={handleSuggestEdit}
             onCloseAction={() => setSelectedResource(null)}
             onEditCloseAction={() => setEditResource(null)}
             onReviewCloseAction={() => setReviewResource(null)}
