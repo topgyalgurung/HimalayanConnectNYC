@@ -1,15 +1,16 @@
 "use client";
 
-import * as React from "react";
+import React from "react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { addEditResource } from "../actions/forms";
 import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
 import dayjs from "dayjs";
-import { SingleInputTimeRangeField } from "@mui/x-date-pickers-pro/SingleInputTimeRangeField";
-import { LocalizationProvider } from "@mui/x-date-pickers";
+import TextField from "@mui/material/TextField";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
 import { type Resource } from "@/app/types/resource";
 
@@ -26,8 +27,32 @@ export default function ResourceSuggestCard({
 }: ResourceSuggestCardProps) {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [selectedDays, setSelectedDays] = useState<string[]>([]);
+  const [openTime, setOpenTime] = useState<dayjs.Dayjs | null>(null);
+  const [closeTime, setCloseTime] = useState<dayjs.Dayjs | null>(null);
   const router = useRouter();
+  const cleanOpenDays = Array.from(new Set(selectedDays)).join(",");
 
+  useEffect(() => {
+    if (resource) {
+      if (resource.openDays) {
+        setSelectedDays(resource.openDays.split(","));
+      }
+      if (resource.openTime) {
+        setOpenTime(dayjs(resource.openTime));
+      }
+      if (resource.closeTime) {
+        setCloseTime(dayjs(resource.closeTime));
+      }
+    }
+  }, [resource]);
+
+  const handleDayChange = (
+    event: React.MouseEvent<HTMLElement>,
+    newDays: string[]
+  ) => {
+    setSelectedDays(newDays);
+  };
   const [formData, setFormData] = useState({
     name: resource?.name || "",
     address: resource?.address || "",
@@ -38,21 +63,21 @@ export default function ResourceSuggestCard({
     closeTime: resource?.closeTime || "",
   });
 
-  const [value, setValue] = useState<[dayjs.Dayjs | null, dayjs.Dayjs | null]>([
-    dayjs(resource?.openTime),
-    dayjs(resource?.closeTime),
-  ]);
+  // const [value, setValue] = useState<[dayjs.Dayjs | null, dayjs.Dayjs | null]>([
+  //   dayjs(resource?.openTime),
+  //   dayjs(resource?.closeTime),
+  // ]);
 
   // for open and close time
-  useEffect(() => {
-    if (value[0] && value[1]) {
-      setFormData((prev): typeof prev => ({
-        ...prev,
-        openTime: value[0]?.toISOString() || "",
-        closeTime: value[1]?.toISOString() || "",
-      }));
-    }
-  }, [value]);
+  // useEffect(() => {
+  //   if (value[0] && value[1]) {
+  //     setFormData((prev): typeof prev => ({
+  //       ...prev,
+  //       openTime: value[0]?.toISOString() || "",
+  //       closeTime: value[1]?.toISOString() || "",
+  //     }));
+  //   }
+  // }, [value]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -130,19 +155,58 @@ export default function ResourceSuggestCard({
             onChange={handleChange}
             variant="standard"
           />
-          <TextField
+          {/* <TextField
             name="openDays"
             value={formData?.openDays}
             onChange={handleChange}
             variant="standard"
-          />
+          /> */}
 
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <SingleInputTimeRangeField
-              label="Hours"
-              value={value}
-              onChange={setValue}
-            />
+            <div className="space-y-4">
+              <p className="font-semibold mb-1">Open Days </p>
+              <ToggleButtonGroup
+                value={selectedDays}
+                onChange={handleDayChange}
+                aria-label="Weekdays"
+                size="small"
+              >
+                {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
+                  (day) => (
+                    <ToggleButton key={day} value={day}>
+                      {day}
+                    </ToggleButton>
+                  )
+                )}
+              </ToggleButtonGroup>
+              <input
+                type="hidden"
+                name="openDays"
+                value={selectedDays.join(",")}
+              />
+            </div>
+            <div>
+              <TimePicker
+                label="Open Time"
+                value={openTime}
+                onChange={(newTime) => setOpenTime(newTime)}
+              />
+              <TimePicker
+                label="Close Time"
+                value={closeTime}
+                onChange={(newTime) => setCloseTime(newTime)}
+              />
+              <input
+                type="hidden"
+                name="openTime"
+                value={openTime ? openTime.toDate().toISOString() : ""}
+              />
+              <input
+                type="hidden"
+                name="closeTime"
+                value={closeTime ? closeTime.toDate().toISOString() : ""}
+              />
+            </div>
           </LocalizationProvider>
 
           <button

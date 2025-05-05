@@ -12,7 +12,7 @@ interface ResourceListProps {
   filteredResources: Resource[]; // Add filteredResources prop
   onViewDetails: (resource: Resource) => void;
   onSuggestEdit: (resource: Resource) => void;
-  onReviewClick: (resource: Resource) => void;
+  // onReviewClick: (resource: Resource) => void;
   // setLocations: (locations: { latitude: number; longitude: number }[]) => void;
 }
 
@@ -22,7 +22,7 @@ const ResourceList = ({
   setFilteredResources,
   onViewDetails,
   onSuggestEdit,
-  onReviewClick,
+  // onReviewClick,
   filteredResources, // Use the passed filteredResources
 }: ResourceListProps) => {
   const searchParams = useSearchParams(); // access search params from url /resources?query=name
@@ -80,7 +80,7 @@ const ResourceList = ({
         resources={filteredResources}
         onViewDetails={onViewDetails}
         onSuggestEdit={onSuggestEdit}
-        onReviewClick={onReviewClick}
+        // onReviewClick={onReviewClick}
       />
     </div>
   );

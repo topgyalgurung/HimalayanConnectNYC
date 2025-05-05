@@ -1,18 +1,29 @@
 "use client";
 
+// click to expand/view/edit
+
 import { format } from "date-fns";
 
 import { type Resource } from "@/app/types/resource";
+import { useUser } from "@/app/context/UserProvider";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 interface ResourceCardProps {
   resources: Resource[];
   onViewDetails?: (resource: Resource) => void;
+  onSuggestEdit?: (resource: Resource) => void;
 }
 // ResourceCard component: Displays a list of resources
 export default function ResourceCard({
   resources,
   onViewDetails,
+  onSuggestEdit,
 }: ResourceCardProps) {
+  // function showDetail() {}
+  const { user } = useUser();
+  const router = useRouter();
+
   return (
     <div className="flex flex-col space-y-4 pb-20">
       {resources
@@ -44,16 +55,54 @@ export default function ResourceCard({
                 {format(resource.closeTime, "hh:mm a")}
               </p>
 
-              <div className=" flex item-end">
+              <div className="pt-4 flex items-center justify-between">
                 {/* view details */}
+
                 <button
                   className="text-white py-2 px-3 bg-blue-600 rounded hover:bg-blue-700"
                   onClick={() => onViewDetails?.(resource)}
                 >
                   View Details
+                  {/* {resource?.id === resource.id ? "Close" : "View Details"} */}
                 </button>
+
+                {/* suggest edit  */}
+                {/* make active only user logged in  */}
+                <div
+                // className="text-white py-2 px-3 bg-blue-600 rounded hover:bg-blue-700"
+                >
+                  <button
+                    // disabled={!user}
+                    onClick={() => {
+                      if (!user) {
+                        toast.error("Please log in to suggest an edit.");
+                        router.push("/login");
+                        return;
+                      }
+
+                      onSuggestEdit?.(resource);
+                    }}
+                    className={`${
+                      user ? "bg-blue-500" : "bg-blue-500 cursor-not-allowed"
+                    } text-white py-2 px-3 rounded`}
+                  >
+                    Suggest Edit
+                  </button>
+                  {/* <Link href={`/suggestions/edit/${resource.id}`}>
+                  Suggest Edit
+                </Link> */}
+                </div>
               </div>
             </div>
+
+            {/* image section if images are available */}
+            {/* <div>
+              <img
+                src={image ?? "/mememan.webp"}
+                alt={`${name}'s profile`}
+                className=""
+              />
+            </div> */}
           </div>
         ))}
     </div>

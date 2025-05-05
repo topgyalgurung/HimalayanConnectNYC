@@ -1,16 +1,16 @@
 // src/app/hooks/useModal.ts
 import { useState } from "react";
 
-export function useModal<T = any>() {
+export function usePopup<T = any>() {
   const [isOpen, setIsOpen] = useState(false);
   const [data, setData] = useState<T | null>(null);
 
-  const openModal = (modalData: T) => {
+  const openPopup = (modalData: T) => {
     setData(modalData);
     setIsOpen(true);
   };
 
-  const closeModal = () => {
+  const closePopup = () => {
     setIsOpen(false);
     setData(null);
   };
@@ -18,7 +18,7 @@ export function useModal<T = any>() {
   return {
     isOpen,
     data,
-    openModal,
-    closeModal,
+    openPopup,
+    closePopup,
   };
 }

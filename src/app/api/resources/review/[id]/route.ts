@@ -2,6 +2,39 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/app/lib/prisma";
 import { getSession } from "@/app/lib/session";
 
+export async function GET(req: NextRequest, 
+  props: { params: Promise<{ id: string }> })
+{
+  try {
+    const params = await props.params;
+    const resourceId = parseInt(params.id);
+
+    if (isNaN(resourceId)) {
+      return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
+    }
+    const reviews = await prisma.resourceReview.findMany({
+      where: { resourceId },
+      orderBy: { createdAt: "desc" },
+      include: {
+        user: {
+          select: {
+            firstName: true
+          }
+        },
+      },
+    });
+    return NextResponse.json(reviews);
+  } catch (error:any) {
+    console.error("Error showing reviews:", {
+      message: error.message,
+      // stack: error.stack,
+    });
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
+
+  }
+
+  
+}
 export async function DELETE(req: NextRequest,
   props: { params: Promise<{ id: string }> })
 {
@@ -55,8 +88,7 @@ export async function DELETE(req: NextRequest,
   } catch (error: any) {
     console.error("Error deleting review:", {
       message: error.message,
-      stack: error.stack,
-    
+      // stack: error.stack,
     });
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }

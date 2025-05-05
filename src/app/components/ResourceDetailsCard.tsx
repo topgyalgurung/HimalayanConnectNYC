@@ -20,6 +20,7 @@ import Rating from "@mui/material/Rating";
 import { Box } from "@mui/material";
 import toast from "react-hot-toast";
 import { useFavorites } from "../hooks/useFavorites";
+import { useFetchResourceReview } from "../hooks/useFetchResourceReview";
 
 interface ResourceDetailsCardProps {
   resource: Resource | null;
@@ -32,7 +33,7 @@ interface ResourceDetailsCardProps {
 export default function ResourceDetailsCard({
   resource,
   // editResource,
-  // onSuggestEdit,
+  onSuggestEdit,
   onReviewResource,
   onCloseAction,
 }: ResourceDetailsCardProps) {
@@ -41,6 +42,7 @@ export default function ResourceDetailsCard({
   const router = useRouter();
 
   const { isFavorite, toggleFavorite } = useFavorites();
+  const { reviews } = useFetchResourceReview(Number(resource?.id) || null);
   if (!resource) return null;
   const liked = isFavorite(Number(resource.id));
 
@@ -54,19 +56,29 @@ export default function ResourceDetailsCard({
       >
         ✕
       </button>
+      <div className="flex justify-between">
+        <div>
+          <h2 className="text-2xl font-bold mb-4">{resource.name}</h2>
+          <div className="space-y-3">
+            <p className="text-sm font-medium text-blue-600">
+              {resource.ResourceCategory?.name || "No category"}
+            </p>
 
-      {/* image */}
-      <h2 className="text-2xl font-bold mb-4">{resource.name}</h2>
-      <div className="space-y-3">
-        <p className="text-sm font-medium text-blue-600">
-          {resource.ResourceCategory?.name || "No category"}
-        </p>
-        <Rating name="read-only" value={resource.rating} readOnly />
-        {/* <p>{resource.rating}</p> */}
+            <Box align="left" mb={1} borderColor="transparent">
+              <Rating
+                name="rating"
+                value={resource.rating}
+                precision={0.5}
+                readOnly
+              />
+              {resource.rating}
+            </Box>
+          </div>
+        </div>
       </div>
 
       {/* Tab Buttons */}
-      <div className="flex space-x-4 mb-4 border-b">
+      <div className="flex justify-around mb-4 border-b">
         {["overview", "review", "about"].map((tab) => (
           <button
             key={tab}
@@ -81,53 +93,77 @@ export default function ResourceDetailsCard({
           </button>
         ))}
       </div>
+
       {/* Tab Content */}
+
       {activeTab === "overview" && (
         <div>
-          <div className="flex space-x-3">
-            <a
-              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                resource.address + ", " + resource.city
-              )}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 hover:underline"
-            >
-              <IoNavigateCircleOutline className="text-red-500 text-xl" />
-              Directions
-            </a>
-            <a
-              href={resource.facebookLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 hover:underline"
-            >
-              <FaFacebook className="text-blue-600 text-xl" />
-              Facebook
-            </a>
-            <a href={resource.email} className="text-blue-600 hover:underline">
-              <TfiEmail className="text-red-600 text-xl" />
-              Email
-            </a>
-            <a href={resource.url} className="text-blue-600 hover:underline">
-              <IoLinkSharp className="text-green-600 text-xl" />
-              Website
-            </a>
+          <div className="flex justify-around">
+            {resource.address && resource.city && (
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                  resource.address + ", " + resource.city
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:underline"
+              >
+                <IoNavigateCircleOutline className="text-red-500 text-2xl" />
+              </a>
+            )}
+
+            {resource.facebookLink && (
+              <a
+                href={resource.facebookLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:underline"
+              >
+                <FaFacebook className="text-blue-600 text-2xl" />
+              </a>
+            )}
+
+            {resource.email && (
+              <a
+                href={`mailto:${resource.email}`}
+                className="text-blue-600 hover:underline"
+              >
+                <TfiEmail className="text-red-600 text-2xl" />
+              </a>
+            )}
+
+            {resource.url && (
+              <a
+                href={
+                  resource.url?.startsWith("http")
+                    ? resource.url
+                    : `https://${resource.url}`
+                }
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:underline"
+              >
+                <IoLinkSharp className="text-green-600 text-2xl" />
+              </a>
+            )}
             {/* favorite on click, it should call api to register into database user favorite resource */}
             <motion.div
-              whileTap={{ scale: 1.3 }}
+              whileTap={{ scale: 1 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
               <IconButton
-                onClick={() => toggleFavorite(resource.id)}
+                onClick={() => toggleFavorite(Number(resource.id))}
                 color="error"
               >
                 {liked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
               </IconButton>
             </motion.div>
-            Favorite
           </div>
+
           <hr className="my-4 border-gray-300" />
+
+          {/* details */}
+
           <p className="text-gray-600">
             <span className="font-medium">Address:</span> {resource.address},{" "}
             {resource.city}
@@ -140,33 +176,36 @@ export default function ResourceDetailsCard({
             {format(resource.openTime, "hh:mm a")} -{" "}
             {format(resource.closeTime, "hh:mm a")}
           </p>
-          {/* suggest edit button */}
-          {/* <div className="text-white py-2 px-3 bg-blue-600 rounded hover:bg-blue-700"> */}
-          {/* NOTE: for now have suggest edit from resource card only, 
-            later implement to have it on ResourceDetailsCard not on ResourceCard on the ResourceList  */}
+          <hr className="my-4 border-gray-300" />
 
-          {/* {editResource.map((res) => (
-              <button onClick={() => onSuggestEdit?.(res)}>
-                Suggest Edit
-              </button>
-          ))} */}
-          {/* </div> */}
+          {/* suggest edit button */}
+
+          <div className="text-white text-center">
+            <button
+              // disabled={!user}
+              onClick={() => {
+                if (!user) {
+                  toast.error("Please log in to suggest an edit.");
+                  router.push("/login");
+                  return;
+                }
+
+                onSuggestEdit?.(resource);
+              }}
+              className={`${
+                user ? "bg-blue-500" : "bg-blue-500 cursor-not-allowed"
+              } text-white py-2 px-3 rounded`}
+            >
+              Suggest Edit
+            </button>
+          </div>
         </div>
       )}
 
       {activeTab === "review" && (
         <div>
-          <Box align="left" mb={1} borderColor="transparent">
-            <Rating name="rating" value={resource.rating} readOnly />
-            {resource.rating}
-          </Box>
-
-          {/* SHOW USER REVIEWS */}
-
-          {/* post review  */}
-          <div>
+          <div className="self-start text-center">
             <button
-              // disabled={!user}
               onClick={() => {
                 if (!user) {
                   toast.error("Please log in to submit a review.");
@@ -176,13 +215,23 @@ export default function ResourceDetailsCard({
                 onReviewResource?.(resource);
               }}
               className="text-center bg-blue-500 text-white py-2 px-3 rounded hover:bg-blue-600"
-              // className={`${
-              //   user ? "bg-blue-500" : "bg-gray-300 cursor-not-allowed"
-              // } text-white py-2 px-3 rounded`}
             >
-              Submit a review
+              Submit a Review
             </button>
           </div>
+          <hr className="my-4 border-gray-300" />
+
+          {reviews.length === 0 && <p> No reviews yet.</p>}
+
+          {reviews.map((r) => (
+            <div key={r.id}>
+              <p>{r.user?.firstName || "anonymous"}</p>
+              <p>{r.user?.createdAt}</p>
+              <Rating value={r.rating} readOnly precision={0.5} />
+              <p> {r.content}</p>
+              <hr className="my-4 border-gray-300" />
+            </div>
+          ))}
         </div>
       )}
 

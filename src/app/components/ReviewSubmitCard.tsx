@@ -81,7 +81,7 @@ export default function ReviewSubmitCard({
             {user?.firstName} {user?.lastName}
           </h2>
           <Typography variant="h6" gutterBottom>
-            Submit a Review: <>{resource?.name}</>
+            <>{resource?.name}</>
           </Typography>
 
           <Box className="mb-4">

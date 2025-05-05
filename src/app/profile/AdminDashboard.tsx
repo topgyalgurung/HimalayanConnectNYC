@@ -1,15 +1,16 @@
 "use client";
 import Image from "next/image";
-import { logout } from "../actions/auth";
-import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
-import type { Resource } from "@/app/types/resource";
+
+import { useState } from "react";
 
 import React from "react";
 
 import { useFetchResources } from "../hooks/useFetchResources";
 import { useFetchResourceEdit } from "../hooks/useFetchResourceEdit";
-import { useModal } from "../hooks/useModal";
+
+import Popup from "../components/Popup";
+import { usePopup } from "../hooks/usePopup";
+import { useLogout } from "../hooks/useLogout";
 
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
@@ -20,17 +21,13 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 
-import { Typography } from "@mui/material";
-import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
-
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("new");
-  const router = useRouter();
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { resources, refetch: refetchResources } = useFetchResources();
   const { editResources, refetch: refetchEditResources } =
     useFetchResourceEdit();
-  const { isOpen, data: selectedResource, openModal, closeModal } = useModal();
+  const { isOpen, data: selectedResource, openPopup, closePopup } = usePopup();
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
@@ -61,16 +58,12 @@ export default function AdminDashboard() {
     }
   };
 
-  // Function to log out the current user
-  const handleLogout = async () => {
-    try {
-      await logout();
-      console.log("Logout successful");
-      router.replace("/");
-      router.refresh();
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
+  const { handleLogout } = useLogout();
+
+  // Close popup when modal closes
+  const handleClosePopup = () => {
+    setAnchorEl(null);
+    closePopup();
   };
 
   const filteredByStatus = resources.filter((resource) => {
@@ -81,10 +74,6 @@ export default function AdminDashboard() {
   const filteredByEditStatus = editResources.filter((res) => {
     if (activeTab == "edit") return res.status == "PENDING";
   });
-
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
 
   return (
     <div className="flex flex-col items-center justify-center ">
@@ -205,7 +194,17 @@ export default function AdminDashboard() {
                         <TableCell>{index + 1}</TableCell>
                         <TableCell>{resource.name}</TableCell>
                         <TableCell>
-                          <Button onClick={() => openModal(resource)}>
+                          <Button
+                            onClick={(e) => {
+                              if (anchorEl === e.currentTarget) {
+                                setAnchorEl(null);
+                                closePopup();
+                              } else {
+                                setAnchorEl(e.currentTarget);
+                                openPopup(resource);
+                              }
+                            }}
+                          >
                             View
                           </Button>
                         </TableCell>
@@ -275,7 +274,17 @@ export default function AdminDashboard() {
                         <TableCell>{index + 1}</TableCell>
                         <TableCell>{resource.name}</TableCell>
                         <TableCell>
-                          <Button onClick={() => openModal(resource)}>
+                          <Button
+                            onClick={(e) => {
+                              if (anchorEl === e.currentTarget) {
+                                setAnchorEl(null);
+                                closePopup();
+                              } else {
+                                setAnchorEl(e.currentTarget);
+                                openPopup(resource);
+                              }
+                            }}
+                          >
                             View
                           </Button>
                         </TableCell>
@@ -312,24 +321,19 @@ export default function AdminDashboard() {
               </TableContainer>
             </Paper>
 
-            <Modal
+            <Popup
+              anchor={anchorEl}
               open={isOpen}
-              onClose={closeModal}
-              aria-labelledby="modal-modal-title"
-              aria-describedby="modal-modal-description"
-            >
-              <Box className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 bg-white border-2 border-black shadow-2xl pt-2 px-4 pb-3">
-                <Typography id="modal-modal-title" variant="h6" component="h2">
-                  {selectedResource?.name || "No Title"}
-                </Typography>
-                <Typography id="modal-modal-description" className="mt-2">
-                  {selectedResource?.description}
-                  {selectedResource?.city && ` - ${selectedResource.city}`}
-                  {selectedResource?.address &&
-                    ` - ${selectedResource.address}`}
-                </Typography>
-              </Box>
-            </Modal>
+              onClose={handleClosePopup}
+              title={selectedResource?.name || "No Title"}
+              content={[
+                selectedResource?.description,
+                selectedResource?.city,
+                selectedResource?.address,
+              ]
+                .filter(Boolean)
+                .join(" - ")}
+            />
           </div>
         </div>
       </div>

@@ -9,10 +9,8 @@ import {
   APIProvider,
   AdvancedMarker,
   CollisionBehavior,
-  Pin,
   InfoWindow,
 } from "@vis.gl/react-google-maps";
-import Image from "next/image";
 import { useState } from "react";
 import type { Resource } from "@/app/types/resource";
 import ResourceDetailsCard from "../ResourceDetailsCard";
@@ -24,6 +22,7 @@ interface MapViewProps {
   editResource: Resource | null;
   reviewResource: Resource | null;
   setReviewResource: Resource | null;
+  onSuggestEdit: (resource: Resource) => void;
   onReviewResource: (resource: Resource) => void;
   onCloseAction: (resource: Resource | null) => void;
   onEditCloseAction: (resource: Resource | null) => void;
@@ -35,6 +34,7 @@ export default function MapView({
   selectedResource,
   editResource,
   reviewResource,
+  onSuggestEdit,
   onReviewResource,
   onCloseAction,
   onReviewCloseAction,
@@ -60,6 +60,7 @@ export default function MapView({
           <ResourceDetailsCard
             resource={selectedResource}
             editResource={editResource}
+            onSuggestEdit={onSuggestEdit}
             onReviewResource={onReviewResource}
             onCloseAction={onCloseAction}
           />
@@ -70,6 +71,7 @@ export default function MapView({
         <div className="absolute top-0 left-0 h-full w-[400px] z-50 shadow-lg overflow-y-auto">
           <ResourceSuggestCard
             resource={editResource}
+            onSuggestEdit={onSuggestEdit}
             onEditCloseAction={onEditCloseAction}
           />
         </div>

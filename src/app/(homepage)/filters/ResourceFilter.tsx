@@ -7,8 +7,9 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Checkbox from "@mui/material/Checkbox";
+import Image from "next/image";
 interface CategoryFilterProps {
-  onFilterChange: (category: string[]) => void;
+  onFilterChangeAction: (category: string[]) => void;
   selectedCategories?: string[];
 }
 
@@ -47,7 +48,7 @@ const categories = [
 ];
 
 export default function ResourceFilter({
-  onFilterChange,
+  onFilterChangeAction,
   selectedCategories = [],
 }: CategoryFilterProps) {
   const handleCategoryCheckboxChange = (category: string) => {
@@ -61,10 +62,10 @@ export default function ResourceFilter({
         )
       : [...selectedCategories, category];
 
-    onFilterChange(updatedCategories);
+    onFilterChangeAction(updatedCategories);
   };
   const clearFilters = () => {
-    onFilterChange([]);
+    onFilterChangeAction([]);
   };
   return (
     <div className="p-2 border rounded-md text-black text-sm">
@@ -88,7 +89,13 @@ export default function ResourceFilter({
                   size="medium"
                 />
               </ListItemIcon>
-              <img src={cat.icon} alt={cat.name} className="w-5 h-5 mr-2" />
+              <Image
+                src={cat.icon}
+                alt={cat.name}
+                className="mr-2"
+                width={25}
+                height={25}
+              />
               <ListItemText primary={cat.name} className="capitalize" />
             </ListItemButton>
           </ListItem>

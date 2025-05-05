@@ -111,6 +111,9 @@ export async function addResource(formData: FormData) {
 
 // Server action for edit form 
 export async function addEditResource(formData: FormData) {
+  if (!formData) {
+    return { error: "Form data is missing" };
+  }
   // using my custom session not next-auth
   const session = await getSession(); 
 
@@ -122,6 +125,9 @@ export async function addEditResource(formData: FormData) {
 
   const data = Object.fromEntries(formData.entries()) as unknown as EditResourceInput;
   console.log("form data received for edit: ", data);
+  if (!data || Object.keys(data).length === 0) {
+    return { error: "No form data received" };
+  }
   
   const {  name, address, phone, url,openDays, openTime, closeTime } = data;
   const resourceId = parseInt(data.resourceId as string, 10);
