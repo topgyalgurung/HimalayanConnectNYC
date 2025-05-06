@@ -37,10 +37,7 @@ export default function RootLayout({
         <UserProvider>
           <ThemeProvider theme={theme}>
             <NavMenu />
-            <Toaster
-              position="bottom-center"
-              toastOptions={{ duration: 5000 }}
-            />
+            <Toaster position="top-center" toastOptions={{ duration: 5000 }} />
             <main className="flex-grow">{children}</main>
             {/* <footer className="bg-slate-900 text-white p-4 text-center shadow-md h-[60px] flex-none">
               © Himalayan Connect NYC

@@ -170,9 +170,15 @@ export default function ResourceDetailsCard({
               <IconButton
                 onClick={() => {
                   toggleFavorite(Number(resource.id));
-                  toast("Added to your favorite", {
-                    icon: "👏",
-                  });
+                  if (!liked) {
+                    toast("Added to your favorite", {
+                      icon: "👏",
+                    });
+                  } else {
+                    toast("Removed from your favorite", {
+                      icon: "❌",
+                    });
+                  }
                 }}
                 color="error"
               >
