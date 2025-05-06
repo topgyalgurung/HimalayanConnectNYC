@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useUser } from "../context/UserProvider";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 import { FaFacebook } from "react-icons/fa";
 import { TfiEmail } from "react-icons/tfi";
@@ -48,6 +49,11 @@ export default function ResourceDetailsCard({
 
   // Removed handleLikeToggle and likedResourceId state
 
+  // const cloudinaryBase = "https://res.cloudinary.com/dxzee5uah/image/upload/";
+  // const imageUrl = resource?.imageUrl
+  //   ? `${cloudinaryBase}${resource.imageUrl}`
+  //   : null;
+
   return (
     <div className="absolute top-4 right-4 z-50 w-96 bg-white rounded-lg shadow-xl p-6">
       <button
@@ -58,6 +64,16 @@ export default function ResourceDetailsCard({
       </button>
       <div className="flex justify-between">
         <div>
+          {/* show image from cloudinary her  */}
+          {resource.imageUrl && (
+            <Image
+              src={resource?.imageUrl}
+              alt={resource.name}
+              className="w-full h-48 object-cover rounded-t-lg mb-4"
+              height={400}
+              width={200}
+            />
+          )}
           <h2 className="text-2xl font-bold mb-4">{resource.name}</h2>
           <div className="space-y-3">
             <p className="text-sm font-medium text-blue-600">
@@ -152,7 +168,12 @@ export default function ResourceDetailsCard({
               transition={{ type: "spring", stiffness: 300 }}
             >
               <IconButton
-                onClick={() => toggleFavorite(Number(resource.id))}
+                onClick={() => {
+                  toggleFavorite(Number(resource.id));
+                  toast("Added to your favorite", {
+                    icon: "👏",
+                  });
+                }}
                 color="error"
               >
                 {liked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
@@ -216,7 +237,7 @@ export default function ResourceDetailsCard({
               }}
               className="text-center bg-blue-500 text-white py-2 px-3 rounded hover:bg-blue-600"
             >
-              Submit a Review
+              Write a Review
             </button>
           </div>
           <hr className="my-4 border-gray-300" />
@@ -225,8 +246,8 @@ export default function ResourceDetailsCard({
 
           {reviews.map((r) => (
             <div key={r.id}>
-              <p>{r.user?.firstName || "anonymous"}</p>
-              <p>{r.user?.createdAt}</p>
+              <p>{r.User?.firstName || "anonymous"}</p>
+              <p>{r.User?.createdAt}</p>
               <Rating value={r.rating} readOnly precision={0.5} />
               <p> {r.content}</p>
               <hr className="my-4 border-gray-300" />

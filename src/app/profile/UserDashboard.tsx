@@ -20,6 +20,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Button from "@mui/material/Button";
+import { Box } from "@mui/material";
 // import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import Popup from "../components/Popup";
@@ -445,12 +446,26 @@ export default function UserDashboard() {
               onClose={handleClosePopup}
               title={selectedResource?.name || "No Title"}
               content={[
-                selectedResource?.description,
-                selectedResource?.city,
-                selectedResource?.address,
+                selectedResource?.description &&
+                  `Description: ${selectedResource.description}`,
+                selectedResource?.city && `City: ${selectedResource.city}`,
+                selectedResource?.address &&
+                  `Address: ${selectedResource.address}`,
+                selectedResource?.openDays &&
+                  `Open Days: ${selectedResource.openDays}`,
+                selectedResource?.openTime &&
+                  `Open Time: ${format(
+                    new Date(selectedResource.openTime),
+                    "hh:mm a"
+                  )}`,
+                selectedResource?.closeTime &&
+                  `Close Time: ${format(
+                    new Date(selectedResource.closeTime),
+                    "hh:mm a"
+                  )}`,
               ]
                 .filter(Boolean)
-                .join(" - ")}
+                .join("\n")}
             />
           </div>
         </div>

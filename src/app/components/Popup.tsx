@@ -47,7 +47,7 @@ export default function Popup({
       <StyledPopup>
         <PopupBody>
           <Typography variant="h6">{title}</Typography>
-          <Typography>{content}</Typography>
+          <Typography sx={{ whiteSpace: "pre-line" }}>{content}</Typography>
         </PopupBody>
       </StyledPopup>
     </BasePopup>
