@@ -20,6 +20,8 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import { Box } from "@mui/material";
+import { format } from "date-fns";
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("new");
@@ -324,12 +326,26 @@ export default function AdminDashboard() {
               onClose={handleClosePopup}
               title={selectedResource?.name || "No Title"}
               content={[
-                selectedResource?.description,
-                selectedResource?.city,
-                selectedResource?.address,
+                selectedResource?.description &&
+                  `Description: ${selectedResource.description}`,
+                selectedResource?.city && `City: ${selectedResource.city}`,
+                selectedResource?.address &&
+                  `Address: ${selectedResource.address}`,
+                selectedResource?.openDays &&
+                  `Open Days: ${selectedResource.openDays}`,
+                selectedResource?.openTime &&
+                  `Open Time: ${format(
+                    new Date(selectedResource.openTime),
+                    "hh:mm a"
+                  )}`,
+                selectedResource?.closeTime &&
+                  `Close Time: ${format(
+                    new Date(selectedResource.closeTime),
+                    "hh:mm a"
+                  )}`,
               ]
                 .filter(Boolean)
-                .join(" - ")}
+                .join("\n")}
             />
           </div>
         </div>
