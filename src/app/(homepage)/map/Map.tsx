@@ -13,18 +13,18 @@ import {
 } from "@vis.gl/react-google-maps";
 import { useState } from "react";
 import type { Resource } from "@/app/types/resource";
-import ResourceDetailsCard from "../ResourceDetailsCard";
-import ResourceSuggestCard from "../ResourceSuggestCard";
-import ReviewSubmitCard from "../ReviewSubmitCard";
+import ResourceDetailsCard from "@/app/components/ResourceDetailsCard";
+import ResourceSuggestCard from "@/app/components/ResourceSuggestCard";
+import ReviewSubmitCard from "@/app/components/ReviewSubmitCard";
 import Image from "next/image";
+
 interface MapViewProps {
   resources: Resource[];
   selectedResource: Resource | null;
   editResource: Resource | null;
   reviewResource: Resource | null;
-  setReviewResource: Resource | null;
   onSuggestEdit: (resource: Resource) => void;
-  onReviewResource: (resource: Resource) => void;
+  onReviewResource: (resource: Resource | null) => void;
   onCloseAction: (resource: Resource | null) => void;
   onEditCloseAction: (resource: Resource | null) => void;
   onReviewCloseAction: (resource: Resource | null) => void;
@@ -42,50 +42,53 @@ export default function MapView({
   onEditCloseAction,
 }: MapViewProps) {
   return (
-    <div className="h-full w-full relative">
-      <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? ""}>
-        <Map
-          className="h-full w-full"
-          defaultCenter={{ lat: 40.7564298, lng: -73.8872289 }}
-          defaultZoom={12}
-          gestureHandling={"greedy"}
-          disableDefaultUI={true}
-          mapId={process.env.NEXT_PUBLIC_MAP_ID ?? ""}
-        >
-          <Markers points={resources} />
-        </Map>
-      </APIProvider>
-      {/* show resource detail card on selectedResource */}
-      {selectedResource && (
-        <div className="absolute top-0 left-0 h-full w-[400px] z-40 shadow-lg overflow-y-auto">
-          <ResourceDetailsCard
-            resource={selectedResource}
-            editResource={editResource}
-            onSuggestEdit={onSuggestEdit}
-            onReviewResource={onReviewResource}
-            onCloseAction={onCloseAction}
-          />
-        </div>
-      )}
-      {/* show edit resource card */}
-      {editResource && (
-        <div className="absolute top-0 left-0 h-full w-[400px] z-50 shadow-lg overflow-y-auto">
-          <ResourceSuggestCard
-            resource={editResource}
-            onSuggestEdit={onSuggestEdit}
-            onEditCloseAction={onEditCloseAction}
-          />
-        </div>
-      )}
+    <aside className="w-[50%] bg-white shadow-md pl-4 flex flex-col h-full border-2 border-gray-300 ">
+      <div className="flex-1 relative border border-gray-400 rounded-lg overflow-hidden"></div>
+      <div className="h-full w-full relative">
+        <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? ""}>
+          <Map
+            className="h-full w-full"
+            defaultCenter={{ lat: 40.7564298, lng: -73.8872289 }}
+            defaultZoom={12}
+            gestureHandling={"greedy"}
+            disableDefaultUI={true}
+            mapId={process.env.NEXT_PUBLIC_MAP_ID ?? ""}
+          >
+            <Markers points={resources} />
+          </Map>
+        </APIProvider>
+        {/* show resource detail card on selectedResource */}
+        {selectedResource && (
+          <div className="absolute top-0 left-0 h-full w-[400px] z-40 shadow-lg overflow-y-auto">
+            <ResourceDetailsCard
+              resource={selectedResource}
+              editResource={editResource}
+              onSuggestEdit={onSuggestEdit}
+              onReviewResource={onReviewResource}
+              onCloseAction={onCloseAction}
+            />
+          </div>
+        )}
+        {/* show edit resource card */}
+        {editResource && (
+          <div className="absolute top-0 left-0 h-full w-[400px] z-50 shadow-lg overflow-y-auto">
+            <ResourceSuggestCard
+              resource={editResource}
+              onSuggestEdit={onSuggestEdit}
+              onEditCloseAction={onEditCloseAction}
+            />
+          </div>
+        )}
 
-      {/* show submit review card */}
-      {reviewResource && (
-        <ReviewSubmitCard
-          resource={reviewResource}
-          onReviewCloseAction={onReviewCloseAction}
-        />
-      )}
-    </div>
+        {/* show submit review card */}
+        {reviewResource && (
+          <ReviewSubmitCard
+            resource={reviewResource}
+            onReviewCloseAction={onReviewCloseAction}
+          />
+        )}
+      </div>
+    </aside>
   );
 }
 

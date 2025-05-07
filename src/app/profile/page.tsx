@@ -11,7 +11,6 @@ import { useEffect, useState } from "react";
 import AdminDashboard from "../profile/AdminDashboard";
 import UserDashboard from "../profile/UserDashboard";
 import { getSession } from "../lib/session";
-import { verifySession } from "../lib/dal";
 export default function Profile() {
   // const session = await verifySession()
   // const userRole = session?.role;

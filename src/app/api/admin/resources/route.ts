@@ -1,1 +1,0 @@
-// approve or reject resources (admin)
