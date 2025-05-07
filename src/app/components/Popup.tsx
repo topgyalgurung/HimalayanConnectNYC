@@ -1,11 +1,9 @@
 "use client";
 
 import React from "react";
-import {
-  Unstable_Popup as BasePopup,
-  type PopupProps as BasePopupProps,
-} from "@mui/base/Unstable_Popup";
-import { styled, Box, Typography } from "@mui/material";
+import { Unstable_Popup as BasePopup } from "@mui/base/Unstable_Popup";
+import { styled, Box, Typography, IconButton } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 
 const StyledPopup = styled("div")(({ theme }) => ({
   zIndex: 1500,
@@ -19,12 +17,23 @@ const StyledPopup = styled("div")(({ theme }) => ({
   padding: "16px 24px",
   minWidth: 320,
   maxWidth: 400,
+  position: "relative",
 }));
 
 const PopupBody = styled(Box)(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   gap: theme.spacing(2),
+}));
+
+const CloseButton = styled(IconButton)(({ theme }) => ({
+  position: "absolute",
+  right: 8,
+  top: 8,
+  color: theme.palette.grey[500],
+  "&:hover": {
+    color: theme.palette.grey[700],
+  },
 }));
 
 type CustomPopupProps = {
@@ -43,8 +52,16 @@ export default function Popup({
   content,
 }: CustomPopupProps) {
   return (
-    <BasePopup open={open} anchor={anchor} onClose={onClose}>
+    <BasePopup 
+      open={open} 
+      anchor={anchor}
+      placement="bottom-start"
+      offset={4}
+    >
       <StyledPopup>
+        <CloseButton onClick={onClose} size="small">
+          <CloseIcon />
+        </CloseButton>
         <PopupBody>
           <Typography variant="h6">{title}</Typography>
           <Typography sx={{ whiteSpace: "pre-line" }}>{content}</Typography>

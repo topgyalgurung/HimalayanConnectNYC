@@ -25,7 +25,7 @@ import { format } from "date-fns";
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("new");
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [resourceAnchorEl, setResourceAnchorEl] = useState<null | HTMLElement>(null);
   const { resources, refetch: refetchResources } = useFetchResources();
   const { editResources, refetch: refetchEditResources } =
     useFetchResourceEdit();
@@ -33,6 +33,9 @@ export default function AdminDashboard() {
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
+    // Close popup when changing tabs
+    setResourceAnchorEl(null);
+    closePopup();
   };
 
   // Function to update the status of a resource
@@ -64,7 +67,7 @@ export default function AdminDashboard() {
 
   // Close popup when modal closes
   const handleClosePopup = () => {
-    setAnchorEl(null);
+    setResourceAnchorEl(null);
     closePopup();
   };
 
@@ -198,11 +201,11 @@ export default function AdminDashboard() {
                         <TableCell>
                           <Button
                             onClick={(e) => {
-                              if (anchorEl === e.currentTarget) {
-                                setAnchorEl(null);
+                              if (resourceAnchorEl === e.currentTarget) {
+                                setResourceAnchorEl(null);
                                 closePopup();
                               } else {
-                                setAnchorEl(e.currentTarget);
+                                setResourceAnchorEl(e.currentTarget);
                                 openPopup(resource);
                               }
                             }}
@@ -279,11 +282,11 @@ export default function AdminDashboard() {
                         <TableCell>
                           <Button
                             onClick={(e) => {
-                              if (anchorEl === e.currentTarget) {
-                                setAnchorEl(null);
+                              if (resourceAnchorEl === e.currentTarget) {
+                                setResourceAnchorEl(null);
                                 closePopup();
                               } else {
-                                setAnchorEl(e.currentTarget);
+                                setResourceAnchorEl(e.currentTarget);
                                 openPopup(resource);
                               }
                             }}
@@ -321,7 +324,7 @@ export default function AdminDashboard() {
             </Paper>
 
             <Popup
-              anchor={anchorEl}
+              anchor={resourceAnchorEl}
               open={isOpen}
               onClose={handleClosePopup}
               title={selectedResource?.name || "No Title"}

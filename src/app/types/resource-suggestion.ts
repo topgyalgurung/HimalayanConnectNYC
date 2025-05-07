@@ -9,7 +9,8 @@ export type Location = {
 
 export type ResourceEditSuggestion = {
      id: string;
-      name: string;
+  name: string;
+  description: string;
       address: string;
       openDays: string;
       phone: string;

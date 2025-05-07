@@ -11,6 +11,8 @@ import { useFetchUser } from "../hooks/useFetchUsers";
 import { useUser } from "../context/UserProvider";
 import { usePopup } from "../hooks/usePopup";
 import { useDeleteItem } from "../hooks/useDeleteResource";
+import { useFetchResources } from "../hooks/useFetchResources";
+import { useFetchResourceEdit } from "../hooks/useFetchResourceEdit";
 
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
@@ -69,6 +71,9 @@ export default function UserDashboard() {
   const router = useRouter();
   const { setUser } = useUser();
 
+  const { resources, refetch: refetchResources } = useFetchResources();
+  const { editResources, refetch: refetchEditResources } = useFetchResourceEdit();
+  
   const { data: user, refetch } = useFetchUser();
   const { isOpen, data: selectedResource, openPopup, closePopup } = usePopup();
 
@@ -78,6 +83,9 @@ export default function UserDashboard() {
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
+    // Close popup when changing tabs
+    setAnchorEl(null);
+    closePopup();
   };
 
   const handleLogout = async () => {
@@ -224,14 +232,14 @@ export default function UserDashboard() {
                   <TableBody>
                     {/* new Resources submitted by user */}
                     {activeTab === "new" &&
-                      (user.resources.length === 0 ? (
+                      (resources.length === 0 ? (
                         <TableRow>
                           <TableCell colSpan={5}>
                             No resources submitted yet.
                           </TableCell>
                         </TableRow>
                       ) : (
-                        user.resources.map((res, index) => (
+                        resources.map((res, index) => (
                           <TableRow
                             key={res.id}
                             hover
@@ -281,14 +289,14 @@ export default function UserDashboard() {
 
                     {/* Edit suggestions by user */}
                     {activeTab === "suggest" &&
-                      (user.ResourceEditSuggestion.length === 0 ? (
+                      (editResources.length === 0 ? (
                         <TableRow>
                           <TableCell colSpan={5}>
                             No edit suggestions submitted yet.
                           </TableCell>
                         </TableRow>
                       ) : (
-                        user.ResourceEditSuggestion.map((edit, index) => (
+                        editResources.map((edit, index) => (
                           <TableRow
                             key={edit.id}
                             hover
@@ -298,6 +306,7 @@ export default function UserDashboard() {
                             <TableCell>{index + 1} </TableCell>
                             <TableCell>{edit.name}</TableCell>
                             <TableCell>{edit.status}</TableCell>
+
                             <TableCell>
                               <Button
                                 onClick={(e) => {
@@ -446,23 +455,29 @@ export default function UserDashboard() {
               onClose={handleClosePopup}
               title={selectedResource?.name || "No Title"}
               content={[
-                selectedResource?.description &&
-                  `Description: ${selectedResource.description}`,
+                // Basic Information
+                selectedResource?.description && `Description: ${selectedResource.description}`,
                 selectedResource?.city && `City: ${selectedResource.city}`,
-                selectedResource?.address &&
-                  `Address: ${selectedResource.address}`,
-                selectedResource?.openDays &&
-                  `Open Days: ${selectedResource.openDays}`,
-                selectedResource?.openTime &&
-                  `Open Time: ${format(
-                    new Date(selectedResource.openTime),
-                    "hh:mm a"
-                  )}`,
-                selectedResource?.closeTime &&
-                  `Close Time: ${format(
-                    new Date(selectedResource.closeTime),
-                    "hh:mm a"
-                  )}`,
+                selectedResource?.address && `Address: ${selectedResource.address}`,
+                
+                // Operating Hours
+                selectedResource?.openDays && `Open Days: ${selectedResource.openDays}`,
+                selectedResource?.openTime && `Open Time: ${format(new Date(selectedResource.openTime), "hh:mm a")}`,
+                selectedResource?.closeTime && `Close Time: ${format(new Date(selectedResource.closeTime), "hh:mm a")}`,
+                
+                // Additional Details
+                selectedResource?.status && `Status: ${selectedResource.status}`,
+                selectedResource?.createdAt && `Created: ${format(new Date(selectedResource.createdAt), "yyyy-MM-dd")}`,
+                selectedResource?.updatedAt && `Last Updated: ${format(new Date(selectedResource.updatedAt), "yyyy-MM-dd")}`,
+                
+                // Contact Information (if available)
+                selectedResource?.phone && `Phone: ${selectedResource.phone}`,
+                selectedResource?.email && `Email: ${selectedResource.email}`,
+                selectedResource?.website && `Website: ${selectedResource.website}`,
+                
+                // Additional Features (if available)
+                selectedResource?.features && `Features: ${selectedResource.features}`,
+                selectedResource?.amenities && `Amenities: ${selectedResource.amenities}`,
               ]
                 .filter(Boolean)
                 .join("\n")}
