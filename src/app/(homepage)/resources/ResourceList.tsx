@@ -28,6 +28,7 @@ const ResourceList = ({
   const searchParams = useSearchParams(); // access search params from url /resources?query=name
   const searchQuery = searchParams.get("query")?.toLowerCase() || ""; // Get query from URL and convert to lowercase
 
+  // need to fix this, already fetched data in page
   const { resources } = useFetchResources(); // use hook to fetch data (it either )
   console.log("fetched resources ", resources);
 
@@ -77,8 +78,12 @@ const ResourceList = ({
   const searchFilteredResources = filteredResources.filter((resource) => {
     const searchQueryLower = searchQuery.trim().toLowerCase();
     const nameMatch = resource.name?.toLowerCase().includes(searchQueryLower);
-    const addressMatch = resource.address?.toLowerCase().includes(searchQueryLower);
-    const locationMatch = resource.city?.toLowerCase().includes(searchQueryLower);
+    const addressMatch = resource.address
+      ?.toLowerCase()
+      .includes(searchQueryLower);
+    const locationMatch = resource.city
+      ?.toLowerCase()
+      .includes(searchQueryLower);
 
     return nameMatch || addressMatch || locationMatch;
   });

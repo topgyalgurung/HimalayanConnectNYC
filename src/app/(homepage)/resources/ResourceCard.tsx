@@ -40,6 +40,7 @@ export default function ResourceCard({
               </p>
               <p>
                 <strong>Hours :</strong>
+                {/* need validation later open should be smaller than close time  */}
                 {format(resource.openTime, "hh:mm a")}-
                 {format(resource.closeTime, "hh:mm a")}
               </p>

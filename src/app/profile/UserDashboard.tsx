@@ -2,7 +2,6 @@
   User dashboard component for managing personal resources, edits, reviews and favorites
   */
 
-
 "use client";
 
 import React from "react";
@@ -18,11 +17,10 @@ import { useDeleteItem } from "../hooks/useDeleteResource";
 import { useFetchResourceEdit } from "../hooks/useFetchResourceEdit";
 import { useFetchUserResources } from "../hooks/useFetchUserResources";
 
-import Popup from "../components/Popup";
+import Popup from "../components/ui/Popup";
 import { ProfileCard } from "./SharedProfileCard";
 import { TabNavigation } from "../components/dashboard/TabNavigation";
 import { UserResourceTable } from "../components/dashboard/UserResourceTable";
-
 
 interface resourceColumn {
   id: "index" | "name" | "status" | "view" | "edit";
@@ -75,13 +73,13 @@ export default function UserDashboard() {
   const { setUser } = useUser();
 
   const { resources, refetch: refetchResources } = useFetchUserResources();
-  const { editResources, refetch: refetchEditResources } = useFetchResourceEdit();
+  const { editResources, refetch: refetchEditResources } =
+    useFetchResourceEdit();
   const { data: user, refetch } = useFetchUser();
   const { isOpen, data: selectedResource, openPopup, closePopup } = usePopup();
   const { deleteItem, deletingId } = useDeleteItem();
 
   if (!user) return <p>Loading user data...</p>;
-
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
@@ -89,7 +87,6 @@ export default function UserDashboard() {
     closePopup();
   };
 
-  
   const handleLogout = async () => {
     try {
       await logout();
@@ -101,14 +98,15 @@ export default function UserDashboard() {
     }
   };
 
- 
   const handleClosePopup = () => {
     setAnchorEl(null);
     closePopup();
   };
 
-
-  const handleViewClick = (resource: Resource, event: React.MouseEvent<HTMLElement>) => {
+  const handleViewClick = (
+    resource: Resource,
+    event: React.MouseEvent<HTMLElement>
+  ) => {
     if (anchorEl === event.currentTarget) {
       setAnchorEl(null);
       closePopup();
@@ -120,37 +118,34 @@ export default function UserDashboard() {
 
   /**
    * Deletes a resource and refreshes the data
-*/
+   */
   const handleDeleteResource = async (resourceId: string) => {
     await deleteItem("resources", resourceId, {
       refetchUser: refetch,
       onSuccess: () => {
         refetchResources();
-      }
+      },
     });
   };
 
- 
   const handleDeleteEdit = async (editId: string) => {
     await deleteItem("resources/edit", editId, {
       refetchUser: refetch,
       onSuccess: () => {
         refetchEditResources();
-      }
+      },
     });
   };
 
-  
   const handleDeleteReview = async (reviewId: string) => {
     await deleteItem("resources/review", reviewId, {
-      refetchUser: refetch
+      refetchUser: refetch,
     });
   };
 
- 
   const handleDeleteFavorite = async (favoriteId: string) => {
     await deleteItem("resources/favorite", favoriteId, {
-      refetchUser: refetch
+      refetchUser: refetch,
     });
   };
 
