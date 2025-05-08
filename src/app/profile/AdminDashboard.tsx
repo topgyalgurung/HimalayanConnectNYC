@@ -23,9 +23,14 @@ import TableRow from "@mui/material/TableRow";
 import { Box } from "@mui/material";
 import { format } from "date-fns";
 
+import { ProfileCard } from "./SharedProfileCard";
+import { TabNavigation } from "../components/dashboard/TabNavigation";
+
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("new");
-  const [resourceAnchorEl, setResourceAnchorEl] = useState<null | HTMLElement>(null);
+  const [resourceAnchorEl, setResourceAnchorEl] = useState<null | HTMLElement>(
+    null
+  );
   const { resources, refetch: refetchResources } = useFetchResources();
   const { editResources, refetch: refetchEditResources } =
     useFetchResourceEdit();
@@ -80,37 +85,21 @@ export default function AdminDashboard() {
     if (activeTab == "edit") return res.status == "PENDING";
   });
 
+  const adminTabs = [
+    { id: "new", label: "New Submissions", color: "bg-blue-500" },
+    { id: "edit", label: "Edit Submissions", color: "bg-blue-500" },
+    { id: "approved", label: "Approved", color: "bg-green-500" },
+    { id: "rejected", label: "Rejected", color: "bg-red-500" },
+  ];
+
   return (
     <div className="flex flex-col items-center justify-center ">
-      <h1 className="text-4xl font-bold text-center mt-1">Profile</h1>
-
-      {/* Profile card and dashboard container */}
       <div className="flex flex-row w-full">
-        {/* Profile card (takes 30% width) */}
-        <div className="w-full md:w-1/3 p-4">
-          <div className="flex flex-col items-center bg-white shadow-lg rounded-lg p-6">
-            <div className="relative w-32 h-32 mb-4">
-              <Image
-                src={"/default-avatar.jpg"}
-                alt="Profile Picture"
-                fill
-                className="rounded-full object-cover"
-                priority
-              />
-            </div>
-            {/* show names */}
-            <h2 className="text-xl font-bold mb-4">Hello Admin</h2>
-
-            <div className="mt-6">
-              <button
-                onClick={handleLogout}
-                className="px-4 py-2 text-red-500 rounded-lg border border-red-500 hover:bg-red-500 hover:text-white transition-colors"
-              >
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
+        <ProfileCard
+          userName="Admin"
+          onLogout={handleLogout}
+          userType="admin"
+        />
 
         {/* Dashboard (takes 70% width) */}
         <div className="w-full md:w-2/3 p-4">
@@ -118,49 +107,11 @@ export default function AdminDashboard() {
             <h2 className="text-2xl font-bold mb-4">Dashboard</h2>
             <p className="text-gray-600">Manage your resources</p>
 
-            {/* More dashboard content here */}
-            <div className=" flex space-x-4 mb-4">
-              {/* new  */}
-              <button
-                className={`px-4 py-2 ${
-                  activeTab === "new" ? "bg-blue-500 text-white" : "bg-gray-200"
-                }`}
-                onClick={() => handleTabChange("new")}
-              >
-                New Submissions
-              </button>
-              {/* edit */}
-              <button
-                className={`px-4 py-2 ${
-                  activeTab === "edit"
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-200"
-                }`}
-                onClick={() => handleTabChange("edit")}
-              >
-                Edit Submissions
-              </button>
-              <button
-                className={`px-4 py-2 ${
-                  activeTab === "approved"
-                    ? "bg-green-500 text-white"
-                    : "bg-gray-200"
-                }`}
-                onClick={() => handleTabChange("approved")}
-              >
-                Approved
-              </button>
-              <button
-                className={`px-4 py-2 ${
-                  activeTab === "rejected"
-                    ? "bg-red-500 text-white"
-                    : "bg-gray-200"
-                }`}
-                onClick={() => handleTabChange("rejected")}
-              >
-                Rejected
-              </button>
-            </div>
+            <TabNavigation
+              activeTab={activeTab}
+              onTabChange={handleTabChange}
+              tabs={adminTabs}
+            />
 
             {/* table header or column names  */}
 

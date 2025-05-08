@@ -13,6 +13,7 @@ import { usePopup } from "../hooks/usePopup";
 import { useDeleteItem } from "../hooks/useDeleteResource";
 import { useFetchResources } from "../hooks/useFetchResources";
 import { useFetchResourceEdit } from "../hooks/useFetchResourceEdit";
+import { useFetchUserResources } from "../hooks/useFetchUserResources";
 
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
@@ -27,6 +28,9 @@ import { Box } from "@mui/material";
 import TableRow from "@mui/material/TableRow";
 import Popup from "../components/Popup";
 import { format } from "date-fns";
+
+import { ProfileCard } from "./SharedProfileCard";
+import { TabNavigation } from "../components/dashboard/TabNavigation";
 
 interface resourceColumn {
   id: "index" | "name" | "status" | "view" | "edit";
@@ -71,9 +75,10 @@ export default function UserDashboard() {
   const router = useRouter();
   const { setUser } = useUser();
 
-  const { resources, refetch: refetchResources } = useFetchResources();
-  const { editResources, refetch: refetchEditResources } = useFetchResourceEdit();
-  
+  const { resources, refetch: refetchResources } = useFetchUserResources();
+  const { editResources, refetch: refetchEditResources } =
+    useFetchResourceEdit();
+
   const { data: user, refetch } = useFetchUser();
   const { isOpen, data: selectedResource, openPopup, closePopup } = usePopup();
 
@@ -105,37 +110,39 @@ export default function UserDashboard() {
     closePopup();
   };
 
+   const handleDeleteResource = async (resourceId: string) => {
+    await deleteItem("resources", resourceId, {
+      refetchUser: refetch,
+      onSuccess: () => {
+        refetchResources(); // Refetch the resources list
+      }
+    });
+  };
+  const handleDeleteEdit = async (editId: string) => {
+    await deleteItem("resources/edit", editId, {
+      refetchUser: refetch,
+      onSuccess: () => {
+        refetchEditResources(); // Refetch the edit suggestions list
+      }
+    });
+  };
+  const userTabs = [
+    { id: "new", label: "New", color: "bg-blue-500" },
+    { id: "suggest", label: "Suggest Edit", color: "bg-green-500" },
+    { id: "reviews", label: "Reviews", color: "bg-green-500" },
+    { id: "likes", label: "Favorites", color: "bg-green-500" },
+  ];
+
   return (
     <div className="flex flex-col items-center justify-center ">
       {/* Profile card and dashboard container */}
       <div className="flex flex-row w-full">
         {/* Profile card (takes 30% width) */}
-        <div className="w-full md:w-1/3 p-4">
-          <h1 className="text-4xl font-bold text-center mt-1">Profile</h1>
-          <div className="flex flex-col items-center bg-white shadow-lg rounded-lg p-6">
-            <div className="relative w-32 h-32 mb-4">
-              <Image
-                src={"/default-avatar.jpg"}
-                alt="Profile Picture"
-                fill
-                className="rounded-full object-cover"
-                priority
-              />
-            </div>
-            <h2 className="text-xl font-bold mb-4">
-              Hello User: {user.firstName}
-            </h2>
-
-            <div className="mt-6">
-              <button
-                onClick={handleLogout}
-                className="px-4 py-2 text-red-500 rounded-lg border border-red-500 hover:bg-red-500 hover:text-white transition-colors"
-              >
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
+        <ProfileCard
+          userName={user.firstName}
+          onLogout={handleLogout}
+          userType="user"
+        />
 
         {/* Dashboard (takes 70% width) */}
         <div className="w-full md:w-2/3 p-4">
@@ -146,47 +153,13 @@ export default function UserDashboard() {
               submissions
             </p>
 
+            <TabNavigation
+              activeTab={activeTab}
+              onTabChange={handleTabChange}
+              tabs={userTabs}
+            />
+
             {/* More dashboard content here */}
-            <div className=" flex space-x-4 mb-4">
-              <button
-                className={`px-4 py-2 ${
-                  activeTab === "new" ? "bg-blue-500 text-white" : "bg-gray-200"
-                }`}
-                onClick={() => handleTabChange("new")}
-              >
-                New
-              </button>
-              <button
-                className={`px-4 py-2 ${
-                  activeTab === "suggest"
-                    ? "bg-green-500 text-white"
-                    : "bg-gray-200"
-                }`}
-                onClick={() => handleTabChange("suggest")}
-              >
-                Suggest Edit
-              </button>
-              <button
-                className={`px-4 py-2 ${
-                  activeTab === "reviews"
-                    ? "bg-green-500 text-white"
-                    : "bg-gray-200"
-                }`}
-                onClick={() => handleTabChange("reviews")}
-              >
-                Reviews
-              </button>
-              <button
-                className={`px-4 py-2 ${
-                  activeTab === "likes"
-                    ? "bg-green-500 text-white"
-                    : "bg-gray-200"
-                }`}
-                onClick={() => handleTabChange("likes")}
-              >
-                Favorites
-              </button>
-            </div>
 
             {/* table headers  */}
 
@@ -272,11 +245,8 @@ export default function UserDashboard() {
                                 variant="outlined"
                                 startIcon={<DeleteIcon />}
                                 disabled={deletingId === res.id.toString()}
-                                onClick={() =>
-                                  deleteItem("resources", res.id, {
-                                    refetchUser: refetch,
-                                  })
-                                }
+                                onClick={() => handleDeleteResource(res.id)}
+                        
                               >
                                 {deletingId === res.id.toString()
                                   ? "Deleting..."
@@ -327,11 +297,8 @@ export default function UserDashboard() {
                                 variant="outlined"
                                 startIcon={<DeleteIcon />}
                                 disabled={deletingId === edit.id.toString()}
-                                onClick={() =>
-                                  deleteItem("resources/edit", edit.id, {
-                                    refetchUser: refetch,
-                                  })
-                                }
+                                onClick={() => handleDeleteEdit(edit.id)}
+                                  
                               >
                                 {deletingId === edit.id.toString()
                                   ? "Deleting..."
@@ -456,28 +423,51 @@ export default function UserDashboard() {
               title={selectedResource?.name || "No Title"}
               content={[
                 // Basic Information
-                selectedResource?.description && `Description: ${selectedResource.description}`,
+                selectedResource?.description &&
+                  `Description: ${selectedResource.description}`,
                 selectedResource?.city && `City: ${selectedResource.city}`,
-                selectedResource?.address && `Address: ${selectedResource.address}`,
-                
+                selectedResource?.address &&
+                  `Address: ${selectedResource.address}`,
+
                 // Operating Hours
-                selectedResource?.openDays && `Open Days: ${selectedResource.openDays}`,
-                selectedResource?.openTime && `Open Time: ${format(new Date(selectedResource.openTime), "hh:mm a")}`,
-                selectedResource?.closeTime && `Close Time: ${format(new Date(selectedResource.closeTime), "hh:mm a")}`,
-                
+                selectedResource?.openDays &&
+                  `Open Days: ${selectedResource.openDays}`,
+                selectedResource?.openTime &&
+                  `Open Time: ${format(
+                    new Date(selectedResource.openTime),
+                    "hh:mm a"
+                  )}`,
+                selectedResource?.closeTime &&
+                  `Close Time: ${format(
+                    new Date(selectedResource.closeTime),
+                    "hh:mm a"
+                  )}`,
+
                 // Additional Details
-                selectedResource?.status && `Status: ${selectedResource.status}`,
-                selectedResource?.createdAt && `Created: ${format(new Date(selectedResource.createdAt), "yyyy-MM-dd")}`,
-                selectedResource?.updatedAt && `Last Updated: ${format(new Date(selectedResource.updatedAt), "yyyy-MM-dd")}`,
-                
+                selectedResource?.status &&
+                  `Status: ${selectedResource.status}`,
+                selectedResource?.createdAt &&
+                  `Created: ${format(
+                    new Date(selectedResource.createdAt),
+                    "yyyy-MM-dd"
+                  )}`,
+                selectedResource?.updatedAt &&
+                  `Last Updated: ${format(
+                    new Date(selectedResource.updatedAt),
+                    "yyyy-MM-dd"
+                  )}`,
+
                 // Contact Information (if available)
                 selectedResource?.phone && `Phone: ${selectedResource.phone}`,
                 selectedResource?.email && `Email: ${selectedResource.email}`,
-                selectedResource?.website && `Website: ${selectedResource.website}`,
-                
+                selectedResource?.website &&
+                  `Website: ${selectedResource.website}`,
+
                 // Additional Features (if available)
-                selectedResource?.features && `Features: ${selectedResource.features}`,
-                selectedResource?.amenities && `Amenities: ${selectedResource.amenities}`,
+                selectedResource?.features &&
+                  `Features: ${selectedResource.features}`,
+                selectedResource?.amenities &&
+                  `Amenities: ${selectedResource.amenities}`,
               ]
                 .filter(Boolean)
                 .join("\n")}
