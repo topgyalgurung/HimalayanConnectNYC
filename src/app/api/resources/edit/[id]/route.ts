@@ -65,3 +65,39 @@ export async function DELETE(
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
+
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const resourceId = parseInt(params.id);
+    
+    if (isNaN(resourceId)) {
+      return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
+    }
+
+    const body = await req.json();
+    const { status } = body;
+
+    if (!status || !["PENDING", "APPROVED", "REJECTED"].includes(status)) {
+      return NextResponse.json(
+        { error: "Invalid status. Must be PENDING, APPROVED, or REJECTED" },
+        { status: 400 }
+      );
+    }
+
+    const updatedSuggestion = await prisma.resourceEditSuggestion.update({
+      where: { id: resourceId },
+      data: { status },
+    });
+
+    return NextResponse.json(updatedSuggestion);
+  } catch (error) {
+    console.error("Error updating edit suggestion status:", error);
+    return NextResponse.json(
+      { error: "Failed to update edit suggestion status" },
+      { status: 500 }
+    );
+  }
+}

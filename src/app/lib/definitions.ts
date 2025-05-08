@@ -1,6 +1,10 @@
+/**
+ * Contains Zod schemas and TypeScript types for form validation
+
+ */
+
 import { z } from 'zod'
 
- // schema validation library 
 export const SignupFormSchema = z.object({
   firstName: z
     .string()

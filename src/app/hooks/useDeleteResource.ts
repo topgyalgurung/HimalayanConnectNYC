@@ -6,39 +6,43 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
 interface DeleteItemOptions {
-  refetchUser?: () => Promise<void>; // Updated to reflect async refetch
+  refetchUser?: () => Promise<void>;
+  onSuccess?: () => void;
 }
 
 export function useDeleteItem() {
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const router = useRouter();
 
-  const deleteItem = async (path: string, id:string | number,options: DeleteItemOptions = {}) => {
+  const deleteItem = async (path: string, id: string | number, options: DeleteItemOptions = {}) => {
     if (deletingId) return;
 
     setDeletingId(id.toString());
     try {
       const res = await fetch(`/api/${path}/${id}`, {
         method: "DELETE",
-       
       });
 
       if (!res.ok) {
-        throw new Error(`Failed to delete ${path.slice(0, -1)}`); // eg. resource, suggestion
+        throw new Error(`Failed to delete`);
       }
 
-      toast.success(`${path.slice(0, -1)} deleted successfully!`);
-    // Trigger refetch of user data if provided
-    if (options.refetchUser) {
-      await options.refetchUser();
-    } else {
-      // Fallback to page refresh
-      router.refresh();
-    }
-    
+      toast.success(`Deleted successfully!`);
+      
+      // Trigger refetch of user data if provided
+      if (options.refetchUser) {
+        await options.refetchUser();
+      }
+      
+      // Call onSuccess callback if provided
+      if (options.onSuccess) {
+        options.onSuccess();
+      } else {
+        // Fallback to page refresh if no onSuccess callback
+        router.refresh();
+      }
     } catch (error) {
       console.error(error);
-
       toast.error(`Failed to delete ${path.slice(0, -1)}`);
     } finally {
       setDeletingId(null);

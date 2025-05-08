@@ -1,351 +1,177 @@
+/**
+ *  Main admin dashboard component that handles resource management, including approval/rejection
+ * of new resources and edit suggestions. Provides a tabbed interface for different resource statuses.
+
+ * - Tab-based navigation for different resource statuses (new, edit, approved, rejected)
+ * - Resource status management (approve/reject)
+ * - Resource details viewing
+ * - Real-time updates on status changes
+
+ * - useFetchResources: Hook for fetching regular resources
+ * - useFetchResourceEdit: Hook for fetching edit suggestions
+ * - usePopup: Hook for managing resource detail popups
+ * - AdminResourceTable: Component for displaying resources in a table format
+ */
+
 "use client";
-import Image from "next/image";
-
 import { useState } from "react";
-
 import React from "react";
-
 import { useFetchResources } from "../hooks/useFetchResources";
 import { useFetchResourceEdit } from "../hooks/useFetchResourceEdit";
-
 import Popup from "../components/Popup";
 import { usePopup } from "../hooks/usePopup";
 import { useLogout } from "../hooks/useLogout";
-
-import Button from "@mui/material/Button";
-import Paper from "@mui/material/Paper";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import { Box } from "@mui/material";
 import { format } from "date-fns";
+import { ProfileCard } from "./SharedProfileCard";
+import { TabNavigation } from "../components/dashboard/TabNavigation";
+import { AdminResourceTable } from "../components/dashboard/AdminResourceTable";
+import { updateResourceStatus } from "../actions/resources/updateResourceStatus";
+import { toast } from "react-hot-toast";
+
+const formatTime = (timeString: string | undefined) => {
+  if (!timeString) return '';
+  try {
+    return format(new Date(timeString), "hh:mm a");
+  } catch (error) {
+    console.error('Invalid date:', timeString);
+    return 'Invalid time';
+  }
+};
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("new");
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [resourceAnchorEl, setResourceAnchorEl] = useState<null | HTMLElement>(null);
   const { resources, refetch: refetchResources } = useFetchResources();
-  const { editResources, refetch: refetchEditResources } =
-    useFetchResourceEdit();
+  const { editResources, refetch: refetchEditResources } = useFetchResourceEdit();
   const { isOpen, data: selectedResource, openPopup, closePopup } = usePopup();
+  const [isLoading, setIsLoading] = useState(false);
+
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
+    setResourceAnchorEl(null);
+    closePopup();
   };
 
-  // Function to update the status of a resource
-  const handleStatusChange = async (resourceId: string, newStatus: string) => {
+  /**
+   * Handles status changes for both new resources and edit suggestions
+   */
+  const handleStatusChange = async (resourceId: string, newStatus: string, resourceType: string) => {
     try {
-      const response = await fetch(`/api/resources/${resourceId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ status: newStatus }),
-      });
+      setIsLoading(true);
+      const result = await updateResourceStatus(resourceId, newStatus, resourceType);
 
-      if (!response.ok) {
-        console.error(
-          `Failed to update resource status: ${response.statusText}`
-        );
-        return;
+      if (!result.success) {
+        throw new Error(result.error || "Failed to update status");
       }
 
-      await refetchResources();
-      await refetchEditResources();
+      toast.success(`Successfully updated ${resourceType} status to ${newStatus}`);
+      
+      await Promise.all([
+        refetchResources(),
+        refetchEditResources()
+      ]);
     } catch (error) {
-      console.error("Error updating status:", error);
+      toast.error(error instanceof Error ? error.message : "Failed to update status");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  /**
+   * Handles the view button click to show resource details
+
+   */
+  const handleViewClick = (resource: any, event: React.MouseEvent<HTMLElement>) => {
+    if (resourceAnchorEl === event.currentTarget) {
+      setResourceAnchorEl(null);
+      closePopup();
+    } else {
+      setResourceAnchorEl(event.currentTarget);
+      openPopup(resource);
     }
   };
 
   const { handleLogout } = useLogout();
 
-  // Close popup when modal closes
+  /**
+   * Closes the popup and resets the anchor element
+   */
   const handleClosePopup = () => {
-    setAnchorEl(null);
+    setResourceAnchorEl(null);
     closePopup();
   };
 
+  /**
+   * Filters resources based on their status
+   */
   const filteredByStatus = resources.filter((resource) => {
-    if (activeTab == "new") return resource.status == "PENDING";
-    if (activeTab == "approved") return resource.status == "APPROVED";
-    if (activeTab == "rejected") return resource.status == "REJECTED";
+    if (activeTab === "new") return resource.status === "PENDING";
+    if (activeTab === "approved") return resource.status === "APPROVED";
+    if (activeTab === "rejected") return resource.status === "REJECTED";
+    return false;
   });
+
+  /**
+   * Filters edit resources based on their status
+
+   */
   const filteredByEditStatus = editResources.filter((res) => {
-    if (activeTab == "edit") return res.status == "PENDING";
+    if (activeTab === "edit") return res.status === "PENDING";
+    if (activeTab === "approved") return res.status === "APPROVED";
+    if (activeTab === "rejected") return res.status === "REJECTED";
+    return false;
   });
+
+  const adminTabs = [
+    { id: "new", label: "New Submissions", color: "bg-blue-500" },
+    { id: "edit", label: "Edit Submissions", color: "bg-blue-500" },
+    { id: "approved", label: "Approved", color: "bg-green-500" },
+    { id: "rejected", label: "Rejected", color: "bg-red-500" },
+  ];
 
   return (
-    <div className="flex flex-col items-center justify-center ">
-      <h1 className="text-4xl font-bold text-center mt-1">Profile</h1>
-
-      {/* Profile card and dashboard container */}
+    <div className="flex flex-col items-center justify-center">
       <div className="flex flex-row w-full">
-        {/* Profile card (takes 30% width) */}
-        <div className="w-full md:w-1/3 p-4">
-          <div className="flex flex-col items-center bg-white shadow-lg rounded-lg p-6">
-            <div className="relative w-32 h-32 mb-4">
-              <Image
-                src={"/default-avatar.jpg"}
-                alt="Profile Picture"
-                fill
-                className="rounded-full object-cover"
-                priority
-              />
-            </div>
-            {/* show names */}
-            <h2 className="text-xl font-bold mb-4">Hello Admin</h2>
+        <ProfileCard
+          userName="Admin"
+          onLogout={handleLogout}
+          userType="admin"
+        />
 
-            <div className="mt-6">
-              <button
-                onClick={handleLogout}
-                className="px-4 py-2 text-red-500 rounded-lg border border-red-500 hover:bg-red-500 hover:text-white transition-colors"
-              >
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Dashboard (takes 70% width) */}
         <div className="w-full md:w-2/3 p-4">
           <div className="bg-white shadow-lg rounded-lg p-6">
             <h2 className="text-2xl font-bold mb-4">Dashboard</h2>
             <p className="text-gray-600">Manage your resources</p>
 
-            {/* More dashboard content here */}
-            <div className=" flex space-x-4 mb-4">
-              {/* new  */}
-              <button
-                className={`px-4 py-2 ${
-                  activeTab === "new" ? "bg-blue-500 text-white" : "bg-gray-200"
-                }`}
-                onClick={() => handleTabChange("new")}
-              >
-                New Submissions
-              </button>
-              {/* edit */}
-              <button
-                className={`px-4 py-2 ${
-                  activeTab === "edit"
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-200"
-                }`}
-                onClick={() => handleTabChange("edit")}
-              >
-                Edit Submissions
-              </button>
-              <button
-                className={`px-4 py-2 ${
-                  activeTab === "approved"
-                    ? "bg-green-500 text-white"
-                    : "bg-gray-200"
-                }`}
-                onClick={() => handleTabChange("approved")}
-              >
-                Approved
-              </button>
-              <button
-                className={`px-4 py-2 ${
-                  activeTab === "rejected"
-                    ? "bg-red-500 text-white"
-                    : "bg-gray-200"
-                }`}
-                onClick={() => handleTabChange("rejected")}
-              >
-                Rejected
-              </button>
-            </div>
+            <TabNavigation
+              activeTab={activeTab}
+              onTabChange={handleTabChange}
+              tabs={adminTabs}
+            />
 
-            {/* table header or column names  */}
-
-            <Paper sx={{ width: "100%", overflow: "hidden" }}>
-              <TableContainer sx={{ maxHeight: 440 }}>
-                <Table stickyHeader aria-label="sticky table">
-                  <TableHead>
-                    {activeTab === "new" || activeTab === "edit" ? (
-                      <TableRow>
-                        <TableCell>Index</TableCell>
-                        <TableCell>Name</TableCell>
-                        <TableCell>View Details</TableCell>
-                        <TableCell>Approve</TableCell>
-                        <TableCell>Reject</TableCell>
-                      </TableRow>
-                    ) : (
-                      <TableRow>
-                        <TableCell>Index</TableCell>
-                        <TableCell>Name</TableCell>
-                        <TableCell>View Details</TableCell>
-                        <TableCell>Actions</TableCell>
-                      </TableRow>
-                    )}
-                  </TableHead>
-
-                  {/* table content */}
-
-                  <TableBody>
-                    {filteredByStatus.map((resource, index) => (
-                      <TableRow
-                        key={resource.id}
-                        hover
-                        role="checkbox"
-                        tabIndex={-1}
-                      >
-                        <TableCell>{index + 1}</TableCell>
-                        <TableCell>{resource.name}</TableCell>
-                        <TableCell>
-                          <Button
-                            onClick={(e) => {
-                              if (anchorEl === e.currentTarget) {
-                                setAnchorEl(null);
-                                closePopup();
-                              } else {
-                                setAnchorEl(e.currentTarget);
-                                openPopup(resource);
-                              }
-                            }}
-                          >
-                            View
-                          </Button>
-                        </TableCell>
-                        {activeTab === "new" && (
-                          <>
-                            <TableCell>
-                              <Button
-                                variant="contained"
-                                color="success"
-                                onClick={() =>
-                                  handleStatusChange(resource.id, "APPROVED")
-                                }
-                              >
-                                Approve
-                              </Button>
-                            </TableCell>
-                            <TableCell>
-                              <Button
-                                variant="contained"
-                                color="error"
-                                onClick={() =>
-                                  handleStatusChange(resource.id, "REJECTED")
-                                }
-                              >
-                                Reject
-                              </Button>
-                            </TableCell>
-                          </>
-                        )}
-                        {activeTab === "approved" && (
-                          <TableCell>
-                            <Button
-                              variant="contained"
-                              color="error"
-                              onClick={() =>
-                                handleStatusChange(resource.id, "REJECTED")
-                              }
-                            >
-                              Reject
-                            </Button>
-                          </TableCell>
-                        )}
-                        {activeTab === "rejected" && (
-                          <TableCell>
-                            <Button
-                              variant="contained"
-                              color="success"
-                              onClick={() =>
-                                handleStatusChange(resource.id, "APPROVED")
-                              }
-                            >
-                              Approve
-                            </Button>
-                          </TableCell>
-                        )}
-                      </TableRow>
-                    ))}
-
-                    {/* Edit submission */}
-
-                    {filteredByEditStatus.map((resource, index) => (
-                      <TableRow
-                        key={resource.id}
-                        hover
-                        role="checkbox"
-                        tabIndex={-1}
-                      >
-                        <TableCell>{index + 1}</TableCell>
-                        <TableCell>{resource.name}</TableCell>
-                        <TableCell>
-                          <Button
-                            onClick={(e) => {
-                              if (anchorEl === e.currentTarget) {
-                                setAnchorEl(null);
-                                closePopup();
-                              } else {
-                                setAnchorEl(e.currentTarget);
-                                openPopup(resource);
-                              }
-                            }}
-                          >
-                            View
-                          </Button>
-                        </TableCell>
-                        <TableCell>
-                          <Button
-                            variant="contained"
-                            color="success"
-                            onClick={() =>
-                              handleStatusChange(resource.id, "APPROVED")
-                            }
-                          >
-                            Approve
-                          </Button>
-                        </TableCell>
-                        <TableCell>
-                          <Button
-                            variant="contained"
-                            color="error"
-                            onClick={() =>
-                              handleStatusChange(resource.id, "REJECTED")
-                            }
-                          >
-                            Reject
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Paper>
+            <AdminResourceTable
+              activeTab={activeTab}
+              filteredByStatus={filteredByStatus}
+              filteredByEditStatus={filteredByEditStatus}
+              resourceAnchorEl={resourceAnchorEl}
+              onViewClick={handleViewClick}
+              onStatusChange={handleStatusChange}
+            />
 
             <Popup
-              anchor={anchorEl}
+              anchor={resourceAnchorEl}
               open={isOpen}
               onClose={handleClosePopup}
               title={selectedResource?.name || "No Title"}
               content={[
-                selectedResource?.description &&
-                  `Description: ${selectedResource.description}`,
+                selectedResource?.description && `Description: ${selectedResource.description}`,
                 selectedResource?.city && `City: ${selectedResource.city}`,
-                selectedResource?.address &&
-                  `Address: ${selectedResource.address}`,
-                selectedResource?.openDays &&
-                  `Open Days: ${selectedResource.openDays}`,
-                selectedResource?.openTime &&
-                  `Open Time: ${format(
-                    new Date(selectedResource.openTime),
-                    "hh:mm a"
-                  )}`,
-                selectedResource?.closeTime &&
-                  `Close Time: ${format(
-                    new Date(selectedResource.closeTime),
-                    "hh:mm a"
-                  )}`,
-              ]
-                .filter(Boolean)
-                .join("\n")}
+                selectedResource?.address && `Address: ${selectedResource.address}`,
+                selectedResource?.openDays && `Open Days: ${selectedResource.openDays}`,
+                selectedResource?.openTime && `Open Time: ${format(new Date(selectedResource.openTime), "hh:mm a")}`,
+                selectedResource?.closeTime && `Close Time: ${format(new Date(selectedResource.closeTime), "hh:mm a")}`,
+              ].filter(Boolean).join("\n")}
             />
           </div>
         </div>

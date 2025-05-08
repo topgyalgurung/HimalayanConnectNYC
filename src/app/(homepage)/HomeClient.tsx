@@ -1,71 +1,95 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
 import FilterSidebar from "./filters/FilterSidebar";
 import ResourceListPanel from "./resources/ResourceListPanel";
+import MapView from "./map/Map";
 import type { Resource } from "@/app/types/resource";
 
-import MapView from "./map/Map";
-export default function Home({
-  initialResources,
-}: {
+interface HomeClientProps {
   initialResources: Resource[];
-}) {
-  const [selectedResource, setSelectedResource] = useState<Resource | null>(
-    null
-  );
-  const [editResource, setEditResource] = useState<Resource | null>(null); // for suggest edit
-  const [reviewResource, setReviewResource] = useState<Resource | null>(null); // review
-  const [filteredResources, setFilteredResources] =
-    useState<Resource[]>(initialResources); // storing filtered resources based on the search query
+}
 
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]); // for category filter
-  const [selectedBoroughs, setSelectedBoroughs] = useState<string[]>([]); // for borough filter
+export default function HomeClient({ initialResources }: HomeClientProps) {
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedBoroughs, setSelectedBoroughs] = useState<string[]>([]);
+  const [filteredResources, setFilteredResources] = useState<Resource[]>(initialResources);
+  const [selectedResource, setSelectedResource] = useState<Resource | null>(null);
+  const [editResource, setEditResource] = useState<Resource | null>(null);
+  const [reviewResource, setReviewResource] = useState<Resource | null>(null);
 
-  // to open/close card on click (view details button)
+  // Effect to filter resources when filters change
+  useEffect(() => {
+    console.log('Selected Boroughs:', selectedBoroughs);
+    console.log('Initial Resources:', initialResources.map(r => r.city));
+    
+    const filtered = initialResources.filter((resource) => {
+      const categoryMatch =
+        selectedCategories.length === 0 ||
+        selectedCategories.includes(
+          (resource.ResourceCategory?.name ?? "").toLowerCase()
+        );
+      
+      const boroughMatch =
+        selectedBoroughs.length === 0 ||
+        selectedBoroughs.some(borough => {
+          const match = resource.city?.toLowerCase().trim() === borough.toLowerCase().trim();
+          console.log(`Comparing ${resource.city} with ${borough}: ${match}`);
+          return match;
+        });
+
+      return categoryMatch && boroughMatch;
+    });
+
+    console.log('Filtered Resources:', filtered.map(r => r.city));
+    setFilteredResources(filtered);
+  }, [initialResources, selectedCategories, selectedBoroughs]);
+
   const handleToggleDetails = (resource: Resource) => {
     if (selectedResource?.id === resource.id) {
-      setSelectedResource(null); // close if already selected
+      setSelectedResource(null);
     } else {
-      // if selecting resourceDetails close edit resource card
       setEditResource(null);
-      setSelectedResource(resource); // open if different or closed
+      setSelectedResource(resource);
     }
   };
 
-  // to open suggestEdit form
   const handleSuggestEdit = (resource: Resource) => {
     if (editResource?.id === resource.id) {
       setEditResource(null);
     } else {
-      // if selecting editResourceCard close resourceDetails card
       setSelectedResource(null);
       setEditResource(resource);
     }
   };
 
+  const handleReviewResource = (resource: Resource) => {
+    if (reviewResource?.id === resource.id) {
+      setReviewResource(null);
+    } else {
+      setReviewResource(resource);
+    }
+  };
+
   return (
     <div className="flex h-[calc(100vh-90px)] text-black p-1">
-      {/* Left: Filter Section */}
       <FilterSidebar
         selectedCategories={selectedCategories}
+        setSelectedCategories={setSelectedCategories}
         selectedBoroughs={selectedBoroughs}
-        onCategoryChangeAction={setSelectedCategories}
-        onBoroughChangeAction={setSelectedBoroughs}
+        setSelectedBoroughs={setSelectedBoroughs}
       />
-
-      {/* Middle: Resource List */}
 
       <ResourceListPanel
         selectedCategories={selectedCategories}
         selectedBoroughs={selectedBoroughs}
         setFilteredResources={setFilteredResources}
         filteredResources={filteredResources}
-        onViewDetailsAction={handleToggleDetails}
+        onViewDetails={handleToggleDetails}
+        onSuggestEdit={handleSuggestEdit}
+        onReviewClick={handleReviewResource}
       />
 
-      {/* Right: Map Display */}
       <MapView
         resources={filteredResources}
         selectedResource={selectedResource}

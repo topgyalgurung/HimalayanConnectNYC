@@ -73,11 +73,21 @@ const ResourceList = ({
     setFilteredResources,
   ]); // Dependencies: re-run when these values change
 
+  // Filter resources based on search query
+  const searchFilteredResources = filteredResources.filter((resource) => {
+    const searchQueryLower = searchQuery.trim().toLowerCase();
+    const nameMatch = resource.name?.toLowerCase().includes(searchQueryLower);
+    const addressMatch = resource.address?.toLowerCase().includes(searchQueryLower);
+    const locationMatch = resource.city?.toLowerCase().includes(searchQueryLower);
+
+    return nameMatch || addressMatch || locationMatch;
+  });
+
   return (
     <div className="flex flex-col h-full">
       {/* Display the filtered resources using the ResourceCard component */}
       <ResourceCard
-        resources={filteredResources}
+        resources={searchFilteredResources}
         onViewDetails={onViewDetails}
         onSuggestEdit={onSuggestEdit}
         // onReviewClick={onReviewClick}
