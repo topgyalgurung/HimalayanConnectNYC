@@ -1,4 +1,11 @@
-// src/app/hooks/useDeleteResource.ts
+/**
+ * Custom hook for deleting resources from the API
+ * Makes DELETE request to /api/{path}/{id} endpoint
+ * api/resources/edit/{id}
+ * api/resources/review/{id}
+ * api/resources/favorite/{id}
+ * Handles loading state, success/error toasts, and data refetching
+ */
 "use client";
 
 import { useState } from "react";
