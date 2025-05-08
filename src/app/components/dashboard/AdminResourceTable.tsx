@@ -81,7 +81,7 @@ export const AdminResourceTable = ({
           <TableBody>
             {displayResources.map((resource, index) => (
               <TableRow
-                key={`${resource.type}-${resource.id}`}
+                key={`${resource.type}-${resource.id}`} // unique key 
                 hover
                 role="checkbox"
                 tabIndex={-1}
