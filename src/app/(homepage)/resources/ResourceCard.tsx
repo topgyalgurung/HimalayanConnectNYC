@@ -4,6 +4,7 @@ import { format } from "date-fns";
 
 import { type Resource } from "@/app/types/resource";
 import { formatOpenDays } from "@/app/helpers/formatOpenDays";
+
 interface ResourceCardProps {
   resources: Resource[];
   onViewDetails?: (resource: Resource) => void;

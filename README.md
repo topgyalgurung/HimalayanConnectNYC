@@ -1,117 +1,182 @@
-<p align ="center">
-<a href = :>
+# Himalayan Connect NYC
 
-<div align="center">
+## Project Overview
+Himalayan Connect NYC is a comprehensive web platform designed to connect the Himalayan community in New York with essential resources. The application serves as a centralized hub for accessing nonprofit services, legal assistance, immigration support, housing, and job opportunities.
 
-  <a href="https://github-readme-tech-stack.vercel.app/api/cards?title=Himalayan+Connect+NYC&lineCount=1&line1=tailwindcss%2Ctailwind+css%2C1a18c1%3Breact%2CReact.jss%2C2281ce%3BNext.js%2CNEXT.js%2C242121%3Bpostgresql%2CPostgres%2C0e2856%3Bmaterialui%2Cmaterial+UI%2C1922ab%3Bprisma%2Cprisma+orm+%2C2f1b1b%3B">
-    <img src="https://github-readme-tech-stack.vercel.app/api/cards?title=Himalayan+Connect+NYC+Tech+Stack&align=center&titleAlign=center&fontSize=20&lineHeight=10&lineCount=3&theme=ayu&width=450&bg=%25230B0E14&titleColor=%231c9eff&line1=react%2Creact%2Cauto%3Btailwindcss%2Ctailwind%2Cauto%3B&line2=next.js%2Cnext.js%2Cffffff%3Btypescript%2Ctypescript%2Cauto%3Bpostgresql%2CPostgres%2C0e2856%3B&line3=prisma%2Cprisma+orm+%2C2f1b1b%3Bmaterialui%2Cmaterial+UI%2C1922ab%3B" alt="GitHub Readme Tech Stack" />
+## Tech Stack
+- **Frontend**: 
+  - Next.js 15.1.7 (React 19)
+  - TypeScript
+  - Tailwind CSS
+  - Material UI
+  - Framer Motion (animations)
+- **Backend**: 
+  - Next.js API Routes
+  - Prisma ORM
+  - PostgreSQL
+- **External APIs**:
+  - Google Maps API (Directions, Geocoding, Maps JavaScript API, Places API)
+  - Cloudinary (image storage)
+- **Authentication**: Custom JWT-based session management
+- **Form Handling**: React Hook Form with Zod validation
 
-  </a>
-</div>
+## Core Features
 
-# Himalayan-Connect-NYC
+### 1. Resource Management
+- **Resource Directory**: Searchable directory of community resources
+- **Resource Submission**: Users can submit new resources for admin approval
+- **Resource Editing**: Users can suggest edits to existing resources
+- **Resource Reviews**: Users can leave reviews and ratings
+- **Favorites**: Users can save resources to their favorites
 
-## Objective: 
-Himalayan Connect NYC, a comprehensive and user-friendly website that connects the Himalayan community in New York with essential resources.
+### 2. User Features
+- **User Dashboard**: 
+  - View submitted resources
+  - Track resource status
+  - Manage reviews and favorites
+  - Edit/delete submissions
+- **Profile Management**: 
+  - User authentication
+  - Session management
+  - Profile customization
 
-## Problem statement: 
-The Himalayan community in New York faces significant challenges in accessing essential resources such as nonprofit services, legal assistance, immigration support, housing, and job opportunities. 
+### 3. Admin Features
+- **Admin Dashboard**:
+  - Resource approval/rejection
+  - Edit suggestion management
+  - Resource status tracking
+  - User management
 
-The information about these services is often scattered across multiple sources, making it difficult for community members, especially those with limited English proficiency or technological experience, to find the help they need. This lack of a centralized, accessible platform creates barriers to important services, hindering the community’s ability to thrive in a new environment.
+### 4. Search and Filtering
+- **Advanced Search**: 
+  - Category-based filtering
+  - Borough-based filtering
+  - Text search functionality
+- **Map Integration**: 
+  - Interactive map view
+  - Resource location display
+  - Direction services
 
-By offering a streamlined platform with categorized listings, search functionality, and multilingual support, the project will empower individuals and families to easily find the services they need to succeed.
+## Application Structure
 
-## Key Features 
+```
+src/
+├── app/
+│   ├── (homepage)/         # Homepage components
+│   ├── (auth)/            # Authentication related pages
+│   ├── profile/           # User profile pages
+│   ├── components/        # Reusable components
+│   ├── actions/           # Server actions
+│   ├── hooks/            # Custom React hooks
+│   ├── context/          # React context providers
+│   ├── types/            # TypeScript type definitions
+│   ├── lib/              # Utility functions
+│   └── api/              # API routes
+```
 
-1. Search Resource 
-Provide a searchable directory of resources categorized into nonprofits, community organizations, law firms, immigration resources, and more.
-Resource management
-2. Submit a resource:
-Resource submission that goes to admin dashboard for approval
-Edit, Review and Likes 
-Logged in user can suggest edit, submit review and save favorites 
-3. User Profile:
-Show resource submissions, reviews and likes 
-Can edit or delete submissions and reviews
-4. Admin Flow:
-Admin logged in goes to Admin dashboard to see resource submissions list and approve/reject manually
+## Key Components
 
-Stretch goal:
+### Frontend Components
+- `HomeClient.tsx`: Main homepage component with resource listing and map
+- `ResourceDetailsCard.tsx`: Detailed view of resource information
+- `AdminResourceTable.tsx`: Admin dashboard resource management
+- `UserDashboard.tsx`: User profile and resource management
+- `TimePickerSection.tsx`: Time and day selection for resources
 
-5. Multilingual Support: Basic support for multiple languages, including Nepali, to cater to the community’s diverse linguistic needs.
-6. Community Insights/ Community Forum  (nice to haves) 
-Discussion boards: A forum where community members can discuss topics, share experiences, ask questions, and seek advice	
-User can leave questions about a resource - more like reddit.IDEAS: Meetup, FAQs, Reporting, Reviews (upvoting)
+### Backend Services
+- Resource management (CRUD operations)
+- User authentication and authorization
+- Review and rating system
+- Favorite resource management
+- Image upload and management
 
+## Development Notes
 
-## Design
+### Form Validation
+- Using Zod for form validation
+- Server Action size limit: 1MB
+- Image handling through Cloudinary
 
-#### Wireframe 
-- [Himalayan Connect NYC FIGMA wireframe](https://www.figma.com/design/rv1wIJmRVMcct15TuFCCBe/Himalayan-Connect-NYC-Website-UI?m=auto&t=NicB32WCserygMbc-1)
-- Sample Homepage only: 
-<img src ="public/homepage-figma.png" width="400" >
+### Authentication
+- Custom JWT-based session management
+- Session cookie for secure storage
+- Server-side session validation
 
-
-|Task Name|Description|Example|
-|--- | --- |---|
-|Design Database Schema | 
-|Data source|
-|User Flows
-|Set up backend and database|
-|Set up frontend|
-|User Authentication| 
-
-### External API
-- Google Maps API
-  - Directions 
-  - Geocoding
-  - Maps Javascript API
-  - Places API
-
-### Tech Stack
-- Front end: React, Nextjs Tailwind Css, Material UI 
-- Backend: Nextjs, Prisma ORM 
-- Database: PostgreSQL
-- API: Google Maps API
-- Testing: Jest for Node.js, React-Testing-Library framework for React 
-- Deployment Platform: Render or aws amplify 
-
-### Run Tests 
-
-
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+### Client Session Management
+- UserProvider: React Context for client-side session
+- useUser hook for accessing session data
+- Server-side session validation through getSession()
 
 ## Getting Started
 
-First, run the development server:
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Set up environment variables:
+   - Database connection
+   - Google Maps API key
+   - Cloudinary credentials
+   - JWT secret
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+4. Run the development server:
+   ```bash
+   npm run dev
+   ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Deployment
+- Frontend: Vercel (recommended)
+- Database: PostgreSQL
+- Image Storage: Cloudinary
+- API Services: Google Maps API
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Future Enhancements
+1. Multilingual Support
+   - Nepali language integration
+   - Additional language options
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. Community Features
+   - Discussion forums
+   - Community meetups
+   - FAQ section
+   - Resource reporting system
 
-## Learn More
+3. Enhanced Search
+   - Advanced filtering options
+   - Search history
+   - Popular searches
 
-To learn more about Next.js, take a look at the following resources:
+4. User Experience
+   - Mobile app development
+   - Push notifications
+   - Offline support
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Form Validation & Data Handling
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Zod Form Validation
+- Using Zod for form validation and type safety
+- Note: Large forms (images + text + hours) may hit 1MB Server Action limit
+- Solutions:
+  1. Increase body size in next.config.js
+  2. Use Cloudinary + store URL (current implementation ✅)
 
-## Deploy on Vercel
+## Authentication System
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Custom JWT Session Management
+- Custom JWT-based session implementation (not using next-auth)
+- Secure session cookie storage
+- Server-side session access via getSession() in server actions
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Client-Side Session Architecture
+1. **UserProvider (React Context)**
+   - Wraps application
+   - Initializes session data on mount
+   - Manages client-side session state
+
+2. **Session Components**
+   - `lib/session.ts`: Server-only session cookie handling
+   - `UserProvider`: Client-side session management via API
+   - `useUser`: Client-side hook for session access
+
+

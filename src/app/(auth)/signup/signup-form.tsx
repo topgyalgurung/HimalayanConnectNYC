@@ -2,13 +2,14 @@
 
 import { signup } from "@/app/actions/auth";
 import { useActionState } from "react";
+import { useState } from "react";
 import { useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-
 export default function SignupForm() {
   const [state, action, pending] = useActionState(signup, undefined);
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -52,14 +53,20 @@ export default function SignupForm() {
           </div>
           {state?.errors?.email && <p>{state.errors.email}</p>}
 
-          <div>
+          <div className="relative">
             <input
-              id="password"
+              type={showPassword ? "text" : "password"}
               name="password"
-              type="password"
               placeholder="Password"
               className="text-black p-2 border border-gray-50 rounded-md mb-4 focus:outline-none focus:border-gray-600 w-full"
             />
+            <button
+              type="button"
+              className="absolute right-2 top-2.5 text-gray-600"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? "Hide" : "Show"}
+            </button>
           </div>
           {state?.errors?.password && (
             <div>
@@ -78,9 +85,6 @@ export default function SignupForm() {
           >
             Sign Up
           </button>
-          {/* <div>
-            <SignIn />
-          </div> */}
           <div className="flex justify-end">
             <Link href="/login" className="text-right">
               Already have an account?

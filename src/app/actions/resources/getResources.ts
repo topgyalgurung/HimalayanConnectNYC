@@ -13,7 +13,6 @@
 import prisma from "@/app/lib/prisma";
 import { getSession } from "@/app/lib/session";
 import type { Resource } from "@/app/types/resource";
-import { ResourceStatus } from "@prisma/client";
 
 interface GetResourcesOptions {
   categories?: string[];
@@ -37,11 +36,11 @@ export async function getResources({ categories = [], boroughs = [] }: GetResour
           in: boroughs
         }
       }),
-      status: ResourceStatus.APPROVED // Only show approved resources
+      status: "APPROVED" // Only show approved resources
     };
 
     const resources = await prisma.resource.findMany({
-      where,
+      // where,
       include: {
         ResourceCategory: {
           select: { id: true, name: true },

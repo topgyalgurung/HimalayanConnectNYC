@@ -10,7 +10,7 @@ import { useUser } from "@/app/context/UserProvider";
 export default function LoginForm() {
   const { setUser } = useUser(); // Get context
   const [state, action] = useActionState(login, undefined);
-  const [showPassword, setShowPassword] = useState(false); // Add this line
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
