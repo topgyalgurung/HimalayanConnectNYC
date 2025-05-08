@@ -7,41 +7,13 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/app/lib/prisma";
 import { getSession } from "@/app/lib/session";
 
-// GET, PATCH, PUT DELETE
+// PATCH ( using actions), DELETE
 /**
  * Updates the status of a resource
  */
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  const resourceId = parseInt(params.id);
 
-  try {
-    const body = await req.json();
-    const { status } = body;
-
-    if (!status || !["PENDING", "APPROVED", "REJECTED"].includes(status)) {
-      return NextResponse.json(
-        { error: "Invalid status. Must be PENDING, APPROVED, or REJECTED" },
-        { status: 400 }
-      );
-    }
-
-    const updatedResource = await prisma.resource.update({
-      where: { id: resourceId },
-      data: { status },
-    });
-    return NextResponse.json(updatedResource);
-  } catch (error) {
-    console.error("Error updating resource status: ", error);
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
-  }
-}
-
-
+// userdashboard useDelete Hooks call api/resources/id to delete
 export async function DELETE(request: NextRequest, props: { params: Promise<{ id: string }> }) {
- 
   try {
     const params = await props.params;
     const resourceId = parseInt(params.id, 10); 

@@ -18,7 +18,7 @@ import { useState } from "react";
 import React from "react";
 import { useFetchResources } from "../hooks/useFetchResources";
 import { useFetchResourceEdit } from "../hooks/useFetchResourceEdit";
-import Popup from "../components/Popup";
+import Popup from "../components/ui/Popup";
 import { usePopup } from "../hooks/usePopup";
 import { useLogout } from "../hooks/useLogout";
 import { format } from "date-fns";
@@ -29,23 +29,25 @@ import { updateResourceStatus } from "../actions/resources/updateResourceStatus"
 import { toast } from "react-hot-toast";
 
 const formatTime = (timeString: string | undefined) => {
-  if (!timeString) return '';
+  if (!timeString) return "";
   try {
     return format(new Date(timeString), "hh:mm a");
   } catch (error) {
-    console.error('Invalid date:', timeString);
-    return 'Invalid time';
+    console.error("Invalid date:", timeString);
+    return "Invalid time";
   }
 };
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("new");
-  const [resourceAnchorEl, setResourceAnchorEl] = useState<null | HTMLElement>(null);
+  const [resourceAnchorEl, setResourceAnchorEl] = useState<null | HTMLElement>(
+    null
+  );
   const { resources, refetch: refetchResources } = useFetchResources();
-  const { editResources, refetch: refetchEditResources } = useFetchResourceEdit();
+  const { editResources, refetch: refetchEditResources } =
+    useFetchResourceEdit();
   const { isOpen, data: selectedResource, openPopup, closePopup } = usePopup();
   const [isLoading, setIsLoading] = useState(false);
-
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
@@ -56,23 +58,32 @@ export default function AdminDashboard() {
   /**
    * Handles status changes for both new resources and edit suggestions
    */
-  const handleStatusChange = async (resourceId: string, newStatus: string, resourceType: string) => {
+  const handleStatusChange = async (
+    resourceId: string,
+    newStatus: string,
+    resourceType: string
+  ) => {
     try {
       setIsLoading(true);
-      const result = await updateResourceStatus(resourceId, newStatus, resourceType);
+      const result = await updateResourceStatus(
+        resourceId,
+        newStatus,
+        resourceType
+      );
 
       if (!result.success) {
         throw new Error(result.error || "Failed to update status");
       }
 
-      toast.success(`Successfully updated ${resourceType} status to ${newStatus}`);
-      
-      await Promise.all([
-        refetchResources(),
-        refetchEditResources()
-      ]);
+      toast.success(
+        `Successfully updated ${resourceType} status to ${newStatus}`
+      );
+
+      await Promise.all([refetchResources(), refetchEditResources()]);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Failed to update status");
+      toast.error(
+        error instanceof Error ? error.message : "Failed to update status"
+      );
     } finally {
       setIsLoading(false);
     }
@@ -82,7 +93,10 @@ export default function AdminDashboard() {
    * Handles the view button click to show resource details
 
    */
-  const handleViewClick = (resource: any, event: React.MouseEvent<HTMLElement>) => {
+  const handleViewClick = (
+    resource: any,
+    event: React.MouseEvent<HTMLElement>
+  ) => {
     if (resourceAnchorEl === event.currentTarget) {
       setResourceAnchorEl(null);
       closePopup();
@@ -165,13 +179,26 @@ export default function AdminDashboard() {
               onClose={handleClosePopup}
               title={selectedResource?.name || "No Title"}
               content={[
-                selectedResource?.description && `Description: ${selectedResource.description}`,
+                selectedResource?.description &&
+                  `Description: ${selectedResource.description}`,
                 selectedResource?.city && `City: ${selectedResource.city}`,
-                selectedResource?.address && `Address: ${selectedResource.address}`,
-                selectedResource?.openDays && `Open Days: ${selectedResource.openDays}`,
-                selectedResource?.openTime && `Open Time: ${format(new Date(selectedResource.openTime), "hh:mm a")}`,
-                selectedResource?.closeTime && `Close Time: ${format(new Date(selectedResource.closeTime), "hh:mm a")}`,
-              ].filter(Boolean).join("\n")}
+                selectedResource?.address &&
+                  `Address: ${selectedResource.address}`,
+                selectedResource?.openDays &&
+                  `Open Days: ${selectedResource.openDays}`,
+                selectedResource?.openTime &&
+                  `Open Time: ${format(
+                    new Date(selectedResource.openTime),
+                    "hh:mm a"
+                  )}`,
+                selectedResource?.closeTime &&
+                  `Close Time: ${format(
+                    new Date(selectedResource.closeTime),
+                    "hh:mm a"
+                  )}`,
+              ]
+                .filter(Boolean)
+                .join("\n")}
             />
           </div>
         </div>

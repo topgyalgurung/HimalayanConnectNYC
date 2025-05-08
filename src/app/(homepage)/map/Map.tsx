@@ -13,9 +13,9 @@ import {
 } from "@vis.gl/react-google-maps";
 import { useState } from "react";
 import type { Resource } from "@/app/types/resource";
-import ResourceDetailsCard from "@/app/components/ResourceDetailsCard";
-import ResourceSuggestCard from "@/app/components/ResourceSuggestCard";
-import ReviewSubmitCard from "@/app/components/ReviewSubmitCard";
+import ResourceDetailsCard from "@/app/components/features/ResourceDetailsCard";
+import ResourceSuggestCard from "@/app/components/features/ResourceSuggestCard";
+import ReviewSubmitCard from "@/app/components/features/ReviewSubmitCard";
 import Image from "next/image";
 
 interface MapViewProps {

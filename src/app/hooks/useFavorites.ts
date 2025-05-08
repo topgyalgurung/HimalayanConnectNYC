@@ -3,6 +3,14 @@
 // On mount, it fetches the list of favorites and sets them.
 // isFavorite(id) checks from fetched list.
 //toggleFavorite(id) updates both backend and local.
+/**
+ * Custom hook for managing user favorites
+ * Fetches favorites from the backend and provides functionality to check if a resource is a favorite
+ * and to toggle a resource as a favorite
+ * calls: /api/resources/favorite
+ * returns: favoriteIds, isFavorite, toggleFavorite
+ */
+
 import { useState, useEffect } from "react";
 
 export function useFavorites() {

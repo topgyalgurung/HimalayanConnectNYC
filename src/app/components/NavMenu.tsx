@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 import { usePathname, useRouter } from "next/navigation";
-import SearchInput from "./SearchInput";
+import SearchInput from "./ui/SearchInput";
 import { useUser } from "@/app/context/UserProvider";
 import { useLogout } from "../hooks/useLogout";
 

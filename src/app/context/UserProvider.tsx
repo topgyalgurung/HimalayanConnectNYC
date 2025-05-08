@@ -1,5 +1,14 @@
 // client side session management
-// wraps app and stores  user session data on the client
+// wraps app an
+
+/**
+ * UserProvider component
+ * Provides user context to the application
+ * Manages user session data on the client
+ * 
+ * 
+ */
+
 "use client";
 
 import { createContext, useContext, useState, useEffect } from "react";
