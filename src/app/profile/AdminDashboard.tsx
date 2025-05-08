@@ -25,6 +25,7 @@ import { format } from "date-fns";
 
 import { ProfileCard } from "./SharedProfileCard";
 import { TabNavigation } from "../components/dashboard/TabNavigation";
+import { AdminResourceTable } from "../components/dashboard/AdminResourceTable";
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("new");
@@ -44,9 +45,14 @@ export default function AdminDashboard() {
   };
 
   // Function to update the status of a resource
-  const handleStatusChange = async (resourceId: string, newStatus: string) => {
+  const handleStatusChange = async (resourceId: string, newStatus: string, resourceType: string) => {
     try {
-      const response = await fetch(`/api/resources/${resourceId}`, {
+      // Use different endpoint based on resource type
+      const endpoint = resourceType === "edit" 
+        ? `/api/resources/edit/${resourceId}`
+        : `/api/resources/${resourceId}`;
+
+      const response = await fetch(endpoint, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -54,17 +60,28 @@ export default function AdminDashboard() {
         body: JSON.stringify({ status: newStatus }),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        console.error(
-          `Failed to update resource status: ${response.statusText}`
-        );
-        return;
+        throw new Error(data.error || `Failed to update status: ${response.statusText}`);
       }
 
+      // Refetch both resources and edit suggestions
       await refetchResources();
       await refetchEditResources();
     } catch (error) {
       console.error("Error updating status:", error);
+      alert(error instanceof Error ? error.message : "Failed to update status. Please try again.");
+    }
+  };
+
+  const handleViewClick = (resource: any, event: React.MouseEvent<HTMLElement>) => {
+    if (resourceAnchorEl === event.currentTarget) {
+      setResourceAnchorEl(null);
+      closePopup();
+    } else {
+      setResourceAnchorEl(event.currentTarget);
+      openPopup(resource);
     }
   };
 
@@ -77,12 +94,17 @@ export default function AdminDashboard() {
   };
 
   const filteredByStatus = resources.filter((resource) => {
-    if (activeTab == "new") return resource.status == "PENDING";
-    if (activeTab == "approved") return resource.status == "APPROVED";
-    if (activeTab == "rejected") return resource.status == "REJECTED";
+    if (activeTab === "new") return resource.status === "PENDING";
+    if (activeTab === "approved") return resource.status === "APPROVED";
+    if (activeTab === "rejected") return resource.status === "REJECTED";
+    return false;
   });
+
   const filteredByEditStatus = editResources.filter((res) => {
-    if (activeTab == "edit") return res.status == "PENDING";
+    if (activeTab === "edit") return res.status === "PENDING";
+    if (activeTab === "approved") return res.status === "APPROVED";
+    if (activeTab === "rejected") return res.status === "REJECTED";
+    return false;
   });
 
   const adminTabs = [
@@ -113,166 +135,14 @@ export default function AdminDashboard() {
               tabs={adminTabs}
             />
 
-            {/* table header or column names  */}
-
-            <Paper sx={{ width: "100%", overflow: "hidden" }}>
-              <TableContainer sx={{ maxHeight: 440 }}>
-                <Table stickyHeader aria-label="sticky table">
-                  <TableHead>
-                    {activeTab === "new" || activeTab === "edit" ? (
-                      <TableRow>
-                        <TableCell>Index</TableCell>
-                        <TableCell>Name</TableCell>
-                        <TableCell>View Details</TableCell>
-                        <TableCell>Approve</TableCell>
-                        <TableCell>Reject</TableCell>
-                      </TableRow>
-                    ) : (
-                      <TableRow>
-                        <TableCell>Index</TableCell>
-                        <TableCell>Name</TableCell>
-                        <TableCell>View Details</TableCell>
-                        <TableCell>Actions</TableCell>
-                      </TableRow>
-                    )}
-                  </TableHead>
-
-                  {/* table content */}
-
-                  <TableBody>
-                    {filteredByStatus.map((resource, index) => (
-                      <TableRow
-                        key={resource.id}
-                        hover
-                        role="checkbox"
-                        tabIndex={-1}
-                      >
-                        <TableCell>{index + 1}</TableCell>
-                        <TableCell>{resource.name}</TableCell>
-                        <TableCell>
-                          <Button
-                            onClick={(e) => {
-                              if (resourceAnchorEl === e.currentTarget) {
-                                setResourceAnchorEl(null);
-                                closePopup();
-                              } else {
-                                setResourceAnchorEl(e.currentTarget);
-                                openPopup(resource);
-                              }
-                            }}
-                          >
-                            View
-                          </Button>
-                        </TableCell>
-                        {activeTab === "new" && (
-                          <>
-                            <TableCell>
-                              <Button
-                                variant="contained"
-                                color="success"
-                                onClick={() =>
-                                  handleStatusChange(resource.id, "APPROVED")
-                                }
-                              >
-                                Approve
-                              </Button>
-                            </TableCell>
-                            <TableCell>
-                              <Button
-                                variant="contained"
-                                color="error"
-                                onClick={() =>
-                                  handleStatusChange(resource.id, "REJECTED")
-                                }
-                              >
-                                Reject
-                              </Button>
-                            </TableCell>
-                          </>
-                        )}
-                        {activeTab === "approved" && (
-                          <TableCell>
-                            <Button
-                              variant="contained"
-                              color="error"
-                              onClick={() =>
-                                handleStatusChange(resource.id, "REJECTED")
-                              }
-                            >
-                              Reject
-                            </Button>
-                          </TableCell>
-                        )}
-                        {activeTab === "rejected" && (
-                          <TableCell>
-                            <Button
-                              variant="contained"
-                              color="success"
-                              onClick={() =>
-                                handleStatusChange(resource.id, "APPROVED")
-                              }
-                            >
-                              Approve
-                            </Button>
-                          </TableCell>
-                        )}
-                      </TableRow>
-                    ))}
-
-                    {/* Edit submission */}
-
-                    {filteredByEditStatus.map((resource, index) => (
-                      <TableRow
-                        key={resource.id}
-                        hover
-                        role="checkbox"
-                        tabIndex={-1}
-                      >
-                        <TableCell>{index + 1}</TableCell>
-                        <TableCell>{resource.name}</TableCell>
-                        <TableCell>
-                          <Button
-                            onClick={(e) => {
-                              if (resourceAnchorEl === e.currentTarget) {
-                                setResourceAnchorEl(null);
-                                closePopup();
-                              } else {
-                                setResourceAnchorEl(e.currentTarget);
-                                openPopup(resource);
-                              }
-                            }}
-                          >
-                            View
-                          </Button>
-                        </TableCell>
-                        <TableCell>
-                          <Button
-                            variant="contained"
-                            color="success"
-                            onClick={() =>
-                              handleStatusChange(resource.id, "APPROVED")
-                            }
-                          >
-                            Approve
-                          </Button>
-                        </TableCell>
-                        <TableCell>
-                          <Button
-                            variant="contained"
-                            color="error"
-                            onClick={() =>
-                              handleStatusChange(resource.id, "REJECTED")
-                            }
-                          >
-                            Reject
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Paper>
+            <AdminResourceTable
+              activeTab={activeTab}
+              filteredByStatus={filteredByStatus}
+              filteredByEditStatus={filteredByEditStatus}
+              resourceAnchorEl={resourceAnchorEl}
+              onViewClick={handleViewClick}
+              onStatusChange={handleStatusChange}
+            />
 
             <Popup
               anchor={resourceAnchorEl}

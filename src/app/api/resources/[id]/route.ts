@@ -9,18 +9,21 @@ import { getSession } from "@/app/lib/session";
 
 // GET, PATCH, PUT DELETE
 export async function PATCH(req: NextRequest,
-  // props: { params: Promise<{ id: string }> }
-  { params }: { params: { id: string } }
+  props: { params: Promise<{ id: string }> }
+  // { params }: { params: { id: string } }
 ) {
-  // const params = await props.params;
+  const params = await props.params;
   const resourceId = parseInt(params.id);
 
   try {
     const body = await req.json();
     const { status } = body;
 
-    if (!["PENDING", "APPROVED", "REJECTED"].includes(status)) {
-      return NextResponse.json({ error: "invalid status" }, { status: 400 });
+    if (!status || !["PENDING", "APPROVED", "REJECTED"].includes(status)) {
+      return NextResponse.json(
+        { error: "Invalid status. Must be PENDING, APPROVED, or REJECTED" },
+        { status: 400 }
+      );
     }
 
     const updatedResource = await prisma.resource.update({

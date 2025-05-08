@@ -17,19 +17,55 @@ interface UserResourceTableProps {
   resources: any[];
   editResources: any[];
   user: any;
+  deletingId: string | null;
+  anchorEl: HTMLElement | null;
   onViewClick: (resource: any, event: React.MouseEvent<HTMLElement>) => void;
-  onDeleteClick: (type: string, id: string, options: any) => void;
-  deletingId: string;
+  onDeleteResource: (id: string) => void;
+  onDeleteEdit: (id: string) => void;
+  onDeleteReview: (id: string) => void;
+  onDeleteFavorite: (id: string) => void;
 }
+
+const columns = [
+  {
+    id: "index",
+    label: "Index",
+    minWidth: 170,
+  },
+  {
+    id: "name",
+    label: "Name",
+    minWidth: 100,
+  },
+  {
+    id: "status",
+    label: "Status",
+    minWidth: 170,
+  },
+  {
+    id: "view",
+    label: "view",
+    minWidth: 170,
+  },
+  {
+    id: "edit",
+    label: "Action",
+    minWidth: 100,
+  },
+];
 
 export const UserResourceTable = ({
   activeTab,
   resources,
   editResources,
   user,
-  onViewClick,
-  onDeleteClick,
   deletingId,
+  anchorEl,
+  onViewClick,
+  onDeleteResource,
+  onDeleteEdit,
+  onDeleteReview,
+  onDeleteFavorite,
 }: UserResourceTableProps) => {
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
@@ -38,11 +74,15 @@ export const UserResourceTable = ({
           <TableHead>
             {(activeTab === "new" || activeTab === "suggest") && (
               <TableRow>
-                <TableCell>Index</TableCell>
-                <TableCell>Name</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>View</TableCell>
-                <TableCell>Action</TableCell>
+                {columns.map((column) => (
+                  <TableCell
+                    key={column.id}
+                    align={column.align}
+                    style={{ minWidth: column.minWidth }}
+                  >
+                    {column.label}
+                  </TableCell>
+                ))}
               </TableRow>
             )}
             {activeTab === "reviews" && (
@@ -67,15 +107,15 @@ export const UserResourceTable = ({
 
           <TableBody>
             {/* New Resources */}
-            {activeTab === "new" && (
-              resources.length === 0 ? (
+            {activeTab === "new" &&
+              (resources.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={5}>No resources submitted yet.</TableCell>
                 </TableRow>
               ) : (
                 resources.map((res, index) => (
                   <TableRow key={res.id} hover role="checkbox" tabIndex={-1}>
-                    <TableCell>{index + 1}</TableCell>
+                    <TableCell className="px6 py-4">{index + 1}</TableCell>
                     <TableCell>{res.name}</TableCell>
                     <TableCell>{res.status}</TableCell>
                     <TableCell>
@@ -86,53 +126,49 @@ export const UserResourceTable = ({
                         variant="outlined"
                         startIcon={<DeleteIcon />}
                         disabled={deletingId === res.id.toString()}
-                        onClick={() => onDeleteClick("resources", res.id, { refetchUser: true })}
+                        onClick={() => onDeleteResource(res.id)}
                       >
                         {deletingId === res.id.toString() ? "Deleting..." : "Delete"}
                       </Button>
                     </TableCell>
                   </TableRow>
                 ))
-              )
-            )}
+              ))}
 
             {/* Edit Suggestions */}
-            {activeTab === "suggest" && (
-              editResources.length === 0 ? (
+            {activeTab === "suggest" &&
+              (editResources.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={5}>No edit suggestions submitted yet.</TableCell>
                 </TableRow>
               ) : (
-                editResources
-                  .filter(edit => edit && edit.id)
-                  .map((edit, index) => (
-                    <TableRow key={edit.id} hover role="checkbox" tabIndex={-1}>
-                      <TableCell>{index + 1}</TableCell>
-                      <TableCell>{edit.name}</TableCell>
-                      <TableCell>{edit.status}</TableCell>
-                      <TableCell>
-                        <Button onClick={(e) => onViewClick(edit, e)}>View</Button>
-                      </TableCell>
-                      <TableCell>
-                        <Button
-                          variant="outlined"
-                          startIcon={<DeleteIcon />}
-                          disabled={deletingId === edit.id.toString()}
-                          onClick={() => onDeleteClick("resources/edit", edit.id, { refetchUser: true })}
-                        >
-                          {deletingId === edit.id.toString() ? "Deleting..." : "Delete"}
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))
-              )
-            )}
+                editResources.map((edit, index) => (
+                  <TableRow key={edit.id} hover role="checkbox" tabIndex={-1}>
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>{edit.name}</TableCell>
+                    <TableCell>{edit.status}</TableCell>
+                    <TableCell>
+                      <Button onClick={(e) => onViewClick(edit, e)}>View</Button>
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="outlined"
+                        startIcon={<DeleteIcon />}
+                        disabled={deletingId === edit.id.toString()}
+                        onClick={() => onDeleteEdit(edit.id)}
+                      >
+                        {deletingId === edit.id.toString() ? "Deleting..." : "Delete"}
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ))}
 
             {/* Reviews */}
-            {activeTab === "reviews" && (
-              user.reviews.length === 0 ? (
+            {activeTab === "reviews" &&
+              (user.reviews.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6}>No reviews submitted yet.</TableCell>
+                  <TableCell colSpan={5}>No reviews submitted yet.</TableCell>
                 </TableRow>
               ) : (
                 user.reviews.map((review, index) => (
@@ -149,21 +185,20 @@ export const UserResourceTable = ({
                         variant="outlined"
                         startIcon={<DeleteIcon />}
                         disabled={deletingId === review.id.toString()}
-                        onClick={() => onDeleteClick("resources/review", review.id, { refetchUser: true })}
+                        onClick={() => onDeleteReview(review.id)}
                       >
                         {deletingId === review.id.toString() ? "Deleting..." : "Delete"}
                       </Button>
                     </TableCell>
                   </TableRow>
                 ))
-              )
-            )}
+              ))}
 
             {/* Favorites */}
-            {activeTab === "likes" && (
-              user.likes.length === 0 ? (
+            {activeTab === "likes" &&
+              (user.likes.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={4}>No favorites yet.</TableCell>
+                  <TableCell colSpan={5}>No favorites yet.</TableCell>
                 </TableRow>
               ) : (
                 user.likes.map((like, index) => (
@@ -178,15 +213,14 @@ export const UserResourceTable = ({
                         variant="outlined"
                         startIcon={<DeleteIcon />}
                         disabled={deletingId === like.id.toString()}
-                        onClick={() => onDeleteClick("resources/favorite", like.id, { refetchUser: true })}
+                        onClick={() => onDeleteFavorite(like.id)}
                       >
                         {deletingId === like.id.toString() ? "Deleting..." : "Delete"}
                       </Button>
                     </TableCell>
                   </TableRow>
                 ))
-              )
-            )}
+              ))}
           </TableBody>
         </Table>
       </TableContainer>

@@ -31,6 +31,7 @@ import { format } from "date-fns";
 
 import { ProfileCard } from "./SharedProfileCard";
 import { TabNavigation } from "../components/dashboard/TabNavigation";
+import { UserResourceTable } from "../components/dashboard/UserResourceTable";
 
 interface resourceColumn {
   id: "index" | "name" | "status" | "view" | "edit";
@@ -110,22 +111,46 @@ export default function UserDashboard() {
     closePopup();
   };
 
-   const handleDeleteResource = async (resourceId: string) => {
+  const handleViewClick = (resource: any, event: React.MouseEvent<HTMLElement>) => {
+    if (anchorEl === event.currentTarget) {
+      setAnchorEl(null);
+      closePopup();
+    } else {
+      setAnchorEl(event.currentTarget);
+      openPopup(resource);
+    }
+  };
+
+  const handleDeleteResource = async (resourceId: string) => {
     await deleteItem("resources", resourceId, {
       refetchUser: refetch,
       onSuccess: () => {
-        refetchResources(); // Refetch the resources list
+        refetchResources();
       }
     });
   };
+
   const handleDeleteEdit = async (editId: string) => {
     await deleteItem("resources/edit", editId, {
       refetchUser: refetch,
       onSuccess: () => {
-        refetchEditResources(); // Refetch the edit suggestions list
+        refetchEditResources();
       }
     });
   };
+
+  const handleDeleteReview = async (reviewId: string) => {
+    await deleteItem("resources/review", reviewId, {
+      refetchUser: refetch
+    });
+  };
+
+  const handleDeleteFavorite = async (favoriteId: string) => {
+    await deleteItem("resources/favorite", favoriteId, {
+      refetchUser: refetch
+    });
+  };
+
   const userTabs = [
     { id: "new", label: "New", color: "bg-blue-500" },
     { id: "suggest", label: "Suggest Edit", color: "bg-green-500" },
@@ -159,262 +184,20 @@ export default function UserDashboard() {
               tabs={userTabs}
             />
 
-            {/* More dashboard content here */}
+            <UserResourceTable
+              activeTab={activeTab}
+              resources={resources}
+              editResources={editResources}
+              user={user}
+              deletingId={deletingId}
+              anchorEl={anchorEl}
+              onViewClick={handleViewClick}
+              onDeleteResource={handleDeleteResource}
+              onDeleteEdit={handleDeleteEdit}
+              onDeleteReview={handleDeleteReview}
+              onDeleteFavorite={handleDeleteFavorite}
+            />
 
-            {/* table headers  */}
-
-            <Paper sx={{ width: "100%", overflow: "hidden" }}>
-              <TableContainer sx={{ maxHeight: 440 }}>
-                <Table stickyHeader aria-label="sticky table">
-                  <TableHead>
-                    {(activeTab === "new" || activeTab === "suggest") && (
-                      <TableRow>
-                        {columns.map((column) => (
-                          <TableCell
-                            key={column.id}
-                            align={column.align}
-                            style={{ minWidth: column.minWidth }}
-                          >
-                            {column.label}
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    )}
-                    {activeTab === "reviews" && (
-                      <TableRow>
-                        <TableCell>Index</TableCell>
-                        <TableCell>Resource Name</TableCell>
-                        <TableCell>Reviews</TableCell>
-                        <TableCell>Rating</TableCell>
-                        <TableCell>Date</TableCell>
-                        <TableCell>Action</TableCell>
-                      </TableRow>
-                    )}
-                    {activeTab === "likes" && (
-                      <TableRow>
-                        <TableCell>Index</TableCell>
-                        <TableCell>Resource Name</TableCell>
-                        <TableCell>View Details</TableCell>
-                        <TableCell>Action</TableCell>
-                      </TableRow>
-                    )}
-                  </TableHead>
-
-                  {/* table content */}
-
-                  <TableBody>
-                    {/* new Resources submitted by user */}
-                    {activeTab === "new" &&
-                      (resources.length === 0 ? (
-                        <TableRow>
-                          <TableCell colSpan={5}>
-                            No resources submitted yet.
-                          </TableCell>
-                        </TableRow>
-                      ) : (
-                        resources.map((res, index) => (
-                          <TableRow
-                            key={res.id}
-                            hover
-                            role="checkbox"
-                            tabIndex={-1}
-                          >
-                            <TableCell className="px6 py-4">
-                              {index + 1}
-                            </TableCell>
-                            <TableCell>{res.name}</TableCell>
-                            <TableCell>{res.status}</TableCell>
-                            <TableCell>
-                              <Button
-                                onClick={(e) => {
-                                  if (anchorEl === e.currentTarget) {
-                                    setAnchorEl(null);
-                                    closePopup();
-                                  } else {
-                                    setAnchorEl(e.currentTarget);
-                                    openPopup(res);
-                                  }
-                                }}
-                              >
-                                View
-                              </Button>
-                            </TableCell>
-                            {/* delete button */}
-                            <TableCell>
-                              <Button
-                                variant="outlined"
-                                startIcon={<DeleteIcon />}
-                                disabled={deletingId === res.id.toString()}
-                                onClick={() => handleDeleteResource(res.id)}
-                        
-                              >
-                                {deletingId === res.id.toString()
-                                  ? "Deleting..."
-                                  : "Delete"}
-                              </Button>
-                            </TableCell>
-                          </TableRow>
-                        ))
-                      ))}
-
-                    {/* Edit suggestions by user */}
-                    {activeTab === "suggest" &&
-                      (editResources.length === 0 ? (
-                        <TableRow>
-                          <TableCell colSpan={5}>
-                            No edit suggestions submitted yet.
-                          </TableCell>
-                        </TableRow>
-                      ) : (
-                        editResources.map((edit, index) => (
-                          <TableRow
-                            key={edit.id}
-                            hover
-                            role="checkbox"
-                            tabIndex={-1}
-                          >
-                            <TableCell>{index + 1} </TableCell>
-                            <TableCell>{edit.name}</TableCell>
-                            <TableCell>{edit.status}</TableCell>
-
-                            <TableCell>
-                              <Button
-                                onClick={(e) => {
-                                  if (anchorEl === e.currentTarget) {
-                                    setAnchorEl(null);
-                                    closePopup();
-                                  } else {
-                                    setAnchorEl(e.currentTarget);
-                                    openPopup(edit);
-                                  }
-                                }}
-                              >
-                                View
-                              </Button>
-                            </TableCell>
-                            <TableCell>
-                              <Button
-                                variant="outlined"
-                                startIcon={<DeleteIcon />}
-                                disabled={deletingId === edit.id.toString()}
-                                onClick={() => handleDeleteEdit(edit.id)}
-                                  
-                              >
-                                {deletingId === edit.id.toString()
-                                  ? "Deleting..."
-                                  : "Delete"}
-                              </Button>
-                            </TableCell>
-                          </TableRow>
-                        ))
-                      ))}
-
-                    {/* reviews */}
-                    {activeTab === "reviews" &&
-                      (user.reviews.length === 0 ? (
-                        <TableRow>
-                          <TableCell colSpan={5}>
-                            No reviews submitted yet.
-                          </TableCell>
-                        </TableRow>
-                      ) : (
-                        user.reviews.map((review, index) => (
-                          <TableRow
-                            key={review.id}
-                            hover
-                            role="checkbox"
-                            tabIndex={-1}
-                          >
-                            <TableCell>{index + 1} </TableCell>
-                            <TableCell>{review.resource.name}</TableCell>
-                            <TableCell>{review.content}</TableCell>
-                            <TableCell>{review.rating}</TableCell>
-                            <TableCell>
-                              {format(new Date(review.createdAt), "yyyy-MM-dd")}
-                            </TableCell>
-                            <TableCell>
-                              <Button
-                                variant="outlined"
-                                startIcon={<DeleteIcon />}
-                                disabled={deletingId === review.id.toString()}
-                                onClick={() =>
-                                  deleteItem("resources/review", review.id, {
-                                    refetchUser: refetch,
-                                  })
-                                }
-                              >
-                                {deletingId === review.id.toString()
-                                  ? "Deleting..."
-                                  : "Delete"}
-                              </Button>
-                            </TableCell>
-                          </TableRow>
-                        ))
-                      ))}
-
-                    {/* favorites */}
-                    {activeTab === "likes" &&
-                      (user.likes.length === 0 ? (
-                        <TableRow>
-                          <TableCell colSpan={5}>No favorites yet.</TableCell>
-                        </TableRow>
-                      ) : (
-                        user.likes.map((like, index) => (
-                          <TableRow
-                            key={like.resource.id}
-                            hover
-                            role="checkbox"
-                            tabIndex={-1}
-                          >
-                            <TableCell>{index + 1}</TableCell>
-                            <TableCell>{like.resource.name}</TableCell>
-                            <TableCell>
-                              <Button
-                                onClick={(e) => {
-                                  if (anchorEl === e.currentTarget) {
-                                    setAnchorEl(null);
-                                    closePopup();
-                                  } else {
-                                    setAnchorEl(e.currentTarget);
-                                    openPopup(like.resource);
-                                  }
-                                }}
-                              >
-                                View
-                              </Button>
-                            </TableCell>
-                            <TableCell>
-                              <Button
-                                variant="outlined"
-                                startIcon={<DeleteIcon />}
-                                disabled={deletingId === like.id.toString()}
-                                onClick={() =>
-                                  deleteItem("resources/favorite", like.id, {
-                                    refetchUser: refetch,
-                                  })
-                                }
-                              >
-                                {deletingId === like.id.toString()
-                                  ? "Deleting..."
-                                  : "Delete"}
-                              </Button>
-                            </TableCell>
-                          </TableRow>
-                        ))
-                      ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              {/* <TablePagination
-                rowsPerPageOptions={[10, 25, 100]}
-                component="div"
-                count={user.ResourceEditSuggestion.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-              /> */}
-            </Paper>
             {/* Popup for resource details */}
             <Popup
               anchor={anchorEl}
