@@ -1,12 +1,12 @@
 /* Table component for displaying resources in the admin dashboard.
  * Handles different views based on the active tab and resource type.
- * 
+ *
  * @features
  * - Displays resources in a tabular format
  * - Supports different columns based on active tab
  * - Handles both new resources and edit suggestions
  * - Provides status change actions (approve/reject)
-*/
+ */
 "use client";
 
 import React from "react";
@@ -19,14 +19,17 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Button from "@mui/material/Button";
 
-
 interface AdminResourceTableProps {
   activeTab: string;
   filteredByStatus: any[];
   filteredByEditStatus: any[];
   resourceAnchorEl: HTMLElement | null;
   onViewClick: (resource: any, event: React.MouseEvent<HTMLElement>) => void;
-  onStatusChange: (resourceId: string, newStatus: string, resourceType: string) => void;
+  onStatusChange: (
+    resourceId: string,
+    newStatus: string,
+    resourceType: string
+  ) => void;
 }
 
 export const AdminResourceTable = ({
@@ -38,14 +41,18 @@ export const AdminResourceTable = ({
   onStatusChange,
 }: AdminResourceTableProps) => {
   // Combine both types of resources for approved and rejected tabs
-  const displayResources = (activeTab === "approved" || activeTab === "rejected")
-    ? [
-        ...filteredByStatus.map(resource => ({ ...resource, type: "new" })),
-        ...filteredByEditStatus.map(resource => ({ ...resource, type: "edit" }))
-      ]
-    : activeTab === "edit"
-    ? filteredByEditStatus.map(resource => ({ ...resource, type: "edit" }))
-    : filteredByStatus.map(resource => ({ ...resource, type: "new" }));
+  const displayResources =
+    activeTab === "approved" || activeTab === "rejected"
+      ? [
+          ...filteredByStatus.map((resource) => ({ ...resource, type: "new" })),
+          ...filteredByEditStatus.map((resource) => ({
+            ...resource,
+            type: "edit",
+          })),
+        ]
+      : activeTab === "edit"
+      ? filteredByEditStatus.map((resource) => ({ ...resource, type: "edit" }))
+      : filteredByStatus.map((resource) => ({ ...resource, type: "new" }));
 
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
@@ -74,7 +81,7 @@ export const AdminResourceTable = ({
           <TableBody>
             {displayResources.map((resource, index) => (
               <TableRow
-                key={resource.id}
+                key={`${resource.type}-${resource.id}`}
                 hover
                 role="checkbox"
                 tabIndex={-1}
@@ -83,12 +90,16 @@ export const AdminResourceTable = ({
                 <TableCell>{resource.name}</TableCell>
                 {(activeTab === "approved" || activeTab === "rejected") && (
                   <TableCell>
-                    <span className={`px-2 py-1 text-sm font-medium rounded-full ${
-                      resource.type === "new" 
-                        ? "bg-blue-100 text-blue-800"
-                        : "bg-purple-100 text-purple-800"
-                    }`}>
-                      {resource.type === "new" ? "New Resource" : "Edit Resource"}
+                    <span
+                      className={`px-2 py-1 text-sm font-medium rounded-full ${
+                        resource.type === "new"
+                          ? "bg-blue-100 text-blue-800"
+                          : "bg-purple-100 text-purple-800"
+                      }`}
+                    >
+                      {resource.type === "new"
+                        ? "New Resource"
+                        : "Edit Resource"}
                     </span>
                   </TableCell>
                 )}
@@ -103,7 +114,9 @@ export const AdminResourceTable = ({
                       <Button
                         variant="contained"
                         color="success"
-                        onClick={() => onStatusChange(resource.id, "APPROVED", "new")}
+                        onClick={() =>
+                          onStatusChange(resource.id, "APPROVED", "new")
+                        }
                       >
                         Approve
                       </Button>
@@ -112,7 +125,9 @@ export const AdminResourceTable = ({
                       <Button
                         variant="contained"
                         color="error"
-                        onClick={() => onStatusChange(resource.id, "REJECTED", "new")}
+                        onClick={() =>
+                          onStatusChange(resource.id, "REJECTED", "new")
+                        }
                       >
                         Reject
                       </Button>
@@ -125,7 +140,9 @@ export const AdminResourceTable = ({
                       <Button
                         variant="contained"
                         color="success"
-                        onClick={() => onStatusChange(resource.id, "APPROVED", "edit")}
+                        onClick={() =>
+                          onStatusChange(resource.id, "APPROVED", "edit")
+                        }
                       >
                         Approve
                       </Button>
@@ -134,7 +151,9 @@ export const AdminResourceTable = ({
                       <Button
                         variant="contained"
                         color="error"
-                        onClick={() => onStatusChange(resource.id, "REJECTED", "edit")}
+                        onClick={() =>
+                          onStatusChange(resource.id, "REJECTED", "edit")
+                        }
                       >
                         Reject
                       </Button>
@@ -146,7 +165,9 @@ export const AdminResourceTable = ({
                     <Button
                       variant="contained"
                       color="error"
-                      onClick={() => onStatusChange(resource.id, "REJECTED", resource.type)}
+                      onClick={() =>
+                        onStatusChange(resource.id, "REJECTED", resource.type)
+                      }
                     >
                       Reject
                     </Button>
@@ -157,7 +178,9 @@ export const AdminResourceTable = ({
                     <Button
                       variant="contained"
                       color="success"
-                      onClick={() => onStatusChange(resource.id, "APPROVED", resource.type)}
+                      onClick={() =>
+                        onStatusChange(resource.id, "APPROVED", resource.type)
+                      }
                     >
                       Approve
                     </Button>
