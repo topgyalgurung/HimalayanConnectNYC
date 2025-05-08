@@ -8,11 +8,13 @@ import prisma from "@/app/lib/prisma";
 import { getSession } from "@/app/lib/session";
 
 // GET, PATCH, PUT DELETE
-export async function PATCH(req: NextRequest,
-  props: { params: Promise<{ id: string }> }
-  // { params }: { params: { id: string } }
+/**
+ * Updates the status of a resource
+ */
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: { id: string } }
 ) {
-  const params = await props.params;
   const resourceId = parseInt(params.id);
 
   try {

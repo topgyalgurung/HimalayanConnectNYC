@@ -1,3 +1,12 @@
+/* Table component for displaying resources in the admin dashboard.
+ * Handles different views based on the active tab and resource type.
+ * 
+ * @features
+ * - Displays resources in a tabular format
+ * - Supports different columns based on active tab
+ * - Handles both new resources and edit suggestions
+ * - Provides status change actions (approve/reject)
+*/
 "use client";
 
 import React from "react";
@@ -10,13 +19,14 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Button from "@mui/material/Button";
 
+
 interface AdminResourceTableProps {
   activeTab: string;
   filteredByStatus: any[];
   filteredByEditStatus: any[];
   resourceAnchorEl: HTMLElement | null;
   onViewClick: (resource: any, event: React.MouseEvent<HTMLElement>) => void;
-  onStatusChange: (resourceId: string, newStatus: string, type: string) => void;
+  onStatusChange: (resourceId: string, newStatus: string, resourceType: string) => void;
 }
 
 export const AdminResourceTable = ({

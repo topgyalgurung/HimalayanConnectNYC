@@ -6,13 +6,9 @@ import { useRouter } from "next/navigation";
 import { addEditResource } from "@/app/actions/forms";
 import dayjs from "dayjs";
 import { type Resource } from "@/app/types/resource";
-
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { ToggleButton, ToggleButtonGroup } from "@mui/material";
-import { TimePicker } from "@mui/x-date-pickers/TimePicker";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import TimePickerSection from "./TimePickerSection";
 
 interface ResourceSuggestCardProps {
   resource: Resource | null;
@@ -29,9 +25,6 @@ export default function ResourceSuggestCard({
   const [openTime, setOpenTime] = useState<dayjs.Dayjs | null>(null);
   const [closeTime, setCloseTime] = useState<dayjs.Dayjs | null>(null);
   const router = useRouter();
-  const cleanOpenDays = Array.from(
-    new Set(selectedDays.map((d) => d.trim().slice(0, 3))) // standardize to "Mon", "Tue", etc.
-  ).join(",");
 
   useEffect(() => {
     if (resource) {
@@ -44,12 +37,6 @@ export default function ResourceSuggestCard({
     }
   }, [resource]);
 
-  const handleDayChange = (
-    event: React.MouseEvent<HTMLElement>,
-    newDays: string[]
-  ) => {
-    setSelectedDays(newDays);
-  };
   const [formData, setFormData] = useState({
     name: resource?.name || "",
     address: resource?.address || "",
@@ -71,7 +58,6 @@ export default function ResourceSuggestCard({
 
     try {
       const result = await addEditResource(formData);
-      setLoading(true);
       if (result.success) {
         setMessage(result.success);
         router.push("/profile");
@@ -89,7 +75,7 @@ export default function ResourceSuggestCard({
   return (
     <div className="absolute top-4 right-4 z-50 w-96 bg-white rounded-lg shadow-xl p-6">
       <button
-        onClick={onEditCloseAction}
+        onClick={() => onEditCloseAction(null)}
         className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
       >
         ✕
@@ -98,14 +84,13 @@ export default function ResourceSuggestCard({
       <h1>Suggest an Edit</h1>
 
       <form action={handleFormAction}>
-        {/* <form onSubmit={handleSubmit}> */}
         <Box
           sx={{ "& .MuiTextField-root": { m: 1, width: "25ch" } }}
           noValidate
           autoComplete="off"
         >
-          {/* backend needs to know which resourceId suggestion belongs to so it can link suggestion to original resource  */}
           <input name="resourceId" value={resource?.id ?? ""} type="hidden" />
+          
           <TextField
             name="name"
             label="Name"
@@ -134,61 +119,15 @@ export default function ResourceSuggestCard({
             onChange={handleChange}
             variant="standard"
           />
-          {/* <TextField
-            name="openDays"
-            value={formData?.openDays}
-            onChange={handleChange}
-            variant="standard"
-          /> */}
 
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <div className="space-y-4">
-              <p className="font-semibold mb-1">Open Days </p>
-              <ToggleButtonGroup
-                value={selectedDays}
-                onChange={handleDayChange}
-                aria-label="Weekdays"
-                size="small"
-              >
-                {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
-                  (day) => (
-                    <ToggleButton key={day} value={day}>
-                      {day}
-                    </ToggleButton>
-                  )
-                )}
-              </ToggleButtonGroup>
-              <input
-                type="hidden"
-                name="openDays"
-                value={Array.from(
-                  new Set(selectedDays.map((d) => d.trim().slice(0, 3)))
-                ).join(",")}
-              />
-            </div>
-            <div>
-              <TimePicker
-                label="Open Time"
-                value={openTime}
-                onChange={(newTime) => setOpenTime(newTime)}
-              />
-              <TimePicker
-                label="Close Time"
-                value={closeTime}
-                onChange={(newTime) => setCloseTime(newTime)}
-              />
-              <input
-                type="hidden"
-                name="openTime"
-                value={openTime ? openTime.format("hh:mm A") : ""}
-              />
-              <input
-                type="hidden"
-                name="closeTime"
-                value={closeTime ? closeTime.format("hh:mm A") : ""}
-              />
-            </div>
-          </LocalizationProvider>
+          <TimePickerSection
+            selectedDays={selectedDays}
+            openTime={openTime}
+            closeTime={closeTime}
+            onDayChange={(_, newDays) => setSelectedDays(newDays)}
+            onOpenTimeChange={setOpenTime}
+            onCloseTimeChange={setCloseTime}
+          />
 
           <button
             type="submit"

@@ -1,37 +1,28 @@
+/**
+  User dashboard component for managing personal resources, edits, reviews and favorites
+  */
+
+
 "use client";
 
 import React from "react";
-
-import Image from "next/image";
 import { useState } from "react";
-import { logout } from "../actions/auth";
 import { useRouter } from "next/navigation";
+import { format } from "date-fns";
 
+import { logout } from "../actions/auth";
 import { useFetchUser } from "../hooks/useFetchUsers";
 import { useUser } from "../context/UserProvider";
 import { usePopup } from "../hooks/usePopup";
 import { useDeleteItem } from "../hooks/useDeleteResource";
-import { useFetchResources } from "../hooks/useFetchResources";
 import { useFetchResourceEdit } from "../hooks/useFetchResourceEdit";
 import { useFetchUserResources } from "../hooks/useFetchUserResources";
 
-import Paper from "@mui/material/Paper";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import DeleteIcon from "@mui/icons-material/Delete";
-import Button from "@mui/material/Button";
-import { Box } from "@mui/material";
-// import TablePagination from "@mui/material/TablePagination";
-import TableRow from "@mui/material/TableRow";
 import Popup from "../components/Popup";
-import { format } from "date-fns";
-
 import { ProfileCard } from "./SharedProfileCard";
 import { TabNavigation } from "../components/dashboard/TabNavigation";
 import { UserResourceTable } from "../components/dashboard/UserResourceTable";
+
 
 interface resourceColumn {
   id: "index" | "name" | "status" | "view" | "edit";
@@ -41,6 +32,9 @@ interface resourceColumn {
   format?: (value: number) => string;
 }
 
+/**
+ * Table column definitions for the resource management interface
+ */
 const columns: readonly resourceColumn[] = [
   {
     id: "index",
@@ -69,6 +63,10 @@ const columns: readonly resourceColumn[] = [
   },
 ];
 
+/**
+ * Main dashboard component for users to manage their resources, edits, reviews and favorites.
+ * Provides functionality for viewing, editing, and deleting user-related content.
+ */
 export default function UserDashboard() {
   const [activeTab, setActiveTab] = useState("new");
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -77,27 +75,25 @@ export default function UserDashboard() {
   const { setUser } = useUser();
 
   const { resources, refetch: refetchResources } = useFetchUserResources();
-  const { editResources, refetch: refetchEditResources } =
-    useFetchResourceEdit();
-
+  const { editResources, refetch: refetchEditResources } = useFetchResourceEdit();
   const { data: user, refetch } = useFetchUser();
   const { isOpen, data: selectedResource, openPopup, closePopup } = usePopup();
-
   const { deleteItem, deletingId } = useDeleteItem();
 
   if (!user) return <p>Loading user data...</p>;
 
+
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
-    // Close popup when changing tabs
     setAnchorEl(null);
     closePopup();
   };
 
+  
   const handleLogout = async () => {
     try {
       await logout();
-      setUser(null); // Clear user session for NavMenu
+      setUser(null);
       router.replace("/");
       router.refresh();
     } catch (error) {
@@ -105,13 +101,14 @@ export default function UserDashboard() {
     }
   };
 
-  // Close popup when modal closes
+ 
   const handleClosePopup = () => {
     setAnchorEl(null);
     closePopup();
   };
 
-  const handleViewClick = (resource: any, event: React.MouseEvent<HTMLElement>) => {
+
+  const handleViewClick = (resource: Resource, event: React.MouseEvent<HTMLElement>) => {
     if (anchorEl === event.currentTarget) {
       setAnchorEl(null);
       closePopup();
@@ -121,6 +118,9 @@ export default function UserDashboard() {
     }
   };
 
+  /**
+   * Deletes a resource and refreshes the data
+*/
   const handleDeleteResource = async (resourceId: string) => {
     await deleteItem("resources", resourceId, {
       refetchUser: refetch,
@@ -130,6 +130,7 @@ export default function UserDashboard() {
     });
   };
 
+ 
   const handleDeleteEdit = async (editId: string) => {
     await deleteItem("resources/edit", editId, {
       refetchUser: refetch,
@@ -139,12 +140,14 @@ export default function UserDashboard() {
     });
   };
 
+  
   const handleDeleteReview = async (reviewId: string) => {
     await deleteItem("resources/review", reviewId, {
       refetchUser: refetch
     });
   };
 
+ 
   const handleDeleteFavorite = async (favoriteId: string) => {
     await deleteItem("resources/favorite", favoriteId, {
       refetchUser: refetch
@@ -159,17 +162,14 @@ export default function UserDashboard() {
   ];
 
   return (
-    <div className="flex flex-col items-center justify-center ">
-      {/* Profile card and dashboard container */}
+    <div className="flex flex-col items-center justify-center">
       <div className="flex flex-row w-full">
-        {/* Profile card (takes 30% width) */}
         <ProfileCard
           userName={user.firstName}
           onLogout={handleLogout}
           userType="user"
         />
 
-        {/* Dashboard (takes 70% width) */}
         <div className="w-full md:w-2/3 p-4">
           <div className="bg-white shadow-lg rounded-lg p-6">
             <h2 className="text-2xl font-bold mb-4">Your Dashboard</h2>
@@ -198,21 +198,17 @@ export default function UserDashboard() {
               onDeleteFavorite={handleDeleteFavorite}
             />
 
-            {/* Popup for resource details */}
             <Popup
               anchor={anchorEl}
               open={isOpen}
               onClose={handleClosePopup}
               title={selectedResource?.name || "No Title"}
               content={[
-                // Basic Information
                 selectedResource?.description &&
                   `Description: ${selectedResource.description}`,
                 selectedResource?.city && `City: ${selectedResource.city}`,
                 selectedResource?.address &&
                   `Address: ${selectedResource.address}`,
-
-                // Operating Hours
                 selectedResource?.openDays &&
                   `Open Days: ${selectedResource.openDays}`,
                 selectedResource?.openTime &&
@@ -225,8 +221,6 @@ export default function UserDashboard() {
                     new Date(selectedResource.closeTime),
                     "hh:mm a"
                   )}`,
-
-                // Additional Details
                 selectedResource?.status &&
                   `Status: ${selectedResource.status}`,
                 selectedResource?.createdAt &&
@@ -239,14 +233,10 @@ export default function UserDashboard() {
                     new Date(selectedResource.updatedAt),
                     "yyyy-MM-dd"
                   )}`,
-
-                // Contact Information (if available)
                 selectedResource?.phone && `Phone: ${selectedResource.phone}`,
                 selectedResource?.email && `Email: ${selectedResource.email}`,
                 selectedResource?.website &&
                   `Website: ${selectedResource.website}`,
-
-                // Additional Features (if available)
                 selectedResource?.features &&
                   `Features: ${selectedResource.features}`,
                 selectedResource?.amenities &&

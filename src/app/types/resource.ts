@@ -4,22 +4,26 @@ export type Location = {
   longitude: number;
 };
 
-export type Resource = {
+export interface Resource {
   id: string;
   name: string;
-  description: string;
-  address: string;
-  city: string;
-  openDays: string;
+  description?: string;
+  city?: string;
+  address?: string;
+  openDays?: string;
+  openTime?: string;
+  closeTime?: string;
+  status: 'PENDING' | 'APPROVED' | 'REJECTED';
+  ResourceCategory?: { name: string } | null;
+  Location: Location[];
   phone: string;
   rating: string;
   imageUrl: string;
   facebookLink: string;
   email: string;
   url: string;
-  openTime: string;
-  closeTime: string;
-  ResourceCategory?: { name: string } | null;
-  Location: Location[];
-  status: string;
-};
+}
+
+export interface EditResource extends Resource {
+  // Add edit-specific fields
+}

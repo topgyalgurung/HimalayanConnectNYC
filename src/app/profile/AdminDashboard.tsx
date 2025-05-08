@@ -1,80 +1,87 @@
+/**
+ *  Main admin dashboard component that handles resource management, including approval/rejection
+ * of new resources and edit suggestions. Provides a tabbed interface for different resource statuses.
+
+ * - Tab-based navigation for different resource statuses (new, edit, approved, rejected)
+ * - Resource status management (approve/reject)
+ * - Resource details viewing
+ * - Real-time updates on status changes
+
+ * - useFetchResources: Hook for fetching regular resources
+ * - useFetchResourceEdit: Hook for fetching edit suggestions
+ * - usePopup: Hook for managing resource detail popups
+ * - AdminResourceTable: Component for displaying resources in a table format
+ */
+
 "use client";
-import Image from "next/image";
-
 import { useState } from "react";
-
 import React from "react";
-
 import { useFetchResources } from "../hooks/useFetchResources";
 import { useFetchResourceEdit } from "../hooks/useFetchResourceEdit";
-
 import Popup from "../components/Popup";
 import { usePopup } from "../hooks/usePopup";
 import { useLogout } from "../hooks/useLogout";
-
-import Button from "@mui/material/Button";
-import Paper from "@mui/material/Paper";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import { Box } from "@mui/material";
 import { format } from "date-fns";
-
 import { ProfileCard } from "./SharedProfileCard";
 import { TabNavigation } from "../components/dashboard/TabNavigation";
 import { AdminResourceTable } from "../components/dashboard/AdminResourceTable";
+import { updateResourceStatus } from "../actions/resources/updateResourceStatus";
+import { toast } from "react-hot-toast";
+
+const formatTime = (timeString: string | undefined) => {
+  if (!timeString) return '';
+  try {
+    return format(new Date(timeString), "hh:mm a");
+  } catch (error) {
+    console.error('Invalid date:', timeString);
+    return 'Invalid time';
+  }
+};
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("new");
-  const [resourceAnchorEl, setResourceAnchorEl] = useState<null | HTMLElement>(
-    null
-  );
+  const [resourceAnchorEl, setResourceAnchorEl] = useState<null | HTMLElement>(null);
   const { resources, refetch: refetchResources } = useFetchResources();
-  const { editResources, refetch: refetchEditResources } =
-    useFetchResourceEdit();
+  const { editResources, refetch: refetchEditResources } = useFetchResourceEdit();
   const { isOpen, data: selectedResource, openPopup, closePopup } = usePopup();
+  const [isLoading, setIsLoading] = useState(false);
+
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
-    // Close popup when changing tabs
     setResourceAnchorEl(null);
     closePopup();
   };
 
-  // Function to update the status of a resource
+  /**
+   * Handles status changes for both new resources and edit suggestions
+   */
   const handleStatusChange = async (resourceId: string, newStatus: string, resourceType: string) => {
     try {
-      // Use different endpoint based on resource type
-      const endpoint = resourceType === "edit" 
-        ? `/api/resources/edit/${resourceId}`
-        : `/api/resources/${resourceId}`;
+      setIsLoading(true);
+      const result = await updateResourceStatus(resourceId, newStatus, resourceType);
 
-      const response = await fetch(endpoint, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ status: newStatus }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || `Failed to update status: ${response.statusText}`);
+      if (!result.success) {
+        throw new Error(result.error || "Failed to update status");
       }
 
-      // Refetch both resources and edit suggestions
-      await refetchResources();
-      await refetchEditResources();
+      toast.success(`Successfully updated ${resourceType} status to ${newStatus}`);
+      
+      await Promise.all([
+        refetchResources(),
+        refetchEditResources()
+      ]);
     } catch (error) {
-      console.error("Error updating status:", error);
-      alert(error instanceof Error ? error.message : "Failed to update status. Please try again.");
+      toast.error(error instanceof Error ? error.message : "Failed to update status");
+    } finally {
+      setIsLoading(false);
     }
   };
 
+  /**
+   * Handles the view button click to show resource details
+
+   */
   const handleViewClick = (resource: any, event: React.MouseEvent<HTMLElement>) => {
     if (resourceAnchorEl === event.currentTarget) {
       setResourceAnchorEl(null);
@@ -87,12 +94,17 @@ export default function AdminDashboard() {
 
   const { handleLogout } = useLogout();
 
-  // Close popup when modal closes
+  /**
+   * Closes the popup and resets the anchor element
+   */
   const handleClosePopup = () => {
     setResourceAnchorEl(null);
     closePopup();
   };
 
+  /**
+   * Filters resources based on their status
+   */
   const filteredByStatus = resources.filter((resource) => {
     if (activeTab === "new") return resource.status === "PENDING";
     if (activeTab === "approved") return resource.status === "APPROVED";
@@ -100,6 +112,10 @@ export default function AdminDashboard() {
     return false;
   });
 
+  /**
+   * Filters edit resources based on their status
+
+   */
   const filteredByEditStatus = editResources.filter((res) => {
     if (activeTab === "edit") return res.status === "PENDING";
     if (activeTab === "approved") return res.status === "APPROVED";
@@ -115,7 +131,7 @@ export default function AdminDashboard() {
   ];
 
   return (
-    <div className="flex flex-col items-center justify-center ">
+    <div className="flex flex-col items-center justify-center">
       <div className="flex flex-row w-full">
         <ProfileCard
           userName="Admin"
@@ -123,7 +139,6 @@ export default function AdminDashboard() {
           userType="admin"
         />
 
-        {/* Dashboard (takes 70% width) */}
         <div className="w-full md:w-2/3 p-4">
           <div className="bg-white shadow-lg rounded-lg p-6">
             <h2 className="text-2xl font-bold mb-4">Dashboard</h2>
@@ -150,26 +165,13 @@ export default function AdminDashboard() {
               onClose={handleClosePopup}
               title={selectedResource?.name || "No Title"}
               content={[
-                selectedResource?.description &&
-                  `Description: ${selectedResource.description}`,
+                selectedResource?.description && `Description: ${selectedResource.description}`,
                 selectedResource?.city && `City: ${selectedResource.city}`,
-                selectedResource?.address &&
-                  `Address: ${selectedResource.address}`,
-                selectedResource?.openDays &&
-                  `Open Days: ${selectedResource.openDays}`,
-                selectedResource?.openTime &&
-                  `Open Time: ${format(
-                    new Date(selectedResource.openTime),
-                    "hh:mm a"
-                  )}`,
-                selectedResource?.closeTime &&
-                  `Close Time: ${format(
-                    new Date(selectedResource.closeTime),
-                    "hh:mm a"
-                  )}`,
-              ]
-                .filter(Boolean)
-                .join("\n")}
+                selectedResource?.address && `Address: ${selectedResource.address}`,
+                selectedResource?.openDays && `Open Days: ${selectedResource.openDays}`,
+                selectedResource?.openTime && `Open Time: ${format(new Date(selectedResource.openTime), "hh:mm a")}`,
+                selectedResource?.closeTime && `Close Time: ${format(new Date(selectedResource.closeTime), "hh:mm a")}`,
+              ].filter(Boolean).join("\n")}
             />
           </div>
         </div>

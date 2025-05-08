@@ -8,11 +8,8 @@ import Accordion from "@mui/material/Accordion";
 import { AccordionSummary, Typography } from "@mui/material";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { ToggleButton, ToggleButtonGroup } from "@mui/material";
-import { TimePicker } from "@mui/x-date-pickers/TimePicker";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import dayjs from "dayjs";
+import TimePickerSection from "@/app/components/features/TimePickerSection";
 
 export default function AddResourceForm({ user }: any) {
   const [message, setMessage] = useState("");
@@ -20,16 +17,9 @@ export default function AddResourceForm({ user }: any) {
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
   const [openTime, setOpenTime] = useState<dayjs.Dayjs | null>(null);
   const [closeTime, setCloseTime] = useState<dayjs.Dayjs | null>(null);
-
-  // const [state, formAction, pending] = useActionState(addResource, initialState)
-  const [categories, setCategories] = useState<{ id: number; name: string }[]>(
-    []
-  );
-  const [imageUrl, setImageUrl] = useState<string | null>(null); // State to hold the image URL
+  const [categories, setCategories] = useState<{ id: number; name: string }[]>([]);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
   const router = useRouter();
-  const cleanOpenDays = Array.from(
-    new Set(selectedDays.map((d) => d.trim().slice(0, 3))) // standardize to "Mon", "Tue", etc.
-  ).join(",");
 
   // Fetch categories from the server action
   useEffect(() => {
@@ -39,13 +29,6 @@ export default function AddResourceForm({ user }: any) {
     }
     fetchCategories();
   }, []);
-
-  const handleDayChange = (
-    event: React.MouseEvent<HTMLElement>,
-    newDays: string[]
-  ) => {
-    setSelectedDays(newDays);
-  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -59,14 +42,13 @@ export default function AddResourceForm({ user }: any) {
     const url = result?.info?.secure_url;
     if (url) {
       setImageUrl(url);
-      console.log("image url: ", url); // Use 'image' to match addResource
+      console.log("image url: ", url);
     }
   }
 
   const handleFormAction = async (formData: FormData) => {
     setLoading(true);
     setMessage("");
-    // Append the image URL to the FormData with the key 'image' (matching server action)
     if (imageUrl) {
       formData.append("image", imageUrl);
     }
@@ -75,8 +57,8 @@ export default function AddResourceForm({ user }: any) {
       setLoading(false);
       if (result.success) {
         setMessage(result.success);
-        setImageUrl(null); // reset image url after successful submission
-        router.push("/profile"); // '/profile/$user.id}
+        setImageUrl(null);
+        router.push("/profile");
       } else {
         setMessage(result.error || "Failed to add resource.");
       }
@@ -131,14 +113,14 @@ export default function AddResourceForm({ user }: any) {
           required
           className="w-full p-2 border rounded"
         />
-        {/* optional  */}
+
         <Accordion defaultExpanded>
           <AccordionSummary
             expandIcon={<ArrowDropDownIcon />}
             aria-controls="optional-content"
             id="optional-content"
           >
-            <Typography component="span"> Add more details</Typography>
+            <Typography component="span">Add more details</Typography>
           </AccordionSummary>
           <AccordionDetails>
             <Typography>
@@ -150,70 +132,15 @@ export default function AddResourceForm({ user }: any) {
               placeholder="City"
               className="w-full p-2 border rounded"
             />
-            {/* <input
-              type="text"
-              name="openDays"
-              placeholder="Open Days (e.g., Mon-Fri)"
-              className="w-full p-2 border rounded"
+
+            <TimePickerSection
+              selectedDays={selectedDays}
+              openTime={openTime}
+              closeTime={closeTime}
+              onDayChange={(_, newDays) => setSelectedDays(newDays)}
+              onOpenTimeChange={setOpenTime}
+              onCloseTimeChange={setCloseTime}
             />
-            <input
-              type="time"
-              name="openTime"
-              placeholder="opening time"
-              className="w-full p-2 border rounded"
-            />
-            <input
-              type="time"
-              name="closeTime"
-              placeholder="closing time"
-              className="w-full p-2 border rounded"
-            /> */}
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <div className="space-y-4">
-                <p className="font-semibold mb-1">Open Days </p>
-                <ToggleButtonGroup
-                  value={selectedDays}
-                  onChange={handleDayChange}
-                  aria-label="Weekdays"
-                  size="small"
-                >
-                  {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
-                    (day) => (
-                      <ToggleButton key={day} value={day}>
-                        {day}
-                      </ToggleButton>
-                    )
-                  )}
-                </ToggleButtonGroup>
-                <input
-                  type="hidden"
-                  name="openDays"
-                  value={Array.from(new Set(selectedDays.map((d) => d.trim().slice(0, 3)))).join(",")}
-                />
-              </div>
-              <div>
-                <TimePicker
-                  label="Open Time"
-                  value={openTime}
-                  onChange={(newTime) => setOpenTime(newTime)}
-                />
-                <TimePicker
-                  label="Close Time"
-                  value={closeTime}
-                  onChange={(newTime) => setCloseTime(newTime)}
-                />
-                <input
-                  type="hidden"
-                  name="openTime"
-                  value={openTime ? openTime.format("hh:mm A") : ""}
-                />
-                <input
-                  type="hidden"
-                  name="closeTime"
-                  value={closeTime ? closeTime.format("hh:mm A") : ""}
-                />
-              </div>
-            </LocalizationProvider>
 
             <input
               type="tel"
@@ -241,7 +168,6 @@ export default function AddResourceForm({ user }: any) {
               className="w-full p-2 border rounded"
             />
 
-            {/* Cloudinary image upload widget */}
             {imageUrl && <input type="hidden" name="image" value={imageUrl} />}
             <CldUploadWidget
               signatureEndpoint="/api/sign-image"
@@ -261,18 +187,10 @@ export default function AddResourceForm({ user }: any) {
           </AccordionDetails>
         </Accordion>
 
-        {/* Display the uploaded image URL (optional) */}
-        {/* {imageUrl && (
-          <div className="mt-2">
-            <p className="text-sm">Uploaded Image: {imageUrl}</p>
-          </div>
-        )} */}
-
         <button
           type="submit"
           className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
           disabled={loading}
-          // disabled = {pending}
         >
           {loading ? "Submitting..." : "Submit Resource"}
         </button>
