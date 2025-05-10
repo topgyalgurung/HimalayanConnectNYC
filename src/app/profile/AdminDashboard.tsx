@@ -18,7 +18,7 @@ import { useState } from "react";
 import React from "react";
 import { useFetchResources } from "../hooks/useFetchResources";
 import { useFetchResourceEdit } from "../hooks/useFetchResourceEdit";
-import Popup from "../components/ui/Popup";
+import Popup from "../components/dashboard/Popup";
 import { usePopup } from "../hooks/usePopup";
 import { useLogout } from "../hooks/useLogout";
 import { format } from "date-fns";
@@ -28,6 +28,7 @@ import { AdminResourceTable } from "../components/dashboard/AdminResourceTable";
 import { updateResourceStatus } from "../actions/resources/updateResourceStatus";
 import { toast } from "react-hot-toast";
 import type { Resource } from "../types/resource";
+import ResourceDetailsPopup from '../components/dashboard/ResourceDetailsPopup';
 
 // const formatTime = (timeString: string | undefined) => {
 //   if (!timeString) return "";
@@ -151,7 +152,7 @@ export default function AdminDashboard() {
         <div className="w-full md:w-2/3 p-4">
           <div className="bg-white shadow-lg rounded-lg p-6">
             <h2 className="text-2xl font-bold mb-4">Dashboard</h2>
-            <p className="text-gray-600">Manage your resources</p>
+            <p className="text-gray-600 mb-4">Manage your resources</p>
 
             <TabNavigation
               activeTab={activeTab}
@@ -169,32 +170,11 @@ export default function AdminDashboard() {
               isLoading={isLoading}
             />
 
-            <Popup
+            <ResourceDetailsPopup
               anchor={resourceAnchorEl}
               open={isOpen}
               onClose={handleClosePopup}
-              title={selectedResource?.name || "No Title"}
-              content={[
-                selectedResource?.description &&
-                  `Description: ${selectedResource.description}`,
-                selectedResource?.city && `City: ${selectedResource.city}`,
-                selectedResource?.address &&
-                  `Address: ${selectedResource.address}`,
-                selectedResource?.openDays &&
-                  `Open Days: ${selectedResource.openDays}`,
-                selectedResource?.openTime &&
-                  `Open Time: ${format(
-                    new Date(selectedResource.openTime),
-                    "hh:mm a"
-                  )}`,
-                selectedResource?.closeTime &&
-                  `Close Time: ${format(
-                    new Date(selectedResource.closeTime),
-                    "hh:mm a"
-                  )}`,
-              ]
-                .filter(Boolean)
-                .join("\n")}
+              resource={selectedResource}
             />
           </div>
         </div>

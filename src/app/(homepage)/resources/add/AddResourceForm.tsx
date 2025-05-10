@@ -10,6 +10,7 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import dayjs from "dayjs";
 import TimePickerSection from "@/app/components/features/TimePickerSection";
+import CitySelect from "@/app/components/features/CitySelect";
 
 export default function AddResourceForm({ user }: any) {
   const [message, setMessage] = useState("");
@@ -21,7 +22,6 @@ export default function AddResourceForm({ user }: any) {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const router = useRouter();
 
-  // Fetch categories from the server action
   useEffect(() => {
     async function fetchCategories() {
       const data = await getCategories();
@@ -71,130 +71,148 @@ export default function AddResourceForm({ user }: any) {
   };
 
   return (
-    <div className="max-w-2xl mt-5 mx-auto p-6 bg-white shadow-lg rounded-md">
-      <h2 className="text-2xl font-bold mb-4">Add a New Resource</h2>
-      <h4>Provide some information about this place</h4>
-      {message && (
-        <p
-          className={`text-sm text-center ${
-            message.includes("success") ? "text-green-500" : "text-red-500"
-          }`}
-        >
-          {message}
-        </p>
-      )}
+    <div className="max-w-2xl mx-auto my-4 px-4 sm:px-6 lg:px-8 pb-8">
+      <div className="bg-white shadow-lg rounded-lg p-4 sm:p-6 space-y-4">
+        <div className="space-y-2">
+          <h2 className="text-2xl font-bold text-gray-900">Add a New Resource</h2>
+          <h4 className="text-gray-600">Provide some information about this place</h4>
+        </div>
 
-      <form action={handleFormAction} className="space-y-4">
-        <input
-          type="text"
-          name="name"
-          placeholder="Resource Name"
-          required
-          className="w-full p-2 border rounded"
-        />
-
-        <select
-          name="categoryId"
-          required
-          className="w-full p-2 border rounded"
-        >
-          <option value="">Select a category</option>
-          {categories.map((category) => (
-            <option key={category.id} value={category.id}>
-              {category.name}
-            </option>
-          ))}
-        </select>
-
-        <input
-          type="text"
-          name="address"
-          placeholder="Address"
-          required
-          className="w-full p-2 border rounded"
-        />
-
-        <Accordion defaultExpanded>
-          <AccordionSummary
-            expandIcon={<ArrowDropDownIcon />}
-            aria-controls="optional-content"
-            id="optional-content"
+        {message && (
+          <p
+            className={`text-sm text-center py-2 px-4 rounded-md ${
+              message.includes("success") 
+                ? "bg-green-50 text-green-700" 
+                : "bg-red-50 text-red-700"
+            }`}
           >
-            <Typography component="span">Add more details</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Typography>
-              Add phone, hours, website, photos to verify this place{" "}
-            </Typography>
+            {message}
+          </p>
+        )}
+
+        <form action={handleFormAction} className="space-y-4">
+          <div className="space-y-3">
             <input
               type="text"
-              name="city"
-              placeholder="City"
-              className="w-full p-2 border rounded"
+              name="name"
+              placeholder="Resource Name"
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
 
-            <TimePickerSection
-              selectedDays={selectedDays}
-              openTime={openTime}
-              closeTime={closeTime}
-              onDayChange={(_, newDays) => setSelectedDays(newDays)}
-              onOpenTimeChange={setOpenTime}
-              onCloseTimeChange={setCloseTime}
-            />
-
-            <input
-              type="tel"
-              name="phone"
-              placeholder="Phone Number"
-              className="w-full p-2 border rounded"
-            />
-
-            <input
-              type="url"
-              name="url"
-              placeholder="Website"
-              className="w-full p-2 border rounded"
-            />
-            <input
-              type="url"
-              name="facebookLink"
-              placeholder="Facebook Link"
-              className="w-full p-2 border rounded"
-            />
-
-            <textarea
-              name="description"
-              placeholder="Description"
-              className="w-full p-2 border rounded"
-            />
-
-            {imageUrl && <input type="hidden" name="image" value={imageUrl} />}
-            <CldUploadWidget
-              signatureEndpoint="/api/sign-image"
-              options={{ sources: ["local", "url"] }}
-              onSuccess={handleUploadSuccess}
+            <select
+              name="categoryId"
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              aria-label="Select a category"
             >
-              {({ open }) => (
-                <button
-                  type="button"
-                  className="bg-indigo-500 rounded py-2 px-4 mb-4 text-white"
-                  onClick={() => open()}
-                >
-                  Upload an Image
-                </button>
-              )}
-            </CldUploadWidget>
-          </AccordionDetails>
-        </Accordion>
+              <option value="">Select a category</option>
+              {categories.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
 
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
-          disabled={loading}
-        >
-          {loading ? "Submitting..." : "Submit Resource"}
-        </button>
-      </form>
+            <input
+              type="text"
+              name="address"
+              placeholder="Address"
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+
+          <Accordion defaultExpanded className="border border-gray-200 rounded-md">
+            <AccordionSummary
+              expandIcon={<ArrowDropDownIcon />}
+              aria-controls="optional-content"
+              id="optional-content"
+              className="hover:bg-gray-50"
+            >
+              <Typography component="span" className="font-medium">
+                Add more details
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails className="pt-2">
+              <Typography className="text-gray-600 mb-2">
+                Add phone, hours, website, photos to verify this place
+              </Typography>
+
+              <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+
+                <CitySelect />
+
+                <div className="flex justify-center">
+                  <TimePickerSection
+                    selectedDays={selectedDays}
+                    openTime={openTime}
+                    closeTime={closeTime}
+                    onDayChange={(_, newDays) => setSelectedDays(newDays)}
+                    onOpenTimeChange={setOpenTime}
+                    onCloseTimeChange={setCloseTime}
+                  />
+                </div>
+
+                <input
+                  type="tel"
+                  name="phone"
+                  placeholder="Phone Number"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+
+                <input
+                  type="url"
+                  name="url"
+                  placeholder="Website"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+
+                <input
+                  type="url"
+                  name="facebookLink"
+                  placeholder="Facebook Link"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+
+                <textarea
+                  name="description"
+                  placeholder="Description"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[80px]"
+                />
+              </div>
+
+              {imageUrl && <input type="hidden" name="image" value={imageUrl} />}
+              
+              <div className="pt-4 mt-4 border-t border-gray-200">
+                <CldUploadWidget
+                  signatureEndpoint="/api/sign-image"
+                  options={{ sources: ["local", "url"] }}
+                  onSuccess={handleUploadSuccess}
+                >
+                  {({ open }) => (
+                    <button
+                      type="button"
+                      className="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200"
+                      onClick={() => open()}
+                    >
+                      Upload an Image
+                    </button>
+                  )}
+                </CldUploadWidget>
+              </div>
+            </AccordionDetails>
+          </Accordion>
+
+          <button
+            type="submit"
+            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed mt-4"
+            disabled={loading}
+          >
+            {loading ? "Submitting..." : "Submit Resource"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

@@ -10,7 +10,7 @@
  * @param {boolean} props.open - Controls popup visibility
  * @param {Function} props.onClose - Handler for closing the popup
  * @param {string} props.title - Popup title
- * @param {string} props.content - Popup content
+ * @param {ReactNode} props.content - Popup content
  * 
  * @example
  * <Popup
@@ -23,7 +23,7 @@
  */
 "use client";
 
-import React from "react";
+import React, { ReactNode } from "react";
 import { Unstable_Popup as BasePopup } from "@mui/base/Unstable_Popup";
 import { styled, Box, Typography, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
@@ -37,35 +37,70 @@ const StyledPopup = styled("div")(({ theme }) => ({
   background:
     theme.palette.mode === "dark" ? theme.palette.background.paper : "#fff",
   borderRadius: 8,
-  padding: "16px 24px",
-  minWidth: 320,
-  maxWidth: 400,
+  padding: "8px 12px",
+  minWidth: 280,
+  maxWidth: 360,
+  maxHeight: "65vh",
   position: "relative",
+  overflow: "hidden",
+  marginTop: 2,
 }));
 
 const PopupBody = styled(Box)(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
-  gap: theme.spacing(2),
+  gap: theme.spacing(1),
+  maxHeight: "calc(65vh - 50px)",
+  overflowY: "auto",
+  paddingRight: 2,
+  "&::-webkit-scrollbar": {
+    width: "4px",
+  },
+  "&::-webkit-scrollbar-track": {
+    background: "#f1f1f1",
+    borderRadius: "2px",
+  },
+  "&::-webkit-scrollbar-thumb": {
+    background: "#888",
+    borderRadius: "2px",
+    "&:hover": {
+      background: "#555",
+    },
+  },
+}));
+
+const PopupHeader = styled(Box)(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  marginBottom: theme.spacing(1),
+  paddingBottom: theme.spacing(0.5),
+  borderBottom: `1px solid ${theme.palette.divider}`,
+  position: "sticky",
+  top: 0,
+  backgroundColor: theme.palette.background.paper,
+  zIndex: 1,
+  padding: "4px 0",
 }));
 
 const CloseButton = styled(IconButton)(({ theme }) => ({
   position: "absolute",
-  right: 8,
-  top: 8,
+  right: 2,
+  top: 2,
   color: theme.palette.grey[500],
+  padding: 2,
   "&:hover": {
     color: theme.palette.grey[700],
   },
 }));
 
-type CustomPopupProps = {
+interface PopupProps {
   anchor: HTMLElement | null;
   open: boolean;
   onClose: () => void;
   title: string;
-  content: string;
-};
+  content: ReactNode;
+}
 
 export default function Popup({
   anchor,
@@ -73,21 +108,25 @@ export default function Popup({
   onClose,
   title,
   content,
-}: CustomPopupProps) {
+}: PopupProps) {
   return (
     <BasePopup 
       open={open} 
       anchor={anchor}
-      placement="bottom-start"
-      offset={4}
+      placement="bottom"
+      offset={2}
+      style={{ zIndex: 1500 }}
     >
       <StyledPopup>
-        <CloseButton onClick={onClose} size="small">
-          <CloseIcon />
-        </CloseButton>
+        <PopupHeader>
+          <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>Your Submission</Typography>
+          <CloseButton onClick={onClose} size="small">
+            <CloseIcon fontSize="small" />
+          </CloseButton>
+        </PopupHeader>
         <PopupBody>
-          <Typography variant="h6">{title}</Typography>
-          <Typography sx={{ whiteSpace: "pre-line" }}>{content}</Typography>
+          <Typography variant="body2" sx={{ mb: 0.5, color: 'text.secondary' }}>Name: {title}</Typography>
+          {content}
         </PopupBody>
       </StyledPopup>
     </BasePopup>

@@ -65,7 +65,8 @@ export default function SearchInput() {
       <TextField
         id="search-bar"
         type="search"
-        placeholder="Search name, category, or location"
+        placeholder="Search name"
+        // category, or location" not working now 
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         variant="outlined"

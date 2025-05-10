@@ -42,7 +42,7 @@ export default function UserProfileMenu() {
       <div className="flex items-center gap-4">
         <Link
           href="/login"
-          className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+          className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-lg font-medium"
         >
           Login / Sign Up
         </Link>
@@ -62,8 +62,15 @@ export default function UserProfileMenu() {
         <Tooltip title="Account">
           <IconButton
             onClick={handleClick}
-            size="medium"
-            sx={{ ml: 2 }}
+            size="large"
+            sx={{ 
+              ml: 2,
+              padding: 0,
+              '&:hover': {
+                transform: 'scale(1.05)',
+                transition: 'transform 0.2s ease-in-out'
+              }
+            }}
             aria-controls={open ? "account-menu" : undefined}
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
@@ -71,9 +78,9 @@ export default function UserProfileMenu() {
             <Image
               src={user?.image || "/default-avatar.jpg"}
               alt="User Avatar"
-              width={40}
-              height={40}
-              className="rounded-full"
+              width={56}
+              height={56}
+              className="rounded-full shadow-sm hover:shadow-md transition-shadow duration-200"
             />
           </IconButton>
         </Tooltip>
@@ -87,27 +94,69 @@ export default function UserProfileMenu() {
         onClick={handleClose}
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+        PaperProps={{
+          elevation: 3,
+          sx: {
+            mt: 1.5,
+            minWidth: '200px',
+            borderRadius: '12px',
+            overflow: 'visible',
+            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.15))',
+            '&:before': {
+              content: '""',
+              display: 'block',
+              position: 'absolute',
+              top: 0,
+              right: 14,
+              width: 10,
+              height: 10,
+              bgcolor: 'background.paper',
+              transform: 'translateY(-50%) rotate(45deg)',
+              zIndex: 0,
+            },
+          },
+        }}
       >
-        <MenuItem onClick={handleClose}>
-          <Link href="/profile" className="hover:opacity-80 transition-opacity">
+        <MenuItem 
+          onClick={handleClose}
+          sx={{
+            padding: '12px 16px',
+            '&:hover': {
+              backgroundColor: 'rgba(59, 130, 246, 0.08)',
+            },
+          }}
+        >
+          <Link href="/profile" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
             <Image
               src={user?.image || "/default-avatar.jpg"}
               alt="User Avatar"
-              width={40}
-              height={40}
+              width={48}
+              height={48}
               className="rounded-full"
             />
-            Profile
+            <div className="flex flex-col">
+              <span className="font-medium text-gray-900">Profile</span>
+              <span className="text-sm text-gray-500">View your profile</span>
+            </div>
           </Link>
         </MenuItem>
 
-        <Divider />
+        <Divider sx={{ my: 1 }} />
 
-        <MenuItem onClick={handleLogout}>
-          <ListItemIcon>
-            <Logout fontSize="small" />
+        <MenuItem 
+          onClick={handleLogout}
+          sx={{
+            padding: '12px 16px',
+            color: '#EF4444',
+            '&:hover': {
+              backgroundColor: 'rgba(239, 68, 68, 0.08)',
+            },
+          }}
+        >
+          <ListItemIcon sx={{ minWidth: '40px' }}>
+            <Logout fontSize="small" sx={{ color: '#EF4444' }} />
           </ListItemIcon>
-          Logout
+          <span className="font-medium">Logout</span>
         </MenuItem>
       </Menu>
     </div>

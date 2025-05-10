@@ -60,7 +60,7 @@ export default function TimePickerSection({
           />
         </div>
 
-        <div className="flex gap-4">
+        <div className="flex gap-4 mt-4">
           <TimePicker
             label="Open Time"
             value={openTime}
