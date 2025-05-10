@@ -41,6 +41,7 @@ export async function getCategories() {
   }
 }
 
+
 // Server action 
 // use zod for form validation 
 export async function addResource(formData: FormData) {
@@ -94,7 +95,7 @@ export async function addResource(formData: FormData) {
     /**
      * Prisma returns the rating field as a Decimal object (from the @db.Decimal(2, 1) in your schema), 
      * but Next.js Server Actions can only return plain JavaScript objects to Client Components. 
-     * The Decimal type from Prisma isn’t serializable by default in this context.
+     * The Decimal type from Prisma isn't serializable by default in this context.
      */
     // Convert Decimal to plain number before returning
     const serializedResource = {
@@ -114,7 +115,7 @@ export async function addEditResource(formData: FormData) {
   if (!formData) {
     return { error: "Form data is missing" };
   }
-  // using my custom session not next-auth
+  
   const session = await getSession(); 
 
   if (!session || !session?.userId) {
@@ -123,46 +124,76 @@ export async function addEditResource(formData: FormData) {
 
   const userId = parseInt(session.userId, 10);
 
-  const data = Object.fromEntries(formData.entries()) as unknown as EditResourceInput;
-  console.log("form data received for edit: ", data);
+  // Convert FormData to a plain object and log it
+  const formDataObj = Object.fromEntries(formData.entries());
+  console.log("Raw form data received:", formDataObj);
+
+  const data = formDataObj as unknown as EditResourceInput;
+  console.log("Parsed form data:", data);
+  
   if (!data || Object.keys(data).length === 0) {
     return { error: "No form data received" };
   }
   
-  const {  name, address, phone, url,openDays, openTime, closeTime } = data;
   const resourceId = parseInt(data.resourceId as string, 10);
   if (isNaN(resourceId)) {
     return { error: "Invalid or missing resource ID" };
   }
 
   try {
-    const editResource = await prisma.resourceEditSuggestion.create({
-      data: {
-        suggestedById:userId, // attach the logged in user's Id(user from session)
-        resourceId,
-        name: name || "Untitled",
-        address: address || "Unknown",
-        phone: phone || null,
-        url: url || null,
-        openDays: openDays || null,
-        openTime: openTime
-        ? parse(openTime, "hh:mm a", new Date())
-        : null,
-      closeTime: closeTime
-        ? parse(closeTime, "hh:mm a", new Date())
-        : null,
-        status:"PENDING"
+    // Helper function to check if a field was changed (not null)
+    const isFieldChanged = (value: string | null | undefined) => {
+      const result = value !== 'null' && value !== null && value !== undefined && value !== '';
+      console.log(`Checking field value: ${value}, isChanged: ${result}`);
+      return result;
+    };
+
+    // Helper function to parse time if it exists
+    const parseTimeIfExists = (timeStr: string | null | undefined) => {
+      if (!isFieldChanged(timeStr)) return null;
+      try {
+        return parse(timeStr!, "HH:mm:ss", new Date());
+      } catch (error) {
+        console.error("Error parsing time:", error);
+        return null;
       }
-    })
+    };
+
+    // Create the data object with only changed fields
+    const suggestionData = {
+      suggestedById: userId,
+      resourceId,
+      name: isFieldChanged(data.name) ? data.name : null,
+      address: isFieldChanged(data.address) ? data.address : null,
+      phone: isFieldChanged(data.phone) ? data.phone : null,
+      url: isFieldChanged(data.url) ? data.url : null,
+      openDays: isFieldChanged(data.openDays) ? data.openDays : null,
+      openTime: parseTimeIfExists(data.openTime),
+      closeTime: parseTimeIfExists(data.closeTime),
+      status: "PENDING" as const
+    };
+
+    console.log("Creating suggestion with data:", suggestionData);
+
+    const editResource = await prisma.resourceEditSuggestion.create({
+      data: suggestionData
+    });
   
     return {
-      success: "resource edit submitted successfully, ",
+      success: "Resource edit submitted successfully",
       resourceEditSuggestion: editResource,
-    }
+    };
     
   } catch (error) {
     console.error("Error submitting edit resource: ", error);
     return { error: "Failed to submit edit resource" };
   }
- 
+}
+
+// will do this later 
+export async function addReviewResource(formData: FormData) {
+  if (!formData) {
+    return { error: "No form data received" };
+  }
+  
 }

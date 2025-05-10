@@ -18,22 +18,22 @@ export async function GET(req: NextRequest,
       include: {
         user: {
           select: {
-            firstName: true
+            firstName: true,
+            lastName: true,
+            image: true,
+            createdAt: true
           }
         },
       },
     });
+
     return NextResponse.json(reviews);
-  } catch (error:any) {
+  } catch (error: unknown) {
     console.error("Error showing reviews:", {
-      message: error.message,
-      // stack: error.stack,
+      message: error instanceof Error ? error.message : 'Unknown error',
     });
     return NextResponse.json({ error: "Server error" }, { status: 500 });
-
   }
-
-  
 }
 export async function DELETE(req: NextRequest,
   props: { params: Promise<{ id: string }> })

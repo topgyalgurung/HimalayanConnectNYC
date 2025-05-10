@@ -1,4 +1,13 @@
-
+/**
+ * useFetchResources Hook
+ * 
+ * A custom hook for fetching and managing resource data.
+ * Handles API calls, error handling, and provides a refetch mechanism.
+ * 
+ * @returns {Object} Resource data and control functions
+ * @returns {Resource[]} resources - Array of fetched resources
+ * @returns {Function} refetch - Function to manually refresh resources
+ */
 import { useState, useEffect } from "react";
 import type { Resource } from "@/app/types/resource";
 

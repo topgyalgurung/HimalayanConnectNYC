@@ -18,7 +18,7 @@ import { useState } from "react";
 import React from "react";
 import { useFetchResources } from "../hooks/useFetchResources";
 import { useFetchResourceEdit } from "../hooks/useFetchResourceEdit";
-import Popup from "../components/ui/Popup";
+import Popup from "../components/dashboard/Popup";
 import { usePopup } from "../hooks/usePopup";
 import { useLogout } from "../hooks/useLogout";
 import { format } from "date-fns";
@@ -27,16 +27,18 @@ import { TabNavigation } from "../components/dashboard/TabNavigation";
 import { AdminResourceTable } from "../components/dashboard/AdminResourceTable";
 import { updateResourceStatus } from "../actions/resources/updateResourceStatus";
 import { toast } from "react-hot-toast";
+import type { Resource } from "../types/resource";
+import ResourceDetailsPopup from '../components/dashboard/ResourceDetailsPopup';
 
-const formatTime = (timeString: string | undefined) => {
-  if (!timeString) return "";
-  try {
-    return format(new Date(timeString), "hh:mm a");
-  } catch (error) {
-    console.error("Invalid date:", timeString);
-    return "Invalid time";
-  }
-};
+// const formatTime = (timeString: string | undefined) => {
+//   if (!timeString) return "";
+//   try {
+//     return format(new Date(timeString), "hh:mm a");
+//   } catch (error) {
+//     console.error("Invalid date:", timeString);
+//     return "Invalid time";
+//   }
+// };
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("new");
@@ -61,29 +63,23 @@ export default function AdminDashboard() {
   const handleStatusChange = async (
     resourceId: string,
     newStatus: string,
-    resourceType: string
+    resourceType: "new" | "edit"
   ) => {
     try {
       setIsLoading(true);
-      const result = await updateResourceStatus(
-        resourceId,
-        newStatus,
-        resourceType
-      );
 
-      if (!result.success) {
-        throw new Error(result.error || "Failed to update status");
-      }
-
-      toast.success(
-        `Successfully updated ${resourceType} status to ${newStatus}`
+      await toast.promise(
+        updateResourceStatus(resourceId, newStatus, resourceType),
+        {
+          loading: "Updating status...",
+          success: `Successfully updated ${resourceType} status to ${newStatus}`,
+          error: (err: Error) => `Failed to update status: ${err.message}`,
+        }
       );
 
       await Promise.all([refetchResources(), refetchEditResources()]);
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "Failed to update status"
-      );
+      console.error("Error updating status:", error);
     } finally {
       setIsLoading(false);
     }
@@ -94,7 +90,7 @@ export default function AdminDashboard() {
 
    */
   const handleViewClick = (
-    resource: any,
+    resource: Resource,
     event: React.MouseEvent<HTMLElement>
   ) => {
     if (resourceAnchorEl === event.currentTarget) {
@@ -156,7 +152,7 @@ export default function AdminDashboard() {
         <div className="w-full md:w-2/3 p-4">
           <div className="bg-white shadow-lg rounded-lg p-6">
             <h2 className="text-2xl font-bold mb-4">Dashboard</h2>
-            <p className="text-gray-600">Manage your resources</p>
+            <p className="text-gray-600 mb-4">Manage your resources</p>
 
             <TabNavigation
               activeTab={activeTab}
@@ -171,34 +167,14 @@ export default function AdminDashboard() {
               resourceAnchorEl={resourceAnchorEl}
               onViewClick={handleViewClick}
               onStatusChange={handleStatusChange}
+              isLoading={isLoading}
             />
 
-            <Popup
+            <ResourceDetailsPopup
               anchor={resourceAnchorEl}
               open={isOpen}
               onClose={handleClosePopup}
-              title={selectedResource?.name || "No Title"}
-              content={[
-                selectedResource?.description &&
-                  `Description: ${selectedResource.description}`,
-                selectedResource?.city && `City: ${selectedResource.city}`,
-                selectedResource?.address &&
-                  `Address: ${selectedResource.address}`,
-                selectedResource?.openDays &&
-                  `Open Days: ${selectedResource.openDays}`,
-                selectedResource?.openTime &&
-                  `Open Time: ${format(
-                    new Date(selectedResource.openTime),
-                    "hh:mm a"
-                  )}`,
-                selectedResource?.closeTime &&
-                  `Close Time: ${format(
-                    new Date(selectedResource.closeTime),
-                    "hh:mm a"
-                  )}`,
-              ]
-                .filter(Boolean)
-                .join("\n")}
+              resource={selectedResource}
             />
           </div>
         </div>

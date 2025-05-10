@@ -2,8 +2,10 @@
 
 import { revalidatePath } from 'next/cache';
 import prisma from '@/app/lib/prisma';
-import { ResourceStatus } from './types';
+import { ResourceStatus } from '@prisma/client';
 
+// this is the action for the admin to update the status of the resource
+// todo: when edit status is approved, update the resource with the new values
 export async function updateResourceStatus(
   resourceId: string,
   newStatus: ResourceStatus,
@@ -20,10 +22,41 @@ export async function updateResourceStatus(
     }
 
     if (resourceType === "edit") {
+      // First fetch the edit suggestion
+      const resourceEditSuggestion = await prisma.resourceEditSuggestion.findUnique({
+        where: { id: resourceIdNum }
+      });
+
+      if (!resourceEditSuggestion) {
+        return { success: false, error: "Edit suggestion not found" };
+      }
+
       await prisma.resourceEditSuggestion.update({
         where: { id: resourceIdNum },
         data: { status: newStatus },
       });
+
+      // If the suggestion is approved, update the resource
+      if (newStatus === "APPROVED") {
+        // Create an update object with only the fields that have values
+        const updateData: any = {};
+        
+        if (resourceEditSuggestion.name) updateData.name = resourceEditSuggestion.name;
+        if (resourceEditSuggestion.address) updateData.address = resourceEditSuggestion.address;
+        if (resourceEditSuggestion.phone) updateData.phone = resourceEditSuggestion.phone;
+        if (resourceEditSuggestion.url) updateData.url = resourceEditSuggestion.url;
+        if (resourceEditSuggestion.openDays) updateData.openDays = resourceEditSuggestion.openDays;
+        if (resourceEditSuggestion.openTime) updateData.openTime = resourceEditSuggestion.openTime;
+        if (resourceEditSuggestion.closeTime) updateData.closeTime = resourceEditSuggestion.closeTime;
+
+        console.log('Updating resource with data:', updateData);
+
+        // Update the resource with the changed fields
+        await prisma.resource.update({
+          where: { id: resourceEditSuggestion.resourceId },
+          data: updateData
+        });
+      }
     } else {
       await prisma.resource.update({
         where: { id: resourceIdNum },

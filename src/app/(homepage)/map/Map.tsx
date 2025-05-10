@@ -1,7 +1,27 @@
-/* 
-Since the map was loaded on client side, 
-we need to make this component client rendered as well else error occurs
-*/
+
+/**
+ * @file Map.tsx
+ * @description Interactive map component for displaying community resources with custom markers and info windows.
+ * Implements Google Maps integration with custom markers for different resource categories.
+ * 
+ * @component MapView
+ * @description Main map container component that renders the Google Maps interface and handles resource display.
+ * Manages the display of resource details, edit forms, and review forms in overlay cards.
+ * 
+ * @component Markers
+ * @description Renders custom markers for each resource on the map with category-specific icons.
+ * Handles marker interaction hover now but can close with x now (hover/click) and displays info windows with resource details.
+ * 
+ * @requires @vis.gl/react-google-maps - Google Maps React components
+ * @requires next/image - Image optimization
+ * @requires Resource type - Resource data structure
+ * @requires ResourceDetailsCard - Resource details display component
+ * @requires ResourceSuggestCard - Resource edit form component
+ * @requires ReviewSubmitCard - Review submission component
+ * 
+ * @todo - on hover on each resource card in resourcelist, light up the marker on the map 
+ */
+
 "use client";
 
 import {
@@ -92,9 +112,6 @@ export default function MapView({
   );
 }
 
-//each point
-// type Point = google.maps.LatLngLiteral & { key: string };
-// type Props = { points: Point[] };
 interface MarkersProps {
   points: Resource[];
 }
@@ -112,7 +129,6 @@ const Markers = ({ points }: MarkersProps) => {
         const shouldShowInfoWindow = activeMarkerId === resource.id;
 
         // Customize pin background color based on resource category
-        // let pinBackground = "red"; // Default color
         let image = "https://cdn-icons-png.flaticon.com/512/1946/1946436.png"; // default
 
         switch (resource.ResourceCategory?.name?.toLowerCase()) {
@@ -140,7 +156,6 @@ const Markers = ({ points }: MarkersProps) => {
           <div
             key={resource.id}
             onClick={() => setActiveMarkerId(resource.id)}
-            // onMouseOut={() => setActiveMarkerId(null)}
             onMouseOver={() => setActiveMarkerId(resource.id)}
             className="cursor-pointer"
           >
@@ -151,7 +166,6 @@ const Markers = ({ points }: MarkersProps) => {
                 lng: location?.longitude ?? 0,
               }}
             >
-              {/* customize pin color based on resource category */}
               <Image
                 src={image}
                 alt={`${resource.ResourceCategory?.name} icon`}
@@ -161,7 +175,6 @@ const Markers = ({ points }: MarkersProps) => {
               />
             </AdvancedMarker>
 
-            {/* Show InfoWindow if the marker is clicked or hovered */}
             {shouldShowInfoWindow && (
               <InfoWindow
                 position={{
@@ -176,7 +189,7 @@ const Markers = ({ points }: MarkersProps) => {
                   </h1>
                   <p className="text-sm text-gray-600"> 📍{resource.address}</p>
                   <p className="text-sm text-gray-500 mt-2">
-                    {resource.description.length > 200
+                    {resource.description?.length > 200
                       ? `${resource.description.slice(0, 200)}...`
                       : resource.description}
                   </p>

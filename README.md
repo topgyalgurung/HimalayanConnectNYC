@@ -83,6 +83,10 @@ src/
 - `UserDashboard.tsx`: User profile and resource management
 - `TimePickerSection.tsx`: Time and day selection for resources
 
+### Component Hierarchy
+![Component Hierarchy](/public/ComponentHierarchy.png)
+
+
 ### Backend Services
 - Resource management (CRUD operations)
 - User authentication and authorization
@@ -92,20 +96,31 @@ src/
 
 ## Development Notes
 
-### Form Validation
-- Using Zod for form validation
+### Form Validation & Data Handling
+- Using Zod for form validation and type safety
 - Server Action size limit: 1MB
 - Image handling through Cloudinary
+- Note: Large forms (images + text + hours) may hit 1MB Server Action limit
+- Solutions:
+  1. Increase body size in next.config.js
+  2. Use Cloudinary + store URL (current implementation ✅)
 
-### Authentication
-- Custom JWT-based session management
-- Session cookie for secure storage
-- Server-side session validation
-
-### Client Session Management
-- UserProvider: React Context for client-side session
-- useUser hook for accessing session data
+### Authentication & Session Management
+- Custom JWT-based session implementation (not using next-auth)
+- Secure session cookie storage
 - Server-side session validation through getSession()
+
+### Client-Side Architecture
+1. **UserProvider (React Context)**
+   - Wraps application
+   - Initializes session data on mount
+   - Manages client-side session state
+   - Provides useUser hook for accessing session data
+
+2. **Session Components**
+   - `lib/session.ts`: Server-only session cookie handling
+   - `UserProvider`: Client-side session management via API
+   - `useUser`: Client-side hook for session access
 
 ## Getting Started
 
@@ -154,29 +169,5 @@ src/
 
 ## Form Validation & Data Handling
 
-### Zod Form Validation
-- Using Zod for form validation and type safety
-- Note: Large forms (images + text + hours) may hit 1MB Server Action limit
-- Solutions:
-  1. Increase body size in next.config.js
-  2. Use Cloudinary + store URL (current implementation ✅)
-
-## Authentication System
-
-### Custom JWT Session Management
-- Custom JWT-based session implementation (not using next-auth)
-- Secure session cookie storage
-- Server-side session access via getSession() in server actions
-
-### Client-Side Session Architecture
-1. **UserProvider (React Context)**
-   - Wraps application
-   - Initializes session data on mount
-   - Manages client-side session state
-
-2. **Session Components**
-   - `lib/session.ts`: Server-only session cookie handling
-   - `UserProvider`: Client-side session management via API
-   - `useUser`: Client-side hook for session access
 
 

@@ -1,3 +1,12 @@
+/**
+ * Profile Page Component
+ * 
+ * A dynamic page component that renders either AdminDashboard or UserDashboard
+ * based on the user's role. Handles authentication and role-based routing.
+ * 
+ * @component
+ * @returns {JSX.Element} The appropriate dashboard based on user role
+ */
 "use client";
 
 /**

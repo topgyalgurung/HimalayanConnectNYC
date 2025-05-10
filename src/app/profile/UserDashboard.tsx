@@ -17,49 +17,11 @@ import { useDeleteItem } from "../hooks/useDeleteResource";
 import { useFetchResourceEdit } from "../hooks/useFetchResourceEdit";
 import { useFetchUserResources } from "../hooks/useFetchUserResources";
 
-import Popup from "../components/ui/Popup";
+import Popup from "../components/dashboard/Popup";
 import { ProfileCard } from "./SharedProfileCard";
 import { TabNavigation } from "../components/dashboard/TabNavigation";
 import { UserResourceTable } from "../components/dashboard/UserResourceTable";
-
-interface resourceColumn {
-  id: "index" | "name" | "status" | "view" | "edit";
-  label: string;
-  minWidth?: number;
-  align?: "right";
-  format?: (value: number) => string;
-}
-
-/**
- * Table column definitions for the resource management interface
- */
-const columns: readonly resourceColumn[] = [
-  {
-    id: "index",
-    label: "Index",
-    minWidth: 170,
-  },
-  {
-    id: "name",
-    label: "Name",
-    minWidth: 100,
-  },
-  {
-    id: "status",
-    label: "Status",
-    minWidth: 170,
-  },
-  {
-    id: "view",
-    label: "view",
-    minWidth: 170,
-  },
-  {
-    id: "edit",
-    label: "Action",
-    minWidth: 100,
-  },
-];
+import ResourceDetailsPopup from '../components/dashboard/ResourceDetailsPopup';
 
 /**
  * Main dashboard component for users to manage their resources, edits, reviews and favorites.
@@ -168,7 +130,7 @@ export default function UserDashboard() {
         <div className="w-full md:w-2/3 p-4">
           <div className="bg-white shadow-lg rounded-lg p-6">
             <h2 className="text-2xl font-bold mb-4">Your Dashboard</h2>
-            <p className="text-gray-600">
+            <p className="text-gray-600 mb-4">
               Welcome to your dashboard! Here you can manage your resource
               submissions
             </p>
@@ -193,52 +155,11 @@ export default function UserDashboard() {
               onDeleteFavorite={handleDeleteFavorite}
             />
 
-            <Popup
+            <ResourceDetailsPopup
               anchor={anchorEl}
               open={isOpen}
               onClose={handleClosePopup}
-              title={selectedResource?.name || "No Title"}
-              content={[
-                selectedResource?.description &&
-                  `Description: ${selectedResource.description}`,
-                selectedResource?.city && `City: ${selectedResource.city}`,
-                selectedResource?.address &&
-                  `Address: ${selectedResource.address}`,
-                selectedResource?.openDays &&
-                  `Open Days: ${selectedResource.openDays}`,
-                selectedResource?.openTime &&
-                  `Open Time: ${format(
-                    new Date(selectedResource.openTime),
-                    "hh:mm a"
-                  )}`,
-                selectedResource?.closeTime &&
-                  `Close Time: ${format(
-                    new Date(selectedResource.closeTime),
-                    "hh:mm a"
-                  )}`,
-                selectedResource?.status &&
-                  `Status: ${selectedResource.status}`,
-                selectedResource?.createdAt &&
-                  `Created: ${format(
-                    new Date(selectedResource.createdAt),
-                    "yyyy-MM-dd"
-                  )}`,
-                selectedResource?.updatedAt &&
-                  `Last Updated: ${format(
-                    new Date(selectedResource.updatedAt),
-                    "yyyy-MM-dd"
-                  )}`,
-                selectedResource?.phone && `Phone: ${selectedResource.phone}`,
-                selectedResource?.email && `Email: ${selectedResource.email}`,
-                selectedResource?.website &&
-                  `Website: ${selectedResource.website}`,
-                selectedResource?.features &&
-                  `Features: ${selectedResource.features}`,
-                selectedResource?.amenities &&
-                  `Amenities: ${selectedResource.amenities}`,
-              ]
-                .filter(Boolean)
-                .join("\n")}
+              resource={selectedResource}
             />
           </div>
         </div>
