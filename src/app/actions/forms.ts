@@ -166,3 +166,11 @@ export async function addEditResource(formData: FormData) {
   }
  
 }
+
+// will do this later 
+export async function addReviewResource(formData: FormData) {
+  if (!formData) {
+    return { error: "No form data received" };
+  }
+  
+}

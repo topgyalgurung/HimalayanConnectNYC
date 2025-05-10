@@ -19,7 +19,7 @@
 
 import * as React from "react";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useUser } from "../../context/UserProvider";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
@@ -165,7 +165,30 @@ export default function ResourceDetailsCard({
   const { user } = useUser();
   const router = useRouter();
   const { isFavorite, toggleFavorite } = useFavorites();
-  const { reviews } = useFetchResourceReview(Number(resource?.id) || null);
+  const { reviews, refetch: refetchReviews } = useFetchResourceReview(Number(resource?.id) || null);
+
+  // Refetch reviews when review tab is active or when a review is submitted
+  useEffect(() => {
+    if (activeTab === "review") {
+      refetchReviews();
+    }
+  }, [activeTab, refetchReviews]);
+
+  // Listen for review submission
+  // Refetch reviews when a review is submitted
+  useEffect(() => {
+    const handleReviewSubmitted = () => {
+      if (activeTab === "review") {
+        refetchReviews();
+        router.refresh();
+      }
+    };
+
+    window.addEventListener('reviewSubmitted', handleReviewSubmitted);
+    return () => {
+      window.removeEventListener('reviewSubmitted', handleReviewSubmitted);
+    };
+  }, [activeTab, refetchReviews, router]);
 
   if (!resource) return null;
   const liked = isFavorite(Number(resource.id));

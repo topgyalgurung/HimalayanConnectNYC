@@ -1,12 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
-
 import Rating from "@mui/material/Rating";
 import Box from "@mui/material/Box";
 import { Typography } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import { type Resource } from "@/app/types/resource";
 interface ReviewResourceCardProps {
@@ -18,7 +18,6 @@ export default function ReviewSubmitCard({
   resource,
   onReviewCloseAction,
 }: ReviewResourceCardProps) {
-  
   const [user, setUser] = useState<{
     firstName: string;
     lastName: string;
@@ -27,6 +26,7 @@ export default function ReviewSubmitCard({
   const [rating, setRating] = useState<number | null>(5.0);
   const [content, setContent] = useState<string | "">("");
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -41,6 +41,7 @@ export default function ReviewSubmitCard({
     if (!rating || !resource?.id) return;
 
     console.log("Rating before submit:", rating);
+    setIsSubmitting(true);
 
     try {
       const res = await fetch("/api/resources/review", {
@@ -53,9 +54,20 @@ export default function ReviewSubmitCard({
           content,
         }),
       });
-      if (res.ok) setIsSubmitted(true);
+      
+      if (res.ok) {
+        setIsSubmitted(true);
+        // Dispatch event to notify that a review was submitted
+        window.dispatchEvent(new Event('reviewSubmitted'));
+        // Close the review card after a short delay
+        setTimeout(() => {
+          onReviewCloseAction(null);
+        }, 2000);
+      }
     } catch (error) {
       console.error("Review submit failed: ", error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -117,8 +129,13 @@ export default function ReviewSubmitCard({
             color="primary"
             fullWidth
             onClick={handleSubmit}
+            disabled={isSubmitting}
           >
-            Submit Review
+            {isSubmitting ? (
+              <CircularProgress size={24} color="inherit" />
+            ) : (
+              "Submit Review"
+            )}
           </Button>
         </>
       )}
