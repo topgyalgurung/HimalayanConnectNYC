@@ -27,16 +27,17 @@ import { TabNavigation } from "../components/dashboard/TabNavigation";
 import { AdminResourceTable } from "../components/dashboard/AdminResourceTable";
 import { updateResourceStatus } from "../actions/resources/updateResourceStatus";
 import { toast } from "react-hot-toast";
+import type { Resource } from "../types/resource";
 
-const formatTime = (timeString: string | undefined) => {
-  if (!timeString) return "";
-  try {
-    return format(new Date(timeString), "hh:mm a");
-  } catch (error) {
-    console.error("Invalid date:", timeString);
-    return "Invalid time";
-  }
-};
+// const formatTime = (timeString: string | undefined) => {
+//   if (!timeString) return "";
+//   try {
+//     return format(new Date(timeString), "hh:mm a");
+//   } catch (error) {
+//     console.error("Invalid date:", timeString);
+//     return "Invalid time";
+//   }
+// };
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("new");
@@ -61,29 +62,23 @@ export default function AdminDashboard() {
   const handleStatusChange = async (
     resourceId: string,
     newStatus: string,
-    resourceType: string
+    resourceType: "new" | "edit"
   ) => {
     try {
       setIsLoading(true);
-      const result = await updateResourceStatus(
-        resourceId,
-        newStatus,
-        resourceType
-      );
 
-      if (!result.success) {
-        throw new Error(result.error || "Failed to update status");
-      }
-
-      toast.success(
-        `Successfully updated ${resourceType} status to ${newStatus}`
+      await toast.promise(
+        updateResourceStatus(resourceId, newStatus, resourceType),
+        {
+          loading: "Updating status...",
+          success: `Successfully updated ${resourceType} status to ${newStatus}`,
+          error: (err: Error) => `Failed to update status: ${err.message}`,
+        }
       );
 
       await Promise.all([refetchResources(), refetchEditResources()]);
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "Failed to update status"
-      );
+      console.error("Error updating status:", error);
     } finally {
       setIsLoading(false);
     }
@@ -94,7 +89,7 @@ export default function AdminDashboard() {
 
    */
   const handleViewClick = (
-    resource: any,
+    resource: Resource,
     event: React.MouseEvent<HTMLElement>
   ) => {
     if (resourceAnchorEl === event.currentTarget) {
@@ -171,6 +166,7 @@ export default function AdminDashboard() {
               resourceAnchorEl={resourceAnchorEl}
               onViewClick={handleViewClick}
               onStatusChange={handleStatusChange}
+              isLoading={isLoading}
             />
 
             <Popup

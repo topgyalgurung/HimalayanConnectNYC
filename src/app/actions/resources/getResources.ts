@@ -3,11 +3,6 @@
  * 
  * This server action fetches resources from the database with proper filtering
  * and includes related data like categories, locations, and user likes.
- * 
- * @param {Object} options - Filter options
- * @param {string[]} options.categories - Selected category IDs
- * @param {string[]} options.boroughs - Selected boroughs
- * @returns {Promise<Resource[]>} Array of resources with related data
  */
 
 import prisma from "@/app/lib/prisma";
@@ -66,7 +61,7 @@ export async function getResources({ categories = [], boroughs = [] }: GetResour
     return resources.map(resource => ({
       ...resource,
       id: String(resource.id),
-      rating: resource.rating ? String(resource.rating) : null,
+      rating: Number(resource.rating),
       Location: resource.Location.map(loc => ({
         ...loc,
         id: String(loc.id),

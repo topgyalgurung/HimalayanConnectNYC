@@ -24,6 +24,7 @@ export async function updateResourceStatus(
         where: { id: resourceIdNum },
         data: { status: newStatus },
       });
+      // and i need to update the resource id that match with resourceedit suggestion to reflect changes on the app 
     } else {
       await prisma.resource.update({
         where: { id: resourceIdNum },

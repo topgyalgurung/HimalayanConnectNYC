@@ -1,11 +1,13 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { addEditResource } from "../../actions/forms";
 import dayjs from "dayjs";
 import { type Resource } from "@/app/types/resource";
+import toast from "react-hot-toast";
 
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
@@ -74,7 +76,26 @@ export default function ResourceSuggestCard({
       setLoading(true);
       if (result.success) {
         setMessage(result.success);
-        router.push("/profile");
+        // router.push("/profile");
+
+        toast(
+          (t) => (
+            <span>
+              Thank you for your suggestion. Admin will review and make changes
+              soon.
+              <Link
+                href="/profile"
+                className=" text-blue-600"
+                onClick={() => toast.dismiss(t.id)}
+              >
+                Go to Profile
+              </Link>
+            </span>
+          ),
+          { duration: 8000 }
+        );
+
+        onEditCloseAction(null);
       } else {
         setMessage(result.error || "Failed to edit resource");
       }

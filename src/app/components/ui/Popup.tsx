@@ -1,3 +1,26 @@
+/**
+ * Popup Component
+ * 
+ * A reusable popup component built with Material-UI.
+ * Displays content in a floating window with a close button.
+ * 
+ * @component
+ * @param {Object} props
+ * @param {HTMLElement|null} props.anchor - Element to anchor the popup to
+ * @param {boolean} props.open - Controls popup visibility
+ * @param {Function} props.onClose - Handler for closing the popup
+ * @param {string} props.title - Popup title
+ * @param {string} props.content - Popup content
+ * 
+ * @example
+ * <Popup
+ *   anchor={anchorElement}
+ *   open={isOpen}
+ *   onClose={handleClose}
+ *   title="Resource Details"
+ *   content="Detailed information here"
+ * />
+ */
 "use client";
 
 import React from "react";

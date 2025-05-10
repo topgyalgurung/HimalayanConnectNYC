@@ -1,3 +1,12 @@
+
+/**
+ * ResourceCard Component
+ *
+ * This component is the resource card for the homepage of the Himalayan Connect NYC application.
+ * It displays a single resource in a card format.
+ * 
+ */
+  
 "use client";
 
 import { format } from "date-fns";
@@ -21,9 +30,9 @@ export default function ResourceCard({
         .map((resource) => (
           <div
             key={resource.id}
-            className="flex p-4 border rounded-md shadow-md bg-white transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:scale-[1.02]"
+            className="flex justify-between p-4 border rounded-md shadow-md bg-white transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:scale-[1.02]"
           >
-            <div>
+            <div className="flex-1">
               <h4 className="text-lg font-bold">{resource.name}</h4>
               <p className="text-gray-500">
                 {resource.ResourceCategory?.name || "no category"}
@@ -39,22 +48,22 @@ export default function ResourceCard({
               <p>
                 <strong>Open Days :</strong> {formatOpenDays(resource.openDays)}
               </p>
-              <p>
-                <strong>Hours :</strong>
-                {/* need validation later open should be smaller than close time  */}
-                {format(resource.openTime, "hh:mm a")}-
-                {format(resource.closeTime, "hh:mm a")}
+              <p className="flex items-center gap-1">
+                <strong className="text-gray-700">Hours:</strong>
+                <span className="text-gray-600">
+                  {format(resource.openTime, "hh:mm a")} -{" "}
+                  {format(resource.closeTime, "hh:mm a")}
+                </span>
               </p>
+            </div>
 
-              <div className=" flex item-end">
-                {/* view details */}
-                <button
-                  className="text-white py-2 px-3 bg-blue-600 rounded hover:bg-blue-700"
-                  onClick={() => onViewDetails?.(resource)}
-                >
-                  View Details
-                </button>
-              </div>
+            <div className="flex items-end ml-4">
+              <button
+                className="text-white py-2 px-3 bg-blue-600 rounded hover:bg-blue-700"
+                onClick={() => onViewDetails?.(resource)}
+              >
+                View Details
+              </button>
             </div>
           </div>
         ))}

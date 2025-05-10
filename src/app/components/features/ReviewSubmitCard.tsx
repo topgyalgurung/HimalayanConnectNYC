@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+
 import Rating from "@mui/material/Rating";
 import Box from "@mui/material/Box";
 import { Typography } from "@mui/material";
@@ -8,7 +9,6 @@ import Button from "@mui/material/Button";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 
 import { type Resource } from "@/app/types/resource";
-
 interface ReviewResourceCardProps {
   resource: Resource | null;
   onReviewCloseAction: (resource: Resource | null) => void;
@@ -18,13 +18,14 @@ export default function ReviewSubmitCard({
   resource,
   onReviewCloseAction,
 }: ReviewResourceCardProps) {
+  
   const [user, setUser] = useState<{
     firstName: string;
     lastName: string;
     image?: string;
   } | null>(null);
-  const [rating, setRating] = useState<number | null>(5);
-  const [content, setContent] = useState<string>("");
+  const [rating, setRating] = useState<number | null>(5.0);
+  const [content, setContent] = useState<string | "">("");
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
 
   useEffect(() => {
@@ -39,11 +40,13 @@ export default function ReviewSubmitCard({
   const handleSubmit = async () => {
     if (!rating || !resource?.id) return;
 
+    console.log("Rating before submit:", rating);
+
     try {
       const res = await fetch("/api/resources/review", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include", // ensure session cookie is sent
+        credentials: "include",
         body: JSON.stringify({
           resourceId: resource.id,
           rating,
@@ -59,7 +62,7 @@ export default function ReviewSubmitCard({
   return (
     <div className="absolute top-4 right-4 z-50 w-96 bg-white rounded-lg shadow-xl p-6">
       <button
-        onClick={onReviewCloseAction}
+        onClick={() => onReviewCloseAction(null)}
         className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
       >
         ✕
@@ -89,8 +92,14 @@ export default function ReviewSubmitCard({
               name="user-rating"
               value={rating}
               precision={0.5}
-              onChange={(event, newValue) => setRating(newValue)}
+              onChange={(event, newValue) => {
+                console.log("New rating value:", newValue);
+                setRating(newValue);
+              }}
             />
+            <Typography variant="body2" color="text.secondary" className="mt-1">
+              {rating ? `Selected rating: ${rating}` : 'No rating selected'}
+            </Typography>
           </Box>
 
           <TextField

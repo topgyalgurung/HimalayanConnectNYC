@@ -1,4 +1,12 @@
 'use client';
+
+/**
+ * Theme configuration for the Himalayan Connect NYC application.
+ *
+ * This file defines the theme configuration for the application using MUI's createTheme function.
+ * It includes color schemes, CSS variables, typography, and component styles.
+ */
+
 import { createTheme } from '@mui/material/styles';
 import { Roboto } from 'next/font/google';
 

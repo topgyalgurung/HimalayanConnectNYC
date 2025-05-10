@@ -152,23 +152,31 @@ src/
    - Push notifications
    - Offline support
 
-# zod for form validation 
-- If your form grows (images + text + hours), you may hit the 1MB Server Action limit.
-- // Option 1: increase body size in next.config.js
-// Option 2: use Cloudinary + store URL (which you're doing ✅)
+## Form Validation & Data Handling
 
+### Zod Form Validation
+- Using Zod for form validation and type safety
+- Note: Large forms (images + text + hours) may hit 1MB Server Action limit
+- Solutions:
+  1. Increase body size in next.config.js
+  2. Use Cloudinary + store URL (current implementation ✅)
 
-// auth
+## Authentication System
 
- not using next-auth, but instead managing your own JWT-based sessions with a custom session cookie (stored securely
- -  Use getSession() from your lib/session.ts file to access the user session inside your server actions.
--  
+### Custom JWT Session Management
+- Custom JWT-based session implementation (not using next-auth)
+- Secure session cookie storage
+- Server-side session access via getSession() in server actions
 
+### Client-Side Session Architecture
+1. **UserProvider (React Context)**
+   - Wraps application
+   - Initializes session data on mount
+   - Manages client-side session state
 
-// client session: 
-UserProvider is a React Context that wraps your app and stores user session data on the client, by calling getSession() once on mount
-- lib/session.ts, server only: Reads session cookie securely on server
-- User Provider, client only: Reads session via API call and stores it in React state
-- useUser, client only: hook to access session in component 
+2. **Session Components**
+   - `lib/session.ts`: Server-only session cookie handling
+   - `UserProvider`: Client-side session management via API
+   - `useUser`: Client-side hook for session access
 
 

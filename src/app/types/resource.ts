@@ -17,13 +17,9 @@ export interface Resource {
   ResourceCategory?: { name: string } | null;
   Location: Location[];
   phone: string;
-  rating: string;
+  rating: number;
   imageUrl: string;
   facebookLink: string;
   email: string;
   url: string;
-}
-
-export interface EditResource extends Resource {
-  // Add edit-specific fields
 }

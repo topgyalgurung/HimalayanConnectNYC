@@ -46,7 +46,7 @@ model Resource {
   openTime               DateTime?                @db.Time(6)
   closeTime              DateTime?                @db.Time(6)
   phone                  String?
-  rating                 Decimal                  @default(0) @db.Decimal(2, 1)
+  rating                 Decimal                  @default(0) @db.Decimal(3, 1)
   imageUrl               String?
   facebookLink           String?
   email                  String?
@@ -106,7 +106,7 @@ model ResourceReview {
   id         Int      @id @default(autoincrement())
   resourceId Int
   userId     Int
-  rating     Int
+  rating     Decimal  @db.Decimal(3, 1)
   content    String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt

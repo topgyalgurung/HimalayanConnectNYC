@@ -3,32 +3,42 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
 import ResourceFilter from "./ResourceFilter";
 import BoroughFilter from "./BoroughFilter";
+import type { Resource } from "@/app/types/resource";
 
 interface FilterSidebarProps {
-  selectedCategories: string[];
-  setSelectedCategories: (categories: string[]) => void;
-  selectedBoroughs: string[];
-  setSelectedBoroughs: (boroughs: string[]) => void;
+  resources: Resource[];
+  onFilteredResourcesChange: (filteredResources: Resource[]) => void;
 }
 
 export default function FilterSidebar({
-  selectedCategories,
-  setSelectedCategories,
-  selectedBoroughs,
-  setSelectedBoroughs,
+  resources,
+  onFilteredResourcesChange,
 }: FilterSidebarProps) {
-  const handleBoroughChange = (borough: string) => {
-    setSelectedBoroughs((prev) => {
-      if (prev.includes(borough)) {
-        return prev.filter((b) => b !== borough);
-      } else {
-        return [...prev, borough];
-      }
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedBoroughs, setSelectedBoroughs] = useState<string[]>([]);
+
+// filtering logic moved closer to the component from homeclient before 
+  useEffect(() => {
+    const filtered = resources.filter((resource) => {
+      const categoryMatch =
+        selectedCategories.length === 0 ||
+        selectedCategories.includes(
+          (resource.ResourceCategory?.name ?? "").toLowerCase()
+        );
+
+      const boroughMatch =
+        selectedBoroughs.length === 0 ||
+        selectedBoroughs.some(borough => 
+          resource.city?.toLowerCase().trim() === borough.toLowerCase().trim()
+        );
+
+      return categoryMatch && boroughMatch;
     });
-  };
+
+    onFilteredResourcesChange(filtered);
+  }, [resources, selectedCategories, selectedBoroughs, onFilteredResourcesChange]);
 
   return (
     <aside className="w-full md:w-[18%] pl-4 bg-white shadow-md flex flex-col overflow-hidden max-h-screen">
