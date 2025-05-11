@@ -1,4 +1,12 @@
 // src/app/(homepage)/filters/FilterSidebar.tsx
+/**
+ * FilterSidebar Component
+ *
+ * This component is the filter sidebar for the homepage of the Himalayan Connect NYC application.
+ * It displays the filter options for the resources.
+ * 
+ */
+
 
 "use client";
 

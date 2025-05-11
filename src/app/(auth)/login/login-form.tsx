@@ -39,7 +39,12 @@ export default function LoginForm() {
               placeholder="Email"
               className="text-black p-2 border border-gray-50 rounded-md mb-4 focus:outline-none focus:border-gray-600 w-full"
             />
-            {state?.errors?.email && <p>{state.errors.email}</p>}
+            {state?.errors?.email && (
+              <p className="text-red-500 text-sm mb-2">{state.errors.email[0]}</p>
+            )}
+            {state?.message && !state?.errors && (
+              <p className="text-red-500 text-sm mb-2">{state.message}</p>
+            )}
             <div className="flex justify-end mt-1">
               <Link
                 href="/forgotpassword"
@@ -63,7 +68,9 @@ export default function LoginForm() {
                 {showPassword ? "Hide" : "Show"}
               </button>
             </div>
-            {state?.errors?.password && <p>{state.errors.password}</p>}
+            {state?.errors?.password && (
+              <p className="text-red-500 text-sm mb-2">{state.errors.password[0]}</p>
+            )}
             <br />
             <button
               type="submit"

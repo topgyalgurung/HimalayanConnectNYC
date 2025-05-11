@@ -3,16 +3,21 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { addResource, getCategories } from "@/app/actions/forms";
-import { CldUploadWidget } from "next-cloudinary";
 import Accordion from "@mui/material/Accordion";
 import { AccordionSummary, Typography } from "@mui/material";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import dayjs from "dayjs";
-import TimePickerSection from "@/app/components/features/TimePickerSection";
-import CitySelect from "@/app/components/features/CitySelect";
+import { formSchema, type FormValues } from "@/app/lib/forms/validationSchema";
+import BasicInfoSection from "@/app/lib/forms/BasicInfoSection";
+import AdditionalDetailsSection from "@/app/lib/forms/AdditionalDetailsSection";
+import { User } from "@prisma/client";
 
-export default function AddResourceForm({ user }: any) {
+interface AddResourceFormProps {
+  user: User | null;
+}
+
+export default function AddResourceForm({ user }: AddResourceFormProps) {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
@@ -20,6 +25,16 @@ export default function AddResourceForm({ user }: any) {
   const [closeTime, setCloseTime] = useState<dayjs.Dayjs | null>(null);
   const [categories, setCategories] = useState<{ id: number; name: string }[]>([]);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [formData, setFormData] = useState<FormValues>({
+    name: "",
+    categoryId: "",
+    address: "",
+    phone: "",
+    url: "",
+    facebookLink: "",
+    description: "",
+  });
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const router = useRouter();
 
   useEffect(() => {
@@ -30,31 +45,51 @@ export default function AddResourceForm({ user }: any) {
     fetchCategories();
   }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
+    // Clear error when user starts typing
+    setErrors(prev => ({ ...prev, [name]: "" }));
   };
-
-  function handleUploadSuccess(result: any) {
-    const url = result?.info?.secure_url;
-    if (url) {
-      setImageUrl(url);
-      console.log("image url: ", url);
-    }
-  }
 
   const handleFormAction = async (formData: FormData) => {
     setLoading(true);
     setMessage("");
-    if (imageUrl) {
-      formData.append("image", imageUrl);
-    }
+    setErrors({});
+
     try {
+      // Validate form data
+      const validationResult = formSchema.safeParse({
+        name: formData.get('name'),
+        categoryId: formData.get('categoryId'),
+        address: formData.get('address'),
+        phone: formData.get('phone'),
+        url: formData.get('url'),
+        facebookLink: formData.get('facebookLink'),
+        description: formData.get('description'),
+      });
+      
+      if (!validationResult.success) {
+        const newErrors: Record<string, string> = {};
+        validationResult.error.errors.forEach((err) => {
+          if (err.path[0]) {
+            newErrors[err.path[0].toString()] = err.message;
+          }
+        });
+        setErrors(newErrors);
+        setLoading(false);
+        return;
+      }
+
+      if (imageUrl) {
+        formData.append("image", imageUrl);
+      }
+
       const result = await addResource(formData);
-      setLoading(false);
+      
       if (result.success) {
         setMessage(result.success);
         setImageUrl(null);
@@ -91,37 +126,12 @@ export default function AddResourceForm({ user }: any) {
         )}
 
         <form action={handleFormAction} className="space-y-4">
-          <div className="space-y-3">
-            <input
-              type="text"
-              name="name"
-              placeholder="Resource Name"
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
-
-            <select
-              name="categoryId"
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              aria-label="Select a category"
-            >
-              <option value="">Select a category</option>
-              {categories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
-
-            <input
-              type="text"
-              name="address"
-              placeholder="Address"
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
+          <BasicInfoSection
+            formData={formData}
+            errors={errors}
+            categories={categories}
+            handleChange={handleChange}
+          />
 
           <Accordion defaultExpanded className="border border-gray-200 rounded-md">
             <AccordionSummary
@@ -139,68 +149,18 @@ export default function AddResourceForm({ user }: any) {
                 Add phone, hours, website, photos to verify this place
               </Typography>
 
-              <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
-
-                <CitySelect />
-
-                <div className="flex justify-center">
-                  <TimePickerSection
-                    selectedDays={selectedDays}
-                    openTime={openTime}
-                    closeTime={closeTime}
-                    onDayChange={(_, newDays) => setSelectedDays(newDays)}
-                    onOpenTimeChange={setOpenTime}
-                    onCloseTimeChange={setCloseTime}
-                  />
-                </div>
-
-                <input
-                  type="tel"
-                  name="phone"
-                  placeholder="Phone Number"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-
-                <input
-                  type="url"
-                  name="url"
-                  placeholder="Website"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-
-                <input
-                  type="url"
-                  name="facebookLink"
-                  placeholder="Facebook Link"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-
-                <textarea
-                  name="description"
-                  placeholder="Description"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[80px]"
-                />
-              </div>
-
-              {imageUrl && <input type="hidden" name="image" value={imageUrl} />}
-              
-              <div className="pt-4 mt-4 border-t border-gray-200">
-                <CldUploadWidget
-                  signatureEndpoint="/api/sign-image"
-                  options={{ sources: ["local", "url"] }}
-                  onSuccess={handleUploadSuccess}
-                >
-                  {({ open }) => (
-                    <button
-                      type="button"
-                      className="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200"
-                      onClick={() => open()}
-                    >
-                      Upload an Image
-                    </button>
-                  )}
-                </CldUploadWidget>
-              </div>
+              <AdditionalDetailsSection
+                formData={formData}
+                errors={errors}
+                handleChange={handleChange}
+                selectedDays={selectedDays}
+                openTime={openTime}
+                closeTime={closeTime}
+                onDayChange={(_, newDays) => setSelectedDays(newDays)}
+                onOpenTimeChange={setOpenTime}
+                onCloseTimeChange={setCloseTime}
+                onImageUpload={setImageUrl}
+              />
             </AccordionDetails>
           </Accordion>
 

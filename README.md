@@ -1,7 +1,7 @@
 # Himalayan Connect NYC
 
 ## Project Overview
-Himalayan Connect NYC is a comprehensive web platform designed to connect the Himalayan community in New York with essential resources. The application serves as a centralized hub for accessing nonprofit services, legal assistance, immigration support, housing, and job opportunities.
+Himalayan Connect NYC is a comprehensive web platform designed to connect the Nepalese Himalayan community in New York with essential resources. The application serves as a centralized hub for accessing nonprofit services, legal assistance, immigration support, housing, and job opportunities.
 
 ## Tech Stack
 - **Frontend**: 
@@ -11,7 +11,9 @@ Himalayan Connect NYC is a comprehensive web platform designed to connect the Hi
   - Material UI
   - Framer Motion (animations)
 - **Backend**: 
-  - Next.js API Routes
+  - Next.js API Route Handler 
+  - Next.js Server Action
+  - Server Component
   - Prisma ORM
   - PostgreSQL
 - **External APIs**:
@@ -36,26 +38,22 @@ Himalayan Connect NYC is a comprehensive web platform designed to connect the Hi
   - Manage reviews and favorites
   - Edit/delete submissions
 - **Profile Management**: 
-  - User authentication
-  - Session management
-  - Profile customization
+  - User authentication 
 
 ### 3. Admin Features
 - **Admin Dashboard**:
   - Resource approval/rejection
-  - Edit suggestion management
   - Resource status tracking
-  - User management
 
 ### 4. Search and Filtering
 - **Advanced Search**: 
-  - Category-based filtering
-  - Borough-based filtering
-  - Text search functionality
+  - Text search by resource name functionality
+  - Category-based filtering (todo)
+  - Borough-based filtering (todo)
 - **Map Integration**: 
-  - Interactive map view
+  - Interactive map view 
+  - pin with category icon
   - Resource location display
-  - Direction services
 
 ## Application Structure
 
@@ -72,16 +70,27 @@ src/
 │   ├── types/            # TypeScript type definitions
 │   ├── lib/              # Utility functions
 │   └── api/              # API routes
+├──  middleware
+├──  next.config.ts
+├──  tailwind.config.ts
+├──  tsconfig.json
 ```
 
 ## Key Components
 
 ### Frontend Components
-- `HomeClient.tsx`: Main homepage component with resource listing and map
+- `HomeClient.tsx`: Main homepage component with resource listing, **filter** and map
 - `ResourceDetailsCard.tsx`: Detailed view of resource information
-- `AdminResourceTable.tsx`: Admin dashboard resource management
-- `UserDashboard.tsx`: User profile and resource management
+- `ResourceListPanel.tsx`: Displays list of resources in the middle page
+- `FilterSidebar`: Displays the filter options for the resources
+- `resources/add/AddResourceForm.tsx`:form for adding a new resource 
+- `ResourceDetailsCard`: Displays comprehensive info about a resource
+- `ResourceSuggestCard`:Form for suggesting edits to a resource
+- `ReviewSubmitCard`: Form for submitting a review for a resource
+- `AdminDashboard.tsx`: Admin profile and dashboard resource management
+- `UserDashboard.tsx`: User profile and dashboard resource management
 - `TimePickerSection.tsx`: Time and day selection for resources
+- 
 
 ### Component Hierarchy
 ![Component Hierarchy](/public/ComponentHierarchy.png)
@@ -148,14 +157,12 @@ src/
 
 ## Future Enhancements
 1. Multilingual Support
-   - Nepali language integration
-   - Additional language options
+   - Nepali and Tibetan language integration
 
 2. Community Features
    - Discussion forums
    - Community meetups
    - FAQ section
-   - Resource reporting system
 
 3. Enhanced Search
    - Advanced filtering options
@@ -164,10 +171,5 @@ src/
 
 4. User Experience
    - Mobile app development
-   - Push notifications
-   - Offline support
-
-## Form Validation & Data Handling
-
 
 

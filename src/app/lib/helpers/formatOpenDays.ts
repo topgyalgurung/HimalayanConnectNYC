@@ -1,4 +1,6 @@
-  // Helper to format openDays string into condensed ranges
+// Helper to format openDays string into condensed ranges
+// utils/helper 
+  
   export const formatOpenDays = (daysStr: string | null) => {
     if (!daysStr) return "Not specified";
 
@@ -32,7 +34,7 @@
 
     if (isFullyConsecutive) {
       const [s, e] = ranges[0];
-      return s === e ? dayOrder[s] : `${dayOrder[s]}–${dayOrder[e]}`;
+      return s === e ? dayOrder[s] : `${dayOrder[s]} – ${dayOrder[e]}`;
     }
 
     return indices.map(i => dayOrder[i]).join(", ");

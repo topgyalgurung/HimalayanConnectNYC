@@ -24,7 +24,7 @@
 "use client";
 
 import React, { ReactNode } from "react";
-import { Unstable_Popup as BasePopup } from "@mui/base/Unstable_Popup";
+import { Popover } from "@mui/material";
 import { styled, Box, Typography, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
@@ -110,12 +110,18 @@ export default function Popup({
   content,
 }: PopupProps) {
   return (
-    <BasePopup 
+    <Popover 
       open={open} 
-      anchor={anchor}
-      placement="bottom"
-      offset={2}
-      style={{ zIndex: 1500 }}
+      anchorEl={anchor}
+      onClose={onClose}
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'left',
+      }}
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'left',
+      }}
     >
       <StyledPopup>
         <PopupHeader>
@@ -129,6 +135,6 @@ export default function Popup({
           {content}
         </PopupBody>
       </StyledPopup>
-    </BasePopup>
+    </Popover>
   );
 }

@@ -1,3 +1,12 @@
+/**
+ * ResourceTable component
+ *
+ * This component displays a table of resources with various actions and statuses.
+ * It supports different types of resources (new, suggestions, reviews, likes, admin)
+ * and provides functionality for viewing, deleting, and approving/rejecting resources. 
+*
+ */
+
 import React from "react";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
@@ -117,7 +126,20 @@ export const ResourceTable: React.FC<ResourceTableProps> = ({
       case 'status':
         return row.status;
       case 'content':
-        return row.content;
+        return (
+          <div className="flex items-center gap-2">
+            <span className="line-clamp-2">{row.content}</span>
+            {row.content && row.content.length > 30 && (
+              <Button 
+                size="small" 
+                onClick={(e) => onViewClick(row, e)}
+                className="ml-2"
+              >
+                View Full
+              </Button>
+            )}
+          </div>
+        );
       case 'rating':
         return row.rating;
       case 'date':

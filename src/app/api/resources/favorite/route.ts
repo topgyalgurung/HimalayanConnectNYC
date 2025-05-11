@@ -1,6 +1,6 @@
 // src/app/api/resources/favorite/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/app/lib/prisma";
+import { prisma } from "@/app/lib/prisma";
 import { getSession } from "@/app/lib/session";
 
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import type { Resource } from "@/app/types/resource";
+import type { Resource } from "../lib/types";
 
 export function useFetchUserResources() {
   const [resources, setResources] = useState<Resource[]>([]);

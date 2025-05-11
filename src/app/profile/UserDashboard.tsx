@@ -7,7 +7,6 @@
 import React from "react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { format } from "date-fns";
 
 import { logout } from "../actions/auth";
 import { useFetchUser } from "../hooks/useFetchUsers";
@@ -17,11 +16,11 @@ import { useDeleteItem } from "../hooks/useDeleteResource";
 import { useFetchResourceEdit } from "../hooks/useFetchResourceEdit";
 import { useFetchUserResources } from "../hooks/useFetchUserResources";
 
-import Popup from "../components/dashboard/Popup";
 import { ProfileCard } from "./SharedProfileCard";
 import { TabNavigation } from "../components/dashboard/TabNavigation";
 import { UserResourceTable } from "../components/dashboard/UserResourceTable";
-import ResourceDetailsPopup from '../components/dashboard/ResourceDetailsPopup';
+import ResourceDetailsPopup from "../components/dashboard/ResourceDetailsPopup";
+import type { Resource } from "../lib/types";
 
 /**
  * Main dashboard component for users to manage their resources, edits, reviews and favorites.

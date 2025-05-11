@@ -18,17 +18,17 @@ import { useState } from "react";
 import React from "react";
 import { useFetchResources } from "../hooks/useFetchResources";
 import { useFetchResourceEdit } from "../hooks/useFetchResourceEdit";
-import Popup from "../components/dashboard/Popup";
+
 import { usePopup } from "../hooks/usePopup";
 import { useLogout } from "../hooks/useLogout";
-import { format } from "date-fns";
+
 import { ProfileCard } from "./SharedProfileCard";
 import { TabNavigation } from "../components/dashboard/TabNavigation";
 import { AdminResourceTable } from "../components/dashboard/AdminResourceTable";
 import { updateResourceStatus } from "../actions/resources/updateResourceStatus";
 import { toast } from "react-hot-toast";
-import type { Resource } from "../types/resource";
-import ResourceDetailsPopup from '../components/dashboard/ResourceDetailsPopup';
+import type { Resource } from "../lib/types";
+import ResourceDetailsPopup from "../components/dashboard/ResourceDetailsPopup";
 
 // const formatTime = (timeString: string | undefined) => {
 //   if (!timeString) return "";

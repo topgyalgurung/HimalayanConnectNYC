@@ -1,6 +1,4 @@
 "use server";
-
-import { Resource } from "@prisma/client";
 // next js server action has default body size limit of 1mb 
 // option1: increase body size limit by configuring next.config.js 
 // option 2: use cloudinary or another file storage solution , then save url of the uploaded file in your database 
@@ -10,31 +8,20 @@ import { Resource } from "@prisma/client";
 // Server Actions are best for form submissions and other server-side mutations within the Next.js application itself, offering a more direct integration with React components.
 // API Routes, on the other hand, are more flexible and suitable for building public APIs, handling external interactions, and managing complex routing scenarios
 
-import prisma from "../lib/prisma";
+import {prisma} from "../lib/prisma";
 import { getSession } from '@/app/lib/session';
 import { parse } from "date-fns";
-// Define strong input typing for clarity and safety
-interface EditResourceInput {
-  name: string;
-  address: string;
-  resourceId: string;
-  categoryId: string | null;
-  city?: string | null;
-  openDays?: string | null;
-  openTime?: string | null;
-  closeTime?: string | null;
-  phone?: string | null;
-  email?: string | null;
-  url?: string | null;
-  facebookLink?: string | null;
-  description?: string | null;
-  image?: string | null;
-};
+import { cache } from "react";
+import { EditResourceInput } from "../lib/types";
+// cache categories to avoid re-fetching them on every request
+const getCachedCategories = cache(async () => {
+  return await prisma.resourceCategory.findMany();
+});
 
-
+// Server action to get categories
 export async function getCategories() {
   try {
-    return await prisma.resourceCategory.findMany();
+    return await getCachedCategories();
   } catch (error) {
     console.error("Error fetching categories: ", error);
     return [];
@@ -105,6 +92,12 @@ export async function addResource(formData: FormData) {
 
     return { success: "resource added successfully", resource: serializedResource };
   } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      // for unique constraint error 
+      if (error.code === 'P2002') {
+        return { error: "Resource with this name already exists" };
+      }
+    }
     console.error("Error adding resource: ", error);
     return { error: "Failed to add resource" };
   }

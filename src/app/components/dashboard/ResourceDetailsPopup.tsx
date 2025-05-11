@@ -27,6 +27,19 @@ export default function ResourceDetailsPopup({
         </div>
       )}
       
+      {resource.content && (
+        <div className="bg-gray-50 p-3 rounded-lg">
+          <h3 className="text-lg font-semibold text-gray-700 mb-1">Review</h3>
+          <p className="text-gray-600 text-sm whitespace-pre-wrap">{resource.content}</p>
+          {resource.rating && (
+            <div className="mt-2 flex items-center gap-2">
+              <span className="text-gray-500 font-medium">Rating:</span>
+              <span className="text-yellow-600 font-medium">{resource.rating}/5</span>
+            </div>
+          )}
+        </div>
+      )}
+      
       <div className="grid grid-cols-1 gap-2">
         {resource.city && (
           <div className="flex items-center gap-2 text-sm">

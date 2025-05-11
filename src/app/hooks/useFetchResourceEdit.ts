@@ -1,7 +1,7 @@
 // fetch ResourceEditSuggestion
 
 import { useState, useEffect } from "react";
-import type { ResourceEditSuggestion } from "../types/resource-suggestion";
+import type { ResourceEditSuggestion } from "@/app/lib/types";
 
 export function useFetchResourceEdit() {
     const [editResources, setEditResources] = useState<ResourceEditSuggestion[]>([]);

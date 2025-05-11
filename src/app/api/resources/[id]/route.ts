@@ -4,7 +4,7 @@
 // import resources from '@/app/api/db' // for testing
 
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/app/lib/prisma";
+import { prisma } from "@/app/lib/prisma";
 import { getSession } from "@/app/lib/session";
 
 // PATCH ( using actions), DELETE
