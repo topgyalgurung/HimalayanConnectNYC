@@ -10,6 +10,7 @@
 
 // import { format } from "date-fns";
 // need to research if i can import simply Resource type from prisma
+
 import { type Resource } from "@/app/lib/types";
 import { formatOpenDays } from "@/app/lib/helpers/formatOpenDays";
 import dayjs from "dayjs";
