@@ -3,6 +3,7 @@ import type { Resource } from "../lib/types";
 
 export function useFetchUserResources() {
   const [resources, setResources] = useState<Resource[]>([]);
+  const [favorites, setFavorites] = useState<Resource[]>([]);
 
   useEffect(() => {
     fetchUserResources();
@@ -21,18 +22,21 @@ export function useFetchUserResources() {
       
       const data = await response.json();
       
-      if (!Array.isArray(data)) {
-        console.error("API returned non-array data:", data);
+      if (!data || typeof data !== 'object') {
+        console.error("API returned invalid data:", data);
         setResources([]);
+        setFavorites([]);
         return;
       }
       
-      setResources(data);
+      setResources(data.resources || []);
+      setFavorites(data.favorites || []);
     } catch (error) {
       console.error("Error fetching user resources:", error);
       setResources([]);
+      setFavorites([]);
     }
   }
 
-  return { resources, refetch: fetchUserResources };
+  return { resources, favorites, refetch: fetchUserResources };
 }

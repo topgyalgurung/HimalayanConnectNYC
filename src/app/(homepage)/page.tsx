@@ -13,6 +13,8 @@ import { getResources } from '../actions/resources/getResources'; //fetches reso
 import HomeClient from './HomeClient'; // renders the homepage
 import Loading from './loading';
 
+// lazy loading
+
 export default async function Home() {
 
   // Fetch resources on the server  

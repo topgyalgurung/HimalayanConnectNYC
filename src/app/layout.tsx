@@ -17,7 +17,7 @@
  * @param {Object} props - Component props
  * @param {React.ReactNode} props.children - Child components to be rendered
  * @returns {JSX.Element} The root layout component
- *    
+ *
  * {children} renders the homepage, file page.tsx exist in (homepage)
  */
 
@@ -29,7 +29,7 @@ import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "@mui/material/styles";
 
 import { UserProvider } from "@/app/context/UserProvider";
-import NavMenu from "./(homepage)/NavMenu";
+import NavMenu from "./(homepage)/NavMenu/NavMenu";
 import theme from "../../theme";
 
 const inter = Inter({ subsets: ["latin"] });

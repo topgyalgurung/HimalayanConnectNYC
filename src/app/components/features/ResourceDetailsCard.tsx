@@ -33,10 +33,10 @@ import { type Resource } from "@/app/lib/types";
 import { type User } from "@/app/lib/types";
 import { type ResourceReview } from "@/app/lib/types";
 
-import TabButton from "../common/TabButton";
+import TabButton from "./ResourceDetailCommon/TabButton";
 import Rating from "@mui/material/Rating";
-import ResourceHeader from "../common/ResourceHeader";
-import ResourceActions from "../common/ResourceActions";
+import ResourceHeader from "./ResourceDetailCommon/ResourceHeader";
+import ResourceActions from "./ResourceDetailCommon/ResourceActions";
 
 interface ResourceDetailsCardProps {
   resource: Resource | null;

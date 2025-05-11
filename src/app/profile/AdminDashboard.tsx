@@ -23,12 +23,12 @@ import { usePopup } from "../hooks/usePopup";
 import { useLogout } from "../hooks/useLogout";
 
 import { ProfileCard } from "./SharedProfileCard";
-import { TabNavigation } from "../components/dashboard/TabNavigation";
-import { AdminResourceTable } from "../components/dashboard/AdminResourceTable";
+import { TabNavigation } from "../components/dashboard/TabNavigation/TabNavigation";
+import { AdminResourceTable } from "../components/dashboard/ResourceTable/AdminResourceTable";
 import { updateResourceStatus } from "../actions/resources/updateResourceStatus";
 import { toast } from "react-hot-toast";
 import type { Resource } from "../lib/types";
-import ResourceDetailsPopup from "../components/dashboard/ResourceDetailsPopup";
+import ResourceDetailsPopup from "../components/dashboard/ResourcePopup/ResourceDetailsPopup";
 
 // const formatTime = (timeString: string | undefined) => {
 //   if (!timeString) return "";
@@ -175,6 +175,8 @@ export default function AdminDashboard() {
               open={isOpen}
               onClose={handleClosePopup}
               resource={selectedResource}
+              editResource={null}
+              showSubmission={false}
             />
           </div>
         </div>

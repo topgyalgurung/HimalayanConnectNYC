@@ -16,11 +16,10 @@ import Link from "next/link";
 import Image from "next/image";
 
 import { usePathname } from "next/navigation";
-import SearchInput from "./SearchInput";
-import UserProfileMenu from "./ProfileCard/UserProfileMenu";
+import SearchInput from "./SearchInput/SearchInput";
+import UserProfileMenu from "../ProfileCard/UserProfileMenu";
 
 import Button from "@mui/material/Button";
-
 
 export default function NavMenu() {
   const pathname = usePathname();

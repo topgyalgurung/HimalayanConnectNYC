@@ -219,11 +219,11 @@ export default function ResourceSuggestCard({
         "closeTime",
       ];
       allFields.forEach((field) => {
-        if (changedFields.has(field)) {
+        if (field === "name") {
+          // Always include name field
+          changedData.append("name", String(formData.get("name")));
+        } else if (changedFields.has(field)) {
           switch (field) {
-            case "name":
-              changedData.append("name", String(formData.get("name")));
-              break;
             case "address":
               console.log("Adding changed address:", formData.get("address"));
               changedData.append("address", String(formData.get("address")));
@@ -242,13 +242,11 @@ export default function ResourceSuggestCard({
               changedData.append("openDays", openDays);
               break;
             case "openTime":
-              // Changed from formatted string to Date object in addEditResource function
               const openTimeStr = openTime?.format("hh:mm A") || "";
               console.log("Adding changed openTime:", openTimeStr);
               changedData.append("openTime", openTimeStr);
               break;
             case "closeTime":
-              // Changed from formatted string to Date object in addEditResource function
               const closeTimeStr = closeTime?.format("hh:mm A") || "";
               console.log("Adding changed closeTime:", closeTimeStr);
               changedData.append("closeTime", closeTimeStr);
