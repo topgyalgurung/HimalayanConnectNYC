@@ -1,9 +1,8 @@
-// src/app/components/features/ResourceSuggestCard.tsx
 /**
  * ResourceSuggestCard Component
  *
  * This component is the form for suggesting edits to a resource.
- * 
+ *
  */
 
 "use client";
@@ -26,11 +25,19 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   address: z.string().min(5, "Address must be at least 5 characters"),
-  phone: z.string().regex(/^\d{3}-\d{3}-\d{4}$/, "Phone number must be in format: XXX-XXX-XXXX"),
-  url: z.string().url("Must be a valid URL").refine(
-    (url) => /\.(com|org|net|edu|gov|io)$/i.test(url),
-    "URL must end with a valid domain extension (.com, .org, etc.)"
-  ),
+  phone: z
+    .string()
+    .regex(
+      /^\d{3}-\d{3}-\d{4}$/,
+      "Phone number must be in format: XXX-XXX-XXXX"
+    ),
+  url: z
+    .string()
+    .url("Must be a valid URL")
+    .refine(
+      (url) => /\.(com|org|net|edu|gov|io)$/i.test(url),
+      "URL must end with a valid domain extension (.com, .org, etc.)"
+    ),
 });
 
 interface ResourceSuggestCardProps {
@@ -79,7 +86,7 @@ export default function ResourceSuggestCard({
         setCloseTime(dayjs(resource.closeTime));
       }
       if (resource.openDays) {
-        setSelectedDays(resource.openDays.split(',').map(day => day.trim()));
+        setSelectedDays(resource.openDays.split(",").map((day) => day.trim()));
       }
     }
   }, [resource]);
@@ -92,19 +99,19 @@ export default function ResourceSuggestCard({
     const newOpenDays = Array.from(
       new Set(newDays.map((d) => d.trim().slice(0, 3)))
     ).join(",");
-    
-    console.log('Days changed:', {
+
+    console.log("Days changed:", {
       newDays,
       newOpenDays,
-      originalDays: originalValues.openDays
+      originalDays: originalValues.openDays,
     });
 
     if (newOpenDays !== originalValues.openDays) {
-      setChangedFields(prev => new Set([...prev, 'openDays']));
+      setChangedFields((prev) => new Set([...prev, "openDays"]));
     } else {
-      setChangedFields(prev => {
+      setChangedFields((prev) => {
         const newSet = new Set(prev);
-        newSet.delete('openDays');
+        newSet.delete("openDays");
         return newSet;
       });
     }
@@ -118,12 +125,12 @@ export default function ResourceSuggestCard({
     }));
 
     // Clear error when user starts typing
-    setErrors(prev => ({ ...prev, [name]: "" }));
+    setErrors((prev) => ({ ...prev, [name]: "" }));
 
     if (value !== originalValues[name as keyof typeof originalValues]) {
-      setChangedFields(prev => new Set([...prev, name]));
+      setChangedFields((prev) => new Set([...prev, name]));
     } else {
-      setChangedFields(prev => {
+      setChangedFields((prev) => {
         const newSet = new Set(prev);
         newSet.delete(name);
         return newSet;
@@ -131,27 +138,35 @@ export default function ResourceSuggestCard({
     }
   };
 
-  const handleTimeChange = (field: 'openTime' | 'closeTime', newTime: dayjs.Dayjs | null) => {
-    if (field === 'openTime') {
+  const handleTimeChange = (
+    field: "openTime" | "closeTime",
+    newTime: dayjs.Dayjs | null
+  ) => {
+    // Update the time state based on which field changed
+    if (field === "openTime") {
       setOpenTime(newTime);
     } else {
       setCloseTime(newTime);
     }
 
+    // Get the formatted time strings for comparison using 12-hour format with AM/PM
+    const newTimeStr = newTime?.format("hh:mm A");
     const originalTime = originalValues[field];
-    const newTimeStr = newTime?.format('HH:mm:ss');
-    const originalTimeStr = originalTime ? dayjs(originalTime).format('HH:mm:ss') : null;
-    
-    console.log(`Time field ${field} changed:`, {
+    const originalTimeStr = originalTime
+      ? dayjs(originalTime).format("hh:mm A")
+      : null;
+
+    console.log(`Time comparison for ${field}:`, {
       newTime: newTimeStr,
       originalTime: originalTimeStr,
-      isChanged: newTimeStr !== originalTimeStr
+      isChanged: newTimeStr !== originalTimeStr,
     });
 
+    // Track if the time has changed
     if (newTimeStr !== originalTimeStr) {
-      setChangedFields(prev => new Set([...prev, field]));
+      setChangedFields((prev) => new Set([...prev, field]));
     } else {
-      setChangedFields(prev => {
+      setChangedFields((prev) => {
         const newSet = new Set(prev);
         newSet.delete(field);
         return newSet;
@@ -164,10 +179,10 @@ export default function ResourceSuggestCard({
     try {
       // Validate form data
       const validationResult = formSchema.safeParse({
-        name: formData.get('name'),
-        address: formData.get('address'),
-        phone: formData.get('phone'),
-        url: formData.get('url'),
+        name: formData.get("name"),
+        address: formData.get("address"),
+        phone: formData.get("phone"),
+        url: formData.get("url"),
       });
 
       if (!validationResult.success) {
@@ -183,66 +198,76 @@ export default function ResourceSuggestCard({
       }
 
       const changedData = new FormData();
-      changedData.append('resourceId', resource?.id?.toString() || '');
+      changedData.append("resourceId", resource?.id?.toString() || "");
 
-      console.log('Changed fields:', Array.from(changedFields));
-      console.log('Current form state:', {
+      console.log("Changed fields:", Array.from(changedFields));
+      console.log("Current form state:", {
         formData,
         selectedDays,
-        openTime: openTime?.format('HH:mm:ss'),
-        closeTime: closeTime?.format('HH:mm:ss')
+        openTime: openTime?.format("HH:mm"),
+        closeTime: closeTime?.format("HH:mm"),
       });
 
       // Add all fields, but set unchanged ones to null
-      const allFields = ['name', 'address', 'phone', 'url', 'openDays', 'openTime', 'closeTime'];
-      allFields.forEach(field => {
+      const allFields = [
+        "name",
+        "address",
+        "phone",
+        "url",
+        "openDays",
+        "openTime",
+        "closeTime",
+      ];
+      allFields.forEach((field) => {
         if (changedFields.has(field)) {
           switch (field) {
-            case 'name': 
-              changedData.append('name', String(formData.get('name')));
+            case "name":
+              changedData.append("name", String(formData.get("name")));
               break;
-            case 'address':
-              console.log('Adding changed address:', formData.get('address'));
-              changedData.append('address', String(formData.get('address')));
+            case "address":
+              console.log("Adding changed address:", formData.get("address"));
+              changedData.append("address", String(formData.get("address")));
               break;
-            case 'phone':
-              changedData.append('phone', String(formData.get('phone')));
+            case "phone":
+              changedData.append("phone", String(formData.get("phone")));
               break;
-            case 'url':
-              changedData.append('url', String(formData.get('url')));
+            case "url":
+              changedData.append("url", String(formData.get("url")));
               break;
-            case 'openDays':
+            case "openDays":
               const openDays = Array.from(
                 new Set(selectedDays.map((d) => d.trim().slice(0, 3)))
               ).join(",");
-              console.log('Adding changed openDays:', openDays);
-              changedData.append('openDays', openDays);
+              console.log("Adding changed openDays:", openDays);
+              changedData.append("openDays", openDays);
               break;
-            case 'openTime':
-              const openTimeStr = openTime?.format('HH:mm:ss') || '';
-              console.log('Adding changed openTime:', openTimeStr);
-              changedData.append('openTime', openTimeStr);
+            case "openTime":
+              // Changed from formatted string to Date object in addEditResource function
+              const openTimeStr = openTime?.format("hh:mm A") || "";
+              console.log("Adding changed openTime:", openTimeStr);
+              changedData.append("openTime", openTimeStr);
               break;
-            case 'closeTime':
-              const closeTimeStr = closeTime?.format('HH:mm:ss') || '';
-              console.log('Adding changed closeTime:', closeTimeStr);
-              changedData.append('closeTime', closeTimeStr);
+            case "closeTime":
+              // Changed from formatted string to Date object in addEditResource function
+              const closeTimeStr = closeTime?.format("hh:mm A") || "";
+              console.log("Adding changed closeTime:", closeTimeStr);
+              changedData.append("closeTime", closeTimeStr);
               break;
           }
         } else {
           console.log(`Field ${field} unchanged, setting to null`);
-          changedData.append(field, 'null');
+          changedData.append(field, "null");
         }
       });
 
       // Log the final form data being sent
-      console.log('Final form data being sent:');
+      console.log("Final form data being sent:");
       for (const [key, value] of changedData.entries()) {
         console.log(`${key}: ${value}`);
       }
 
       const result = await addEditResource(changedData);
-      
+
       if (result.success) {
         toast(
           (t: { id: string }) => (
@@ -283,7 +308,9 @@ export default function ResourceSuggestCard({
       </button>
 
       <h1>Suggest an Edit</h1>
-      <p className="text-sm text-gray-600 mb-4">Only changed fields will be submitted for review</p>
+      <p className="text-sm text-gray-600 mb-4">
+        Only changed fields will be submitted for review
+      </p>
 
       <form action={handleFormAction}>
         <Box
@@ -298,7 +325,10 @@ export default function ResourceSuggestCard({
             onChange={handleChange}
             variant="standard"
             error={!!errors.name}
-            helperText={errors.name || (changedFields.has('name') ? "Changed" : "Original value")}
+            helperText={
+              errors.name ||
+              (changedFields.has("name") ? "Changed" : "Original value")
+            }
           />
           <TextField
             name="address"
@@ -307,7 +337,10 @@ export default function ResourceSuggestCard({
             onChange={handleChange}
             variant="standard"
             error={!!errors.address}
-            helperText={errors.address || (changedFields.has('address') ? "Changed" : "Original value")}
+            helperText={
+              errors.address ||
+              (changedFields.has("address") ? "Changed" : "Original value")
+            }
           />
           <TextField
             name="phone"
@@ -316,7 +349,10 @@ export default function ResourceSuggestCard({
             onChange={handleChange}
             variant="standard"
             error={!!errors.phone}
-            helperText={errors.phone || (changedFields.has('phone') ? "Changed" : "Original value")}
+            helperText={
+              errors.phone ||
+              (changedFields.has("phone") ? "Changed" : "Original value")
+            }
           />
           <TextField
             name="url"
@@ -325,7 +361,10 @@ export default function ResourceSuggestCard({
             onChange={handleChange}
             variant="standard"
             error={!!errors.url}
-            helperText={errors.url || (changedFields.has('url') ? "Changed" : "Original value")}
+            helperText={
+              errors.url ||
+              (changedFields.has("url") ? "Changed" : "Original value")
+            }
           />
 
           <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -345,25 +384,28 @@ export default function ResourceSuggestCard({
                   )
                 )}
               </ToggleButtonGroup>
-              {changedFields.has('openDays') && (
+              {changedFields.has("openDays") && (
                 <p className="text-sm text-blue-600">Days changed</p>
               )}
             </div>
+
+            {/* Open and Close Times */}
             <div className="space-y-4 mt-4">
               <TimePicker
                 label="Open Time"
                 value={openTime}
-                onChange={(newTime) => handleTimeChange('openTime', newTime)}
+                onChange={(openTime) => handleTimeChange("openTime", openTime)}
               />
-              {changedFields.has('openTime') && (
+              {changedFields.has("openTime") && (
                 <p className="text-sm text-blue-600">Open time changed</p>
               )}
+              {/* close time */}
               <TimePicker
                 label="Close Time"
                 value={closeTime}
-                onChange={(newTime) => handleTimeChange('closeTime', newTime)}
+                onChange={(newTime) => handleTimeChange("closeTime", newTime)}
               />
-              {changedFields.has('closeTime') && (
+              {changedFields.has("closeTime") && (
                 <p className="text-sm text-blue-600">Close time changed</p>
               )}
             </div>
