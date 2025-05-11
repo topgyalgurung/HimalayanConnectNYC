@@ -1,9 +1,9 @@
 /**
  * AdminResourceTable Component
- * 
+ *
  * A table component for displaying and managing resources in the admin dashboard.
  * Handles different views based on the active tab and resource type (new/edit).
- * 
+ *
  * @component
  * @param {Object} props
  * @param {string} props.activeTab - Current active tab ("new", "edit", "approved", "rejected")
@@ -12,7 +12,7 @@
  * @param {Function} props.onViewClick - Handler for viewing resource details
  * @param {Function} props.onStatusChange - Handler for changing resource status
  * @param {boolean} [props.isLoading] - Loading state indicator
- * 
+ *
  * @example
  * <AdminResourceTable
  *   activeTab="new"
@@ -32,7 +32,10 @@ interface AdminResourceTableProps {
   activeTab: string;
   filteredByStatus: Resource[];
   filteredByEditStatus: Resource[];
-  onViewClick: (resource: Resource, event: React.MouseEvent<HTMLElement>) => void;
+  onViewClick: (
+    resource: Resource,
+    event: React.MouseEvent<HTMLElement>
+  ) => void;
   onStatusChange: (
     resourceId: string,
     newStatus: string,
@@ -53,15 +56,24 @@ export const AdminResourceTable = ({
   const displayResources =
     activeTab === "approved" || activeTab === "rejected"
       ? [
-          ...filteredByStatus.map((resource) => ({ ...resource, type: "new" as const })),
+          ...filteredByStatus.map((resource) => ({
+            ...resource,
+            type: "new" as const,
+          })),
           ...filteredByEditStatus.map((resource) => ({
             ...resource,
             type: "edit" as const,
           })),
         ]
       : activeTab === "edit"
-      ? filteredByEditStatus.map((resource) => ({ ...resource, type: "edit" as const }))
-      : filteredByStatus.map((resource) => ({ ...resource, type: "new" as const }));
+      ? filteredByEditStatus.map((resource) => ({
+          ...resource,
+          type: "edit" as const,
+        }))
+      : filteredByStatus.map((resource) => ({
+          ...resource,
+          type: "new" as const,
+        }));
 
   return (
     <ResourceTable

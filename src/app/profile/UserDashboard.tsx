@@ -17,10 +17,10 @@ import { useFetchResourceEdit } from "../hooks/useFetchResourceEdit";
 import { useFetchUserResources } from "../hooks/useFetchUserResources";
 
 import { ProfileCard } from "./SharedProfileCard";
-import { TabNavigation } from "../components/dashboard/TabNavigation";
-import { UserResourceTable } from "../components/dashboard/UserResourceTable";
-import ResourceDetailsPopup from "../components/dashboard/ResourceDetailsPopup";
-import type { Resource } from "../lib/types";
+import { TabNavigation } from "../components/dashboard/TabNavigation/TabNavigation";
+import { UserResourceTable } from "../components/dashboard/ResourceTable/UserResourceTable";
+import ResourceDetailsPopup from "../components/dashboard/ResourcePopup/ResourceDetailsPopup";
+import type { Resource, ResourceEditSuggestion } from "../lib/types";
 
 /**
  * Main dashboard component for users to manage their resources, edits, reviews and favorites.
@@ -32,7 +32,7 @@ export default function UserDashboard() {
 
   const router = useRouter();
   const { setUser } = useUser();
-
+  // note: we are using useFetchUser to get the user data
   const { resources, refetch: refetchResources } = useFetchUserResources();
   const { editResources, refetch: refetchEditResources } =
     useFetchResourceEdit();
@@ -65,7 +65,7 @@ export default function UserDashboard() {
   };
 
   const handleViewClick = (
-    resource: Resource,
+    resource: Resource | ResourceEditSuggestion,
     event: React.MouseEvent<HTMLElement>
   ) => {
     if (anchorEl === event.currentTarget) {
@@ -73,7 +73,51 @@ export default function UserDashboard() {
       closePopup();
     } else {
       setAnchorEl(event.currentTarget);
-      openPopup(resource);
+      if ("type" in resource && resource.type === "edit") {
+        const editResource = resource as ResourceEditSuggestion;
+        openPopup({
+          ...editResource,
+          id: editResource.id.toString(),
+          name: editResource.name | editResource.resource.name,
+          status: editResource.status,
+          description: editResource.description || "",
+          openTime: editResource.openTime,
+          closeTime: editResource.closeTime,
+          openDays: editResource.openDays,
+          address: editResource.address,
+          phone: editResource.phone,
+          url: editResource.url,
+          createdAt: editResource.resource.createdAt,
+          updatedAt: editResource.resource.updatedAt,
+          editResource: editResource,
+        });
+      } else if ("resource" in resource && resource.resource) {
+        const fullResource = resource.resource;
+        openPopup({
+          ...fullResource,
+          id: fullResource.id.toString(),
+          name: fullResource.name,
+          description: fullResource.description || "",
+          address: fullResource.address || "",
+          city: fullResource.city || "",
+          openDays: fullResource.openDays || "",
+          openTime: fullResource.openTime,
+          closeTime: fullResource.closeTime,
+          phone: fullResource.phone || "",
+          email: fullResource.email || "",
+          url: fullResource.url || "",
+          facebookLink: fullResource.facebookLink || "",
+          rating: fullResource.rating,
+          imageUrl: fullResource.imageUrl,
+          ResourceCategory: fullResource.ResourceCategory,
+          Location: fullResource.Location,
+          createdAt: fullResource.createdAt,
+          updatedAt: fullResource.updatedAt,
+          editResource: null,
+        });
+      } else {
+        openPopup(resource);
+      }
     }
   };
 
@@ -143,6 +187,7 @@ export default function UserDashboard() {
             <UserResourceTable
               activeTab={activeTab}
               resources={resources}
+              // activeTab === 'likes' ? favorites : resources}
               editResources={editResources}
               user={user}
               deletingId={deletingId}
@@ -159,6 +204,8 @@ export default function UserDashboard() {
               open={isOpen}
               onClose={handleClosePopup}
               resource={selectedResource}
+              editResource={selectedResource?.editResource || null}
+              showSubmission={activeTab !== "likes"}
             />
           </div>
         </div>

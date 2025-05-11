@@ -38,7 +38,8 @@ export async function GET() {
             ...res,
             isLiked: res.ResourceLike && res.ResourceLike.length > 0,
         }));
-        console.log("Fetched resources:", JSON.stringify(resourcesWithLikeStatus, null, 2));
+        console.log("API Resources:", JSON.stringify(resourcesWithLikeStatus, null, 2));
+        console.log("Resources with locations:", resourcesWithLikeStatus.filter(r => r.Location?.[0]?.latitude && r.Location?.[0]?.longitude));
         return NextResponse.json(resourcesWithLikeStatus);
     } catch (error) {
         console.log("Error fetching resources: ", error);

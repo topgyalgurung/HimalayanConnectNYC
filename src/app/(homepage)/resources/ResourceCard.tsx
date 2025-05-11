@@ -8,10 +8,14 @@
 
 "use client";
 
-import { format } from "date-fns";
+// import { format } from "date-fns";
+// need to research if i can import simply Resource type from prisma
 
-import { type Resource } from "@/app/types/resource";
+import { type Resource } from "@/app/lib/types";
 import { formatOpenDays } from "@/app/lib/helpers/formatOpenDays";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+dayjs.extend(utc);
 
 interface ResourceCardProps {
   resources: Resource[];
@@ -50,13 +54,23 @@ export default function ResourceCard({
               </p>
               <p className="flex items-center gap-1">
                 <strong>Hours:</strong>
-                <span className="text-gray-700">
+                {/* this format does not work for openTime DateTime? @db.Time(6) in db */}
+                {/* <span className="text-gray-700">
                   {resource.openTime
                     ? format(resource.openTime, "hh:mm a")
                     : "N/A"}{" "}
                   -{" "}
                   {resource.closeTime
                     ? format(resource.closeTime, "hh:mm a")
+                    : "N/A"}
+                </span> */}
+                <span className="text-gray-700">
+                  {resource.openTime
+                    ? dayjs.utc(resource.openTime).format("hh:mm a")
+                    : "N/A"}{" "}
+                  -{" "}
+                  {resource.closeTime
+                    ? dayjs.utc(resource.closeTime).format("hh:mm a")
                     : "N/A"}
                 </span>
               </p>

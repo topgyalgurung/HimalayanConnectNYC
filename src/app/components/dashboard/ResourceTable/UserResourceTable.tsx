@@ -1,9 +1,9 @@
 /**
  * UserResourceTable Component
- * 
+ *
  * A table component for displaying and managing user's resources, edits, reviews, and favorites.
  * Provides different views based on the active tab and resource type.
- * 
+ *
  * @component
  * @param {Object} props
  * @param {string} props.activeTab - Current active tab ("new", "suggest", "reviews", "likes")
@@ -17,7 +17,7 @@
  * @param {Function} props.onDeleteEdit - Handler for deleting an edit suggestion
  * @param {Function} props.onDeleteReview - Handler for deleting a review
  * @param {Function} props.onDeleteFavorite - Handler for removing a favorite
- * 
+ *
  * @example
  * <UserResourceTable
  *   activeTab="new"
@@ -48,7 +48,10 @@ interface UserResourceTableProps {
   };
   deletingId: string | null;
   anchorEl: HTMLElement | null;
-  onViewClick: (resource: Resource, event: React.MouseEvent<HTMLElement>) => void;
+  onViewClick: (
+    resource: Resource,
+    event: React.MouseEvent<HTMLElement>
+  ) => void;
   onDeleteResource: (id: string) => void;
   onDeleteEdit: (id: string) => void;
   onDeleteReview: (id: string) => void;
@@ -67,7 +70,6 @@ export const UserResourceTable = ({
   onDeleteReview,
   onDeleteFavorite,
 }: UserResourceTableProps) => {
-  
   const getTableProps = () => {
     switch (activeTab) {
       case "new":

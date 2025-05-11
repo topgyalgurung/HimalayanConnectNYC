@@ -54,15 +54,39 @@ export async function GET() {
                 },
                 likes: {
                     select: {
-                        id:true,
-                        resource: { // get the resource info
+                        id: true,
+                        resource: {
                             select: {
                                 id: true,
                                 name: true,
+                                description: true,
                                 status: true,
                                 address: true,
                                 city: true,
+                                openDays: true,
+                                openTime: true,
+                                closeTime: true,
+                                phone: true,
+                                email: true,
+                                url: true,
+                                facebookLink: true,
+                                rating: true,
                                 imageUrl: true,
+                                ResourceCategory: {
+                                    select: {
+                                        id: true,
+                                        name: true
+                                    }
+                                },
+                                Location: {
+                                    select: {
+                                        id: true,
+                                        latitude: true,
+                                        longitude: true
+                                    }
+                                },
+                                createdAt: true,
+                                // updatedAt: true
                             }
                         }
                     }
