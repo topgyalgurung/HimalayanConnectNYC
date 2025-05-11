@@ -1,7 +1,7 @@
 
 import { NextRequest, NextResponse } from "next/server"
-import prisma from "@/app/lib/prisma";
-import { sendEmail } from "@/helpers/mailer";
+import { prisma } from "@/app/lib/prisma";
+import { sendEmail } from "@/app/lib/helpers/mailer";
 
 // backend generates a token, stores in db and sends email with token using nodemailer 
 export async function POST(request: NextRequest) {

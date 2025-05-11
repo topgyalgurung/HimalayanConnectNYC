@@ -5,9 +5,10 @@
  * and includes related data like categories, locations, and user likes.
  */
 
-import prisma from "@/app/lib/prisma";
+import { prisma } from "@/app/lib/prisma";
 import { getSession } from "@/app/lib/session";
-import type { Resource } from "@/app/types/resource";
+import type { Resource } from "@/app/lib/types";
+import { ResourceStatus } from "@prisma/client";
 
 interface GetResourcesOptions {
   categories?: string[];
@@ -31,11 +32,11 @@ export async function getResources({ categories = [], boroughs = [] }: GetResour
           in: boroughs
         }
       }),
-      status: "APPROVED" // Only show approved resources
+      status: ResourceStatus.APPROVED // Only show approved resources
     };
 
     const resources = await prisma.resource.findMany({
-      // where,
+      where,
       include: {
         ResourceCategory: {
           select: { id: true, name: true },

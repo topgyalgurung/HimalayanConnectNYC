@@ -1,12 +1,20 @@
-"use client";
+// src/app/components/features/ResourceSuggestCard.tsx
+/**
+ * ResourceSuggestCard Component
+ *
+ * This component is the form for suggesting edits to a resource.
+ * 
+ */
 
+"use client";
 import React from "react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { addEditResource } from "../../actions/forms";
 import dayjs from "dayjs";
-import { type Resource } from "@/app/types/resource";
+import { type Resource } from "@/app/lib/types";
 import toast from "react-hot-toast";
+import { z } from "zod";
 
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
@@ -14,6 +22,16 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+
+const formSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  address: z.string().min(5, "Address must be at least 5 characters"),
+  phone: z.string().regex(/^\d{3}-\d{3}-\d{4}$/, "Phone number must be in format: XXX-XXX-XXXX"),
+  url: z.string().url("Must be a valid URL").refine(
+    (url) => /\.(com|org|net|edu|gov|io)$/i.test(url),
+    "URL must end with a valid domain extension (.com, .org, etc.)"
+  ),
+});
 
 interface ResourceSuggestCardProps {
   resource: Resource | null;
@@ -28,7 +46,7 @@ export default function ResourceSuggestCard({
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
   const [openTime, setOpenTime] = useState<dayjs.Dayjs | null>(null);
   const [closeTime, setCloseTime] = useState<dayjs.Dayjs | null>(null);
-  // const router = useRouter();
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   // Track original values
   const [originalValues] = useState({
@@ -99,12 +117,8 @@ export default function ResourceSuggestCard({
       [name]: value,
     }));
 
-    console.log(`Field ${name} changed:`, {
-      newValue: value,
-      originalValue: originalValues[name as keyof typeof originalValues],
-      isChanged: value !== originalValues[name as keyof typeof originalValues]
-    });
-
+    // Clear error when user starts typing
+    setErrors(prev => ({ ...prev, [name]: "" }));
 
     if (value !== originalValues[name as keyof typeof originalValues]) {
       setChangedFields(prev => new Set([...prev, name]));
@@ -115,8 +129,6 @@ export default function ResourceSuggestCard({
         return newSet;
       });
     }
-    console.log('Changed fields:', Array.from(changedFields));
-    console.log('new value:', value);
   };
 
   const handleTimeChange = (field: 'openTime' | 'closeTime', newTime: dayjs.Dayjs | null) => {
@@ -128,14 +140,15 @@ export default function ResourceSuggestCard({
 
     const originalTime = originalValues[field];
     const newTimeStr = newTime?.format('HH:mm:ss');
+    const originalTimeStr = originalTime ? dayjs(originalTime).format('HH:mm:ss') : null;
     
     console.log(`Time field ${field} changed:`, {
       newTime: newTimeStr,
-      originalTime,
-      isChanged: newTimeStr !== originalTime
+      originalTime: originalTimeStr,
+      isChanged: newTimeStr !== originalTimeStr
     });
 
-    if (newTimeStr !== originalTime) {
+    if (newTimeStr !== originalTimeStr) {
       setChangedFields(prev => new Set([...prev, field]));
     } else {
       setChangedFields(prev => {
@@ -148,8 +161,27 @@ export default function ResourceSuggestCard({
 
   const handleFormAction = async (formData: FormData) => {
     setLoading(true);
-
     try {
+      // Validate form data
+      const validationResult = formSchema.safeParse({
+        name: formData.get('name'),
+        address: formData.get('address'),
+        phone: formData.get('phone'),
+        url: formData.get('url'),
+      });
+
+      if (!validationResult.success) {
+        const newErrors: Record<string, string> = {};
+        validationResult.error.errors.forEach((err) => {
+          if (err.path[0]) {
+            newErrors[err.path[0].toString()] = err.message;
+          }
+        });
+        setErrors(newErrors);
+        setLoading(false);
+        return;
+      }
+
       const changedData = new FormData();
       changedData.append('resourceId', resource?.id?.toString() || '');
 
@@ -265,7 +297,8 @@ export default function ResourceSuggestCard({
             value={formData.name}
             onChange={handleChange}
             variant="standard"
-            helperText={changedFields.has('name') ? "Changed" : "Original value"}
+            error={!!errors.name}
+            helperText={errors.name || (changedFields.has('name') ? "Changed" : "Original value")}
           />
           <TextField
             name="address"
@@ -273,7 +306,8 @@ export default function ResourceSuggestCard({
             value={formData.address}
             onChange={handleChange}
             variant="standard"
-            helperText={changedFields.has('address') ? "Changed" : "Original value"}
+            error={!!errors.address}
+            helperText={errors.address || (changedFields.has('address') ? "Changed" : "Original value")}
           />
           <TextField
             name="phone"
@@ -281,7 +315,8 @@ export default function ResourceSuggestCard({
             value={formData.phone}
             onChange={handleChange}
             variant="standard"
-            helperText={changedFields.has('phone') ? "Changed" : "Original value"}
+            error={!!errors.phone}
+            helperText={errors.phone || (changedFields.has('phone') ? "Changed" : "Original value")}
           />
           <TextField
             name="url"
@@ -289,7 +324,8 @@ export default function ResourceSuggestCard({
             value={formData.url}
             onChange={handleChange}
             variant="standard"
-            helperText={changedFields.has('url') ? "Changed" : "Original value"}
+            error={!!errors.url}
+            helperText={errors.url || (changedFields.has('url') ? "Changed" : "Original value")}
           />
 
           <LocalizationProvider dateAdapter={AdapterDayjs}>

@@ -1,8 +1,10 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import prisma from '@/app/lib/prisma';
-import { ResourceStatus } from '@prisma/client';
+import { prisma } from '@/app/lib/prisma';
+import { ResourceStatus, Resource } from '@prisma/client';
+
+type ResourceUpdateData = Partial<Pick<Resource, 'name' | 'address' | 'phone' | 'url' | 'openDays' | 'openTime' | 'closeTime'>>;
 
 // this is the action for the admin to update the status of the resource
 // todo: when edit status is approved, update the resource with the new values
@@ -39,7 +41,7 @@ export async function updateResourceStatus(
       // If the suggestion is approved, update the resource
       if (newStatus === "APPROVED") {
         // Create an update object with only the fields that have values
-        const updateData: any = {};
+        const updateData: ResourceUpdateData = {};
         
         if (resourceEditSuggestion.name) updateData.name = resourceEditSuggestion.name;
         if (resourceEditSuggestion.address) updateData.address = resourceEditSuggestion.address;

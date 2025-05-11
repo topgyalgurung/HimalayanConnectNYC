@@ -20,6 +20,7 @@ import { useEffect, useState } from "react";
 import AdminDashboard from "../profile/AdminDashboard";
 import UserDashboard from "../profile/UserDashboard";
 import { getSession } from "../lib/session";
+
 export default function Profile() {
   // const session = await verifySession()
   // const userRole = session?.role;

@@ -1,3 +1,11 @@
+// src/app/components/features/ReviewSubmitCard.tsx
+/**
+ * ReviewSubmitCard Component
+ *
+ * This component is the form for submitting a review for a resource.
+ * 
+ */
+
 "use client";
 import { useEffect, useState } from "react";
 import Rating from "@mui/material/Rating";
@@ -8,7 +16,7 @@ import Button from "@mui/material/Button";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CircularProgress from "@mui/material/CircularProgress";
 
-import { type Resource } from "@/app/types/resource";
+import { type Resource } from "@/app/lib/types";
 interface ReviewResourceCardProps {
   resource: Resource | null;
   onReviewCloseAction: (resource: Resource | null) => void;

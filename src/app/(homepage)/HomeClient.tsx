@@ -15,7 +15,7 @@ import { useState } from "react";
 import FilterSidebar from "./filters/FilterSidebar"; // FilterSidebar component for resource filtering  
 import ResourceListPanel from "./resources/ResourceListPanel"; // ResourceListPanel component for resource list display
 import MapView from "./map/Map"; // MapView component for map display
-import type { Resource } from "@/app/types/resource"; // Resource type definition
+import type { Resource } from "@/app/lib/types"; // Resource type definition
 
 interface HomeClientProps {
   initialResources: Resource[];

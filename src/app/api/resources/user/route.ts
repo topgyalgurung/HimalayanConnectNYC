@@ -1,4 +1,4 @@
-import prisma from "@/app/lib/prisma";
+import { prisma } from "@/app/lib/prisma";
 import { getSession } from "@/app/lib/session";
 import { NextResponse } from "next/server";
 

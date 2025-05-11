@@ -67,6 +67,7 @@ export const UserResourceTable = ({
   onDeleteReview,
   onDeleteFavorite,
 }: UserResourceTableProps) => {
+  
   const getTableProps = () => {
     switch (activeTab) {
       case "new":

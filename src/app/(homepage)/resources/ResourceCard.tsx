@@ -1,18 +1,17 @@
-
 /**
  * ResourceCard Component
  *
  * This component is the resource card for the homepage of the Himalayan Connect NYC application.
  * It displays a single resource in a card format.
- * 
+ *
  */
-  
+
 "use client";
 
 import { format } from "date-fns";
 
 import { type Resource } from "@/app/types/resource";
-import { formatOpenDays } from "@/app/helpers/formatOpenDays";
+import { formatOpenDays } from "@/app/lib/helpers/formatOpenDays";
 
 interface ResourceCardProps {
   resources: Resource[];
@@ -46,13 +45,19 @@ export default function ResourceCard({
                 {resource.address ? resource.address : "No address available"}
               </p>
               <p>
-                <strong>Open Days :</strong> {formatOpenDays(resource.openDays)}
+                <strong>Open Days :</strong>{" "}
+                {resource.openDays ? formatOpenDays(resource.openDays) : "N/A"}
               </p>
               <p className="flex items-center gap-1">
-                <strong className="text-gray-700">Hours:</strong>
-                <span className="text-gray-600">
-                  {format(resource.openTime, "hh:mm a")} -{" "}
-                  {format(resource.closeTime, "hh:mm a")}
+                <strong>Hours:</strong>
+                <span className="text-gray-700">
+                  {resource.openTime
+                    ? format(resource.openTime, "hh:mm a")
+                    : "N/A"}{" "}
+                  -{" "}
+                  {resource.closeTime
+                    ? format(resource.closeTime, "hh:mm a")
+                    : "N/A"}
                 </span>
               </p>
             </div>

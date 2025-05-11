@@ -48,10 +48,11 @@ export type SignupFormState =
 
 export type LoginFormState =
   | {
-    error?: {
-      email?: string[]
-      password?:string[]
+      errors?: {
+        email?: string[]
+        password?: string[]
+      }
+      message?: string
+      status?: number
     }
-    message?:string
-  }
   | undefined

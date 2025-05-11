@@ -4,7 +4,7 @@ import {
   LoginFormSchema,
   SignupFormState,
   LoginFormState,
-} from "@/app/lib/definitions";
+} from "@/app/lib/forms/definitions";
 
 // login
 // signup
@@ -12,7 +12,7 @@ import {
 
 import { createSession, deleteSession } from "@/app/lib/session";
 import bcrypt from "bcryptjs";
-import prisma from "../lib/prisma";
+import {prisma} from "../lib/prisma";
 import { Role } from "@prisma/client";
 // import { Yesteryear } from "next/font/google";
 // cookie should be set on the server to prevent client side tampering
@@ -133,7 +133,7 @@ export async function login(state: LoginFormState, formData: FormData) {
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) {
       return {
-        message: "Invalid email or password",
+        message: "Password is incorrect",
         status: 401,
       };
     }
@@ -147,7 +147,8 @@ export async function login(state: LoginFormState, formData: FormData) {
       message: "Logged in successfully",
       redirect: "/",
       user: {
-        id: user.id,
+        userId: user.id.toString(),
+        firstName: user.firstName,
         email: user.email,
         role: user.role,
       }, // include user data to avoid re-fetching

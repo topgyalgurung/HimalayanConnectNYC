@@ -1,19 +1,19 @@
 /**
  * ResourceDetailsCard Component
- * 
+ *
  * A detailed view component for displaying comprehensive information about a resource.
  * Features multiple tabs for different types of information:
  * - Overview: Basic details and actions
  * - Review: User reviews and rating system
  * - About: Detailed description
- * 
+ *
  * @component
  * @param {Object} props
  * @param {Resource|null} props.resource - The resource object to display
  * @param {Function} [props.onSuggestEdit] - Handler for suggesting edits to the resource
  * @param {Function} [props.onReviewResource] - Handler for reviewing the resource
  * @param {Function} props.onCloseAction - Handler for closing the details card
- * 
+ *
  */
 "use client";
 
@@ -22,15 +22,16 @@ import * as React from "react";
 import { useState, useEffect } from "react";
 import { useUser } from "../../context/UserProvider";
 import { useRouter } from "next/navigation";
+import { formatOpenDays } from "@/app/lib/helpers/formatOpenDays";
 import toast from "react-hot-toast";
 
 import { useFavorites } from "../../hooks/useFavorites";
 import { useFetchResourceReview } from "../../hooks/useFetchResourceReview";
 
 import { format } from "date-fns";
-import { type Resource } from "@/app/types/resource";
-import { type User } from "@/app/types/user";
-import { type ResourceReview } from "@/app/types/review";
+import { type Resource } from "@/app/lib/types";
+import { type User } from "@/app/lib/types";
+import { type ResourceReview } from "@/app/lib/types";
 
 import TabButton from "../common/TabButton";
 import Rating from "@mui/material/Rating";
@@ -71,15 +72,27 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
 
     <hr className="my-4 border-gray-300" />
 
-    <p className="text-gray-600">
-      <span className="font-medium">Address:</span> {resource.address},{" "}
-      {resource.city}
+    <p>
+      <span className="font-medium">Address:</span> {resource.address}
     </p>
-    <p className="text-gray-600">
-      <span className="font-medium">Open:</span> {resource.openDays}
+    <p>
+      <span className="font-medium">Opens:</span>{" "}
+      {formatOpenDays(resource.openDays || null)}
+    </p>
+    <p>
+      {" "}
+      <span className="font-medium">Website:</span> {resource.url}
+    </p>
+    <p>
+      {" "}
+      <span className="font-medium ">Email:</span> {resource.email}
+    </p>
+    <p>
+      {" "}
+      <span className="font-medium">Phone:</span> {resource.phone}
     </p>
     {resource.openTime && resource.closeTime && (
-      <p className="text-gray-600">
+      <p>
         <span className="font-medium">Hours:</span>{" "}
         {format(new Date(resource.openTime), "hh:mm a")} -{" "}
         {format(new Date(resource.closeTime), "hh:mm a")}
@@ -147,7 +160,9 @@ const ReviewTab: React.FC<ReviewTabProps> = ({
         <p>{r.User?.firstName || "anonymous"}</p>
         <p>{r.User?.createdAt}</p>
         <Rating value={Number(r.rating)} readOnly precision={0.5} />
-        <p className="text-sm text-gray-600">Rating: {Number(r.rating).toFixed(1)}</p>
+        <p className="text-sm text-gray-600">
+          Rating: {Number(r.rating).toFixed(1)}
+        </p>
         <p>{r.content}</p>
         <hr className="my-4 border-gray-300" />
       </div>
@@ -165,7 +180,9 @@ export default function ResourceDetailsCard({
   const { user } = useUser();
   const router = useRouter();
   const { isFavorite, toggleFavorite } = useFavorites();
-  const { reviews, refetch: refetchReviews } = useFetchResourceReview(Number(resource?.id) || null);
+  const { reviews, refetch: refetchReviews } = useFetchResourceReview(
+    Number(resource?.id) || null
+  );
 
   // Refetch reviews when review tab is active or when a review is submitted
   useEffect(() => {
@@ -184,9 +201,9 @@ export default function ResourceDetailsCard({
       }
     };
 
-    window.addEventListener('reviewSubmitted', handleReviewSubmitted);
+    window.addEventListener("reviewSubmitted", handleReviewSubmitted);
     return () => {
-      window.removeEventListener('reviewSubmitted', handleReviewSubmitted);
+      window.removeEventListener("reviewSubmitted", handleReviewSubmitted);
     };
   }, [activeTab, refetchReviews, router]);
 

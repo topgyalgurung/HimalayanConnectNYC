@@ -9,7 +9,7 @@
  * @returns {Function} refetch - Function to manually refresh resources
  */
 import { useState, useEffect } from "react";
-import type { Resource } from "@/app/types/resource";
+import type { Resource } from "../lib/types";
 
 // const RESOURCE_CACHE_KEY = "resourcecache"; // key for localStorage
 
