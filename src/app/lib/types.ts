@@ -42,7 +42,7 @@ export interface Resource {
   closeTime?: Date | null;
   status: ResourceStatus;
   createdAt: Date;
-  updatedAt: Date;
+  // updatedAt: Date;
   suggestedById?: number | null;
   categoryId?: number | null;
   features?: string | null;
@@ -96,4 +96,20 @@ export interface EditResourceInput {
   facebookLink?: string | null;
   description?: string | null;
   image?: string | null;
+};
+
+export type ResourceFormData = {
+  name: string;
+  address: string;
+  categoryId?: string;
+  city?: string;
+  openDays?: string;
+  openTime?: string;
+  closeTime?: string;
+  phone?: string;
+  email?: string;
+  url?: string;
+  facebookLink?: string;
+  description?: string;
+  image?: string;
 };

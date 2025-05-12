@@ -1,18 +1,18 @@
 /**
- * HomeClient Component 
- * 
+ * HomeClient Component
+ *
  * This component is the main client-side component for the homepage of the Himalayan Connect NYC application.
  * It manages the state and logic for the resource filtering and display.
- * 
+ *
  * @param {Object} props - Component props
  * @param {Resource[]} props.initialResources - Initial resources to display
  * @returns {JSX.Element} The homepage component
  */
 
-'use client';
+"use client";
 
 import { useState } from "react";
-import FilterSidebar from "./filters/FilterSidebar"; // FilterSidebar component for resource filtering  
+import FilterSidebar from "./filters/FilterSidebar"; // FilterSidebar component for resource filtering
 import ResourceListPanel from "./resources/ResourceListPanel"; // ResourceListPanel component for resource list display
 import MapView from "./map/Map"; // MapView component for map display
 import type { Resource } from "@/app/lib/types"; // Resource type definition
@@ -22,15 +22,18 @@ interface HomeClientProps {
 }
 
 export default function HomeClient({ initialResources }: HomeClientProps) {
-  const [filteredResources, setFilteredResources] = useState<Resource[]>(initialResources);
-  const [selectedResource, setSelectedResource] = useState<Resource | null>(null);
+  const [filteredResources, setFilteredResources] =
+    useState<Resource[]>(initialResources);
+  const [selectedResource, setSelectedResource] = useState<Resource | null>(
+    null
+  );
   const [editResource, setEditResource] = useState<Resource | null>(null);
   const [reviewResource, setReviewResource] = useState<Resource | null>(null);
 
   // toggles to close or open the details of a resource
   const handleToggleDetails = (resource: Resource) => {
     if (selectedResource?.id === resource.id) {
-      setSelectedResource(null); 
+      setSelectedResource(null);
     } else {
       setEditResource(null);
       setSelectedResource(resource);

@@ -11,11 +11,7 @@ import dayjs from "dayjs";
 import { formSchema, type FormValues } from "@/app/lib/forms/validationSchema";
 import BasicInfoSection from "@/app/lib/forms/BasicInfoSection";
 import AdditionalDetailsSection from "@/app/lib/forms/AdditionalDetailsSection";
-// import { User } from "@prisma/client";
 
-// interface AddResourceFormProps {
-//   user: User | null;
-// }
 
 export default function AddResourceForm() {
   const [message, setMessage] = useState("");
