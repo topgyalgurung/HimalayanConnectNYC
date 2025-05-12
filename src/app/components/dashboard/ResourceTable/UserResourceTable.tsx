@@ -37,25 +37,23 @@
 
 import React from "react";
 import { ResourceTable, Resource } from "./ResourceTable";
+import type { ResourceEditSuggestion, User } from "@/app/lib/types";
 
 interface UserResourceTableProps {
   activeTab: string;
   resources: Resource[];
   editResources: Resource[];
-  user: {
-    reviews: Resource[];
-    likes: Resource[];
-  };
+  user: User;
   deletingId: string | null;
   anchorEl: HTMLElement | null;
-  onViewClick: (
-    resource: Resource,
+  onViewClickAction: (
+    resource: Resource | ResourceEditSuggestion,
     event: React.MouseEvent<HTMLElement>
   ) => void;
-  onDeleteResource: (id: string) => void;
-  onDeleteEdit: (id: string) => void;
-  onDeleteReview: (id: string) => void;
-  onDeleteFavorite: (id: string) => void;
+  onDeleteResourceAction: (id: string) => void;
+  onDeleteEditAction: (id: string) => void;
+  onDeleteReviewAction: (id: string) => void;
+  onDeleteFavoriteAction: (id: string) => void;
 }
 
 export const UserResourceTable = ({
@@ -64,11 +62,11 @@ export const UserResourceTable = ({
   editResources,
   user,
   deletingId,
-  onViewClick,
-  onDeleteResource,
-  onDeleteEdit,
-  onDeleteReview,
-  onDeleteFavorite,
+  onViewClickAction,
+  onDeleteResourceAction,
+  onDeleteEditAction,
+  onDeleteReviewAction,
+  onDeleteFavoriteAction,
 }: UserResourceTableProps) => {
   const getTableProps = () => {
     switch (activeTab) {
@@ -76,28 +74,28 @@ export const UserResourceTable = ({
         return {
           type: "new" as const,
           data: resources,
-          onDelete: onDeleteResource,
+          onDelete: onDeleteResourceAction,
           emptyMessage: "No resources submitted yet.",
         };
       case "suggest":
         return {
           type: "suggest" as const,
           data: editResources,
-          onDelete: onDeleteEdit,
+          onDelete: onDeleteEditAction,
           emptyMessage: "No edit suggestions submitted yet.",
         };
       case "reviews":
         return {
           type: "reviews" as const,
           data: user.reviews,
-          onDelete: onDeleteReview,
+          onDelete: onDeleteReviewAction,
           emptyMessage: "No reviews submitted yet.",
         };
       case "likes":
         return {
           type: "likes" as const,
           data: user.likes,
-          onDelete: onDeleteFavorite,
+          onDelete: onDeleteFavoriteAction,
           emptyMessage: "No favorites yet.",
         };
       default:
@@ -116,7 +114,7 @@ export const UserResourceTable = ({
     <ResourceTable
       {...tableProps}
       deletingId={deletingId}
-      onViewClick={onViewClick}
+      onViewClick={onViewClickAction}
     />
   );
 };

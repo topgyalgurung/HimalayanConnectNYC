@@ -18,59 +18,13 @@ import TableRow from "@mui/material/TableRow";
 import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { format } from "date-fns";
+import { Resource as BaseResource, ResourceStatus } from "@/app/lib/types";
 
-export interface Resource {
-  id: string;
-  name: string;
-  status?: string;
-  content?: string;
-  rating?: number;
-  createdAt?: string;
-  updatedAt?: string;
+export interface Resource extends Omit<BaseResource, "status"> {
+  status?: ResourceStatus;
+  content?: string | null;
   type?: "new" | "edit";
-  description?: string;
-  address?: string;
-  city?: string;
-  openDays?: string;
-  openTime?: string;
-  closeTime?: string;
-  phone?: string;
-  email?: string;
-  url?: string;
-  facebookLink?: string;
-  imageUrl?: string;
-  ResourceCategory?: {
-    name: string;
-  };
-  Location?: Array<{
-    latitude: number;
-    longitude: number;
-  }>;
-  resource?: {
-    id: string;
-    name: string;
-    description?: string;
-    address?: string;
-    city?: string;
-    openDays?: string;
-    openTime?: string;
-    closeTime?: string;
-    phone?: string;
-    email?: string;
-    url?: string;
-    facebookLink?: string;
-    rating?: number;
-    imageUrl?: string;
-    ResourceCategory?: {
-      name: string;
-    };
-    Location?: Array<{
-      latitude: number;
-      longitude: number;
-    }>;
-    createdAt: string;
-    updatedAt: string;
-  };
+  resource?: BaseResource;
 }
 
 interface Column {
@@ -212,33 +166,30 @@ export const ResourceTable: React.FC<ResourceTableProps> = ({
           <Button
             onClick={(e) => {
               if (type === "likes" && row.resource) {
-                onViewClick(
-                  {
-                    ...row.resource,
-                    id: row.resource.id.toString(),
-                    name: row.resource.name,
-                    description: row.resource.description || "",
-                    address: row.resource.address || "",
-                    city: row.resource.city || "",
-                    openDays: row.resource.openDays || "",
-                    openTime: row.resource.openTime,
-                    closeTime: row.resource.closeTime,
-                    phone: row.resource.phone || "",
-                    email: row.resource.email || "",
-                    url: row.resource.url || "",
-                    facebookLink: row.resource.facebookLink || "",
-                    rating: row.resource.rating,
-                    imageUrl: row.resource.imageUrl,
-                    ResourceCategory: row.resource.ResourceCategory,
-                    Location: row.resource.Location,
-                    createdAt: row.resource.createdAt,
-                    updatedAt: row.resource.updatedAt,
-                  },
-                  e
-                );
-                // } else if (type === "suggest") {
-                //   onViewClick({
-                //   })
+                const resourceData: Resource = {
+                  ...row.resource,
+                  id: row.resource.id.toString(),
+                  name: row.resource.name,
+                  description: row.resource.description || "",
+                  address: row.resource.address || "",
+                  city: row.resource.city || "",
+                  openDays: row.resource.openDays || "",
+                  openTime: row.resource.openTime,
+                  closeTime: row.resource.closeTime,
+                  phone: row.resource.phone || "",
+                  email: row.resource.email || "",
+                  url: row.resource.url || "",
+                  facebookLink: row.resource.facebookLink || "",
+                  rating: row.resource.rating,
+                  imageUrl: row.resource.imageUrl,
+                  ResourceCategory: row.resource.ResourceCategory,
+                  Location: row.resource.Location,
+                  createdAt: row.resource.createdAt,
+                  content: row.resource.description || undefined,
+                  type: row.type,
+                  status: row.status,
+                };
+                onViewClick(resourceData, e);
               } else {
                 onViewClick(row, e);
               }
@@ -331,41 +282,41 @@ export const ResourceTable: React.FC<ResourceTableProps> = ({
   };
 
   return (
-    <Paper sx={{ width: "100%", overflow: "hidden" }}>
-      <TableContainer sx={{ maxHeight: 440 }}>
-        <Table stickyHeader aria-label="sticky table">
-          <TableHead>
+    <TableContainer component={Paper}>
+      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <TableHead>
+          <TableRow>
+            {columns.map((column) => (
+              <TableCell
+                key={column.id}
+                align={column.align || "left"}
+                style={{ minWidth: column.minWidth }}
+              >
+                {column.label}
+              </TableCell>
+            ))}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {data.length === 0 ? (
             <TableRow>
-              {columns.map((column) => (
-                <TableCell
-                  key={column.id}
-                  align={column.align || "left"}
-                  style={{ minWidth: column.minWidth }}
-                >
-                  {column.label}
-                </TableCell>
-              ))}
+              <TableCell colSpan={columns.length} align="center">
+                {emptyMessage}
+              </TableCell>
             </TableRow>
-          </TableHead>
-          <TableBody>
-            {data.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={columns.length}>{emptyMessage}</TableCell>
+          ) : (
+            data.map((row, index) => (
+              <TableRow key={row.id} hover role="checkbox" tabIndex={-1}>
+                {columns.map((column) => (
+                  <TableCell key={column.id} align={column.align || "left"}>
+                    {renderCell(row, column, index)}
+                  </TableCell>
+                ))}
               </TableRow>
-            ) : (
-              data.map((row, index) => (
-                <TableRow key={row.id} hover role="checkbox" tabIndex={-1}>
-                  {columns.map((column) => (
-                    <TableCell key={column.id} align={column.align || "left"}>
-                      {renderCell(row, column, index)}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Paper>
+            ))
+          )}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 };

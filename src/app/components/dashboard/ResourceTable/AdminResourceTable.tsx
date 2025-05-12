@@ -26,17 +26,18 @@
 "use client";
 
 import React from "react";
-import { ResourceTable, Resource } from "./ResourceTable";
+import { ResourceTable } from "./ResourceTable";
+import type { Resource } from "@/app/lib/types";
 
 interface AdminResourceTableProps {
   activeTab: string;
   filteredByStatus: Resource[];
   filteredByEditStatus: Resource[];
-  onViewClick: (
+  onViewClickAction: (
     resource: Resource,
     event: React.MouseEvent<HTMLElement>
   ) => void;
-  onStatusChange: (
+  onStatusChangeAction: (
     resourceId: string,
     newStatus: string,
     resourceType: "new" | "edit"
@@ -48,8 +49,8 @@ export const AdminResourceTable = ({
   activeTab,
   filteredByStatus,
   filteredByEditStatus,
-  onViewClick,
-  onStatusChange,
+  onViewClickAction,
+  onStatusChangeAction,
   isLoading,
 }: AdminResourceTableProps) => {
   // Combine both types of resources for approved and rejected tabs
@@ -79,8 +80,8 @@ export const AdminResourceTable = ({
     <ResourceTable
       type="admin"
       data={displayResources}
-      onViewClick={onViewClick}
-      onStatusChange={onStatusChange}
+      onViewClick={onViewClickAction}
+      onStatusChange={onStatusChangeAction}
       isLoading={isLoading}
       adminTab={activeTab}
       emptyMessage={`No ${activeTab} resources found.`}

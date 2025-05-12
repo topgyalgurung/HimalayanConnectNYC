@@ -2,7 +2,7 @@ import React from "react";
 import Popup from "./Popup";
 import type { Resource } from "@/app/lib/types";
 import dayjs from "dayjs";
-import { ResourceEditSuggestion } from "@prisma/client";
+import { ResourceEditSuggestion } from "@/app/lib/types";
 import utc from "dayjs/plugin/utc";
 dayjs.extend(utc);
 
@@ -10,7 +10,7 @@ interface ResourceDetailsPopupProps {
   anchor: HTMLElement | null;
   open: boolean;
   onClose: () => void;
-  resource: Resource | null;
+  resource: Resource;
   editResource: ResourceEditSuggestion | null;
   showSubmission?: boolean;
 }

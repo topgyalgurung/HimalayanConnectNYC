@@ -1,4 +1,3 @@
-
 export type ResourceStatus = "PENDING" | "APPROVED" | "REJECTED";
 
 export type Location = {
@@ -20,7 +19,7 @@ export type User = {
   reviews: {
     id: number;
     content: string;
-    resource: Resource[];
+    resource: Resource;
     rating: number;
     createdAt: string;
   }[];
@@ -42,7 +41,6 @@ export interface Resource {
   closeTime?: Date | null;
   status: ResourceStatus;
   createdAt: Date;
-  // updatedAt: Date;
   suggestedById?: number | null;
   categoryId?: number | null;
   features?: string | null;
@@ -52,6 +50,8 @@ export interface Resource {
   facebookLink?: string | null;
   ResourceCategory?: { name: string } | null;
   Location: Location[];
+  updatedAt: Date;
+  editResource?: ResourceEditSuggestion | null;
 }
 
 export type ResourceEditSuggestion = {
@@ -62,12 +62,15 @@ export type ResourceEditSuggestion = {
   openDays: string;
   phone: string;
   url: string;
-  openTime: string;
-  closeTime: string;
+  openTime: Date;
+  closeTime: Date;
   resource: Resource;
   User: User;
   ResourceCategory?: { name: string } | null;
-  status: string;
+  status: ResourceStatus;
+  createdAt: Date;
+  Location: Location[]
+  updatedAt: Date;
 };
 
 export type ResourceReview = {
@@ -113,3 +116,7 @@ export type ResourceFormData = {
   description?: string;
   image?: string;
 };
+
+// export type ResourceLike{
+
+// }
