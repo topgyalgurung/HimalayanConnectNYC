@@ -88,7 +88,7 @@ export default function MapView({
               editResource={editResource}
               onSuggestEdit={onSuggestEdit}
               onReviewResource={onReviewResource}
-              onCloseAction={onCloseAction}
+              onCloseAction={() => onCloseAction(null)}
             />
           </div>
         )}
