@@ -32,7 +32,7 @@ import { motion } from "framer-motion";
 import IconButton from "@mui/material/IconButton";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import { type Resource } from "@/app/types/resource";
+import type { Resource } from '@/app/lib/types';
 import toast from "react-hot-toast";
 
 interface ResourceActionsProps {

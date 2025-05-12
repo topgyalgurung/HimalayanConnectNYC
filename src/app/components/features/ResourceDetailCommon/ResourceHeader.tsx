@@ -22,7 +22,7 @@ import React from 'react';
 import Image from "next/image";
 import { Box } from "@mui/material";
 import Rating from "@mui/material/Rating";
-import { type Resource } from "@/app/types/resource";
+import type { Resource } from "@/app/lib/types";
 
 interface ResourceHeaderProps {
   resource: Resource;
