@@ -2,7 +2,7 @@
  * SearchInput Component
  * 
  *  The user types into this input field, and the search query is updated instantly.
- * The query is saved in the browser’s URL as ?query=value, and whenever the user types,
+ * The query is saved in the browser's URL as ?query=value, and whenever the user types,
  * it updates the URL and triggers a re-render in the ResourceList component,
  * @returns filtered result
  */
@@ -21,7 +21,6 @@ export default function SearchInput() {
   const searchParams = useSearchParams();
   const currentQuery = searchParams.get("query") || ""; // Get the 'query' from the URL (default to empty string if not found)
 
-  const [searchQuery, setSearchQuery] = useState(currentQuery); //hold the search query in the input field
   const [inputValue, setInputValue] = useState(currentQuery); // Handles input without affecting search results
 
   // sync input field with url on page load
@@ -42,7 +41,6 @@ export default function SearchInput() {
         params.delete("query");
       }
       router.push(`/?${params.toString()}`); // Update URL search params
-      setSearchQuery(inputValue.trim());
     }, 10); // delay live search updates (debounce)
     return () => clearTimeout(debounceTimer); // cleanup debounce
   }, [inputValue, router]);

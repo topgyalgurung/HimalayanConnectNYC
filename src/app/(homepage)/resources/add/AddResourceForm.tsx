@@ -11,19 +11,21 @@ import dayjs from "dayjs";
 import { formSchema, type FormValues } from "@/app/lib/forms/validationSchema";
 import BasicInfoSection from "@/app/lib/forms/BasicInfoSection";
 import AdditionalDetailsSection from "@/app/lib/forms/AdditionalDetailsSection";
-import { User } from "@prisma/client";
+// import { User } from "@prisma/client";
 
-interface AddResourceFormProps {
-  user: User | null;
-}
+// interface AddResourceFormProps {
+//   user: User | null;
+// }
 
-export default function AddResourceForm({ user }: AddResourceFormProps) {
+export default function AddResourceForm() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
   const [openTime, setOpenTime] = useState<dayjs.Dayjs | null>(null);
   const [closeTime, setCloseTime] = useState<dayjs.Dayjs | null>(null);
-  const [categories, setCategories] = useState<{ id: number; name: string }[]>([]);
+  const [categories, setCategories] = useState<{ id: number; name: string }[]>(
+    []
+  );
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [formData, setFormData] = useState<FormValues>({
     name: "",
@@ -45,14 +47,18 @@ export default function AddResourceForm({ user }: AddResourceFormProps) {
     fetchCategories();
   }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
     // Clear error when user starts typing
-    setErrors(prev => ({ ...prev, [name]: "" }));
+    setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
   const handleFormAction = async (formData: FormData) => {
@@ -63,15 +69,15 @@ export default function AddResourceForm({ user }: AddResourceFormProps) {
     try {
       // Validate form data
       const validationResult = formSchema.safeParse({
-        name: formData.get('name'),
-        categoryId: formData.get('categoryId'),
-        address: formData.get('address'),
-        phone: formData.get('phone'),
-        url: formData.get('url'),
-        facebookLink: formData.get('facebookLink'),
-        description: formData.get('description'),
+        name: formData.get("name"),
+        categoryId: formData.get("categoryId"),
+        address: formData.get("address"),
+        phone: formData.get("phone"),
+        url: formData.get("url"),
+        facebookLink: formData.get("facebookLink"),
+        description: formData.get("description"),
       });
-      
+
       if (!validationResult.success) {
         const newErrors: Record<string, string> = {};
         validationResult.error.errors.forEach((err) => {
@@ -89,7 +95,7 @@ export default function AddResourceForm({ user }: AddResourceFormProps) {
       }
 
       const result = await addResource(formData);
-      
+
       if (result.success) {
         setMessage(result.success);
         setImageUrl(null);
@@ -109,15 +115,19 @@ export default function AddResourceForm({ user }: AddResourceFormProps) {
     <div className="max-w-2xl mx-auto my-4 px-4 sm:px-6 lg:px-8 pb-8">
       <div className="bg-white shadow-lg rounded-lg p-4 sm:p-6 space-y-4">
         <div className="space-y-2">
-          <h2 className="text-2xl font-bold text-gray-900">Add a New Resource</h2>
-          <h4 className="text-gray-600">Provide some information about this place</h4>
+          <h2 className="text-2xl font-bold text-gray-900">
+            Add a New Resource
+          </h2>
+          <h4 className="text-gray-600">
+            Provide some information about this place
+          </h4>
         </div>
 
         {message && (
           <p
             className={`text-sm text-center py-2 px-4 rounded-md ${
-              message.includes("success") 
-                ? "bg-green-50 text-green-700" 
+              message.includes("success")
+                ? "bg-green-50 text-green-700"
                 : "bg-red-50 text-red-700"
             }`}
           >
@@ -133,7 +143,10 @@ export default function AddResourceForm({ user }: AddResourceFormProps) {
             handleChange={handleChange}
           />
 
-          <Accordion defaultExpanded className="border border-gray-200 rounded-md">
+          <Accordion
+            defaultExpanded
+            className="border border-gray-200 rounded-md"
+          >
             <AccordionSummary
               expandIcon={<ArrowDropDownIcon />}
               aria-controls="optional-content"

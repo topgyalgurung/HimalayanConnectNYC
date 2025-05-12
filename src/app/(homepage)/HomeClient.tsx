@@ -26,8 +26,6 @@ export default function HomeClient({ initialResources }: HomeClientProps) {
   const [selectedResource, setSelectedResource] = useState<Resource | null>(null);
   const [editResource, setEditResource] = useState<Resource | null>(null);
   const [reviewResource, setReviewResource] = useState<Resource | null>(null);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [selectedBoroughs, setSelectedBoroughs] = useState<string[]>([]);
 
   // toggles to close or open the details of a resource
   const handleToggleDetails = (resource: Resource) => {
@@ -68,11 +66,7 @@ export default function HomeClient({ initialResources }: HomeClientProps) {
 
       <ResourceListPanel
         filteredResources={filteredResources}
-        selectedCategories={selectedCategories}
-        selectedBoroughs={selectedBoroughs}
         onViewDetails={handleToggleDetails}
-        onSuggestEdit={handleSuggestEdit}
-        onReviewClick={handleReviewResource}
       />
 
       <MapView

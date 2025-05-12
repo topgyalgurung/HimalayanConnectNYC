@@ -13,7 +13,7 @@
 import { useState, useEffect } from "react";
 import ResourceFilter from "./ResourceFilter";
 import BoroughFilter from "./BoroughFilter";
-import type { Resource } from "@/app/types/resource";
+import type { Resource } from "@/app/lib/types";
 
 interface FilterSidebarProps {
   resources: Resource[];

@@ -56,12 +56,8 @@ export async function DELETE(req: NextRequest, props: { params: Promise<{ id: st
 
     await prisma.resourceLike.delete({ where: { id: likeId } });
     return NextResponse.json({ success: true });
-  } catch (error: any) {
-    console.error("Error deleting favorite:", {
-      message: error.message,
-      stack: error.stack,
-    
-    });
+  } catch (error: unknown) {
+    console.error("Error deleting favorite", error);
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }

@@ -21,7 +21,6 @@ export function useFetchUser() {
       }
 
       const userData = await response.json();
-      console.log("Fetched user:", data);
       setData(userData);
     } catch (error) {
       console.error("Error fetching resources:", error);

@@ -63,12 +63,8 @@ export async function DELETE(request: NextRequest, props: { params: Promise<{ id
 
     console.log(`Resource ID: ${resourceId} deleted successfully`);
     return NextResponse.json({ success: true });
-  } catch (error: any) {
-    console.error("Error deleting resource:", {
-      message: error.message,
-      stack: error.stack,
-
-    });
+  } catch (error: unknown) {
+    console.error("Error deleting resource", error);
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
