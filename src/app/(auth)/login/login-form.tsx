@@ -82,7 +82,7 @@ export default function LoginForm() {
             </div> */}
             <div className="flex justify-end">
               <Link href="/signup" className="text-right">
-                Don't have an account? Register
+                Don&apos;t have an account? Register
               </Link>
             </div>
           </div>

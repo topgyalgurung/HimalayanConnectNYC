@@ -150,10 +150,10 @@ export async function getSession(): Promise<SessionPayload | null> {
     }
 
     return payload;
-  } catch (error: any) {
+  } catch (error: Error | unknown) {
     console.error("Error in getSession:", {
-      message: error.message,
-      stack: error.stack,
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
     });
     return null;
   }

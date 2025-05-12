@@ -7,27 +7,19 @@
  * 
  */
 
-
 "use client";
 
 import ResourceList from "./ResourceList";
-import type { Resource } from "@/app/types/resource";
+import type { Resource } from "@/app/lib/types";
 
 interface ResourceListPanelProps {
   filteredResources: Resource[];
-  selectedCategories: string[];
-  selectedBoroughs: string[];
   onViewDetails: (resource: Resource) => void;
-  onSuggestEdit: (resource: Resource) => void;
-  onReviewClick: (resource: Resource) => void;
 }
 
 export default function ResourceListPanel({
   filteredResources,
-  selectedCategories,
-  selectedBoroughs,
   onViewDetails,
-
 }: ResourceListPanelProps) {
   return (
     <aside className="w-[30%] pl-4 flex-1 flex flex-col min-h-0 mb-4">
@@ -37,9 +29,7 @@ export default function ResourceListPanel({
       <main className="flex-1 bg-gray-50 p-4 overflow-y-auto mb-4">
         <ResourceList
           filteredResources={filteredResources}
-          selectedCategories={selectedCategories}
-          selectedBoroughs={selectedBoroughs}
-          onViewDetails={onViewDetails} 
+          onViewDetails={onViewDetails}
         />
       </main>
     </aside>

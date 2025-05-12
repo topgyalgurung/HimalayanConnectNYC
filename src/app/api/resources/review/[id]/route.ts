@@ -85,10 +85,9 @@ export async function DELETE(req: NextRequest,
 
     await prisma.resourceReview.delete({ where: { id: reviewId } });
     return NextResponse.json({ success: true });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error deleting review:", {
-      message: error.message,
-      // stack: error.stack,
+      message: error instanceof Error ? error.message : 'Unknown error',
     });
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }

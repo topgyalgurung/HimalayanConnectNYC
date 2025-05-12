@@ -13,7 +13,7 @@
  */
 import { useState } from "react";
 
-export function usePopup<T = any>() {
+export function usePopup<T = unknown>() {
   const [isOpen, setIsOpen] = useState(false);
   const [data, setData] = useState<T | null>(null);
 

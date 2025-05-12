@@ -10,9 +10,10 @@
 
 import {prisma} from "../lib/prisma";
 import { getSession } from '@/app/lib/session';
-import { parse } from "date-fns";
+// import { parse } from "date-fns";
 import { cache } from "react";
 import { EditResourceInput } from "../lib/types";
+import { ResourceFormData } from "../lib/types";
 
 // cache categories to avoid re-fetching them on every request
 const getCachedCategories = cache(async () => {
@@ -25,7 +26,8 @@ const parseTimeToSafeDate = (timeStr: string): Date | null => {
   const [time, modifier] = timeStr.split(" ");
   if (!time || !modifier) return null;
 
-  let [hours, minutes] = time.split(":").map(Number);
+  const [hoursStr, minutes] = time.split(":").map(Number);
+  let hours = hoursStr;
   if (isNaN(hours) || isNaN(minutes)) return null;
 
   // Convert 12-hour to 24-hour format
@@ -66,7 +68,7 @@ export async function addResource(formData: FormData) {
   const currentUserId = parseInt(session.userId, 10);
 
   try {
-    const data = Object.fromEntries(formData.entries()) as any;
+    const data = Object.fromEntries(formData.entries()) as ResourceFormData;
     const { name, address, categoryId } = data;
     if (!name || !address) {
       return { error: "Name and Address are required." };

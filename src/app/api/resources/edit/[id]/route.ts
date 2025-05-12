@@ -56,11 +56,9 @@ export async function DELETE(
 
     console.log(`Resource ID: ${resourceId} deleted successfully`);
     return NextResponse.json({ success: true });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error deleting resource:", {
-      message: error.message,
-      stack: error.stack,
-    
+      message: error instanceof Error ? error.message : 'Unknown error',
     });
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
