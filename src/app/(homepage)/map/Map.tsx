@@ -40,6 +40,7 @@ import Image from "next/image";
 interface MapViewProps {
   resources: Resource[];
   selectedResource: Resource | null;
+  editResource: Resource | null;
   reviewResource: Resource | null;
   onSuggestEdit: (resource: Resource) => void;
   onReviewResource: (resource: Resource | null) => void;
@@ -84,6 +85,7 @@ export default function MapView({
           <div className="absolute top-0 left-0 h-full w-[400px] z-40 shadow-lg overflow-y-auto">
             <ResourceDetailsCard
               resource={selectedResource}
+              editResource={editResource}
               onSuggestEdit={onSuggestEdit}
               onReviewResource={onReviewResource}
               onCloseAction={() => onCloseAction(null)}
