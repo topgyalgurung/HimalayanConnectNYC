@@ -66,10 +66,11 @@ export async function DELETE(
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  props: { params: Promise<{ id: string }> }
 ) {
   try {
-    const resourceId = parseInt(params.id);
+    const params = await props.params;
+    const resourceId = parseInt(params.id, 10);
     
     if (isNaN(resourceId)) {
       return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
