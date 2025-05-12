@@ -18,7 +18,7 @@
  * @requires ResourceSuggestCard - Resource edit form component
  * @requires ReviewSubmitCard - Review submission component
  *
- * @todo - on hover on each resource card in resourcelist, light up the marker on the map
+ * @todo - on hover on each resource card , light up the marker on the map
  */
 
 "use client";
@@ -42,8 +42,8 @@ interface MapViewProps {
   selectedResource: Resource | null;
   editResource: Resource | null;
   reviewResource: Resource | null;
-  onSuggestEdit: (resource: Resource) => void;
-  onReviewResource: (resource: Resource | null) => void;
+  onSuggestEditAction: (resource: Resource) => void;
+  onReviewResourceAction: (resource: Resource | null) => void;
   onCloseAction: (resource: Resource | null) => void;
   onEditCloseAction: (resource: Resource | null) => void;
   onReviewCloseAction: (resource: Resource | null) => void;
@@ -54,8 +54,8 @@ export default function MapView({
   selectedResource,
   editResource,
   reviewResource,
-  onSuggestEdit,
-  onReviewResource,
+  onSuggestEditAction,
+  onReviewResourceAction,
   onCloseAction,
   onReviewCloseAction,
   onEditCloseAction,
@@ -86,8 +86,8 @@ export default function MapView({
             <ResourceDetailsCard
               resource={selectedResource}
               editResource={editResource}
-              onSuggestEdit={onSuggestEdit}
-              onReviewResource={onReviewResource}
+              onSuggestEdit={onSuggestEditAction}
+              onReviewResource={onReviewResourceAction}
               onCloseAction={() => onCloseAction(null)}
             />
           </div>
@@ -97,7 +97,6 @@ export default function MapView({
           <div className="absolute top-0 left-0 h-full w-[400px] z-50 shadow-lg overflow-y-auto">
             <ResourceSuggestCard
               resource={editResource}
-              onSuggestEdit={onSuggestEdit}
               onEditCloseAction={onEditCloseAction}
             />
           </div>
@@ -231,7 +230,7 @@ const Markers = ({ points }: MarkersProps) => {
                   </h1>
                   <p className="text-sm text-gray-600"> 📍{resource.address}</p>
                   <p className="text-sm text-gray-500 mt-2">
-                    {resource.description?.length > 200
+                    {resource.description && resource.description.length > 200
                       ? `${resource.description.slice(0, 200)}...`
                       : resource.description}
                   </p>
