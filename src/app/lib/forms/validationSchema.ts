@@ -20,7 +20,7 @@ export const formSchema = z.object({
     .or(z.literal("")),
   facebookLink: z.string()
     .refine(
-      (url) => url === "" || url.includes("facebook.com/"),
+      (url) => url === "" || url.includes("facebook.com"),
       "Facebook link must be a valid Facebook URL"
     )
     .optional()

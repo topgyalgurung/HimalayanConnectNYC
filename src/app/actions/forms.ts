@@ -13,11 +13,31 @@ import { getSession } from '@/app/lib/session';
 import { parse } from "date-fns";
 import { cache } from "react";
 import { EditResourceInput } from "../lib/types";
-import dayjs from "dayjs";
+
 // cache categories to avoid re-fetching them on every request
 const getCachedCategories = cache(async () => {
   return await prisma.resourceCategory.findMany();
 });
+
+const parseTimeToSafeDate = (timeStr: string): Date | null => {
+  if (!timeStr) return null;
+
+  const [time, modifier] = timeStr.split(" ");
+  if (!time || !modifier) return null;
+
+  let [hours, minutes] = time.split(":").map(Number);
+  if (isNaN(hours) || isNaN(minutes)) return null;
+
+  // Convert 12-hour to 24-hour format
+  if (modifier.toUpperCase() === "PM" && hours < 12) hours += 12;
+  if (modifier.toUpperCase() === "AM" && hours === 12) hours = 0;
+
+  // Build fixed time-only Date (date part will be ignored by Prisma)
+  const date = new Date(0); // Use Unix epoch date to eliminate timezone shifts
+  date.setUTCHours(hours, minutes, 0, 0); // Set in UTC to avoid shift
+
+  return date;
+};
 
 // Server action to get categories
 export async function getCategories() {
@@ -56,6 +76,7 @@ export async function addResource(formData: FormData) {
       ? parseInt(categoryId, 10)
       : null;
     
+    
       const newResource = await prisma.resource.create({
         data: {
           createdById: currentUserId,
@@ -64,12 +85,13 @@ export async function addResource(formData: FormData) {
           categoryId:parsedCategoryId,
           city: data.city as string | null,
           openDays: data.openDays as string | null,
-          openTime: data.openTime
-            ? parse(data.openTime, "hh:mm a", new Date())
-            : null,
+          openTime: data.openTime ? parseTimeToSafeDate(data.openTime as string) : null,
+            // ? parse(data.openTime, "hh:mm a", new Date())
+            // : null,
+            
           closeTime: data.closeTime
-            ? parse(data.closeTime, "hh:mm a", new Date())
-            : null,
+            ? parseTimeToSafeDate(data.closeTime as string) : null,
+            // parse(data.closeTime, "hh:mm a", new Date()): null,
           phone: data.phone as string | null,
           email: data.email as string | null,
           url: data.url as string | null,
@@ -140,26 +162,6 @@ export async function addEditResource(formData: FormData) {
       const result = value !== 'null' && value !== null && value !== undefined && value !== '';
       console.log(`Checking field value: ${value}, isChanged: ${result}`);
       return result;
-    };
-
-    const parseTimeToSafeDate = (timeStr: string): Date | null => {
-      if (!timeStr) return null;
-    
-      const [time, modifier] = timeStr.split(" ");
-      if (!time || !modifier) return null;
-    
-      let [hours, minutes] = time.split(":").map(Number);
-      if (isNaN(hours) || isNaN(minutes)) return null;
-    
-      // Convert 12-hour to 24-hour format
-      if (modifier.toUpperCase() === "PM" && hours < 12) hours += 12;
-      if (modifier.toUpperCase() === "AM" && hours === 12) hours = 0;
-    
-      // Build fixed time-only Date (date part will be ignored by Prisma)
-      const date = new Date(0); // Use Unix epoch date to eliminate timezone shifts
-      date.setUTCHours(hours, minutes, 0, 0); // Set in UTC to avoid shift
-    
-      return date;
     };
 
     // Create the data object with only changed fields
