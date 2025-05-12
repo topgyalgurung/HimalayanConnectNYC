@@ -48,13 +48,13 @@ export default function HomeClient({ initialResources }: HomeClientProps) {
   };
 
   // open or close the review resource
-  const handleReviewResource = (resource: Resource) => {
-    if (reviewResource?.id === resource.id) {
-      setReviewResource(null);
-    } else {
-      setReviewResource(resource);
-    }
-  };
+  // const handleReviewResource = (resource: Resource) => {
+  //   if (reviewResource?.id === resource.id) {
+  //     setReviewResource(null);
+  //   } else {
+  //     setReviewResource(resource);
+  //   }
+  // };
 
   return (
     // render filter sidebar, resource list panel middle, and map view right

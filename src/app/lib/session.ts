@@ -126,11 +126,10 @@ export async function decrypt(
       ...payload,
       role: payload.role as Role, // convert role back to prisma role type
     };
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Failed to verify session:", {
-      message: error.message,
-      stack: error.stack,
       token: session.substring(0, 10) + "...", // Log partial token for debugging
+      error: error instanceof Error ? error.message : 'Unknown error'
     });
     return null;
   }
