@@ -65,14 +65,12 @@ export async function getResources({ categories = [], boroughs = [] }: GetResour
       rating: Number(resource.rating),
       Location: resource.Location.map(loc => ({
         ...loc,
-        id: String(loc.id),
-        resourceId: String(loc.resourceId),
         latitude: loc.latitude ? Number(loc.latitude) : null,
         longitude: loc.longitude ? Number(loc.longitude) : null,
       })),
-      createdAt: resource.createdAt.toISOString(),
-      openTime: resource.openTime?.toISOString() || null,
-      closeTime: resource.closeTime?.toISOString() || null,
+      createdAt: resource.createdAt,
+      openTime: resource.openTime || null,
+      closeTime: resource.closeTime || null,
       ResourceCategory: resource.ResourceCategory ? {
         ...resource.ResourceCategory,
         id: String(resource.ResourceCategory.id),

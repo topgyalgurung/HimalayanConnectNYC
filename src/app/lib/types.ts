@@ -3,8 +3,8 @@ export type ResourceStatus = "PENDING" | "APPROVED" | "REJECTED";
 
 export type Location = {
   id: number;
-  latitude: number;
-  longitude: number;
+  latitude: number | null;
+  longitude: number | null;
 };
 
 export type User = {
