@@ -1,6 +1,6 @@
 import { getSession } from "@/app/lib/session";
 import { redirect } from "next/navigation";
-import { prisma } from "@/app/lib/prisma";
+
 import AddResourceForm from "./AddResourceForm";
 
 export default async function AddResourcePage() {
@@ -11,16 +11,9 @@ export default async function AddResourcePage() {
     redirect("/login");
   }
 
-  const currentUserId = session?.userId;
-  const user = await prisma.user.findUnique({
-    where: {
-      id: Number(currentUserId),
-    },
-  });
-
   return (
     <section>
-      <AddResourceForm user={user} />
+      <AddResourceForm />
     </section>
   );
 }

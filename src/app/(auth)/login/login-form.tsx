@@ -28,10 +28,6 @@ export default function LoginForm() {
         <hr />
         <br />
         <section>
-          {/* <div>
-            <SignIn />
-          </div> */}
-          {/* <div>OR</div> */}
           <form action={action}>
             <input
               type="email"
@@ -44,8 +40,8 @@ export default function LoginForm() {
                 {state.errors.email[0]}
               </p>
             )}
-            {state?.message && !state?.errors && (
-              <p className="text-red-500 text-sm mb-2">{state.message}</p>
+            {state?.status === 200 && (
+              <p className="text-green-500 text-sm mb-2">Login successful!</p>
             )}
 
             <div className="relative">
@@ -77,9 +73,6 @@ export default function LoginForm() {
             </button>
           </form>
           <div>
-            {/* <div>
-              <SignIn />
-            </div> */}
             <div className="flex justify-end">
               <Link href="/signup" className="text-right">
                 Don&apos;t have an account? Register

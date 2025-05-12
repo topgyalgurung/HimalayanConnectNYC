@@ -71,6 +71,8 @@ export default function NavMenu() {
           </Button>
         </Link>
 
+      
+
         {/* User profile menu */}
         <div className="flex flex-1 items-center justify-end gap-8 ml-4">
           <UserProfileMenu />

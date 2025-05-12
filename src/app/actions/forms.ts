@@ -12,8 +12,8 @@ import {prisma} from "../lib/prisma";
 import { getSession } from '@/app/lib/session';
 // import { parse } from "date-fns";
 import { cache } from "react";
-import { EditResourceInput } from "../lib/types";
-import { ResourceFormData } from "../lib/types";
+import { EditResourceInput, ResourceFormData } from "../lib/types";
+
 
 // cache categories to avoid re-fetching them on every request
 const getCachedCategories = cache(async () => {
@@ -50,6 +50,7 @@ export async function getCategories() {
     return [];
   }
 }
+
 
 
 // Server action 
