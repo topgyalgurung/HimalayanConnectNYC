@@ -14,12 +14,12 @@ import type { Resource } from "@/app/lib/types";
 
 interface ResourceListPanelProps {
   filteredResources: Resource[];
-  onViewDetails: (resource: Resource) => void;
+  onViewDetailsAction: (resource: Resource) => void;
 }
 
 export default function ResourceListPanel({
   filteredResources,
-  onViewDetails,
+  onViewDetailsAction,
 }: ResourceListPanelProps) {
   return (
     <aside className="w-[30%] pl-4 flex-1 flex flex-col min-h-0 mb-4">
@@ -29,7 +29,7 @@ export default function ResourceListPanel({
       <main className="flex-1 bg-gray-50 p-4 overflow-y-auto mb-4">
         <ResourceList
           filteredResources={filteredResources}
-          onViewDetails={onViewDetails}
+          onViewDetails={onViewDetailsAction}
         />
       </main>
     </aside>

@@ -23,12 +23,12 @@ interface HomeClientProps {
 
 export default function HomeClient({ initialResources }: HomeClientProps) {
   const [filteredResources, setFilteredResources] =
-    useState<Resource[]>(initialResources);
+    useState<Resource[]>(initialResources); // state for filtered resources
   const [selectedResource, setSelectedResource] = useState<Resource | null>(
     null
-  );
-  const [editResource, setEditResource] = useState<Resource | null>(null);
-  const [reviewResource, setReviewResource] = useState<Resource | null>(null);
+  ); // state for selected resource
+  const [editResource, setEditResource] = useState<Resource | null>(null); // state for edit resource 
+  const [reviewResource, setReviewResource] = useState<Resource | null>(null); // state for review resource 
 
   // toggles to close or open the details of a resource
   const handleToggleDetails = (resource: Resource) => {
@@ -69,16 +69,16 @@ export default function HomeClient({ initialResources }: HomeClientProps) {
 
       <ResourceListPanel
         filteredResources={filteredResources}
-        onViewDetails={handleToggleDetails}
+        onViewDetailsAction={handleToggleDetails}
       />
 
       <MapView
         resources={filteredResources}
         selectedResource={selectedResource}
         reviewResource={reviewResource}
-        onReviewResource={setReviewResource}
+        onReviewResourceAction={setReviewResource}
         editResource={editResource}
-        onSuggestEdit={handleSuggestEdit}
+        onSuggestEditAction={handleSuggestEdit}
         onCloseAction={() => setSelectedResource(null)}
         onEditCloseAction={() => setEditResource(null)}
         onReviewCloseAction={() => setReviewResource(null)}
