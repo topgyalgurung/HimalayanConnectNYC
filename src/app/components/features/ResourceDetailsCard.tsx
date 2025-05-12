@@ -10,6 +10,7 @@
  * @component
  * @param {Object} props
  * @param {Resource|null} props.resource - The resource object to display
+ * @param {Resource|null} props.editResource - The edited resource object
  * @param {Function} [props.onSuggestEdit] - Handler for suggesting edits to the resource
  * @param {Function} [props.onReviewResource] - Handler for reviewing the resource
  * @param {Function} props.onCloseAction - Handler for closing the details card
@@ -40,6 +41,7 @@ import ResourceActions from "./ResourceDetailCommon/ResourceActions";
 
 interface ResourceDetailsCardProps {
   resource: Resource | null;
+  editResource: Resource | null;
   onSuggestEdit?: (resource: Resource) => void;
   onReviewResource?: (resource: Resource) => void;
   onCloseAction: () => void;
@@ -172,6 +174,7 @@ const ReviewTab: React.FC<ReviewTabProps> = ({
 
 export default function ResourceDetailsCard({
   resource,
+  editResource,
   onSuggestEdit,
   onReviewResource,
   onCloseAction,
