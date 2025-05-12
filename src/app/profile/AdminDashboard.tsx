@@ -27,7 +27,7 @@ import { TabNavigation } from "../components/dashboard/TabNavigation/TabNavigati
 import { AdminResourceTable } from "../components/dashboard/ResourceTable/AdminResourceTable";
 import { updateResourceStatus } from "../actions/resources/updateResourceStatus";
 import { toast } from "react-hot-toast";
-import type { Resource } from "../lib/types";
+import type { Resource, ResourceStatus } from "../lib/types";
 import ResourceDetailsPopup from "../components/dashboard/ResourcePopup/ResourceDetailsPopup";
 
 // const formatTime = (timeString: string | undefined) => {
@@ -69,7 +69,7 @@ export default function AdminDashboard() {
       setIsLoading(true);
 
       await toast.promise(
-        updateResourceStatus(resourceId, newStatus, resourceType),
+        updateResourceStatus(resourceId, newStatus as ResourceStatus, resourceType),
         {
           loading: "Updating status...",
           success: `Successfully updated ${resourceType} status to ${newStatus}`,
