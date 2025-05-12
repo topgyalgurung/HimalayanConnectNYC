@@ -40,19 +40,14 @@ export default function LoginForm() {
               className="text-black p-2 border border-gray-50 rounded-md mb-4 focus:outline-none focus:border-gray-600 w-full"
             />
             {state?.errors?.email && (
-              <p className="text-red-500 text-sm mb-2">{state.errors.email[0]}</p>
+              <p className="text-red-500 text-sm mb-2">
+                {state.errors.email[0]}
+              </p>
             )}
             {state?.message && !state?.errors && (
               <p className="text-red-500 text-sm mb-2">{state.message}</p>
             )}
-            <div className="flex justify-end mt-1">
-              <Link
-                href="/forgotpassword"
-                className="text-m text-blue-500 hover:underline"
-              >
-                Forgot Password?
-              </Link>
-            </div>
+
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
@@ -69,7 +64,9 @@ export default function LoginForm() {
               </button>
             </div>
             {state?.errors?.password && (
-              <p className="text-red-500 text-sm mb-2">{state.errors.password[0]}</p>
+              <p className="text-red-500 text-sm mb-2">
+                {state.errors.password[0]}
+              </p>
             )}
             <br />
             <button
