@@ -10,7 +10,6 @@
  * @component
  * @param {Object} props
  * @param {Resource|null} props.resource - The resource object to display
- * @param {Resource|null} props.editResource - The edited resource object
  * @param {Function} [props.onSuggestEdit] - Handler for suggesting edits to the resource
  * @param {Function} [props.onReviewResource] - Handler for reviewing the resource
  * @param {Function} props.onCloseAction - Handler for closing the details card
@@ -174,7 +173,6 @@ const ReviewTab: React.FC<ReviewTabProps> = ({
 
 export default function ResourceDetailsCard({
   resource,
-  editResource,
   onSuggestEdit,
   onReviewResource,
   onCloseAction,
