@@ -21,6 +21,7 @@ interface HomeClientProps {
   initialResources: Resource[];
 }
 
+
 export default function HomeClient({ initialResources }: HomeClientProps) {
   const [filteredResources, setFilteredResources] =
     useState<Resource[]>(initialResources); // state for filtered resources

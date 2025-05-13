@@ -13,7 +13,6 @@ import BasicInfoSection from "@/app/lib/forms/BasicInfoSection";
 import AdditionalDetailsSection from "@/app/lib/forms/AdditionalDetailsSection";
 
 
-;
 export default function AddResourceForm() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
