@@ -7,6 +7,8 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+export const dynamic = 'force-dynamic';
+
 export default function SignupForm() {
   const [state, action, pending] = useActionState(signup, undefined);
   const [showPassword, setShowPassword] = useState(false);

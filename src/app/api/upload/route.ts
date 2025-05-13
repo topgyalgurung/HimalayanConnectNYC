@@ -2,6 +2,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import cloudinary from "cloudinary";
 
+export const dynamic = 'force-dynamic';  
+
 // Configure Cloudinary
 cloudinary.v2.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,

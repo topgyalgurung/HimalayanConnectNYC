@@ -4,7 +4,7 @@ import { prisma } from "@/app/lib/prisma";
 import { getSession } from "@/app/lib/session";
 import { NextResponse } from "next/server";
 
-// export const dynamic = 'force-dynamic';
+export const dynamic = 'force-dynamic';
 // already cache:"no-store"
 
 export async function GET() {

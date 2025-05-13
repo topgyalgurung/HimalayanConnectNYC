@@ -22,6 +22,7 @@ import UserProfileMenu from "../ProfileCard/UserProfileMenu";
 import Button from "@mui/material/Button";
 
 import dynamic from "next/dynamic";
+
 const SearchInput = dynamic(() => import("./SearchInput/SearchInput"), {
   ssr: false,
 });

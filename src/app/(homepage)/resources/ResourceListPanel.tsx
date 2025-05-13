@@ -29,7 +29,7 @@ export default function ResourceListPanel({
       <main className="flex-1 bg-gray-50 p-4 overflow-y-auto mb-4">
         <ResourceList
           filteredResources={filteredResources}
-          onViewDetails={onViewDetailsAction}
+          onViewDetailsAction={onViewDetailsAction}
         />
       </main>
     </aside>
