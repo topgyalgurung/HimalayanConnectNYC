@@ -50,16 +50,18 @@ export default function RootLayout({
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
-      <body className={`${inter.className} overflow-hidden`}>
+      <body className={`${inter.className} overflow-x-hidden`}>
         {/* UserProvider wrapper enables user data access across all pages via useUser hook */}
         <UserProvider>
           <ThemeProvider theme={theme}>
             <Suspense fallback={<div>Loading...</div>}>
-            <NavMenu />
+              <NavMenu />
             </Suspense>
-           
+
             <Toaster position="top-center" toastOptions={{ duration: 2000 }} />
-            <main className="flex-grow">{children}</main>
+            <main className="flex-grow px-2 sm:px-6 pt-4 md:pt-6 lg:pt-6">
+              {children}
+            </main>
             {/* Footer component commented out for future implementation */}
             {/* <footer className="bg-slate-900 text-white p-4 text-center shadow-md h-[60px] flex-none">
               © Himalayan Connect NYC

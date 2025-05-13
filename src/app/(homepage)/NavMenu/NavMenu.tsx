@@ -35,7 +35,7 @@ export default function NavMenu() {
       {/* <AppBar position="static">
         <Container maxWidth="xl">
           <Toolbar disableGutters> */}
-      <nav className="flex items-center justify-between p-2 bg-white shadow-md flex-wrap border-b-1 w-full">
+      <nav className="flex flex-col md:flex-row items-center justify-between gap-4 p-2 bg-white shadow-md flex-wrap border-b-1 w-full">
         {/* Logo */}
 
         <Link
@@ -46,6 +46,7 @@ export default function NavMenu() {
         >
           <Image
             src="/logo.png"
+            objectFit="cover"
             alt="Himalayan Connect Logo"
             width={200}
             height={50}
@@ -55,8 +56,8 @@ export default function NavMenu() {
 
         {/* Search input  */}
 
-        <div className="ml-24 flex-grow flex justify-center">
-          <div className="flex-grow max-w-xl">
+        <div className=" flex justify-center md:ml-24 md:flex-grow w-full md:w-auto">
+          <div className="w-full md:w-auto px-2 md:px-0 max-w-xl">
             <SearchInput />
           </div>
         </div>
@@ -76,8 +77,6 @@ export default function NavMenu() {
             Add Resource ➕
           </Button>
         </Link>
-
-      
 
         {/* User profile menu */}
         <div className="flex flex-1 items-center justify-end gap-8 ml-4">

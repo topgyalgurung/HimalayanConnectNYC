@@ -27,13 +27,13 @@ export default function ResourceCard({
   onViewDetailsAction,
 }: ResourceCardProps) {
   return (
-    <div className="flex flex-col space-y-4 pb-20">
+    <div className="flex flex-col  justify-between space-y-4 pb-20">
       {resources
         .filter((resource) => resource.status === "APPROVED")
         .map((resource) => (
           <div
             key={resource.id}
-            className="flex justify-between p-4 border rounded-md shadow-md bg-white transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:scale-[1.02]"
+            className="flex flex-col md:flex-row space-y-4 justify-between p-4 border rounded-md shadow-md bg-white transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:scale-[1.02]"
           >
             <div className="flex-1">
               <h4 className="text-lg font-bold">{resource.name}</h4>
