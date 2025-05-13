@@ -1,0 +1,135 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "app/generated/prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL") // uses connection pooling 
+}
+
+model User {
+  id                        Int                      @id @default(autoincrement())
+  firstName                 String
+  lastName                  String
+  email                     String                   @unique
+  password                  String
+  image                     String?
+  role                      Role                     @default(USER)
+  isVerified                Boolean                  @default(false)
+  forgotPasswordToken       String?
+  forgotPasswordTokenExpiry DateTime?
+  verifyToken               String?
+  verifyTokenExpiry         DateTime?
+  createdAt                 DateTime                 @default(now())
+  updatedAt                 DateTime                 @updatedAt
+  resources                 Resource[]               @relation("UserResources")
+  ResourceEditSuggestion    ResourceEditSuggestion[]
+  likes                     ResourceLike[]
+  reviews                   ResourceReview[]         @relation("UserReviews")
+}
+
+model Location {
+  id         Int      @id @default(autoincrement())
+  resourceId Int
+  latitude   Float
+  longitude  Float
+  Resource   Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+
+  @@index([resourceId])
+}
+
+model Resource {
+  id                     Int                      @id @default(autoincrement())
+  name                   String
+  description            String?
+  address                String
+  city                   String?
+  openDays               String?
+  openTime               DateTime?                @db.Time(6)
+  closeTime              DateTime?                @db.Time(6)
+  phone                  String?
+  rating                 Decimal                  @default(0) @db.Decimal(3, 1)
+  imageUrl               String?
+  facebookLink           String?
+  email                  String?
+  status                 ResourceStatus           @default(PENDING)
+  url                    String?
+  categoryId             Int?
+  createdById            Int?
+  createdAt              DateTime                 @default(now())
+  Location               Location[]
+  ResourceCategory       ResourceCategory?        @relation(fields: [categoryId], references: [id])
+  User                   User?                    @relation("UserResources", fields: [createdById], references: [id])
+  ResourceEditSuggestion ResourceEditSuggestion[]
+  ResourceLike           ResourceLike[]
+  ResourceReview         ResourceReview[]
+
+  @@index([name, description, city])
+}
+
+model ResourceCategory {
+  id                     Int                      @id @default(autoincrement())
+  name                   String                   @unique
+  Resource               Resource[]
+  ResourceEditSuggestion ResourceEditSuggestion[]
+}
+
+model ResourceEditSuggestion {
+  id               Int               @id @default(autoincrement())
+  resourceId       Int
+  suggestedById    Int?
+  name             String?
+  categoryId       Int?
+  address          String?
+  openDays         String?
+  openTime         DateTime?         @db.Time
+  closeTime        DateTime?         @db.Time
+  phone            String?
+  url              String?
+  createdAt        DateTime          @default(now())
+  status           ResourceStatus    @default(PENDING)
+  ResourceCategory ResourceCategory? @relation(fields: [categoryId], references: [id])
+  resource         Resource          @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  User             User?             @relation(fields: [suggestedById], references: [id])
+}
+
+model ResourceLike {
+  id         Int      @id @default(autoincrement())
+  resourceId Int
+  userId     Int
+  createdAt  DateTime @default(now())
+  resource   Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  User       User     @relation(fields: [userId], references: [id])
+
+  @@unique([resourceId, userId])
+}
+
+model ResourceReview {
+  id         Int      @id @default(autoincrement())
+  resourceId Int
+  userId     Int
+  rating     Decimal  @db.Decimal(3, 1)
+  content    String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  resource   Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  user       User     @relation("UserReviews", fields: [userId], references: [id])
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum ResourceStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum EditStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}

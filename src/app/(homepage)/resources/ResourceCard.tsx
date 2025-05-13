@@ -19,12 +19,12 @@ dayjs.extend(utc);
 
 interface ResourceCardProps {
   resources: Resource[];
-  onViewDetails?: (resource: Resource) => void;
+  onViewDetailsAction?: (resource: Resource) => void;
 }
 // ResourceCard component: Displays a list of resources
 export default function ResourceCard({
   resources,
-  onViewDetails,
+  onViewDetailsAction,
 }: ResourceCardProps) {
   return (
     <div className="flex flex-col space-y-4 pb-20">
@@ -79,7 +79,7 @@ export default function ResourceCard({
             <div className="flex items-end ml-4">
               <button
                 className="text-white py-2 px-3 bg-blue-600 rounded hover:bg-blue-700"
-                onClick={() => onViewDetails?.(resource)}
+                onClick={() => onViewDetailsAction?.(resource)}
               >
                 View Details
               </button>

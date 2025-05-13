@@ -27,18 +27,12 @@ import { TabNavigation } from "../components/dashboard/TabNavigation/TabNavigati
 import { AdminResourceTable } from "../components/dashboard/ResourceTable/AdminResourceTable";
 import { updateResourceStatus } from "../actions/resources/updateResourceStatus";
 import { toast } from "react-hot-toast";
-import type { Resource } from "../lib/types";
+import type {
+  Resource,
+  ResourceEditSuggestion,
+  ResourceStatus,
+} from "../lib/types";
 import ResourceDetailsPopup from "../components/dashboard/ResourcePopup/ResourceDetailsPopup";
-
-// const formatTime = (timeString: string | undefined) => {
-//   if (!timeString) return "";
-//   try {
-//     return format(new Date(timeString), "hh:mm a");
-//   } catch (error) {
-//     console.error("Invalid date:", timeString);
-//     return "Invalid time";
-//   }
-// };
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("new");
@@ -48,7 +42,12 @@ export default function AdminDashboard() {
   const { resources, refetch: refetchResources } = useFetchResources();
   const { editResources, refetch: refetchEditResources } =
     useFetchResourceEdit();
-  const { isOpen, data: selectedResource, openPopup, closePopup } = usePopup();
+  const {
+    isOpen,
+    data: selectedResource,
+    openPopup,
+    closePopup,
+  } = usePopup<Resource>();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleTabChange = (tab: string) => {
@@ -69,7 +68,11 @@ export default function AdminDashboard() {
       setIsLoading(true);
 
       await toast.promise(
-        updateResourceStatus(resourceId, newStatus, resourceType),
+        updateResourceStatus(
+          resourceId,
+          newStatus as ResourceStatus,
+          resourceType
+        ),
         {
           loading: "Updating status...",
           success: `Successfully updated ${resourceType} status to ${newStatus}`,
@@ -90,7 +93,7 @@ export default function AdminDashboard() {
 
    */
   const handleViewClick = (
-    resource: Resource,
+    resource: Resource | ResourceEditSuggestion,
     event: React.MouseEvent<HTMLElement>
   ) => {
     if (resourceAnchorEl === event.currentTarget) {
@@ -98,7 +101,27 @@ export default function AdminDashboard() {
       closePopup();
     } else {
       setResourceAnchorEl(event.currentTarget);
-      openPopup(resource);
+      if ("type" in resource && resource.type === "edit") {
+        const editResource = resource as ResourceEditSuggestion;
+        openPopup({
+          ...editResource,
+          id: editResource.id.toString(),
+          name: editResource.name,
+          status: editResource.status,
+          description: editResource.description || "",
+          openTime: editResource.openTime,
+          closeTime: editResource.closeTime,
+          openDays: editResource.openDays,
+          address: editResource.address,
+          phone: editResource.phone,
+          url: editResource.url,
+          createdAt: editResource.createdAt,
+          // updatedAt: editResource.updatedAt,
+          editResource: editResource,
+        });
+      } else {
+        openPopup(resource);
+      }
     }
   };
 
@@ -145,7 +168,7 @@ export default function AdminDashboard() {
       <div className="flex flex-row w-full">
         <ProfileCard
           userName="Admin"
-          onLogout={handleLogout}
+          onLogoutAction={handleLogout}
           userType="admin"
         />
 
@@ -164,9 +187,9 @@ export default function AdminDashboard() {
               activeTab={activeTab}
               filteredByStatus={filteredByStatus}
               filteredByEditStatus={filteredByEditStatus}
-              resourceAnchorEl={resourceAnchorEl}
-              onViewClick={handleViewClick}
-              onStatusChange={handleStatusChange}
+              //resourceAnchorEl={resourceAnchorEl}
+              onViewClickAction={handleViewClick}
+              onStatusChangeAction={handleStatusChange}
               isLoading={isLoading}
             />
 
@@ -174,7 +197,7 @@ export default function AdminDashboard() {
               anchor={resourceAnchorEl}
               open={isOpen}
               onClose={handleClosePopup}
-              resource={selectedResource}
+              resource={selectedResource || ({} as Resource)}
               editResource={null}
               showSubmission={false}
             />

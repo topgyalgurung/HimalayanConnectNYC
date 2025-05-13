@@ -20,7 +20,9 @@ import { ProfileCard } from "./SharedProfileCard";
 import { TabNavigation } from "../components/dashboard/TabNavigation/TabNavigation";
 import { UserResourceTable } from "../components/dashboard/ResourceTable/UserResourceTable";
 import ResourceDetailsPopup from "../components/dashboard/ResourcePopup/ResourceDetailsPopup";
-import type { Resource, ResourceEditSuggestion } from "../lib/types";
+import type { ResourceEditSuggestion } from "../lib/types";
+import type { Resource } from "../lib/types";
+import { Resource as BaseResource } from "@/app/lib/types";
 
 /**
  * Main dashboard component for users to manage their resources, edits, reviews and favorites.
@@ -37,7 +39,12 @@ export default function UserDashboard() {
   const { editResources, refetch: refetchEditResources } =
     useFetchResourceEdit();
   const { data: user, refetch } = useFetchUser();
-  const { isOpen, data: selectedResource, openPopup, closePopup } = usePopup();
+  const {
+    isOpen,
+    data: selectedResource,
+    openPopup,
+    closePopup,
+  } = usePopup<BaseResource>();
   const { deleteItem, deletingId } = useDeleteItem();
 
   if (!user) return <p>Loading user data...</p>;
@@ -78,7 +85,7 @@ export default function UserDashboard() {
         openPopup({
           ...editResource,
           id: editResource.id.toString(),
-          name: editResource.name | editResource.resource.name,
+          name: editResource.name,
           status: editResource.status,
           description: editResource.description || "",
           openTime: editResource.openTime,
@@ -87,8 +94,8 @@ export default function UserDashboard() {
           address: editResource.address,
           phone: editResource.phone,
           url: editResource.url,
-          createdAt: editResource.resource.createdAt,
-          updatedAt: editResource.resource.updatedAt,
+          createdAt: editResource.createdAt,
+          // updatedAt: editResource.updatedAt,
           editResource: editResource,
         });
       } else if ("resource" in resource && resource.resource) {
@@ -112,11 +119,11 @@ export default function UserDashboard() {
           ResourceCategory: fullResource.ResourceCategory,
           Location: fullResource.Location,
           createdAt: fullResource.createdAt,
-          updatedAt: fullResource.updatedAt,
+          // updatedAt: fullResource.updatedAt,
           editResource: null,
         });
       } else {
-        openPopup(resource);
+        openPopup(resource as BaseResource);
       }
     }
   };
@@ -166,7 +173,7 @@ export default function UserDashboard() {
       <div className="flex flex-row w-full">
         <ProfileCard
           userName={user.firstName}
-          onLogout={handleLogout}
+          onLogoutAction={handleLogout}
           userType="user"
         />
 
@@ -191,19 +198,19 @@ export default function UserDashboard() {
               editResources={editResources}
               user={user}
               deletingId={deletingId}
-              anchorEl={anchorEl}
-              onViewClick={handleViewClick}
-              onDeleteResource={handleDeleteResource}
-              onDeleteEdit={handleDeleteEdit}
-              onDeleteReview={handleDeleteReview}
-              onDeleteFavorite={handleDeleteFavorite}
+              // anchorEl={anchorEl}
+              onViewClickAction={handleViewClick}
+              onDeleteResourceAction={handleDeleteResource}
+              onDeleteEditAction={handleDeleteEdit}
+              onDeleteReviewAction={handleDeleteReview}
+              onDeleteFavoriteAction={handleDeleteFavorite}
             />
 
             <ResourceDetailsPopup
               anchor={anchorEl}
               open={isOpen}
               onClose={handleClosePopup}
-              resource={selectedResource}
+              resource={selectedResource || ({} as BaseResource)}
               editResource={selectedResource?.editResource || null}
               showSubmission={activeTab !== "likes"}
             />

@@ -9,10 +9,11 @@
  */
 
 import { Suspense } from "react"; // Suspense is a React component that allows you to render a fallback UI while a component is loading.
-import { getResources } from "../actions/resources/getResources"; //fetches resources from the database
-import HomeClient from "./HomeClient"; // renders the homepage
-import Loading from "./loading";
+import { getResources } from "./actions/resources/getResources"; //fetches resources from the database
+import HomeClient from "./(homepage)/HomeClient"; // renders the homepage
+import Loading from "./(homepage)/loading";
 
+export const dynamic = 'force-dynamic';
 export default async function Home() {
   // Fetch resources on the server
   const resources = await getResources();

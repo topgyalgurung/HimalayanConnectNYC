@@ -43,6 +43,7 @@ export type SignupFormState =
         password?: string[]
       }
       message?: string
+      status?: number
     }
   | undefined
 
@@ -54,5 +55,11 @@ export type LoginFormState =
       }
       message?: string
       status?: number
+      user?: {
+        userId: string
+        email: string
+        role: string
+        firstName?: string
+      }
     }
   | undefined

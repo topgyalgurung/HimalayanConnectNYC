@@ -14,12 +14,12 @@ import type { Resource } from "@/app/lib/types";
 
 interface ResourceListProps {
   filteredResources: Resource[];
-  onViewDetails: (resource: Resource) => void;
+  onViewDetailsAction: (resource: Resource) => void;
 }
 
 const ResourceList = ({
   filteredResources,
-  onViewDetails,
+  onViewDetailsAction,
 }: ResourceListProps) => {
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("query")?.toLowerCase() || "";
@@ -61,7 +61,7 @@ const ResourceList = ({
     <div className="flex flex-col h-full">
       <ResourceCard
         resources={searchFilteredResources}
-        onViewDetails={onViewDetails}
+        onViewDetailsAction={onViewDetailsAction}
       />
     </div>
   );

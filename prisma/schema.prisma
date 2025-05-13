@@ -1,11 +1,12 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures =[]
+  engineType = "binary"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL") // uses connection pooling 
-  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  url      = env("DATABASE_DATABASE_URL") // uses connection pooling 
 }
 
 model User {
@@ -35,6 +36,8 @@ model Location {
   latitude   Float
   longitude  Float
   Resource   Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+   
+   @@index([resourceId])
 }
 
 model Resource {

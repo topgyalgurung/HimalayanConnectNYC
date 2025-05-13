@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { prisma } from '@/app/lib/prisma';
 import { ResourceStatus, Resource } from '@prisma/client';
+// import { v2 as cloudinary } from 'cloudinary';
 
 type ResourceUpdateData = Partial<Pick<Resource, 'name' | 'address' | 'phone' | 'url' | 'openDays' | 'openTime' | 'closeTime'>>;
 
@@ -80,3 +81,4 @@ export async function updateResourceStatus(
     };
   }
 }
+

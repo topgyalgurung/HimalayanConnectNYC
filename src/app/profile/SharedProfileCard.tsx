@@ -22,13 +22,13 @@ import Image from "next/image";
 
 interface SharedProfileCardProps {
   userName: string;
-  onLogout: () => void;
+  onLogoutAction: () => void;
   userType: "admin" | "user";
 }
 
 export const ProfileCard = ({
   userName,
-  onLogout,
+  onLogoutAction,
   userType,
 }: SharedProfileCardProps) => {
   return (
@@ -50,7 +50,7 @@ export const ProfileCard = ({
         </h2>
         <div className="mt-6">
           <button
-            onClick={onLogout}
+            onClick={onLogoutAction}
             className="px-4 py-2 text-red-500 rounded-lg border border-red-500 hover:bg-red-500 hover:text-white transition-colors"
           >
             Logout
