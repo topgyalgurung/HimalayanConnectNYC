@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client-js"
-  output ="app/generated/prisma/client"
+  output   = "app/generated/prisma/client"
 }
 
 datasource db {
@@ -35,8 +35,8 @@ model Location {
   latitude   Float
   longitude  Float
   Resource   Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
-   
-   @@index([resourceId])
+
+  @@index([resourceId])
 }
 
 model Resource {
