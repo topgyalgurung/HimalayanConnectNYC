@@ -3,7 +3,7 @@
 
 // import resources from '@/app/api/db' // for testing
 
-import {  NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/app/lib/prisma";
 import { getSession } from "@/app/lib/session";
 
@@ -13,7 +13,7 @@ import { getSession } from "@/app/lib/session";
  */
 
 // userdashboard useDelete Hooks call api/resources/id to delete
-export async function DELETE( props: { params: Promise<{ id: string }> }) {
+export async function DELETE(request: NextRequest, props: { params: Promise<{ id: string }> }) {
   try {
     const params = await props.params;
     const resourceId = parseInt(params.id, 10); 
