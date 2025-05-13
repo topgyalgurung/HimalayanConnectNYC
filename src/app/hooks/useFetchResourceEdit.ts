@@ -11,7 +11,7 @@ export function useFetchResourceEdit() {
     }, []);
     async function fetchEditResources() {
         try {
-            console.log("Fetching edit resources data from API ...")
+            // console.log("Fetching edit resources data from API ...")
             const response = await fetch('api/resources/edit')
             const data = await response.json()
             setEditResources(data);

@@ -21,15 +21,14 @@ interface HomeClientProps {
   initialResources: Resource[];
 }
 
-
 export default function HomeClient({ initialResources }: HomeClientProps) {
   const [filteredResources, setFilteredResources] =
     useState<Resource[]>(initialResources); // state for filtered resources
   const [selectedResource, setSelectedResource] = useState<Resource | null>(
     null
   ); // state for selected resource
-  const [editResource, setEditResource] = useState<Resource | null>(null); // state for edit resource 
-  const [reviewResource, setReviewResource] = useState<Resource | null>(null); // state for review resource 
+  const [editResource, setEditResource] = useState<Resource | null>(null); // state for edit resource
+  const [reviewResource, setReviewResource] = useState<Resource | null>(null); // state for review resource
 
   // toggles to close or open the details of a resource
   const handleToggleDetails = (resource: Resource) => {
@@ -62,7 +61,7 @@ export default function HomeClient({ initialResources }: HomeClientProps) {
 
   return (
     // render filter sidebar, resource list panel middle, and map view right
-    <div className="flex h-[calc(100vh-90px)] text-black p-1">
+    <div className="flex flex-col md:flex-row h-auto md:h-[calc(100vh-90px)]">
       <FilterSidebar
         resources={initialResources}
         onFilteredResourcesChange={setFilteredResources}

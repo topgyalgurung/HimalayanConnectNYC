@@ -25,4 +25,9 @@
 - Unit Testing
   - Jest(next.js jas built in configuration for jest) & React Testing Library
   - Vitest
-- 
+  
+
+  ### Performance Considerations
+  - Lazy Loading
+  - Caching and CDNs
+  - minification and compression

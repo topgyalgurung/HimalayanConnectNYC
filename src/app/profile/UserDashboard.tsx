@@ -169,8 +169,8 @@ export default function UserDashboard() {
   ];
 
   return (
-    <div className="flex flex-col items-center justify-center">
-      <div className="flex flex-row w-full">
+    <div className="flex flex-col  items-center justify-center">
+      <div className="flex flex-col md:flex-row w-full">
         <ProfileCard
           userName={user.firstName}
           onLogoutAction={handleLogout}

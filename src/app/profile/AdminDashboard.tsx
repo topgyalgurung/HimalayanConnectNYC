@@ -165,12 +165,14 @@ export default function AdminDashboard() {
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <div className="flex flex-row w-full">
+      <div className="flex flex-col md:flex-row w-full">
+        {/* <div className="w-full"> */}
         <ProfileCard
           userName="Admin"
           onLogoutAction={handleLogout}
           userType="admin"
         />
+        {/* </div> */}
 
         <div className="w-full md:w-2/3 p-4">
           <div className="bg-white shadow-lg rounded-lg p-6">

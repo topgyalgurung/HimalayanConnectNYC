@@ -4,7 +4,7 @@
  *
  * This component is the resource list panel for the homepage of the Himalayan Connect NYC application.
  * It displays the list of resources in a sidebar.
- * 
+ *
  */
 
 "use client";
@@ -22,7 +22,7 @@ export default function ResourceListPanel({
   onViewDetailsAction,
 }: ResourceListPanelProps) {
   return (
-    <aside className="w-[30%] pl-4 flex-1 flex flex-col min-h-0 mb-4">
+    <aside className="w-full md:w-[30%] pl-0 md:pl-4 flex-1 flex flex-col min-h-0 mb-4">
       <h3 className="text-lg px-4 text-center font-bold text-white bg-blue-500 mb-2 sticky top-0 z-10 p-2 shadow">
         RESOURCES
       </h3>

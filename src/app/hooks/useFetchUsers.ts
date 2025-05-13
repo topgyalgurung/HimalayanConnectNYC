@@ -15,7 +15,7 @@ export function useFetchUser() {
         // cache: 'no-cache' // safer for user-specific info
         cache: "no-store", // on demand: not to cache anything and get fresh data everytime
       });
-      console.log("API Response status:", response.status);
+      // console.log("API Response status:", response.status);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }

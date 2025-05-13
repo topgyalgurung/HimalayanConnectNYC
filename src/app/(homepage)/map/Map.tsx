@@ -61,11 +61,11 @@ export default function MapView({
   onEditCloseAction,
 }: MapViewProps) {
   // Add debugging logs
-  console.log('Map Resources:', resources);
-  console.log('Resources with locations:', resources.filter(r => r.Location?.[0]?.latitude && r.Location?.[0]?.longitude));
-  
+  // console.log('Map Resources:', resources);
+  // console.log('Resources with locations:', resources.filter(r => r.Location?.[0]?.latitude && r.Location?.[0]?.longitude));
+
   return (
-    <aside className="w-[50%] bg-white shadow-md pl-4 flex flex-col h-full border-2 border-gray-300 ">
+    <aside className="w-full md:w-[50%] bg-white shadow-md pl-4 flex flex-col h-[500px] md:h-full border-2 border-gray-300">
       <div className="flex-1 relative border border-gray-400 rounded-lg overflow-hidden"></div>
       <div className="h-full w-full relative">
         <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? ""}>
@@ -123,7 +123,6 @@ const Markers = ({ points }: MarkersProps) => {
 
   return (
     <>
-    
       {points.map((resource) => {
         const location = resource.Location?.[0];
 
@@ -132,7 +131,7 @@ const Markers = ({ points }: MarkersProps) => {
         // if (!location) {
         //   // convert address to latitude and longitude
         //   // and update the resource Location table with the new latitude and longitude
-          
+
         //   const geocoder = new google.maps.Geocoder();
         //   geocoder.geocode({ address: resource.address }, async (results, status) => {
         //     if (status === 'OK' && results?.[0]) {
@@ -149,7 +148,7 @@ const Markers = ({ points }: MarkersProps) => {
         //             longitude: location.lng(),
         //           }),
         //         });
-                
+
         //         if (response.ok) {
         //           resource.Location = [{
         //             latitude: location.lat(),
@@ -164,7 +163,6 @@ const Markers = ({ points }: MarkersProps) => {
         //     }
         //   });
         // }
-        
 
         // Determine if we should show the InfoWindow
         const shouldShowInfoWindow = activeMarkerId === resource.id;
