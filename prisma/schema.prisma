@@ -35,6 +35,8 @@ model Location {
   latitude   Float
   longitude  Float
   Resource   Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+   
+   @@index([resourceId])
 }
 
 model Resource {

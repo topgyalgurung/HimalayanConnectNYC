@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/app/lib/prisma";
 import { getSession } from "@/app/lib/session";
 
-
+export const dynamic = "force-dynamic";
 export async function DELETE(req: NextRequest, props: { params: Promise<{ id: string }> }) {
   try {
     const params = await props.params;

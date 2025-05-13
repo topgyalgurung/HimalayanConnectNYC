@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 
 import AddResourceForm from "./AddResourceForm";
 
+export const dynamic = "force-dynamic";
+
 export default async function AddResourcePage() {
   // check session
   const session = await getSession();

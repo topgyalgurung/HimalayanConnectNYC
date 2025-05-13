@@ -27,6 +27,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "@mui/material/styles";
+import { Suspense } from "react";
 
 import { UserProvider } from "@/app/context/UserProvider";
 import NavMenu from "./(homepage)/NavMenu/NavMenu";
@@ -53,7 +54,10 @@ export default function RootLayout({
         {/* UserProvider wrapper enables user data access across all pages via useUser hook */}
         <UserProvider>
           <ThemeProvider theme={theme}>
+            <Suspense fallback={<div>Loading...</div>}>
             <NavMenu />
+            </Suspense>
+           
             <Toaster position="top-center" toastOptions={{ duration: 2000 }} />
             <main className="flex-grow">{children}</main>
             {/* Footer component commented out for future implementation */}
