@@ -13,6 +13,7 @@ import { getResources } from "./actions/resources/getResources"; //fetches resou
 import HomeClient from "./(homepage)/HomeClient"; // renders the homepage
 import Loading from "./(homepage)/loading";
 
+export const dynamic = 'force-dynamic';
 export default async function Home() {
   // Fetch resources on the server
   const resources = await getResources();

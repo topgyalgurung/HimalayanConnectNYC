@@ -236,7 +236,7 @@ export default function ResourceDetailsCard({
       {activeTab === "overview" && (
         <OverviewTab
           resource={resource}
-          user={user as User | null}
+          user={user as unknown as User | null}
           onSuggestEdit={onSuggestEdit!}
           router={router}
           liked={liked}
@@ -247,7 +247,7 @@ export default function ResourceDetailsCard({
       {activeTab === "review" && (
         <ReviewTab
           resource={resource}
-          user={user as User | null}
+          user={user as unknown as User | null}
           onReviewResource={onReviewResource!}
           router={router}
           reviews={reviews}
