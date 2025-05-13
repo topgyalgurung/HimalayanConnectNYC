@@ -39,7 +39,7 @@ export interface Resource {
   openDays?: string | null;
   openTime?: Date | null;
   closeTime?: Date | null;
-  status: ResourceStatus;
+  status: string | undefined;
   createdAt: Date;
   suggestedById?: number | null;
   categoryId?: number | null;
@@ -50,7 +50,7 @@ export interface Resource {
   facebookLink?: string | null;
   ResourceCategory?: { name: string } | null;
   Location: Location[];
-  updatedAt: Date;
+  // updatedAt: Date;
   editResource?: ResourceEditSuggestion | null;
 }
 
@@ -67,7 +67,7 @@ export type ResourceEditSuggestion = {
   resource: Resource;
   User: User;
   ResourceCategory?: { name: string } | null;
-  status: ResourceStatus;
+  status: string |undefined;
   createdAt: Date;
   Location: Location[]
   updatedAt: Date;

@@ -21,7 +21,7 @@ import { TabNavigation } from "../components/dashboard/TabNavigation/TabNavigati
 import { UserResourceTable } from "../components/dashboard/ResourceTable/UserResourceTable";
 import ResourceDetailsPopup from "../components/dashboard/ResourcePopup/ResourceDetailsPopup";
 import type { ResourceEditSuggestion } from "../lib/types";
-import type { Resource } from "../components/dashboard/ResourceTable/ResourceTable";
+import type { Resource } from "../lib/types";
 import { Resource as BaseResource } from "@/app/lib/types";
 
 /**
@@ -95,7 +95,7 @@ export default function UserDashboard() {
           phone: editResource.phone,
           url: editResource.url,
           createdAt: editResource.createdAt,
-          updatedAt: editResource.updatedAt,
+          // updatedAt: editResource.updatedAt,
           editResource: editResource,
         });
       } else if ("resource" in resource && resource.resource) {
@@ -119,7 +119,7 @@ export default function UserDashboard() {
           ResourceCategory: fullResource.ResourceCategory,
           Location: fullResource.Location,
           createdAt: fullResource.createdAt,
-          updatedAt: fullResource.updatedAt,
+          // updatedAt: fullResource.updatedAt,
           editResource: null,
         });
       } else {
@@ -198,7 +198,7 @@ export default function UserDashboard() {
               editResources={editResources}
               user={user}
               deletingId={deletingId}
-              anchorEl={anchorEl}
+              // anchorEl={anchorEl}
               onViewClickAction={handleViewClick}
               onDeleteResourceAction={handleDeleteResource}
               onDeleteEditAction={handleDeleteEdit}

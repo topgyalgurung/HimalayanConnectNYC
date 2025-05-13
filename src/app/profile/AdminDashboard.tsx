@@ -27,7 +27,11 @@ import { TabNavigation } from "../components/dashboard/TabNavigation/TabNavigati
 import { AdminResourceTable } from "../components/dashboard/ResourceTable/AdminResourceTable";
 import { updateResourceStatus } from "../actions/resources/updateResourceStatus";
 import { toast } from "react-hot-toast";
-import type { Resource, ResourceStatus } from "../lib/types";
+import type {
+  Resource,
+  ResourceEditSuggestion,
+  ResourceStatus,
+} from "../lib/types";
 import ResourceDetailsPopup from "../components/dashboard/ResourcePopup/ResourceDetailsPopup";
 
 export default function AdminDashboard() {
@@ -89,7 +93,7 @@ export default function AdminDashboard() {
 
    */
   const handleViewClick = (
-    resource: Resource,
+    resource: Resource | ResourceEditSuggestion,
     event: React.MouseEvent<HTMLElement>
   ) => {
     if (resourceAnchorEl === event.currentTarget) {
@@ -97,7 +101,27 @@ export default function AdminDashboard() {
       closePopup();
     } else {
       setResourceAnchorEl(event.currentTarget);
-      openPopup(resource);
+      if ("type" in resource && resource.type === "edit") {
+        const editResource = resource as ResourceEditSuggestion;
+        openPopup({
+          ...editResource,
+          id: editResource.id.toString(),
+          name: editResource.name,
+          status: editResource.status,
+          description: editResource.description || "",
+          openTime: editResource.openTime,
+          closeTime: editResource.closeTime,
+          openDays: editResource.openDays,
+          address: editResource.address,
+          phone: editResource.phone,
+          url: editResource.url,
+          createdAt: editResource.createdAt,
+          // updatedAt: editResource.updatedAt,
+          editResource: editResource,
+        });
+      } else {
+        openPopup(resource);
+      }
     }
   };
 
