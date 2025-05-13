@@ -168,7 +168,7 @@ export default function AdminDashboard() {
       <div className="flex flex-row w-full">
         <ProfileCard
           userName="Admin"
-          onLogout={handleLogout}
+          onLogoutAction={handleLogout}
           userType="admin"
         />
 
