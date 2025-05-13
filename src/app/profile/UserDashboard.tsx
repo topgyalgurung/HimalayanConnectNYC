@@ -173,7 +173,7 @@ export default function UserDashboard() {
       <div className="flex flex-row w-full">
         <ProfileCard
           userName={user.firstName}
-          onLogout={handleLogout}
+          onLogoutAction={handleLogout}
           userType="user"
         />
 
