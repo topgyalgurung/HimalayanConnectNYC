@@ -7,7 +7,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/app/context/UserProvider";
 
-
 export default function LoginForm() {
   const { setUser } = useUser(); // Get context
   const [state, action] = useActionState(login, undefined);
@@ -23,18 +22,21 @@ export default function LoginForm() {
   }, [state, router, setUser]);
 
   return (
-    <div className="flex flex-col items-center justify-start min-h-screen py-2">
-      <div className="w-1/3 h-1/2 bg-slate-100 p-6 rounded-lg shadow-lg mt-10">
-        <h1 className="text-left text-black text-3xl">Login to your account</h1>
+    <div className="flex flex-col w-full items-center justify-start min-h-screen py-2">
+      <div className="w-full max-w-lg bg-slate-100 p-6 rounded-lg shadow-lg mt-10 mx-4 md:mx-auto">
+        <h1 className=" text-black text-3xl text-center">
+          Login to your account
+        </h1>
         <hr />
         <br />
         <section>
           <form action={action}>
+            {/* email section  */}
             <input
               type="email"
               name="email"
               placeholder="Email"
-              className="text-black p-2 border border-gray-50 rounded-md mb-4 focus:outline-none focus:border-gray-600 w-full"
+              className="text-black p-2 border border-gray-50 rounded-md mb-4 focus:outline-none focus:border-gray-600 w-full mt-3"
             />
             {state?.errors?.email && (
               <p className="text-red-500 text-sm mb-2">
@@ -42,10 +44,10 @@ export default function LoginForm() {
               </p>
             )}
             {state?.status === 200 && (
-              <p className="text-green-500 text-sm mb-2">Login successful!</p>
+              <p className="text-green-500 text-sm mb-2 ">Login successful!</p>
             )}
-
-            <div className="relative">
+            {/* password section */}
+            <div className="relative mt-3">
               <input
                 type={showPassword ? "text" : "password"}
                 name="password"
@@ -74,7 +76,7 @@ export default function LoginForm() {
             </button>
           </form>
           <div>
-            <div className="flex justify-end">
+            <div className="flex justify-end mt-3">
               <Link href="/signup" className="text-right">
                 Don&apos;t have an account? Register
               </Link>
