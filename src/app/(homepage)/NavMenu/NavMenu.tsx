@@ -14,6 +14,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { Suspense } from "react";
 
 import { usePathname } from "next/navigation";
 import SearchInput from "./SearchInput/SearchInput";
@@ -51,7 +52,9 @@ export default function NavMenu() {
 
         <div className="ml-24 flex-grow flex justify-center">
           <div className="flex-grow max-w-xl">
+          <Suspense fallback={<div>Loading search...</div>}>
             <SearchInput />
+            </Suspense>
           </div>
         </div>
 
