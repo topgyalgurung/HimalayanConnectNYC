@@ -49,7 +49,7 @@ interface AdminResourceTableProps {
     newStatus: string,
     resourceType: "new" | "edit"
   ) => void;
-  isLoading?: boolean;
+  loadingResourceId?: string | null;
 }
 
 interface Column {
@@ -65,7 +65,7 @@ export const AdminResourceTable = ({
   filteredByEditStatus,
   onViewClickAction,
   onStatusChangeAction,
-  isLoading,
+  loadingResourceId,
 }: AdminResourceTableProps) => {
   const getColumns = (): Column[] => {
     if (activeTab === "new" || activeTab === "edit") {
@@ -148,9 +148,9 @@ export const AdminResourceTable = ({
                 row.type || "new"
               )
             }
-            disabled={isLoading}
+            disabled={loadingResourceId == row.id}
           >
-            {isLoading ? "Updating..." : "Approve"}
+            {loadingResourceId == row.id ? "Updating..." : "Approve"}
           </Button>
         );
       case "reject":
@@ -165,9 +165,9 @@ export const AdminResourceTable = ({
                 row.type || "new"
               )
             }
-            disabled={isLoading}
+            disabled={loadingResourceId == row.id}
           >
-            {isLoading ? "Updating..." : "Reject"}
+            {loadingResourceId == row.id ? "Updating..." : "Reject"}
           </Button>
         );
       case "action":
@@ -183,9 +183,9 @@ export const AdminResourceTable = ({
                   row.type || "new"
                 )
               }
-              disabled={isLoading}
+              disabled={loadingResourceId == row.id}
             >
-              {isLoading ? "Updating..." : "Reject"}
+              {loadingResourceId == row.id ? "Updating..." : "Reject"}
             </Button>
           );
         } else if (activeTab === "rejected") {
@@ -200,9 +200,9 @@ export const AdminResourceTable = ({
                   row.type || "new"
                 )
               }
-              disabled={isLoading}
+              disabled={loadingResourceId == row.id}
             >
-              {isLoading ? "Updating..." : "Approve"}
+              {loadingResourceId == row.id ? "Updating..." : "Approve"}
             </Button>
           );
         }
@@ -216,6 +216,7 @@ export const AdminResourceTable = ({
   const data = getData();
 
   return (
+    <div className="max-h-[calc(100vh-300px)] overflow-y-auto">
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
@@ -249,8 +250,9 @@ export const AdminResourceTable = ({
               </TableRow>
             ))
           )}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </div>
   );
 };

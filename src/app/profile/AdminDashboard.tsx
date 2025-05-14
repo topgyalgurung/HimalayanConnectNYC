@@ -48,7 +48,7 @@ export default function AdminDashboard() {
     openPopup,
     closePopup,
   } = usePopup<Resource>();
-  const [isLoading, setIsLoading] = useState(false);
+  const [loadingResourceId, setLoadingResourceId] = useState<string | null>(null);
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
@@ -65,7 +65,7 @@ export default function AdminDashboard() {
     resourceType: "new" | "edit"
   ) => {
     try {
-      setIsLoading(true);
+      setLoadingResourceId(resourceId);
 
       await toast.promise(
         updateResourceStatus(
@@ -84,7 +84,7 @@ export default function AdminDashboard() {
     } catch (error) {
       console.error("Error updating status:", error);
     } finally {
-      setIsLoading(false);
+      setLoadingResourceId(null);
     }
   };
 
@@ -189,10 +189,12 @@ export default function AdminDashboard() {
               activeTab={activeTab}
               filteredByStatus={filteredByStatus}
               filteredByEditStatus={filteredByEditStatus}
+              
               //resourceAnchorEl={resourceAnchorEl}
               onViewClickAction={handleViewClick}
               onStatusChangeAction={handleStatusChange}
-              isLoading={isLoading}
+               loadingResourceId={loadingResourceId }
+              // !== null}
             />
 
             <ResourceDetailsPopup

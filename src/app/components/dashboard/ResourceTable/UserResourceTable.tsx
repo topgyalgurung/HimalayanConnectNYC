@@ -244,6 +244,7 @@ export const UserResourceTable = ({
   const data = getData();
 
   return (
+    <div className="max-h-[calc(100vh-300px)] overflow-y-auto">
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
@@ -280,5 +281,6 @@ export const UserResourceTable = ({
         </TableBody>
       </Table>
     </TableContainer>
+    </div>
   );
 };

@@ -16,20 +16,29 @@ async function main() {
     data: { name: 'Community' },
   });
 
-  const spiritualCategory = await prisma.resourceCategory.create({
+  const legalCategory = await prisma.resourceCategory.create({
     data: { name: 'Legal' },
   });
 
-  const advocacyCategory = await prisma.resourceCategory.create({
+  const healthCategory = await prisma.resourceCategory.create({
     data: { name: 'Health' },
   });
 
-  const youthCategory = await prisma.resourceCategory.create({
+  const educationCategory = await prisma.resourceCategory.create({
     data: { name: 'Education' },
   });
 
-  const socialServicesCategory = await prisma.resourceCategory.create({
+  const financeCategory = await prisma.resourceCategory.create({
     data: { name: 'Finance' },
+  });
+
+  const nonProfitCategory = await prisma.resourceCategory.create({
+    data: { name: 'Non-Profit' },
+  });
+
+  // other categories
+  const otherCategory = await prisma.resourceCategory.create({
+    data: { name: 'Other' },
   });
 
   await prisma.user.update({
@@ -39,16 +48,33 @@ async function main() {
 
   await prisma.resource.create({
     data: {
-      name: 'Himalayan Community Center',
-      address: '37-21 72nd St',
+      name: 'Adhikaar',
+      address: '71-07 Woodside Ave, Woodside, NY 11377',
       city: 'Queens',
-      description: 'A hub for community events and support for the Himalayan diaspora.',
+      description: 'A women-led nonprofit working with the Nepali-speaking community to promote human rights and social justice.',
+      status: 'APPROVED',
+      categoryId: nonProfitCategory.id,
+      Location: {
+        create: {
+          latitude: 40.745312,
+          longitude: -73.892888,
+        },
+      },
+    },
+  });
+
+  await prisma.resource.create({
+    data: {
+      name: 'Tibetan Community of NY & NJ',
+      address: '76-16 37th Ave, Queens, NY 11377',
+      city: 'Queens',
+      description: 'Cultural and social hub supporting the Tibetan community in the greater NYC area.',
       status: 'APPROVED',
       categoryId: communityCategory.id,
       Location: {
         create: {
-          latitude: 40.747,
-          longitude: -73.891,
+          latitude: 40.749792,
+          longitude: -73.888391,
         },
       },
     },
@@ -56,29 +82,12 @@ async function main() {
 
   await prisma.resource.create({
     data: {
-      name: 'Tibetan Buddhist Center of NY',
-      address: '97-30 64th Ave',
-      city: 'Rego Park',
-      description: 'Spiritual and cultural support for Himalayan Buddhists.',
+      name: 'Sherpa Kyidug NY & NJ',
+      address: '41-17 75th St, Queens, NY 11373',
+      city: 'Queens',
+      description: 'Sherpa community organization promoting cultural events and advocacy.',
       status: 'APPROVED',
-      categoryId: spiritualCategory.id,
-      Location: {
-        create: {
-          latitude: 40.731,
-          longitude: -73.862,
-        },
-      },
-    },
-  });
-
-  await prisma.resource.create({
-    data: {
-      name: 'Sherpa Association of NY',
-      address: '41-17 75th St',
-      city: 'Jackson Heights',
-      description: 'Advocating for Sherpa families with education and legal support.',
-      status: 'APPROVED',
-      categoryId: advocacyCategory.id,
+      categoryId: nonProfitCategory.id,
       Location: {
         create: {
           latitude: 40.749,
@@ -88,31 +97,16 @@ async function main() {
     },
   });
 
-  await prisma.resource.create({
-    data: {
-      name: 'Nepalese American Youth Center',
-      address: '43-12 47th Ave',
-      city: 'Woodside',
-      description: 'Youth leadership, mentorship, and cultural events.',
-      status: 'APPROVED',
-      categoryId: youthCategory.id,
-      Location: {
-        create: {
-          latitude: 40.743,
-          longitude: -73.907,
-        },
-      },
-    },
-  });
+ 
 
   await prisma.resource.create({
     data: {
-      name: 'Bhutanese Community Support Group',
-      address: '56-10 Roosevelt Ave',
-      city: 'Elmhurst',
-      description: 'Social services and integration programs for Bhutanese immigrants.',
+      name: 'Consulate General of Nepal',
+      address: '228 E 45th St 4th Floor, New York, NY 10017',
+      city: 'Manhattan',
+      description: 'Consulate General of Nepal in New York City.',
       status: 'APPROVED',
-      categoryId: socialServicesCategory.id,
+      categoryId: legalCategory.id,
       Location: {
         create: {
           latitude: 40.740,
@@ -121,8 +115,6 @@ async function main() {
       },
     },
   });
-}
-
 main()
   .catch((e) => {
     console.error(e);
@@ -131,3 +123,4 @@ main()
   .finally(async () => {
     await prisma.$disconnect();
   });
+}

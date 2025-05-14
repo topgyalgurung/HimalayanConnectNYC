@@ -59,7 +59,7 @@ export default function TimePickerSection({
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className="space-y-4">
         <div>
-          <p className="font-semibold mb-1">Open Days</p>
+          <p className="font-semibold mb-1">Business Hours</p>
           <ToggleButtonGroup
             value={selectedDays}
             onChange={onDayChange}

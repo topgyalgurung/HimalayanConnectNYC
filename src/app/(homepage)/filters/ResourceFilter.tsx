@@ -83,7 +83,7 @@ export default function ResourceFilter({
       </div>
       <hr className="mb-2" />
 
-      <List dense sx={{ width: "100%", maxWidth: 140 }}>
+      <List dense sx={{ width: "100%" }}>
         {categories.map((cat) => (
           <ListItem key={cat.id} disablePadding>
             <ListItemButton>
