@@ -10,13 +10,28 @@ import { useRouter } from "next/navigation";
 export default function SignupForm() {
   const [state, action, pending] = useActionState(signup, undefined);
   const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: ''
+  });
   const router = useRouter();
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
 
   useEffect(() => {
     if (state?.status === 200) {
       router.push("/profile");
     }
   }, [state, router]);
+
   return (
     <div className="flex flex-col items-center justify-start min-h-screen py-2">
       <div className="w-full max-w-lg  bg-slate-100 p-6 rounded-lg shadow-lg mt-10 mx-4 md:mx-auto">
@@ -29,37 +44,48 @@ export default function SignupForm() {
             <input
               id="firstName"
               name="firstName"
+              value={formData.firstName}
+              onChange={handleInputChange}
               placeholder="First Name"
               className="text-black p-2 border border-gray-50 rounded-md mb-6  mt-5 focus:outline-none focus:border-gray-600 w-full"
             />
           </div>
-          {state?.errors?.firstName && <p>{state.errors.firstName}</p>}
+          {state?.errors?.firstName && <p className="text-red-500 text-sm mb-2">{state.errors.firstName}</p>}
           {/* lastname */}
           <div>
             <input
               id="lastName"
               name="lastName"
+              value={formData.lastName}
+              onChange={handleInputChange}
               placeholder="Last Name"
               className="text-black p-2 border border-gray-50 rounded-md mb-6 focus:outline-none focus:border-gray-600 w-full"
             />
           </div>
-          {state?.errors?.lastName && <p>{state.errors.lastName}</p>}
+          {state?.errors?.lastName && <p className="text-red-500 text-sm mb-2">{state.errors.lastName}</p>}
 
           <div>
             <input
               id="email"
               name="email"
+              value={formData.email}
+              onChange={handleInputChange}
               placeholder="Email"
               className="text-black p-2 border border-gray-50 rounded-md mb-6 focus:outline-none focus:border-gray-600 w-full"
             />
           </div>
-          {state?.errors?.email && <p>{state.errors.email}</p>}
+          {state?.errors?.email && <p className="text-red-500 text-sm mb-2">{state.errors.email}</p>}
+          {state?.status === 400 && state?.message && (
+            <p className="text-red-500 text-sm mb-2">{state.message}</p>
+          )}
 
           {/* password  */}
           <div className="relative mb-6">
             <input
               type={showPassword ? "text" : "password"}
               name="password"
+              value={formData.password}
+              onChange={handleInputChange}
               placeholder="Password"
               className="text-black p-2 border border-gray-50 rounded-md mb-4 focus:outline-none focus:border-gray-600 w-full"
             />
@@ -71,8 +97,8 @@ export default function SignupForm() {
               {showPassword ? "Hide" : "Show"}
             </button>
           </div>
-          {state?.errors?.password && (
-            <div>
+          {!state?.status && state?.errors?.password && (
+            <div className="text-red-500 text-sm mb-2">
               <p>Password must:</p>
               <ul>
                 {state.errors.password.map((error) => (

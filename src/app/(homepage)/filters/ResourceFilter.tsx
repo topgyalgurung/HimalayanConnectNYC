@@ -45,6 +45,11 @@ const categories = [
     name: "real estate",
     icon: "https://cdn-icons-png.flaticon.com/512/2238/2238337.png",
   },
+  {
+    id: 7,
+    name: "others",
+    icon: "https://cdn-icons-png.flaticon.com/512/3195/3195457.png",
+  },
 ];
 
 export default function ResourceFilter({

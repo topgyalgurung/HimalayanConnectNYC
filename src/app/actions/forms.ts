@@ -13,7 +13,7 @@ import { getSession } from '@/app/lib/session';
 // import { parse } from "date-fns";
 import { cache } from "react";
 import { EditResourceInput, ResourceFormData } from "../lib/types";
-
+import { geocodeAddress } from "@/app/(homepage)/map/geocodeAddress";
 // cache categories to avoid re-fetching them on every request
 const getCachedCategories = cache(async () => {
   return await prisma.resourceCategory.findMany();
@@ -104,6 +104,26 @@ export async function addResource(formData: FormData) {
         },
       });
   
+      // call geocoding and update location 
+      updateResourceLocation(newResource.id, data.address);
+      // try {
+      //   const location = await geocodeAddress(data.address);
+      //  if(location){
+      //     await prisma.resource.update({
+      //       where: { id: newResource.id },
+      //       data: {
+      //         Location: {
+      //           create: {
+      //             latitude: location.lat,
+      //             longitude: location.lng,
+      //           },
+      //         },
+      //       },
+      //     });
+      //   }
+      // } catch (geoErr) {
+      //   console.error("Failed to geocode and store location:", geoErr);
+      // }
     /**
      * Prisma returns the rating field as a Decimal object (from the @db.Decimal(2, 1) in your schema), 
      * but Next.js Server Actions can only return plain JavaScript objects to Client Components. 
@@ -198,9 +218,32 @@ export async function addEditResource(formData: FormData) {
 }
 
 // will do this later 
-export async function addReviewResource(formData: FormData) {
-  if (!formData) {
-    return { error: "No form data received" };
+// export async function addReviewResource(formData: FormData) {
+//   if (!formData) {
+//     return { error: "No form data received" };
+//   }
+// }
+
+
+// Server action to update resource location
+export async function updateResourceLocation(resourceId: number, address: string) {
+  try {
+    const location = await geocodeAddress(address);
+    if (location) {
+      await prisma.resource.update({
+        where: { id: resourceId },
+        data: {
+          Location: {
+            create: {
+              latitude: location.lat,
+              longitude: location.lng,
+            },
+          },
+        },
+      });
+    }
+  } catch (error) {
+    console.error("Failed to update resource location:", error);
+    return { error: "Failed to update resource location" };
   }
-  
 }

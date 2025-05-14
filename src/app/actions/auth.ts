@@ -19,7 +19,30 @@ import { Role } from "@prisma/client";
 
 // SIGN UP
 export async function signup(state: SignupFormState, formData: FormData) {
-  // Validate form fields
+  const email = formData.get("email") as string;
+  
+  // First check if email exists
+  try {
+    const existingUser = await prisma.user.findUnique({
+      where: { email },
+      select: { id: true }, // Only fetch ID for efficiency
+    });
+
+    if (existingUser) {
+      return {
+        message: "An account with this email already exists.",
+        status: 400,
+      };
+    }
+  } catch (error) {
+    console.error("Error checking existing user:", error);
+    return {
+      message: "An error occurred while checking email availability.",
+      status: 500,
+    };
+  }
+
+  // Then validate all form fields
   const validatedFields = SignupFormSchema.safeParse({
     firstName: formData.get("firstName"),
     lastName: formData.get("lastName"),
@@ -35,22 +58,9 @@ export async function signup(state: SignupFormState, formData: FormData) {
   }
 
   // Prepare data for insertion into database
-  const { firstName, lastName, email, password } = validatedFields.data;
+  const { firstName, lastName, password } = validatedFields.data;
 
   try {
-    // Check if user already exists
-    const existingUser = await prisma.user.findUnique({
-      where: { email },
-      select: { id: true }, // Only fetch ID for efficiency
-    });
-
-    if (existingUser) {
-      return {
-        message: "An account with this email already exists.",
-        status: 400,
-      };
-    }
-
     // Hash the password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -124,7 +134,7 @@ export async function login(state: LoginFormState, formData: FormData) {
 
     if (!user?.id) {
       return {
-        message: "Invalid email or password",
+        message: "Invalid email or user does not exist",
         status: 401,
       };
     }

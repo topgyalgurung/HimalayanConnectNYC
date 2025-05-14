@@ -3,6 +3,7 @@ import { getSession } from "@/app/lib/session"; // your secure session utils
 import { prisma } from "@/app/lib/prisma";
 
 export const dynamic = "force-dynamic";
+
 export async function POST(req: NextRequest) {
   try {
     const session = await getSession();

@@ -123,47 +123,22 @@ const Markers = ({ points }: MarkersProps) => {
 
   return (
     <>
-      {points.map((resource) => {
+      {
+      points.map((resource) => {
         const location = resource.Location?.[0];
+      
+         // once user submits a resource, the location is stored in the database
+        // but if does not exist, we need to call geocoding and update the location again 
+        // this is to ensure that the location is always up to date
+      // await only allowed with async function // will do this later 
+      // if(!location?.latitude || !location?.longitude){
+      //   // call the server action to update the location
+      //   await updateResourceLocation(Number(resource.id), resource.address);
+      //   }
+      //   // get the updated location
+      //   const updatedLocation = resource.Location?.[0];
 
-        // todo: update the resource Location table with the new latitude and longitude
-
-        // if (!location) {
-        //   // convert address to latitude and longitude
-        //   // and update the resource Location table with the new latitude and longitude
-
-        //   const geocoder = new google.maps.Geocoder();
-        //   geocoder.geocode({ address: resource.address }, async (results, status) => {
-        //     if (status === 'OK' && results?.[0]) {
-        //       const location = results[0].geometry.location;
-        //       try {
-        //         const response = await fetch('/api/resources/location', {
-        //           method: 'POST',
-        //           headers: {
-        //             'Content-Type': 'application/json',
-        //           },
-        //           body: JSON.stringify({
-        //             resourceId: resource.id,
-        //             latitude: location.lat(),
-        //             longitude: location.lng(),
-        //           }),
-        //         });
-
-        //         if (response.ok) {
-        //           resource.Location = [{
-        //             latitude: location.lat(),
-        //             longitude: location.lng(),
-        //             id: resource.id,
-        //             resourceId: resource.id
-        //           }];
-        //         }
-        //       } catch (error) {
-        //         console.error('Error updating resource location:', error);
-        //       }
-        //     }
-        //   });
-        // }
-
+       
         // Determine if we should show the InfoWindow
         const shouldShowInfoWindow = activeMarkerId === resource.id;
 

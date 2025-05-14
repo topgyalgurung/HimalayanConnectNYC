@@ -5,16 +5,51 @@ export const formSchema = z.object({
     .min(2, "Name must be at least 2 characters")
     .regex(/^[a-zA-Z\s]+$/, "Name cannot contain numbers or special characters"),
   categoryId: z.string().min(1, "Please select a category"),
-  address: z.string().min(5, "Address must be at least 5 characters"),
+  address: z.string()
+    .min(5, "Address must be at least 5 characters")
+    .refine(
+      (address) => {
+        const parts = address.split(',').map(part => part.trim());
+        if (parts.length < 3) return false;
+        
+        const [street, city, state, zip] = parts;
+        const cityRegex = /^[a-zA-Z\s]+$/;
+        const stateRegex = /^[a-zA-Z]{2}$/;
+        const zipRegex = /^\d{5}(-\d{4})?$/; // Validates ZIP codes in formats: 12345 or 12345-6789
+        
+        // Check required fields
+        const requiredFieldsValid = 
+          street.length >= 5 &&
+          city.length >= 2 &&
+          cityRegex.test(city) &&
+          stateRegex.test(state);
+
+        // If zip is provided, validate it
+        if (zip) {
+          return requiredFieldsValid && zipRegex.test(zip);
+        }
+
+        // If no zip provided, just check required fields
+        return requiredFieldsValid;
+      },
+      "Address must include street, city, and state in format: Street, City, State (ZIP optional)"
+    ),
   phone: z.string()
     .regex(/^\d{3}-\d{3}-\d{4}$/, "Phone number must be in format: XXX-XXX-XXXX")
     .optional()
     .or(z.literal("")),
-  url: z.string()
-    .url("Must be a valid URL")
+    url: z
+    .string()
+    .trim()
     .refine(
-      (url) => /\.(com|org|net|edu|gov|io)$/i.test(url),
-      "URL must end with a valid domain extension (.com, .org, etc.)"
+      (url) => {
+        if (!url) return true;
+        const urlRegex = /^(www?:\.)?(https?:\/\/)?[^\s\/]+\.[a-z]{2,}([\/?#].*)?$/i;
+        return urlRegex.test(url);
+      },
+      {
+        message: "Please enter a valid URL (e.g., example.com or https://example.com)",
+      }
     )
     .optional()
     .or(z.literal("")),
