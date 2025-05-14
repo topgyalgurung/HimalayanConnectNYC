@@ -54,10 +54,10 @@ export default function BoroughFilter({
         </button>
       </div>
       <hr className="mb-2" />
-      <List dense sx={{ width: "100%", maxWidth: 140 }}>
+      <List dense sx={{ width: "100%" }}>
         {boroughs.map((borough) => (
           <ListItem key={borough.id} disablePadding>
-            <ListItemButton>
+            <ListItemButton >
               <ListItemIcon className="min-w-0 mr-2">
                 <Checkbox
                   checked={selectedBoroughs.includes(borough.name)}

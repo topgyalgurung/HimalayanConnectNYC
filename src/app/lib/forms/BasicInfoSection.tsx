@@ -56,7 +56,7 @@ export default function BasicInfoSection({
       <input
         type="text"
         name="address"
-        placeholder="Address (Street, City, State, ZIP(optional))"
+        placeholder="Address : Street, City, State, ZIP(optional)"
         value={formData.address}
         onChange={handleChange}
         required

@@ -12,7 +12,7 @@
 // need to research if i can import simply Resource type from prisma
 
 import { type Resource } from "@/app/lib/types";
-import { formatOpenDays } from "@/app/lib/helpers/formatOpenDays";
+// import { formatOpenDays } from "@/app/lib/helpers/formatOpenDays";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 dayjs.extend(utc);
@@ -37,7 +37,7 @@ export default function ResourceCard({
           >
             <div className="flex-1">
               <h4 className="text-lg font-bold">{resource.name}</h4>
-              <p className="text-gray-500">
+              <p className="text-blue-500">
                 {resource.ResourceCategory?.name || "no category"}
               </p>
               <p>{resource.description}</p>
@@ -48,12 +48,12 @@ export default function ResourceCard({
                 <strong>Address: </strong>
                 {resource.address ? resource.address : "No address available"}
               </p>
-              <p>
+              {/* <p>
                 <strong>Open Days :</strong>{" "}
                 {resource.openDays ? formatOpenDays(resource.openDays) : "N/A"}
-              </p>
-              <p className="flex items-center gap-1">
-                <strong>Hours:</strong>
+              </p> */}
+              {/* <p className="flex items-center gap-1">
+                <strong>Hours:</strong> */}
                 {/* this format does not work for openTime DateTime? @db.Time(6) in db */}
                 {/* <span className="text-gray-700">
                   {resource.openTime
@@ -64,7 +64,7 @@ export default function ResourceCard({
                     ? format(resource.closeTime, "hh:mm a")
                     : "N/A"}
                 </span> */}
-                <span className="text-gray-700">
+                {/* <span className="text-gray-700">
                   {resource.openTime
                     ? dayjs.utc(resource.openTime).format("hh:mm a")
                     : "N/A"}{" "}
@@ -72,8 +72,8 @@ export default function ResourceCard({
                   {resource.closeTime
                     ? dayjs.utc(resource.closeTime).format("hh:mm a")
                     : "N/A"}
-                </span>
-              </p>
+                </span> */}
+              {/* </p> */}
             </div>
 
             <div className="flex items-end ml-4">

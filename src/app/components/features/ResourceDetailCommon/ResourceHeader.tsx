@@ -54,15 +54,17 @@ const ResourceHeader: React.FC<ResourceHeaderProps> = ({
             <div className="text-yellow-500">No ratings yet</div>
           ) : (
             <Box sx={{ textAlign: "left", mb: 1, borderColor: "transparent" }}>
-              <Rating
-                name="rating"
-                value={Number(resource.rating)}
-                precision={0.5}
-                readOnly
-              />
-              <span className="text-sm text-gray-600 ml-2">
-                {Number(resource.rating).toFixed(1)}
-              </span>
+              <div className="flex items-center">
+                <Rating
+                  name="rating"
+                  value={Number(resource.rating)}
+                  precision={0.5}
+                  readOnly
+                />
+                <span className="text-sm text-gray-600 ml-2">
+                  {Number(resource.rating).toFixed(1)}
+                </span>
+              </div>
             </Box>
           )}
         </div>
