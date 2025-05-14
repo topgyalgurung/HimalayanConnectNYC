@@ -11,6 +11,7 @@ export default function LoginForm() {
   const { setUser } = useUser(); // Get context
   const [state, action] = useActionState(login, undefined);
   const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({ email: '', password: '' });
   const router = useRouter();
 
   useEffect(() => {
@@ -20,6 +21,14 @@ export default function LoginForm() {
       router.push("/profile");
     }
   }, [state, router, setUser]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
 
   return (
     <div className="flex flex-col w-full items-center justify-start min-h-screen py-2">
@@ -35,12 +44,19 @@ export default function LoginForm() {
             <input
               type="email"
               name="email"
+              value={formData.email}
+              onChange={handleInputChange}
               placeholder="Email"
               className="text-black p-2 border border-gray-50 rounded-md mb-4 focus:outline-none focus:border-gray-600 w-full mt-3"
             />
             {state?.errors?.email && (
               <p className="text-red-500 text-sm mb-2">
                 {state.errors.email[0]}
+              </p>
+            )}
+            {state?.status === 401 && state?.message && (
+              <p className="text-red-500 text-sm mb-2">
+                {state.message}
               </p>
             )}
             {state?.status === 200 && (
@@ -51,6 +67,8 @@ export default function LoginForm() {
               <input
                 type={showPassword ? "text" : "password"}
                 name="password"
+                value={formData.password}
+                onChange={handleInputChange}
                 placeholder="Password"
                 className="text-black p-2 border border-gray-50 rounded-md mb-4 focus:outline-none focus:border-gray-600 w-full"
               />
@@ -67,6 +85,7 @@ export default function LoginForm() {
                 {state.errors.password[0]}
               </p>
             )}
+            
             <br />
             <button
               type="submit"

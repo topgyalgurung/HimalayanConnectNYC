@@ -3,24 +3,9 @@
 ## Project Overview
 Himalayan Connect NYC is a comprehensive web platform designed to connect the Nepalese Himalayan community in New York with essential resources. The application serves as a centralized hub for accessing nonprofit services, legal assistance, immigration support, housing, and job opportunities.
 
-## Tech Stack
-- **Frontend**: 
-  - Next.js 15.1.7 (React 19)
-  - TypeScript
-  - Tailwind CSS
-  - Material UI
-  - Framer Motion (animations)
-- **Backend**: 
-  - Next.js API Route Handler 
-  - Next.js Server Action
-  - Server Component
-  - Prisma ORM
-  - PostgreSQL
-- **External APIs**:
-  - Google Maps API (Directions, Geocoding, Maps JavaScript API, Places API)
-  - Cloudinary (image storage)
-- **Authentication**: Custom JWT-based session management
-- **Form Handling**: React Hook Form with Zod validation
+## Requirements
+
+### Functional Requirements
 
 ## Core Features
 
@@ -54,6 +39,36 @@ Himalayan Connect NYC is a comprehensive web platform designed to connect the Ne
   - Interactive map view 
   - pin with category icon
   - Resource location display
+
+
+
+### Non Functional Requirements
+- Minimize latency 
+- 
+
+## API Design
+
+## Database Design
+
+
+## Tech Stack
+- **Frontend**: 
+  - Next.js 15.1.7 (React 19)
+  - TypeScript
+  - Tailwind CSS
+  - Material UI
+  - Framer Motion (animations)
+- **Backend**: 
+  - Next.js API Route Handler 
+  - Next.js Server Action
+  - Server Component
+  - Prisma ORM
+  - PostgreSQL
+- **External APIs**:
+  - Google Maps API (Directions, Geocoding, Maps JavaScript API, Places API)
+  - Cloudinary (image storage)
+- **Authentication**: Custom JWT-based session management
+- **Form Handling**: React Hook Form with Zod validation
 
 ## Application Structure
 
@@ -151,11 +166,13 @@ src/
 
 ## Deployment
 - Frontend: Vercel (recommended)
-- Database: PostgreSQL
+- Database: Prisma Postgres
 - Image Storage: Cloudinary
 - API Services: Google Maps API
 
+
 ## Future Enhancements
+
 1. Multilingual Support
    - Nepali and Tibetan language integration
 

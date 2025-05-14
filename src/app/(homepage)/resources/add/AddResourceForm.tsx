@@ -1,16 +1,27 @@
+/**
+ * This is the form for adding a new resource.
+ * It is a client component that uses the formSchema to validate the form data.
+ * It also uses the BasicInfoSection and AdditionalDetailsSection to render the form.
+ * It uses the addResource action to add the resource to the database.
+ * It uses the getCategories action to get the categories for the resource.
+ * 
+ */ 
+
 "use client";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+
 import { addResource, getCategories } from "@/app/actions/forms";
+import { formSchema, type FormValues } from "@/app/lib/forms/validationSchema";
+import BasicInfoSection from "@/app/lib/forms/BasicInfoSection";
+import AdditionalDetailsSection from "@/app/lib/forms/AdditionalDetailsSection";
+import dayjs from "dayjs";
+
 import Accordion from "@mui/material/Accordion";
 import { AccordionSummary, Typography } from "@mui/material";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import dayjs from "dayjs";
-import { formSchema, type FormValues } from "@/app/lib/forms/validationSchema";
-import BasicInfoSection from "@/app/lib/forms/BasicInfoSection";
-import AdditionalDetailsSection from "@/app/lib/forms/AdditionalDetailsSection";
 
 
 export default function AddResourceForm() {
@@ -132,6 +143,7 @@ export default function AddResourceForm() {
         )}
 
         <form action={handleFormAction} className="space-y-4">
+          {/* basic info: name, category, address */}
           <BasicInfoSection
             formData={formData}
             errors={errors}

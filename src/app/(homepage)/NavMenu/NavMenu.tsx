@@ -46,7 +46,6 @@ export default function NavMenu() {
         >
           <Image
             src="/logo.png"
-            objectFit="cover"
             alt="Himalayan Connect Logo"
             width={200}
             height={50}
@@ -56,8 +55,8 @@ export default function NavMenu() {
 
         {/* Search input  */}
 
-        <div className=" flex justify-center md:ml-24 md:flex-grow w-full md:w-auto">
-          <div className="w-full md:w-auto px-2 md:px-0 max-w-xl">
+        <div className="ml-0 md:ml-24 flex-grow flex justify-center">
+          <div className="w-full md:w-grow md:max-w-xl">
             <SearchInput />
           </div>
         </div>

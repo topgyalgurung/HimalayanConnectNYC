@@ -1,11 +1,11 @@
-import React from 'react';
+import React from "react";
 
 const NYC_BOROUGHS = [
-  { id: 1, name: 'Manhattan' },
-  { id: 2, name: 'Brooklyn' },
-  { id: 3, name: 'Queens' },
-  { id: 4, name: 'Bronx' },
-  { id: 5, name: 'Staten Island' }
+  { id: 1, name: "Manhattan" },
+  { id: 2, name: "Brooklyn" },
+  { id: 3, name: "Queens" },
+  { id: 4, name: "Bronx" },
+  { id: 5, name: "Staten Island" },
 ];
 
 interface CitySelectProps {
@@ -14,11 +14,15 @@ interface CitySelectProps {
   className?: string;
 }
 
-export default function CitySelect({ name = 'city', required = true, className = '' }: CitySelectProps) {
+export default function CitySelect({
+  name = "city",
+  // required = true,
+  className = "",
+}: CitySelectProps) {
   return (
     <select
       name={name}
-      required={required}
+      // required={required}
       className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${className}`}
       aria-label="Select borough"
     >
@@ -30,4 +34,4 @@ export default function CitySelect({ name = 'city', required = true, className =
       ))}
     </select>
   );
-} 
+}

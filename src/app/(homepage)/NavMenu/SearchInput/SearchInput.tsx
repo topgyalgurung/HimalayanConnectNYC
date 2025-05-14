@@ -1,6 +1,6 @@
 /**
  * SearchInput Component
- * 
+ *
  *  The user types into this input field, and the search query is updated instantly.
  * The query is saved in the browser's URL as ?query=value, and whenever the user types,
  * it updates the URL and triggers a re-render in the ResourceList component,
@@ -14,7 +14,6 @@ import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import TextField from "@mui/material/TextField";
-
 
 export default function SearchInput() {
   const router = useRouter();
@@ -64,7 +63,7 @@ export default function SearchInput() {
         id="search-bar"
         type="search"
         placeholder="Search name"
-        // category, or location" not working now 
+        // category, or location" not working now
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         variant="outlined"

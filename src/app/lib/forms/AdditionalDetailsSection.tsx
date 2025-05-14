@@ -54,7 +54,7 @@ export default function AdditionalDetailsSection({
       <input
         type="tel"
         name="phone"
-        placeholder="Phone Number (XXX-XXX-XXXX)"
+        placeholder="Phone Number (XXX-XXX-XXXX) (optional)"
         value={formData.phone}
         onChange={handleChange}
         className={`w-full px-3 py-2 border ${errors.phone ? 'border-red-500' : 'border-gray-300'} rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
@@ -64,7 +64,7 @@ export default function AdditionalDetailsSection({
       <input
         type="url"
         name="url"
-        placeholder="Website"
+        placeholder=" URL (optional) e.g. must start with https:// or http://"
         value={formData.url}
         onChange={handleChange}
         className={`w-full px-3 py-2 border ${errors.url ? 'border-red-500' : 'border-gray-300'} rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
@@ -74,7 +74,7 @@ export default function AdditionalDetailsSection({
       <input
         type="url"
         name="facebookLink"
-        placeholder="Facebook Link"
+        placeholder="Facebook Link (optional)"
         value={formData.facebookLink}
         onChange={handleChange}
         className={`w-full px-3 py-2 border ${errors.facebookLink ? 'border-red-500' : 'border-gray-300'} rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
@@ -83,7 +83,7 @@ export default function AdditionalDetailsSection({
 
       <textarea
         name="description"
-        placeholder="Description"
+        placeholder="Description (optional)"
         value={formData.description}
         onChange={handleChange}
         className={`w-full px-3 py-2 border ${errors.description ? 'border-red-500' : 'border-gray-300'} rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[80px]`}
