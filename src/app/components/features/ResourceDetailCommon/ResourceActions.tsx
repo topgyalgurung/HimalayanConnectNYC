@@ -59,11 +59,13 @@ const ResourceActions: React.FC<ResourceActionsProps> = ({
 
   return (
     <div className={`flex justify-between items-center ${className}`}>
+          {/* if no link availble, show toast error, show all icons to be consistent */}
+          {/* except address  we will supposed to have by design */}
       {/* <div className="flex space-x-4"> */}
-        {resource.address && resource.city && (
+        {resource.address && (
           <a
             href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-              resource.address + ", " + resource.city
+              resource.address
             )}`}
             target="_blank"
             rel="noopener noreferrer"
@@ -73,27 +75,35 @@ const ResourceActions: React.FC<ResourceActionsProps> = ({
           </a>
         )}
 
-        {resource.facebookLink && (
-          <a
-            href={resource.facebookLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 hover:text-blue-800 transition-colors"
-          >
-            <FaFacebook className="text-blue-600 text-2xl" />
-          </a>
-        )}
+        {/* {resource.facebookLink && ( */}
+    
+            <a
+              href={resource.facebookLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:text-blue-800 transition-colors"
+              onClick={(e) => {
+                if (!resource.facebookLink) {
+                  e.preventDefault();
+                  toast.error("Facebook link not available");
+                }
+              }}
+            >
+              <FaFacebook className="text-blue-600 text-2xl" />
+            </a>
+        
+        {/* )} */}
 
-        {resource.email && (
+        {/* {resource.email && ( */}
           <a
             href={`mailto:${resource.email}`}
             className="text-blue-600 hover:text-blue-800 transition-colors"
           >
             <TfiEmail className="text-red-600 text-2xl" />
           </a>
-        )}
+        {/* )} */}
 
-        {resource.url && (
+        {/* {resource.url && ( */}
           <a
             href={
               resource.url?.startsWith("http")
@@ -106,7 +116,7 @@ const ResourceActions: React.FC<ResourceActionsProps> = ({
           >
             <IoLinkSharp className="text-green-600 text-2xl" />
           </a>
-        )}
+        {/* )} */}
 
       <motion.div
         whileTap={{ scale: 0.95 }}

@@ -38,7 +38,7 @@ export const formSchema = z.object({
     .regex(/^\d{3}-\d{3}-\d{4}$/, "Phone number must be in format: XXX-XXX-XXXX")
     .optional()
     .or(z.literal("")),
-    url: z
+  url: z
     .string()
     .trim()
     .refine(

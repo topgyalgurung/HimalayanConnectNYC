@@ -46,7 +46,12 @@ import TableRow from "@mui/material/TableRow";
 import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { format } from "date-fns";
-import type { Resource, ResourceEditSuggestion, User, Location } from "@/app/lib/types";
+import type {
+  Resource,
+  ResourceEditSuggestion,
+  User,
+  Location,
+} from "@/app/lib/types";
 
 interface UserResourceTableProps {
   activeTab: string;
@@ -177,7 +182,12 @@ export const UserResourceTable = ({
             {row.content && row.content.length > 30 && (
               <Button
                 size="small"
-                onClick={(e) => onViewClickAction(row.resource || row as unknown as Resource, e)}
+                onClick={(e) =>
+                  onViewClickAction(
+                    row.resource || (row as unknown as Resource),
+                    e
+                  )
+                }
                 className="ml-2"
               >
                 View Full
@@ -244,43 +254,43 @@ export const UserResourceTable = ({
   const data = getData();
 
   return (
-    <div className="max-h-[calc(100vh-300px)] overflow-y-auto">
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            {columns.map((column) => (
-              <TableCell
-                key={column.id}
-                align={column.align || "left"}
-                style={{ minWidth: column.minWidth }}
-              >
-                {column.label}
-              </TableCell>
-            ))}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {data.length === 0 ? (
+    <div className="max-h-[calc(100vh-300px)] overflow-y-auto mb-5">
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
             <TableRow>
-              <TableCell colSpan={columns.length} align="center">
-                {`No ${activeTab} resources found.`}
-              </TableCell>
+              {columns.map((column) => (
+                <TableCell
+                  key={column.id}
+                  align={column.align || "left"}
+                  style={{ minWidth: column.minWidth }}
+                >
+                  {column.label}
+                </TableCell>
+              ))}
             </TableRow>
-          ) : (
-            data.map((row, index) => (
-              <TableRow key={row.id} hover role="checkbox" tabIndex={-1}>
-                {columns.map((column) => (
-                  <TableCell key={column.id} align={column.align || "left"}>
-                    {renderCell(row, column, index)}
-                  </TableCell>
-                ))}
+          </TableHead>
+          <TableBody>
+            {data.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={columns.length} align="center">
+                  {`No ${activeTab} resources found.`}
+                </TableCell>
               </TableRow>
-            ))
-          )}
-        </TableBody>
-      </Table>
-    </TableContainer>
+            ) : (
+              data.map((row, index) => (
+                <TableRow key={row.id} hover role="checkbox" tabIndex={-1}>
+                  {columns.map((column) => (
+                    <TableCell key={column.id} align={column.align || "left"}>
+                      {renderCell(row, column, index)}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 };

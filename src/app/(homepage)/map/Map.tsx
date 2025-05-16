@@ -164,6 +164,9 @@ const Markers = ({ points }: MarkersProps) => {
           case "real estate":
             image = "https://cdn-icons-png.flaticon.com/512/2238/2238337.png";
             break;
+          case "other":
+            image = "https://cdn-icons-png.flaticon.com/512/3195/3195457.png";
+            break;
         }
 
         return (
@@ -183,7 +186,10 @@ const Markers = ({ points }: MarkersProps) => {
               <Image
                 src={image}
                 alt={`${resource.ResourceCategory?.name} icon`}
-                style={{ width: "30px", height: "30px", objectFit: "contain" }}
+                style={{  
+                  objectFit: "contain",
+                  backgroundColor: "#FFEB3B" // Bright yellow background
+                }}
                 height={30}
                 width={30}
               />

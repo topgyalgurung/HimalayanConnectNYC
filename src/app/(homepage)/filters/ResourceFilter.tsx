@@ -47,7 +47,7 @@ const categories = [
   },
   {
     id: 7,
-    name: "others",
+    name: "other",
     icon: "https://cdn-icons-png.flaticon.com/512/3195/3195457.png",
   },
 ];
