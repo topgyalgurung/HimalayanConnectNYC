@@ -119,80 +119,83 @@ export default function AddResourceForm() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto my-4 px-4 sm:px-6 lg:px-8 pb-8">
-      <div className="bg-white shadow-lg rounded-lg p-4 sm:p-6 space-y-4">
-        <div className="space-y-2">
-          <h2 className="text-2xl font-bold text-gray-900">
-            Add a New Resource
-          </h2>
-          <h4 className="text-gray-600">
-            Provide some information about this place
-          </h4>
-        </div>
+    <div className="h-[calc(100vh-4rem)] mb-2 overflow-y-auto">
+      <div className="max-w-2xl mx-auto my-4 px-4 sm:px-6 lg:px-8 pb-8">
+        <div className="bg-white shadow-lg rounded-lg p-4 sm:p-6 space-y-4">
+          {/* header */}
+          <div className="space-y-2 sticky top-0 bg-white z-10 pb-2">
+            <h2 className="text-2xl font-bold text-gray-900">
+              Add a New Resource
+            </h2>
+            <h4 className="text-gray-600">
+              Provide some information about this place
+            </h4>
+          </div>
 
-        {message && (
-          <p
-            className={`text-sm text-center py-2 px-4 rounded-md ${
-              message.includes("success")
-                ? "bg-green-50 text-green-700"
-                : "bg-red-50 text-red-700"
-            }`}
-          >
-            {message}
-          </p>
-        )}
-
-        <form action={handleFormAction} className="space-y-4">
-          {/* basic info: name, category, address */}
-          <BasicInfoSection
-            formData={formData}
-            errors={errors}
-            categories={categories}
-            handleChange={handleChange}
-          />
-
-          <Accordion
-            defaultExpanded
-            className="border border-gray-200 rounded-md"
-          >
-            <AccordionSummary
-              expandIcon={<ArrowDropDownIcon />}
-              aria-controls="optional-content"
-              id="optional-content"
-              className="hover:bg-gray-50"
+          {message && (
+            <p
+              className={`text-sm text-center py-2 px-4 rounded-md ${
+                message.includes("success")
+                  ? "bg-green-50 text-green-700"
+                  : "bg-red-50 text-red-700"
+              }`}
             >
-              <Typography component="span" className="font-medium">
-                Add more details
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails className="pt-2">
-              <Typography className="text-gray-600 mb-2">
-                Add phone, hours, website, photos to verify this place
-              </Typography>
+              {message}
+            </p>
+          )}
 
-              <AdditionalDetailsSection
-                formData={formData}
-                errors={errors}
-                handleChange={handleChange}
-                selectedDays={selectedDays}
-                openTime={openTime}
-                closeTime={closeTime}
-                onDayChange={(_, newDays) => setSelectedDays(newDays)}
-                onOpenTimeChange={setOpenTime}
-                onCloseTimeChange={setCloseTime}
-                onImageUpload={setImageUrl}
-              />
-            </AccordionDetails>
-          </Accordion>
+          <form action={handleFormAction} className="space-y-1">
+            {/* basic info: name, category, address */}
+            <BasicInfoSection
+              formData={formData}
+              errors={errors}
+              categories={categories}
+              handleChange={handleChange}
+            />
 
-          <button
-            type="submit"
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed mt-4"
-            disabled={loading}
-          >
-            {loading ? "Submitting..." : "Submit Resource"}
-          </button>
-        </form>
+            <Accordion
+              defaultExpanded
+              className="border border-gray-100 rounded-md"
+            >
+              <AccordionSummary
+                expandIcon={<ArrowDropDownIcon />}
+                aria-controls="optional-content"
+                id="optional-content"
+                className="hover:bg-gray-50"
+              >
+                <Typography component="span" className="font-medium">
+                  Add more details
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails className="pt-2">
+                <Typography className="text-gray-600 mb-2">
+                  Add phone, hours, website, photos to verify this place
+                </Typography>
+
+                <AdditionalDetailsSection
+                  formData={formData}
+                  errors={errors}
+                  handleChange={handleChange}
+                  selectedDays={selectedDays}
+                  openTime={openTime}
+                  closeTime={closeTime}
+                  onDayChange={(_, newDays) => setSelectedDays(newDays)}
+                  onOpenTimeChange={setOpenTime}
+                  onCloseTimeChange={setCloseTime}
+                  onImageUpload={setImageUrl}
+                />
+              </AccordionDetails>
+            </Accordion>
+
+            <button
+              type="submit"
+              className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed mt-4 sticky bottom-4"
+              disabled={loading}
+            >
+              {loading ? "Submitting..." : "Submit Resource"}
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );

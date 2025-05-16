@@ -1,4 +1,4 @@
-# Himalayan Connect NYC
+****# Himalayan Connect NYC
 
 ## Project Overview
 Himalayan Connect NYC is a comprehensive web platform designed to connect the Nepalese Himalayan community in New York with essential resources. The application serves as a centralized hub for accessing nonprofit services, legal assistance, immigration support, housing, and job opportunities.
@@ -169,10 +169,18 @@ src/
 - Database: Prisma Postgres
 - Image Storage: Cloudinary
 - API Services: Google Maps API
-
+****
 
 ## Future Enhancements
 
+- popover/modal for add resource 
+- borough autopopulate based on address entered 
+- For business hours input: Need 2 time inputs (open/close) for each day (m/t/w/th/f/sat/sun) so 14 time inputs
+- Phone number input masking
+- user warning system for profanity/curse words/bad input filter
+  - regular expressions, machine learning, text analysis libraries 
+
+### Nice to Haves 
 1. Multilingual Support
    - Nepali and Tibetan language integration
 

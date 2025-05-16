@@ -174,7 +174,19 @@ export const UserResourceTable = ({
           ? row.resource?.name
           : row.name;
       case "status":
-        return row.status;
+        return (
+          <span
+                className={`px-2 py-1 rounded-full text-xs ${
+                  row.status === "APPROVED"
+                    ? "bg-green-100 text-green-800"
+                    : row.status === "REJECTED"
+                    ? "bg-red-100 text-red-800"
+                    : "bg-yellow-100 text-yellow-800"
+                }`}
+              >
+            {row.status}
+          </span>
+        );
       case "content":
         return (
           <div className="flex items-center gap-2">

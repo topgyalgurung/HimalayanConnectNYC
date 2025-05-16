@@ -22,10 +22,10 @@ export default function ResourceListPanel({
   onViewDetailsAction,
 }: ResourceListPanelProps) {
   return (
-    <aside className="w-full md:w-[30%] pl-0 md:pl-4 flex-1 flex flex-col min-h-0 mb-4">
-      <h3 className="text-lg px-4 text-center font-bold text-white bg-blue-500 mb-2 sticky top-0 z-10 p-2 shadow">
+    <aside className="w-full md:w-[35%] text-md lg:w-[30%] pl-0 md:pl-4 flex-1 flex flex-col min-h-0 mb-4">
+      <h2 className="text-lg text-center font-bold text-black mb-2 top-0 z-10 p-2 shadow bg-white">
         RESOURCES
-      </h3>
+      </h2>
       <main className="flex-1 bg-gray-50 p-4 overflow-y-auto mb-4">
         <ResourceList
           filteredResources={filteredResources}

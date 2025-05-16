@@ -62,7 +62,7 @@ export default function RootLayout({
             </Suspense>
 
             <Toaster position="top-center" toastOptions={{ duration: 2000 }} />
-            <main className="flex-grow px-2 sm:px-6 pt-4 md:pt-6 lg:pt-6 overflow-y-auto">
+            <main className="flex-grow px-2 sm:px-6 pt-4 md:pt-6 lg:pt-2 overflow-y-auto">
               {children}
             </main>
             {/* Footer component commented out for future implementation */}
