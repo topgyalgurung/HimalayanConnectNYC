@@ -13,8 +13,12 @@ import { getResources } from "./actions/resources/getResources"; //fetches resou
 import HomeClient from "./(homepage)/HomeClient"; // renders the homepage
 import Loading from "./(homepage)/loading";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic"; // setting for entire route, dynamically rendered
+// for more granular
+// better use cache: 'no-cache' with fetch or
+// next{revalidate:3600} with fetch (after 1 hour fetch new data)
 export default async function Home() {
+  // fix: move it down, no need to fetch here
   // Fetch resources on the server
   const resources = await getResources();
 

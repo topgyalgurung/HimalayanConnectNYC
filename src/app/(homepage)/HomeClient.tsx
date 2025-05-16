@@ -11,11 +11,12 @@
 
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import FilterSidebar from "./filters/FilterSidebar"; // FilterSidebar component for resource filtering
 import ResourceListPanel from "./resources/ResourceListPanel"; // ResourceListPanel component for resource list display
 import MapView from "./map/Map"; // MapView component for map display
 import type { Resource } from "@/app/lib/types"; // Resource type definition
+import Loading from "./loading";
 
 interface HomeClientProps {
   initialResources: Resource[];
@@ -66,11 +67,12 @@ export default function HomeClient({ initialResources }: HomeClientProps) {
         resources={initialResources}
         onFilteredResourcesChange={setFilteredResources}
       />
-
-      <ResourceListPanel
-        filteredResources={filteredResources}
-        onViewDetailsAction={handleToggleDetails}
-      />
+      <Suspense fallback={<Loading />}>
+        <ResourceListPanel
+          filteredResources={filteredResources}
+          onViewDetailsAction={handleToggleDetails}
+        />
+      </Suspense>
 
       <MapView
         resources={filteredResources}

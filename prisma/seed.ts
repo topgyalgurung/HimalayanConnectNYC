@@ -4,7 +4,8 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-      // Clear database before seeding
+
+  // Clear database before seeding
   await prisma.resourceLike.deleteMany();
   await prisma.resourceReview.deleteMany();
   await prisma.resourceEditSuggestion.deleteMany();
@@ -12,33 +13,54 @@ async function main() {
   await prisma.resource.deleteMany();
   await prisma.resourceCategory.deleteMany();
 
+  
+
+  // Reset auto-increment counters
+  // await prisma.$executeRaw`ALTER SEQUENCE "Resource_id_seq" RESTART WITH 1;`;
+  // await prisma.$executeRaw`ALTER SEQUENCE "Location_id_seq" RESTART WITH 1;`;
+  // await prisma.$executeRaw`ALTER SEQUENCE "ResourceCategory_id_seq" RESTART WITH 1;`;
+  // 'ERROR: must be owner of sequence Resource_id_seq
+
   const communityCategory = await prisma.resourceCategory.create({
-    data: { name: 'Community' },
+    data: {
+      name: 'Community',
+    },
   });
 
   const legalCategory = await prisma.resourceCategory.create({
-    data: { name: 'Legal' },
-  });
-
-  const healthCategory = await prisma.resourceCategory.create({
-    data: { name: 'Health' },
+    data: {
+      name: 'Legal',
+    },
   });
 
   const educationCategory = await prisma.resourceCategory.create({
-    data: { name: 'Education' },
+    data: {
+      name: 'Education',
+    },
+  });
+
+  const realEstateCategory = await prisma.resourceCategory.create({
+    data: {
+      name: 'Real Estate',
+    },
+  });
+
+  const healthCategory = await prisma.resourceCategory.create({
+    data: {
+      name: 'Health',
+    },
   });
 
   const financeCategory = await prisma.resourceCategory.create({
-    data: { name: 'Finance' },
+    data: {
+      name: 'Finance',
+    },
   });
 
-  const nonProfitCategory = await prisma.resourceCategory.create({
-    data: { name: 'Non-Profit' },
-  });
-
-  // other categories
   const otherCategory = await prisma.resourceCategory.create({
-    data: { name: 'Other' },
+    data: {
+      name: 'Other',
+    },
   });
 
   await prisma.user.update({
@@ -53,11 +75,11 @@ async function main() {
       city: 'Queens',
       description: 'A women-led nonprofit working with the Nepali-speaking community to promote human rights and social justice.',
       status: 'APPROVED',
-      categoryId: nonProfitCategory.id,
+      categoryId: legalCategory.id,
       Location: {
         create: {
-          latitude: 40.745312,
-          longitude: -73.892888,
+          latitude: 40.7428404,
+          longitude: -73.8960413,
         },
       },
     },
@@ -73,8 +95,8 @@ async function main() {
       categoryId: communityCategory.id,
       Location: {
         create: {
-          latitude: 40.749792,
-          longitude: -73.888391,
+          latitude: 40.7556923,
+          longitude: -73.9062742,
         },
       },
     },
@@ -87,11 +109,11 @@ async function main() {
       city: 'Queens',
       description: 'Sherpa community organization promoting cultural events and advocacy.',
       status: 'APPROVED',
-      categoryId: nonProfitCategory.id,
+      categoryId: communityCategory.id,
       Location: {
         create: {
-          latitude: 40.749,
-          longitude: -73.891,
+          latitude: 40.7452087,
+          longitude: -73.8924522,
         },
       },
     },
@@ -109,12 +131,14 @@ async function main() {
       categoryId: legalCategory.id,
       Location: {
         create: {
-          latitude: 40.740,
-          longitude: -73.879,
+          latitude: 40.7519151,
+          longitude: -73.9744031,
         },
       },
     },
   });
+}
+
 main()
   .catch((e) => {
     console.error(e);
@@ -123,4 +147,4 @@ main()
   .finally(async () => {
     await prisma.$disconnect();
   });
-}
+
