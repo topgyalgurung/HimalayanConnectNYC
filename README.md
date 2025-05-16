@@ -1,22 +1,34 @@
-****# Himalayan Connect NYC
+# Himalayan Connect NYC
 
-## Project Overview
+## Project Overview: 
 Himalayan Connect NYC is a comprehensive web platform designed to connect the Nepalese Himalayan community in New York with essential resources. The application serves as a centralized hub for accessing nonprofit services, legal assistance, immigration support, housing, and job opportunities.
+
+## Table of Contents
+
+- [Core Features](#core-features)
+- [Tech Stack](#tech-stack)
+- [Application Structure](#application-structure)
+- [Key Component](#key-components)
+- [Development Notes](#development-notes-technical-details)
+- [Getting Started](#getting-started)
+- [Next Steps/Future Improvements](#next-steps--future-enhancements)
 
 ## Requirements
 
-### Functional Requirements
+- [Project Proposal](https://docs.google.com/document/d/1odmkYHsx0IdgKjQPbeW6QE9PRlX_xrfddi-rNIdXmN8/edit?usp=sharing)
+- [Frontend Planning: Figma UI](https://www.figma.com/design/rv1wIJmRVMcct15TuFCCBe/Himalayan-Connect-NYC-Website-UI?node-id=93-7&t=3WS1I3gdEnEYKZqY-0)
 
-## Core Features
 
-### 1. Resource Management
+### Core Features
+
+#### 1. Resource Management
 - **Resource Directory**: Searchable directory of community resources
 - **Resource Submission**: Users can submit new resources for admin approval
 - **Resource Editing**: Users can suggest edits to existing resources
 - **Resource Reviews**: Users can leave reviews and ratings
 - **Favorites**: Users can save resources to their favorites
 
-### 2. User Features
+#### 2. User Features
 - **User Dashboard**: 
   - View submitted resources
   - Track resource status
@@ -25,12 +37,12 @@ Himalayan Connect NYC is a comprehensive web platform designed to connect the Ne
 - **Profile Management**: 
   - User authentication 
 
-### 3. Admin Features
+#### 3. Admin Features
 - **Admin Dashboard**:
   - Resource approval/rejection
   - Resource status tracking
 
-### 4. Search and Filtering
+#### 4. Search and Filtering
 - **Advanced Search**: 
   - Text search by resource name functionality
   - Category-based filtering (todo)
@@ -40,16 +52,19 @@ Himalayan Connect NYC is a comprehensive web platform designed to connect the Ne
   - pin with category icon
   - Resource location display
 
+#### 5. Backend Services
+- Resource management (CRUD operations)
+- User authentication and authorization
+- Review and rating system
+- Favorite resource management
+- Image upload and management
+
 
 
 ### Non Functional Requirements
 - Minimize latency 
-- 
-
-## API Design
-
-## Database Design
-
+  
+  
 
 ## Tech Stack
 - **Frontend**: 
@@ -111,14 +126,7 @@ src/
 ![Component Hierarchy](/public/ComponentHierarchy.png)
 
 
-### Backend Services
-- Resource management (CRUD operations)
-- User authentication and authorization
-- Review and rating system
-- Favorite resource management
-- Image upload and management
-
-## Development Notes
+## Development Notes (Technical Details)
 
 ### Form Validation & Data Handling
 - Using Zod for form validation and type safety
@@ -133,6 +141,7 @@ src/
 - Custom JWT-based session implementation (not using next-auth)
 - Secure session cookie storage
 - Server-side session validation through getSession()
+
 
 ### Client-Side Architecture
 1. **UserProvider (React Context)**
@@ -171,8 +180,9 @@ src/
 - API Services: Google Maps API
 ****
 
-## Future Enhancements
+## Next steps / Future Enhancements
 
+#### Future enhancements
 - popover/modal for add resource 
 - borough autopopulate based on address entered 
 - For business hours input: Need 2 time inputs (open/close) for each day (m/t/w/th/f/sat/sun) so 14 time inputs
@@ -180,7 +190,7 @@ src/
 - user warning system for profanity/curse words/bad input filter
   - regular expressions, machine learning, text analysis libraries 
 
-### Nice to Haves 
+#### Nice to Haves 
 1. Multilingual Support
    - Nepali and Tibetan language integration
 
