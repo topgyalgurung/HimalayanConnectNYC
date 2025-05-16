@@ -18,7 +18,7 @@ export default function BasicInfoSection({
   handleChange,
 }: BasicInfoSectionProps) {
   return (
-    <div className="space-y-3">
+    <div className="space-y-2">
       <input
         type="text"
         name="name"

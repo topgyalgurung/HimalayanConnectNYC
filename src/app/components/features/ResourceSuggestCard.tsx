@@ -305,7 +305,7 @@ export default function ResourceSuggestCard({
         ✕
       </button>
 
-      <h1>Suggest an Edit</h1>
+      <h1 className="text-lg font-bold mb-2">Suggest an Edit</h1>
       <p className="text-sm text-gray-600 mb-4">
         Only changed fields will be submitted for review
       </p>

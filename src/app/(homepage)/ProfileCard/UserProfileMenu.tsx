@@ -119,6 +119,8 @@ export default function UserProfileMenu() {
           }
         }}
       >
+        {/* Link outside of menu mores smoother now  */}
+        <Link href="/profile" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
         <MenuItem 
           onClick={handleClose}
           sx={{
@@ -128,7 +130,7 @@ export default function UserProfileMenu() {
             },
           }}
         >
-          <Link href="/profile" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+          {/* <Link href="/profile" className="flex items-center gap-3 hover:opacity-80 transition-opacity"> */}
             <Image
               src={user?.image || "/default-avatar.jpg"}
               alt="User Avatar"
@@ -140,11 +142,12 @@ export default function UserProfileMenu() {
               <span className="font-medium text-gray-900">Profile</span>
               <span className="text-sm text-gray-500">View your profile</span>
             </div>
-          </Link>
+          {/* </Link> */}
         </MenuItem>
+        </Link>
 
         <Divider sx={{ my: 1 }} />
-
+        {/* logout button */}
         <MenuItem 
           onClick={handleLogout}
           sx={{

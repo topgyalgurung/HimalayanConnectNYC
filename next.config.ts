@@ -3,6 +3,9 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   // whitelist host location of image files 
+  experimental: {
+    cssChunking: 'strict', // Enables strict CSS chunking for better performance and smaller bundle sizes
+  },
   images: {
     remotePatterns: [
       {

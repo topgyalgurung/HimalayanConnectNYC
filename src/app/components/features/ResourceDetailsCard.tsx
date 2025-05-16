@@ -72,33 +72,48 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
     />
 
     <hr className="my-4 border-gray-300" />
-
-    <p>
-      <span className="font-medium">Address:</span> {resource.address}
+    {resource.address && (
+      <p>
+        <span className="font-medium">Address:</span> {resource.address}
+      </p>
+    )}
+    {resource.openDays && (
+      <p>
+        <span className="font-medium">Opens:</span>{" "}
+        {formatOpenDays(resource.openDays || null)}
     </p>
-    <p>
-      <span className="font-medium">Opens:</span>{" "}
-      {formatOpenDays(resource.openDays || null)}
-    </p>
-    <p>
-      {" "}
-      <span className="font-medium">Website:</span> {resource.url}
-    </p>
-    <p>
-      {" "}
-      <span className="font-medium ">Email:</span> {resource.email}
-    </p>
-    <p>
-      {" "}
-      <span className="font-medium">Phone:</span> {resource.phone}
-    </p>
+    )}
     {resource.openTime && resource.closeTime && (
       <p>
-        <span className="font-medium">Hours:</span>{" "}
+        <span className="font-medium">Business Hours:</span>{" "}
         {format(new Date(resource.openTime), "hh:mm a")} -{" "}
         {format(new Date(resource.closeTime), "hh:mm a")}
       </p>
+    )}  
+    {resource.url && (
+    <p>
+      <span className="font-medium">Website:</span>{" "}
+      <a 
+        href={resource.url} 
+        target="_blank" 
+        rel="noopener noreferrer"
+        className="text-blue-500 hover:underline"
+      >
+        {resource.url?.replace(/^https?:\/\//, '')}
+      </a>
+    </p>
     )}
+    {resource.email && (
+      <p>
+        <span className="font-medium">Email:</span> {resource.email}
+      </p>
+    )}
+    {resource.phone && (
+      <p>
+        <span className="font-medium">Phone:</span> {resource.phone}
+      </p>
+    )}
+    
     <hr className="my-4 border-gray-300" />
 
     <div className="text-white text-center">
@@ -212,7 +227,7 @@ export default function ResourceDetailsCard({
   const liked = isFavorite(Number(resource.id));
 
   return (
-    <div className="absolute top-4 right-4 z-50 w-96 bg-white rounded-lg shadow-xl p-6">
+    <div className="fixed md:absolute top-0 md:top-4 right-0 md:right-4 z-50 w-full md:w-96 bg-white rounded-lg shadow-xl p-4 md:p-6 max-h-screen md:max-h-[90vh] overflow-y-auto">
       <button
         onClick={() => onCloseAction()}
         className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
@@ -222,7 +237,7 @@ export default function ResourceDetailsCard({
 
       <ResourceHeader resource={resource} />
 
-      <div className="flex justify-around mb-4 border-b">
+      <div className="flex justify-around mb-4 border-b overflow-x-auto">
         {["overview", "review", "about"].map((tab) => (
           <TabButton
             key={tab}
@@ -233,32 +248,34 @@ export default function ResourceDetailsCard({
         ))}
       </div>
 
-      {activeTab === "overview" && (
-        <OverviewTab
-          resource={resource}
-          user={user as unknown as User | null}
-          onSuggestEdit={onSuggestEdit!}
-          router={router}
-          liked={liked}
-          toggleFavorite={toggleFavorite}
-        />
-      )}
+      <div className="overflow-y-auto">
+        {activeTab === "overview" && (
+          <OverviewTab
+            resource={resource}
+            user={user as unknown as User | null}
+            onSuggestEdit={onSuggestEdit!}
+            router={router}
+            liked={liked}
+            toggleFavorite={toggleFavorite}
+          />
+        )}
 
-      {activeTab === "review" && (
-        <ReviewTab
-          resource={resource}
-          user={user as unknown as User | null}
-          onReviewResource={onReviewResource!}
-          router={router}
-          reviews={reviews}
-        />
-      )}
+        {activeTab === "review" && (
+          <ReviewTab
+            resource={resource}
+            user={user as unknown as User | null}
+            onReviewResource={onReviewResource!}
+            router={router}
+            reviews={reviews}
+          />
+        )}
 
-      {activeTab === "about" && (
-        <div>
-          <p>{resource.description}</p>
-        </div>
-      )}
+        {activeTab === "about" && (
+          <div>
+            <p>{resource.description}</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

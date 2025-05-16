@@ -49,19 +49,26 @@ export default function FilterSidebar({
   }, [resources, selectedCategories, selectedBoroughs, onFilteredResourcesChange]);
 
   return (
-    <aside className="w-full md:w-[18%] pl-4 bg-white shadow-md flex flex-col overflow-hidden max-h-screen">
-      <h2 className="text-lg text-center font-bold text-black mb-2 sticky top-0 z-10 p-2 shadow bg-white">
+  
+    <aside className="w-full md:w-[25%] lg:w-[20%] bg-white shadow-md flex flex-col h-[calc(92vh-90px)]">
+      <div className="flex flex-col h-full">
+      <h2 className="text-lg text-center font-bold text-black p-2 top-0 z-10 bg-white border-b">
         FILTERS
       </h2>
-      <div className="flex-1 overflow-y-auto pr-1 space-y-2">
+      <div className="flex-1 text-sm overflow-y-auto px-2 py-1 space-y-2">
+        <div>
         <ResourceFilter
           selectedCategories={selectedCategories}
           onFilterChangeAction={setSelectedCategories}
         />
+        </div>
+        <div>
         <BoroughFilter
           selectedBoroughs={selectedBoroughs}
           onFilterChangeAction={setSelectedBoroughs}
         />
+        </div>
+      </div>
       </div>
     </aside>
   );

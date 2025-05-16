@@ -61,7 +61,7 @@ export default function HomeClient({ initialResources }: HomeClientProps) {
 
   return (
     // render filter sidebar, resource list panel middle, and map view right
-    <div className="flex flex-col md:flex-row h-auto md:h-[calc(100vh-90px)]">
+    <div className="flex flex-col md:flex-row h-auto text-sm lg:text-sm md:h-[calc(100vh-90px)] ">
       <FilterSidebar
         resources={initialResources}
         onFilteredResourcesChange={setFilteredResources}

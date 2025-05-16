@@ -48,7 +48,10 @@ export default function RootLayout({
   return (
     <html lang="en" data-theme="winter">
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        {/* <meta name="viewport" content="width=device-width, initial-scale=1" /> */}
+        {/* viewport configuration  */}
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+     
       </head>
       <body className={`${inter.className} min-h-screen flex flex-col lg:overflow-hidden`}>
         {/* UserProvider wrapper enables user data access across all pages via useUser hook */}
@@ -59,7 +62,7 @@ export default function RootLayout({
             </Suspense>
 
             <Toaster position="top-center" toastOptions={{ duration: 2000 }} />
-            <main className="flex-grow px-2 sm:px-6 pt-4 md:pt-6 lg:pt-6 overflow-y-auto">
+            <main className="flex-grow px-2 sm:px-6 pt-4 md:pt-6 lg:pt-2 overflow-y-auto">
               {children}
             </main>
             {/* Footer component commented out for future implementation */}

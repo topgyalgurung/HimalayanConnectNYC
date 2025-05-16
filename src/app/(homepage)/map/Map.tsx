@@ -65,7 +65,7 @@ export default function MapView({
   // console.log('Resources with locations:', resources.filter(r => r.Location?.[0]?.latitude && r.Location?.[0]?.longitude));
 
   return (
-    <aside className="w-full md:w-[50%] bg-white shadow-md pl-4 flex flex-col h-[500px] md:h-full border-2 border-gray-300">
+    <aside className="w-full md:w-[50%] lg:w-[45%] bg-white shadow-md pl-4 flex flex-col h-[500px] md:h-full border-2 border-gray-300">
       <div className="flex-1 relative border border-gray-400 rounded-lg overflow-hidden"></div>
       <div className="h-full w-full relative">
         <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? ""}>
@@ -82,7 +82,7 @@ export default function MapView({
         </APIProvider>
         {/* show resource detail card on selectedResource */}
         {selectedResource && (
-          <div className="absolute top-0 left-0 h-full w-[400px] z-40 shadow-lg overflow-y-auto">
+          <div className="absolute top-2 left-2 h-full w-[90%] sm:w-[400px] z-40 shadow-lg overflow-y-auto">
             <ResourceDetailsCard
               resource={selectedResource}
               editResource={editResource}
@@ -164,6 +164,9 @@ const Markers = ({ points }: MarkersProps) => {
           case "real estate":
             image = "https://cdn-icons-png.flaticon.com/512/2238/2238337.png";
             break;
+          case "other":
+            image = "https://cdn-icons-png.flaticon.com/512/3195/3195457.png";
+            break;
         }
 
         return (
@@ -183,7 +186,10 @@ const Markers = ({ points }: MarkersProps) => {
               <Image
                 src={image}
                 alt={`${resource.ResourceCategory?.name} icon`}
-                style={{ width: "30px", height: "30px", objectFit: "contain" }}
+                style={{  
+                  objectFit: "contain",
+                  backgroundColor: "#FFEB3B" // Bright yellow background
+                }}
                 height={30}
                 width={30}
               />

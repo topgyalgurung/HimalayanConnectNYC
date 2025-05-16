@@ -45,27 +45,30 @@ export default function BoroughFilter({
 
   // Render the BoroughFilter component
   return (
-    <div className="p-1 border rounded-md text-black text-sm mt-2">
-      <div className="flex items-center justify-center mb-1">
-        <h3 className="font-semibold text-sm">NYC Borough</h3>
-        <span className="mx-2 border-l border-gray-300 h-6 ml-4" />
-        <button onClick={clearFilters} className="text-gray-500">
+    <div className="p-1 border rounded-md text-black text-sm mt-2 w-full">
+      <div className="flex items-center justify-center mb-1 flex-wrap sm:flex-nowrap">
+        <h3 className="font-semibold text-sm whitespace-nowrap">NYC Borough</h3>
+        <span className="mx-2 border-l border-gray-300 h-6 ml-4 hidden sm:block" />
+        <button onClick={clearFilters} className="text-gray-500 ml-auto sm:ml-0">
           Clear ×
         </button>
       </div>
       <hr className="mb-2" />
-      <List dense sx={{ width: "100%" }}>
+      <List dense sx={{ width: "100%", padding: 0 }}>
         {boroughs.map((borough) => (
           <ListItem key={borough.id} disablePadding>
-            <ListItemButton >
+            <ListItemButton className="py-1">
               <ListItemIcon className="min-w-0 mr-2">
                 <Checkbox
                   checked={selectedBoroughs.includes(borough.name)}
                   onChange={() => handleBoroughCheckboxChange(borough.name)}
-                  size="medium"
+                  size="small"
                 />
               </ListItemIcon>
-              <ListItemText className="capitalize" primary={borough.name} />
+              <ListItemText 
+                className="capitalize text-sm sm:text-base" 
+                primary={borough.name} 
+              />
             </ListItemButton>
           </ListItem>
         ))}

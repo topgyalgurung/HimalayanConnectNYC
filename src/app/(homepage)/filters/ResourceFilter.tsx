@@ -47,7 +47,7 @@ const categories = [
   },
   {
     id: 7,
-    name: "others",
+    name: "other",
     icon: "https://cdn-icons-png.flaticon.com/512/3195/3195457.png",
   },
 ];
@@ -73,17 +73,17 @@ export default function ResourceFilter({
     onFilterChangeAction([]);
   };
   return (
-    <div className="p-2 border rounded-md text-black text-sm">
+    <div className="p-1 border rounded-md text-black text-sm">
       <div className="flex items-center justify-center mb-1">
         <h3 className="font-semibold text-sm">Category</h3>
         <span className="mx-2 border-l border-gray-300 h-6 ml-4" />
-        <button onClick={clearFilters} className="text-gray-500">
+        <button onClick={clearFilters} className=" ml-2 text-gray-500">
           Clear ×
         </button>
       </div>
-      <hr className="mb-2" />
+      <hr className="mb-1" />
 
-      <List dense sx={{ width: "100%" }}>
+      <List dense sx={{ width: "100%", padding: 0, margin: 0}}>
         {categories.map((cat) => (
           <ListItem key={cat.id} disablePadding>
             <ListItemButton>
@@ -91,7 +91,7 @@ export default function ResourceFilter({
                 <Checkbox
                   checked={selectedCategories.includes(cat.name)}
                   onChange={() => handleCategoryCheckboxChange(cat.name)}
-                  size="medium"
+                  size="small"
                 />
               </ListItemIcon>
               <Image
