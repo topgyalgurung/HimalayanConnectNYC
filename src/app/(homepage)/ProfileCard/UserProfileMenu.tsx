@@ -3,7 +3,7 @@
  *
  * This component is the user profile menu for the homepage of the Himalayan Connect NYC application.
  * It allows the user to login, sign up, and logout.
- * 
+ *
  * @returns {JSX.Element} The user profile (with dashboard) menu component
  */
 
@@ -37,19 +37,6 @@ export default function UserProfileMenu() {
     setAnchorEl(null);
   };
 
-  if (!user) {
-    return (
-      <div className="flex items-center gap-4">
-        <Link
-          href="/login"
-          className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-all text-sm font-medium shadow-sm hover:shadow-md"
-        >
-          Login / Sign Up
-        </Link>
-      </div>
-    );
-  }
-
   return (
     <div className="flex items-center gap-4">
       <Box
@@ -63,20 +50,20 @@ export default function UserProfileMenu() {
           <IconButton
             onClick={handleClick}
             size="large"
-            sx={{ 
+            sx={{
               ml: 2,
               padding: 0,
-              '&:hover': {
-                transform: 'scale(1.05)',
-                transition: 'transform 0.2s ease-in-out'
-              }
+              "&:hover": {
+                transform: "scale(1.05)",
+                transition: "transform 0.2s ease-in-out",
+              },
             }}
             aria-controls={open ? "account-menu" : undefined}
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
           >
             <Image
-              src={user?.image || "/default-avatar.jpg"}
+              src={user?.image || "/user.png"} // for future when image feature
               alt="User Avatar"
               width={56}
               height={56}
@@ -99,40 +86,43 @@ export default function UserProfileMenu() {
             elevation: 3,
             sx: {
               mt: 1.5,
-              minWidth: '200px',
-              borderRadius: '12px',
-              overflow: 'visible',
-              filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.15))',
-              '&:before': {
+              minWidth: "200px",
+              borderRadius: "12px",
+              overflow: "visible",
+              filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.15))",
+              "&:before": {
                 content: '""',
-                display: 'block',
-                position: 'absolute',
+                display: "block",
+                position: "absolute",
                 top: 0,
                 right: 14,
                 width: 10,
                 height: 10,
-                bgcolor: 'background.paper',
-                transform: 'translateY(-50%) rotate(45deg)',
+                bgcolor: "background.paper",
+                transform: "translateY(-50%) rotate(45deg)",
                 zIndex: 0,
               },
             },
-          }
+          },
         }}
       >
         {/* Link outside of menu mores smoother now  */}
-        <Link href="/profile" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-        <MenuItem 
-          onClick={handleClose}
-          sx={{
-            padding: '12px 16px',
-            '&:hover': {
-              backgroundColor: 'rgba(59, 130, 246, 0.08)',
-            },
-          }}
+        <Link
+          href="/profile"
+          className="flex items-center gap-3 hover:opacity-80 transition-opacity"
         >
-          {/* <Link href="/profile" className="flex items-center gap-3 hover:opacity-80 transition-opacity"> */}
+          <MenuItem
+            onClick={handleClose}
+            sx={{
+              padding: "12px 16px",
+              "&:hover": {
+                backgroundColor: "rgba(59, 130, 246, 0.08)",
+              },
+            }}
+          >
+            {/* <Link href="/profile" className="flex items-center gap-3 hover:opacity-80 transition-opacity"> */}
             <Image
-              src={user?.image || "/default-avatar.jpg"}
+              src={user?.image || "/user.png"}
               alt="User Avatar"
               width={48}
               height={48}
@@ -142,24 +132,24 @@ export default function UserProfileMenu() {
               <span className="font-medium text-gray-900">Profile</span>
               <span className="text-sm text-gray-500">View your profile</span>
             </div>
-          {/* </Link> */}
-        </MenuItem>
+            {/* </Link> */}
+          </MenuItem>
         </Link>
 
         <Divider sx={{ my: 1 }} />
         {/* logout button */}
-        <MenuItem 
+        <MenuItem
           onClick={handleLogout}
           sx={{
-            padding: '12px 16px',
-            color: '#EF4444',
-            '&:hover': {
-              backgroundColor: 'rgba(239, 68, 68, 0.08)',
+            padding: "12px 16px",
+            color: "#EF4444",
+            "&:hover": {
+              backgroundColor: "rgba(239, 68, 68, 0.08)",
             },
           }}
         >
-          <ListItemIcon sx={{ minWidth: '40px' }}>
-            <Logout fontSize="small" sx={{ color: '#EF4444' }} />
+          <ListItemIcon sx={{ minWidth: "40px" }}>
+            <Logout fontSize="small" sx={{ color: "#EF4444" }} />
           </ListItemIcon>
           <span className="font-medium">Logout</span>
         </MenuItem>

@@ -46,7 +46,6 @@ export const PopupHeader = styled(Box)(({ theme }) => ({
   justifyContent: "space-between",
   marginBottom: theme.spacing(1),
   paddingBottom: theme.spacing(0.5),
-  borderBottom: `1px solid ${theme.palette.divider}`,
   position: "sticky",
   top: 0,
   backgroundColor: theme.palette.background.paper,

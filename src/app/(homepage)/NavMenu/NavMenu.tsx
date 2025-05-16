@@ -18,6 +18,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 // import SearchInput from "./SearchInput/SearchInput";
 import UserProfileMenu from "../ProfileCard/UserProfileMenu";
+import { useUser } from "@/app/context/UserProvider";
 
 import Button from "@mui/material/Button";
 
@@ -29,6 +30,7 @@ const SearchInput = dynamic(() => import("./SearchInput/SearchInput"), {
 
 export default function NavMenu() {
   const pathname = usePathname();
+  const { user } = useUser();
 
   return (
     <header>
@@ -79,7 +81,19 @@ export default function NavMenu() {
 
         {/* User profile menu */}
         <div className="flex flex-1 items-center justify-end gap-8 ml-4">
-          <UserProfileMenu />
+          {user ? (
+            <UserProfileMenu />
+          ) : (
+            <div className="flex items-center gap-4">
+              <Link
+                href="/login"
+                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-all text-sm font-medium shadow-sm hover:shadow-md"
+              >
+                Login / Sign Up
+              </Link>
+            </div>
+          )}
+          {/* <UserProfileMenu /> */}
         </div>
       </nav>
     </header>

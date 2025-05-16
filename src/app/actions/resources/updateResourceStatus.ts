@@ -70,6 +70,7 @@ export async function updateResourceStatus(
     // Revalidate the paths that might be affected
     revalidatePath('/profile/admin');
     revalidatePath('/api/resources');
+    // revalidatePath('/api/resources/review');
     revalidatePath('/api/resources/edit');
 
     return { success: true };

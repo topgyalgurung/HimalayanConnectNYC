@@ -27,16 +27,17 @@ const formSchema = z.object({
   address: z.string().min(5, "Address must be at least 5 characters"),
   phone: z
     .string()
-    .regex(
-      /^\d{3}-\d{3}-\d{4}$/,
+    .optional()
+    .refine(
+      (val) => !val || /^\d{3}-\d{3}-\d{4}$/.test(val),
       "Phone number must be in format: XXX-XXX-XXXX"
     ),
   url: z
     .string()
-    .url("Must be a valid URL")
+    .optional()
     .refine(
-      (url) => /\.(com|org|net|edu|gov|io)$/i.test(url),
-      "URL must end with a valid domain extension (.com, .org, etc.)"
+      (val) => !val || /^https?:\/\/.+\.(com|org|net|edu|gov|io)$/i.test(val),
+      "URL must be a valid URL ending with .com, .org, etc."
     ),
 });
 
@@ -84,9 +85,6 @@ export default function ResourceSuggestCard({
       }
       if (resource.closeTime) {
         setCloseTime(dayjs(resource.closeTime));
-      }
-      if (resource.openDays) {
-        setSelectedDays(resource.openDays.split(",").map((day) => day.trim()));
       }
     }
   }, [resource]);
@@ -367,7 +365,7 @@ export default function ResourceSuggestCard({
 
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <div className="space-y-4">
-              <p className="font-semibold mb-1">Open Days</p>
+              <p className="font-semibold mb-1">Business Hours</p>
               <ToggleButtonGroup
                 value={selectedDays}
                 onChange={handleDayChange}

@@ -11,7 +11,7 @@ export default function LoginForm() {
   const { setUser } = useUser(); // Get context
   const [state, action] = useActionState(login, undefined);
   const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const router = useRouter();
 
   useEffect(() => {
@@ -24,9 +24,9 @@ export default function LoginForm() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -55,9 +55,7 @@ export default function LoginForm() {
               </p>
             )}
             {state?.status === 401 && state?.message && (
-              <p className="text-red-500 text-sm mb-2">
-                {state.message}
-              </p>
+              <p className="text-red-500 text-sm mb-2">{state.message}</p>
             )}
             {state?.status === 200 && (
               <p className="text-green-500 text-sm mb-2 ">Login successful!</p>
@@ -85,7 +83,7 @@ export default function LoginForm() {
                 {state.errors.password[0]}
               </p>
             )}
-            
+
             <br />
             <button
               type="submit"
@@ -96,7 +94,10 @@ export default function LoginForm() {
           </form>
           <div>
             <div className="flex justify-end mt-3">
-              <Link href="/signup" className="text-right">
+              <Link
+                href="/signup"
+                className="text-right text-red-500 hover:underline focus:outline:none text-md"
+              >
                 Don&apos;t have an account? Register
               </Link>
             </div>

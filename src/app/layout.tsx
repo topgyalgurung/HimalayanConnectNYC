@@ -27,7 +27,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "@mui/material/styles";
-import { Suspense } from "react";
+// import { Suspense } from "react";
 
 import { UserProvider } from "@/app/context/UserProvider";
 import NavMenu from "./(homepage)/NavMenu/NavMenu";
@@ -50,21 +50,24 @@ export default function RootLayout({
       <head>
         {/* <meta name="viewport" content="width=device-width, initial-scale=1" /> */}
         {/* viewport configuration  */}
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-     
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
       </head>
-      <body className={`${inter.className} min-h-screen flex flex-col lg:overflow-hidden`}>
+      <body
+        className={`${inter.className} min-h-screen flex flex-col lg:overflow-hidden`}
+      >
         {/* UserProvider wrapper enables user data access across all pages via useUser hook */}
         <UserProvider>
           <ThemeProvider theme={theme}>
-            <Suspense fallback={<div>Loading...</div>}>
-              <NavMenu />
-            </Suspense>
-
+            <NavMenu />
             <Toaster position="top-center" toastOptions={{ duration: 2000 }} />
+
             <main className="flex-grow px-2 sm:px-6 pt-4 md:pt-6 lg:pt-2 overflow-y-auto">
               {children}
             </main>
+
             {/* Footer component commented out for future implementation */}
             {/* <footer className="bg-slate-900 text-white p-4 text-center shadow-md h-[60px] flex-none">
               © Himalayan Connect NYC

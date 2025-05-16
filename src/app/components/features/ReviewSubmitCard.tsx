@@ -3,8 +3,9 @@
  * ReviewSubmitCard Component
  *
  * This component is the form for submitting a review for a resource.
- * 
+ *
  */
+// todo: change to action instead of handleSubmit and calling api that post to db
 
 "use client";
 import { useEffect, useState } from "react";
@@ -26,6 +27,7 @@ export default function ReviewSubmitCard({
   resource,
   onReviewCloseAction,
 }: ReviewResourceCardProps) {
+  // not sure why i use useEffect to get user, might be able to call useUser later
   const [user, setUser] = useState<{
     firstName: string;
     lastName: string;
@@ -62,11 +64,11 @@ export default function ReviewSubmitCard({
           content,
         }),
       });
-      
+
       if (res.ok) {
         setIsSubmitted(true);
         // Dispatch event to notify that a review was submitted
-        window.dispatchEvent(new Event('reviewSubmitted'));
+        window.dispatchEvent(new Event("reviewSubmitted"));
         // Close the review card after a short delay
         setTimeout(() => {
           onReviewCloseAction(null);
@@ -118,7 +120,7 @@ export default function ReviewSubmitCard({
               }}
             />
             <Typography variant="body2" color="text.secondary" className="mt-1">
-              {rating ? `Selected rating: ${rating}` : 'No rating selected'}
+              {rating ? `Selected rating: ${rating}` : "No rating selected"}
             </Typography>
           </Box>
 

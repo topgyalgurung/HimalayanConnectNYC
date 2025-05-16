@@ -38,7 +38,7 @@ export const ProfileCard = ({
       <div className="flex flex-col items-center bg-white shadow-lg rounded-lg p-6">
         <div className="relative w-32 h-32 mb-4">
           <Image
-            src={"/default-avatar.jpg"}
+            src={"/user.png"}
             alt="Profile Picture"
             fill
             className="rounded-full object-cover"
