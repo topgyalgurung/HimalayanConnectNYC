@@ -68,8 +68,6 @@ Himalayan Connect NYC is a comprehensive web platform designed to connect the Ne
   - Framer Motion (animations)
 - **Backend**: 
   - Next.js API Route Handler 
-  - Next.js Server Action
-  - Server Component
   - Prisma ORM
   - PostgreSQL
 - **External APIs**:

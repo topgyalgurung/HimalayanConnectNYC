@@ -123,22 +123,20 @@ const Markers = ({ points }: MarkersProps) => {
 
   return (
     <>
-      {
-      points.map((resource) => {
+      {points.map((resource) => {
         const location = resource.Location?.[0];
-      
-         // once user submits a resource, the location is stored in the database
-        // but if does not exist, we need to call geocoding and update the location again 
-        // this is to ensure that the location is always up to date
-      // await only allowed with async function // will do this later 
-      // if(!location?.latitude || !location?.longitude){
-      //   // call the server action to update the location
-      //   await updateResourceLocation(Number(resource.id), resource.address);
-      //   }
-      //   // get the updated location
-      //   const updatedLocation = resource.Location?.[0];
 
-       
+        // once user submits a resource, the location is stored in the database
+        // but if does not exist, we need to call geocoding and update the location again
+        // this is to ensure that the location is always up to date
+        // await only allowed with async function // will do this later
+        // if(!location?.latitude || !location?.longitude){
+        //   // call the server action to update the location
+        //   await updateResourceLocation(Number(resource.id), resource.address);
+        //   }
+        //   // get the updated location
+        //   const updatedLocation = resource.Location?.[0];
+
         // Determine if we should show the InfoWindow
         const shouldShowInfoWindow = activeMarkerId === resource.id;
 
@@ -186,12 +184,12 @@ const Markers = ({ points }: MarkersProps) => {
               <Image
                 src={image}
                 alt={`${resource.ResourceCategory?.name} icon`}
-                style={{  
+                style={{
                   objectFit: "contain",
-                  backgroundColor: "#FFEB3B" // Bright yellow background
+                  backgroundColor: "#FFEB3B", // Bright yellow background
                 }}
-                height={30}
-                width={30}
+                height={20}
+                width={20}
               />
             </AdvancedMarker>
 
