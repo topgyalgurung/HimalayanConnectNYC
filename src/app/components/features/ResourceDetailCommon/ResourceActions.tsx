@@ -96,8 +96,16 @@ const ResourceActions: React.FC<ResourceActionsProps> = ({
 
         {/* {resource.email && ( */}
           <a
+            target="_blank"
+            rel="noopener noreferrer"
             href={`mailto:${resource.email}`}
             className="text-blue-600 hover:text-blue-800 transition-colors"
+            onClick={(e) => {
+              if (!resource.email) {
+                e.preventDefault();
+                toast.error("Email link not available");
+              }
+            }}
           >
             <TfiEmail className="text-red-600 text-2xl" />
           </a>
@@ -113,6 +121,12 @@ const ResourceActions: React.FC<ResourceActionsProps> = ({
             target="_blank"
             rel="noopener noreferrer"
             className="text-blue-600 hover:text-blue-800 transition-colors"
+            onClick={(e) => {
+              if (!resource.url) {
+                e.preventDefault();
+                toast.error("Website link not available");
+              }
+            }}
           >
             <IoLinkSharp className="text-green-600 text-2xl" />
           </a>
