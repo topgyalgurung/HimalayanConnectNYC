@@ -1,12 +1,7 @@
 /**
- * HomeClient Component
- *
- * This component is the main client-side component for the homepage of the Himalayan Connect NYC application.
+ * main client-side component for the homepage of the Himalayan Connect NYC application.
  * It manages the state and logic for the resource filtering and display.
- *
- * @param {Object} props - Component props
- * @param {Resource[]} props.initialResources - Initial resources to display
- * @returns {JSX.Element} The homepage component
+
  */
 
 "use client";

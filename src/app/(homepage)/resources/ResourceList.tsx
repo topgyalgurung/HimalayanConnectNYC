@@ -1,7 +1,5 @@
 /**
- * ResourceList Component
- *
- * This component is the resource list for the homepage of the Himalayan Connect NYC application.
+ * resource list for the homepage of the Himalayan Connect NYC application.
  * It displays the list of resources in a sidebar.
  * 
  */

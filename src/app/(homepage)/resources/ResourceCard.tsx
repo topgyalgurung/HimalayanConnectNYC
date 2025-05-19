@@ -1,7 +1,5 @@
 /**
- * ResourceCard Component
- *
- * This component is the resource card for the homepage of the Himalayan Connect NYC application.
+ * resource card for the homepage of the Himalayan Connect NYC application.
  * It displays a single resource in a card format.
  *
  */

@@ -1,3 +1,9 @@
+/**
+ * GeocodeAddress Component
+ * A component that geocodes an address
+ * Uses Google Maps API for geocoding
+ */
+
 export const geocodeAddress = async (address: string) => {
     const response = await fetch(
       `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`

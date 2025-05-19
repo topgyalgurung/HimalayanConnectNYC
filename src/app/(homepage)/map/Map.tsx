@@ -1,24 +1,6 @@
 /**
- * @file Map.tsx
- * @description Interactive map component for displaying community resources with custom markers and info windows.
- * Implements Google Maps integration with custom markers for different resource categories.
- *
- * @component MapView
- * @description Main map container component that renders the Google Maps interface and handles resource display.
- * Manages the display of resource details, edit forms, and review forms in overlay cards.
- *
- * @component Markers
- * @description Renders custom markers for each resource on the map with category-specific icons.
- * Handles marker interaction hover now but can close with x now (hover/click) and displays info windows with resource details.
- *
- * @requires @vis.gl/react-google-maps - Google Maps React components
- * @requires next/image - Image optimization
- * @requires Resource type - Resource data structure
- * @requires ResourceDetailsCard - Resource details display component
- * @requires ResourceSuggestCard - Resource edit form component
- * @requires ReviewSubmitCard - Review submission component
- *
- * @todo - on hover on each resource card , light up the marker on the map
+ * map component for the homepage of the Himalayan Connect NYC application. 
+ * displays the map and the markers for the resources
  */
 
 "use client";

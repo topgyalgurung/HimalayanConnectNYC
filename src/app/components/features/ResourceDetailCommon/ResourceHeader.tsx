@@ -1,22 +1,11 @@
 /**
- * ResourceHeader Component
- *
- * A component that displays the header section of a resource card, including:
+ * resource header component
+ * displays the header section of a resource card, including:
  * - Resource image
  * - Resource name
  * - Category information
  * - Rating display
- *
- * @component
- * @param {Object} props
- * @param {Resource} props.resource - The resource object containing display information
- * @param {string} [props.className] - Optional additional CSS classes
- *
- * @example
- * <ResourceHeader
- *   resource={resourceData}
- *   className="mb-4"
- * />
+
  */
 import React from "react";
 import Image from "next/image";

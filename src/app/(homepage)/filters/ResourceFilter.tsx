@@ -1,5 +1,11 @@
 "use client";
 
+/**
+ * ResourceFilter Component
+ * A component that allows users to filter resources by category
+ * Uses Material-UI components for styling and functionality
+ */
+
 import * as React from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";

@@ -1,28 +1,45 @@
 "use client";
 
+/**
+ * SignupForm Component
+ * A form component that handles user registration
+ * Uses React Server Actions for form submission
+ * Manages form state and user registration flow
+ */
+
 import { signup } from "@/app/actions/auth";
 import { useActionState } from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useUser } from "@/app/context/UserProvider";
 
 export default function SignupForm() {
+  const { setUser } = useUser();
   const [state, action, pending] = useActionState(signup, undefined);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: ''
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
   });
   const router = useRouter();
 
+  useEffect(() => {
+    if (state?.status === 200 && state.user) {
+      setUser(state.user); // Update global state
+      router.refresh();
+      router.push("/profile");
+    }
+  }, [state, router, setUser]);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -50,7 +67,11 @@ export default function SignupForm() {
               className="text-black p-2 border border-gray-50 rounded-md mb-6  mt-5 focus:outline-none focus:border-gray-600 w-full"
             />
           </div>
-          {state?.errors?.firstName && <p className="text-red-500 text-sm mb-2">{state.errors.firstName}</p>}
+          {state?.errors?.firstName && (
+            <p className="text-red-500 text-sm mb-2">
+              {state.errors.firstName}
+            </p>
+          )}
           {/* lastname */}
           <div>
             <input
@@ -62,7 +83,9 @@ export default function SignupForm() {
               className="text-black p-2 border border-gray-50 rounded-md mb-6 focus:outline-none focus:border-gray-600 w-full"
             />
           </div>
-          {state?.errors?.lastName && <p className="text-red-500 text-sm mb-2">{state.errors.lastName}</p>}
+          {state?.errors?.lastName && (
+            <p className="text-red-500 text-sm mb-2">{state.errors.lastName}</p>
+          )}
 
           <div>
             <input
@@ -74,7 +97,9 @@ export default function SignupForm() {
               className="text-black p-2 border border-gray-50 rounded-md mb-6 focus:outline-none focus:border-gray-600 w-full"
             />
           </div>
-          {state?.errors?.email && <p className="text-red-500 text-sm mb-2">{state.errors.email}</p>}
+          {state?.errors?.email && (
+            <p className="text-red-500 text-sm mb-2">{state.errors.email}</p>
+          )}
           {state?.status === 400 && state?.message && (
             <p className="text-red-500 text-sm mb-2">{state.message}</p>
           )}

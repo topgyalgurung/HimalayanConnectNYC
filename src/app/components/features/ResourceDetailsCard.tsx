@@ -1,18 +1,10 @@
 /**
- * ResourceDetailsCard Component
- *
- * A detailed view component for displaying comprehensive information about a resource.
- * Features multiple tabs for different types of information:
+ * resource details card component
+ * displays comprehensive information about a resource.
+ * features multiple tabs for different types of information:
  * - Overview: Basic details and actions
  * - Review: User reviews and rating system
  * - About: Detailed description
- *
- * @component
- * @param {Object} props
- * @param {Resource|null} props.resource - The resource object to display
- * @param {Function} [props.onSuggestEdit] - Handler for suggesting edits to the resource
- * @param {Function} [props.onReviewResource] - Handler for reviewing the resource
- * @param {Function} props.onCloseAction - Handler for closing the details card
  *
  */
 "use client";

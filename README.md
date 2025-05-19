@@ -138,6 +138,9 @@ src/
 - update prisma schema: ```$ npx prisma generate```
 - create migration: ``` $ npx prisma migrate dev --name migrate_name ```
 
+### Design:
+- [UX/UI decisions](https://lawsofux.com/)
+
 ### Deployment Checklist
 - Fix all TypeScript errors, linting issues, and warnings
 - Run npm run build locally to ensure successful production build
@@ -191,12 +194,17 @@ src/
 - Phone number input masking
 - user warning system for profanity/curse words/bad input filter
   - regular expressions, machine learning, text analysis libraries 
+- When approving/rejecting, option to send a message as well.
+- User editing → then go to new page. Website should warn user
+- Upon hovering over resource card, light up the icon on map
+- Improve separation of concern, reusable component, dont gov over 200-250 lines each file
 - Next.js: 
   - all GET-requests to server component and 
   - convert all to server actions for POST/PUT/DELETE
   - improve use of Suspense 
   - fetch data directly on server component using prisma rather than fetch with http method 
   - Caching: instead of using ```export const dynamic = "force-dynamic``` on top make it more granular and use ```cache: "no-cache" ``` with fetch. and if not changing very often statically render and use: ```next:{revalidate:3600.},``` e.g refetch every hour. 
+  - follow best practice: review [All 29 Next.js Mistakes Beginners Make](https://youtu.be/5QP0mvrJkiY?si=64zvICvPg6hXxVeN), [NextJS Tutorial - All 12 Concepts You Need to Know](https://youtu.be/vwSlYG7hFk0?si=BlLwVYuc2n6666jC) etc.
 
 #### Nice to Haves 
 1. Multilingual Support
