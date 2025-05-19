@@ -1,4 +1,9 @@
 "use server";
+
+/**
+ * authentication actions for the Himalayan Connect NYC application.
+ */
+
 import {
   SignupFormSchema,
   LoginFormSchema,
@@ -14,7 +19,7 @@ import { createSession, deleteSession } from "@/app/lib/session";
 import bcrypt from "bcryptjs";
 import {prisma} from "../lib/prisma";
 import { Role } from "@prisma/client";
-// import { Yesteryear } from "next/font/google";
+
 // cookie should be set on the server to prevent client side tampering
 
 // SIGN UP
@@ -74,7 +79,7 @@ export async function signup(state: SignupFormState, formData: FormData) {
         role: Role.USER,
         password: hashedPassword,
       },
-      select: { id: true, email: true, role: true },
+      select: { id: true, email: true, firstName:true, role: true },
     });
 
     if (!newUser?.id) {
@@ -89,6 +94,13 @@ export async function signup(state: SignupFormState, formData: FormData) {
       status: 200,
       message: "Account created successfully",
       redirect: "/profile",
+      user: {
+        userId: newUser.id.toString(),
+        firstName: newUser.firstName,
+        email: newUser.email,
+        role: newUser.role,
+      }, // include user data to avoid re-fetching
+      
     };
   } catch (error) {
     console.error("Error in signup:", error);
@@ -155,7 +167,8 @@ export async function login(state: LoginFormState, formData: FormData) {
     return {
       status: 200,
       message: "Logged in successfully",
-      redirect: "/",
+      redirect: "/profile",
+      // return user to setUser 
       user: {
         userId: user.id.toString(),
         firstName: user.firstName,

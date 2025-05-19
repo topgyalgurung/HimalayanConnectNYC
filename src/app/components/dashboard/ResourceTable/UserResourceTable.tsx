@@ -1,37 +1,6 @@
 /**
- * UserResourceTable Component
- *
- * A table component for displaying and managing user's resources, edits, reviews, and favorites.
- * Provides different views based on the active tab and resource type.
- *
- * @component
- * @param {Object} props
- * @param {string} props.activeTab - Current active tab ("new", "suggest", "reviews", "likes")
- * @param {Array} props.resources - List of user's resources
- * @param {Array} props.editResources - List of user's edit suggestions
- * @param {Object} props.user - Current user object
- * @param {string|null} props.deletingId - ID of resource being deleted
- * @param {HTMLElement|null} props.anchorEl - Anchor element for popup menus
- * @param {Function} props.onViewClick - Handler for viewing resource details
- * @param {Function} props.onDeleteResource - Handler for deleting a resource
- * @param {Function} props.onDeleteEdit - Handler for deleting an edit suggestion
- * @param {Function} props.onDeleteReview - Handler for deleting a review
- * @param {Function} props.onDeleteFavorite - Handler for removing a favorite
- *
- * @example
- * <UserResourceTable
- *   activeTab="new"
- *   resources={userResources}
- *   editResources={userEditSuggestions}
- *   user={currentUser}
- *   deletingId={null}
- *   anchorEl={null}
- *   onViewClick={handleViewClick}
- *   onDeleteResource={handleDeleteResource}
- *   onDeleteEdit={handleDeleteEdit}
- *   onDeleteReview={handleDeleteReview}
- *   onDeleteFavorite={handleDeleteFavorite}
- * />
+ * user resource table component for the dashboard
+ * displays and manages user's resources, edits, reviews, and favorites.
  */
 "use client";
 

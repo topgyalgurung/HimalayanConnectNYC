@@ -1,22 +1,7 @@
 /**
- * TabButton Component
- * 
- * A reusable button component for tab navigation.
- * Provides visual feedback for active state and hover effects.
- * 
- * @component
- * @param {Object} props
- * @param {string} props.label - Button text
- * @param {boolean} props.isActive - Current active state
- * @param {Function} props.onClick - Click handler
- * @param {string} [props.className] - Additional CSS classes
- * 
- * @example
- * <TabButton
- *   label="Overview"
- *   isActive={activeTab === "overview"}
- *   onClick={() => setActiveTab("overview")}
- * />
+ * tab button component
+ * provides visual feedback for active state and hover effects.
+
  */
 import React from 'react';
 

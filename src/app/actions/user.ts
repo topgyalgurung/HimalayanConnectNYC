@@ -1,5 +1,9 @@
 "use server";
 
+/**
+ * user action to get user data from the database
+ */
+
 import { prisma } from "../lib/prisma";
 
 export async function getUserData(userId: string) {

@@ -1,27 +1,13 @@
 /**
- * ResourceActions Component
+ * resource actions component
  * 
- * A component that displays interactive action buttons for a resource, including:
+ * displays interactive action buttons for a resource, including:
  * - Navigation link (Google Maps)
  * - Facebook link
  * - Email link
  * - Website link
  * - Favorite toggle button
- * 
- * @component
- * @param {Object} props
- * @param {Resource} props.resource - The resource object containing action links
- * @param {boolean} props.liked - Current favorite status of the resource
- * @param {Function} props.onToggleFavorite - Handler for toggling favorite status
- * @param {string} [props.className] - Optional additional CSS classes
- * 
- * @example
- * <ResourceActions
- *   resource={resourceData}
- *   liked={isFavorite}
- *   onToggleFavorite={handleToggleFavorite}
- *   className="flex justify-between"
- * />
+
  */
 import React from 'react';
 import { FaFacebook } from "react-icons/fa";

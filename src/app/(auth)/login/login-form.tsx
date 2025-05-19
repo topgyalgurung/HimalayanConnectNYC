@@ -1,4 +1,10 @@
 "use client";
+/**
+ * handles user authentication, uses react server actions for form submission
+ * and manages form state and user authentication flow
+ */
+
+
 
 import { useActionState } from "react";
 import { login } from "@/app/actions/auth";

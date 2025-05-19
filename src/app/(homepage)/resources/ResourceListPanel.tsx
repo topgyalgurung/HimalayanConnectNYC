@@ -1,8 +1,6 @@
 // src/app/(homepage)/resources/ResourceListPanel.tsx
 /**
- * ResourceListPanel Component
- *
- * This component is the resource list panel for the homepage of the Himalayan Connect NYC application.
+ * resource list panel for the homepage of the Himalayan Connect NYC application.
  * It displays the list of resources in a sidebar.
  *
  */

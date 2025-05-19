@@ -1,5 +1,11 @@
 "use client";
 
+/**
+ * BoroughFilter Component
+ * A component that allows users to filter by borough
+ * Uses Material-UI components for styling and functionality
+ */
+
 import * as React from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
