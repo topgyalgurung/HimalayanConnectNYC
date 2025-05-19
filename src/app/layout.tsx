@@ -14,10 +14,6 @@
  * Note: Due to Next.js partial rendering, layout components don't re-render on navigation.
  * User session checks should be handled at the page level rather than in layouts.
  *
- * @param {Object} props - Component props
- * @param {React.ReactNode} props.children - Child components to be rendered
- * @returns {JSX.Element} The root layout component
- *
  * {children} renders the homepage, file page.tsx exist in (homepage)
  */
 

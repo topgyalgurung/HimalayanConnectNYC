@@ -3,6 +3,8 @@ import { render, screen } from "@testing-library/react";
 import Home from "../app/page";
 import { getResources } from "../app/actions/resources/getResources";
 
+// main app page test
+
 // Mock the getResources function
 jest.mock("../app/actions/resources/getResources", () => ({
   getResources: jest.fn(),
