@@ -17,8 +17,8 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { getSession } from "@/app/lib/session";
 
-interface User {
-  userId: string;
+export interface User {
+  userId?: string;
   // firstName: string;
   email: string;
   role: string;
@@ -40,7 +40,7 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<{
-    userId: string;
+    userId?: string;
     // firstName: string;
     email: string;
     role: string;

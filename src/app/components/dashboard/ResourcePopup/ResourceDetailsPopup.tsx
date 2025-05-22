@@ -27,14 +27,7 @@ export default function ResourceDetailsPopup({
 
   const content = (
     <div className="space-y-3 max-h-[60vh] overflow-y-auto pr-2">
-      {resource.description && (
-        <div className="bg-gray-50 p-3 rounded-lg">
-          <h3 className="text-lg font-semibold text-gray-700 mb-1">
-            Description
-          </h3>
-          <p className="text-gray-600 text-sm">{resource.description}</p>
-        </div>
-      )}
+     
 
       <div className="grid grid-cols-1 gap-2">
         {/* Basic Information */}
@@ -69,6 +62,14 @@ export default function ResourceDetailsPopup({
             )}
           </div>
         </div>
+        {resource.description && (
+        <div className="bg-gray-50 p-3 rounded-lg">
+          <h3 className="text-lg font-semibold text-gray-700 mb-1">
+            Description
+          </h3>
+          <p className="text-gray-600 text-sm">{resource.description}</p>
+        </div>
+      )}
 
         {/* Contact Information */}
         <div className="bg-gray-50 p-3 rounded-lg">
@@ -188,7 +189,7 @@ export default function ResourceDetailsPopup({
                 </span>
               </div>
             )}
-            {resource.Location && resource.Location.length > 0 && (
+            {/* {resource.Location && resource.Location.length > 0 && (
               <div className="flex items-center gap-2 text-sm">
                 <span className="text-gray-500 font-medium min-w-[80px]">
                   Location:
@@ -199,7 +200,7 @@ export default function ResourceDetailsPopup({
                   ).join(", ")}
                 </span>
               </div>
-            )}
+            )} */}
           </div>
         </div>
 
