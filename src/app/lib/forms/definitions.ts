@@ -44,6 +44,12 @@ export type SignupFormState =
       }
       message?: string
       status?: number
+      user?: {
+        userId: string
+        email: string
+        role: string
+        firstName?: string
+      }
     }
   | undefined
 

@@ -19,6 +19,7 @@ export default function BasicInfoSection({
 }: BasicInfoSectionProps) {
   return (
     <div className="space-y-2">
+      {/* name  */}
       <input
         type="text"
         name="name"
@@ -52,11 +53,11 @@ export default function BasicInfoSection({
       {errors.categoryId && (
         <p className="text-red-500 text-sm">{errors.categoryId}</p>
       )}
-
+      {/* address */}
       <input
         type="text"
         name="address"
-        placeholder="Address : Street, City, State, ZIP(optional)"
+        placeholder="Address : Street, City, State ZIP"
         value={formData.address}
         onChange={handleChange}
         required

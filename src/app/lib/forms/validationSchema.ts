@@ -12,10 +12,13 @@ export const formSchema = z.object({
         const parts = address.split(',').map(part => part.trim());
         if (parts.length < 3) return false;
         
-        const [street, city, state, zip] = parts;
+        const [street, city, stateZip] = parts;
         const cityRegex = /^[a-zA-Z\s]+$/;
         const stateRegex = /^[a-zA-Z]{2}$/;
         const zipRegex = /^\d{5}(-\d{4})?$/; // Validates ZIP codes in formats: 12345 or 12345-6789
+        
+        // Split state and zip if present
+        const [state, zip] = stateZip.split(' ').map(part => part.trim());
         
         // Check required fields
         const requiredFieldsValid = 
@@ -32,7 +35,7 @@ export const formSchema = z.object({
         // If no zip provided, just check required fields
         return requiredFieldsValid;
       },
-      "Address must include street, city, and state in format: Street, City, State (ZIP optional)"
+      "Address must include street, city, and state in format: Street, City, State ZIP"
     ),
   phone: z.string()
     .regex(/^\d{3}-\d{3}-\d{4}$/, "Phone number must be in format: XXX-XXX-XXXX")

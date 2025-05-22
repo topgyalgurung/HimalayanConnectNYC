@@ -4,8 +4,8 @@
  * It also uses the BasicInfoSection and AdditionalDetailsSection to render the form.
  * It uses the addResource action to add the resource to the database.
  * It uses the getCategories action to get the categories for the resource.
- * 
- */ 
+ *
+ */
 
 "use client";
 
@@ -22,7 +22,7 @@ import Accordion from "@mui/material/Accordion";
 import { AccordionSummary, Typography } from "@mui/material";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-
+import toast from "react-hot-toast";
 
 export default function AddResourceForm() {
   const [message, setMessage] = useState("");
@@ -103,6 +103,20 @@ export default function AddResourceForm() {
 
       const result = await addResource(formData);
 
+      if (result.status === 409) {
+        toast.error("Resource with this name or address already exist");
+        setMessage(result.error);
+        setLoading(false);
+        return;
+      }
+
+      if (result.status === 400) {
+        toast.error("Resource must be in New York City.");
+        setMessage(result.error);
+        setLoading(false);
+        return;
+      }
+
       if (result.success) {
         setMessage(result.success);
         setImageUrl(null);
@@ -124,10 +138,10 @@ export default function AddResourceForm() {
         <div className="bg-white shadow-lg rounded-lg p-4 sm:p-6 space-y-4">
           {/* header */}
           <div className="space-y-2 sticky top-0 bg-white z-10 pb-2">
-            <h2 className="text-2xl font-bold text-gray-900">
+            <h2 className="text-2xl font-bold text-center text-gray-900">
               Add a New Resource
             </h2>
-            <h4 className="text-gray-600">
+            <h4 className="text-gray-600 text-center">
               Provide some information about this place
             </h4>
           </div>

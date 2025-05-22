@@ -18,7 +18,7 @@ import { z } from "zod";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { ToggleButton, ToggleButtonGroup, Alert } from "@mui/material";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
@@ -55,6 +55,7 @@ export default function ResourceSuggestCard({
   const [openTime, setOpenTime] = useState<dayjs.Dayjs | null>(null);
   const [closeTime, setCloseTime] = useState<dayjs.Dayjs | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [timeError, setTimeError] = useState<string>("");
 
   // Track original values
   const [originalValues] = useState({
@@ -74,6 +75,26 @@ export default function ResourceSuggestCard({
     phone: originalValues.phone,
     url: originalValues.url,
   });
+
+  const validateAndSetOpenTime = (newTime: dayjs.Dayjs | null) => {
+    if (newTime && closeTime && newTime.isAfter(closeTime)) {
+      setTimeError("Open time must be before close time");
+      return;
+    }
+    setTimeError("");
+    setOpenTime(newTime);
+    handleTimeChange("openTime", newTime);
+  };
+
+  const validateAndSetCloseTime = (newTime: dayjs.Dayjs | null) => {
+    if (newTime && openTime && newTime.isBefore(openTime)) {
+      setTimeError("Close time must be after open time");
+      return;
+    }
+    setTimeError("");
+    setCloseTime(newTime);
+    handleTimeChange("closeTime", newTime);
+  };
 
   // Track which fields have been changed
   const [changedFields, setChangedFields] = useState<Set<string>>(new Set());
@@ -390,7 +411,12 @@ export default function ResourceSuggestCard({
               <TimePicker
                 label="Open Time"
                 value={openTime}
-                onChange={(openTime) => handleTimeChange("openTime", openTime)}
+                onChange={validateAndSetOpenTime}
+                slotProps={{
+                  textField: {
+                    error: !!timeError,
+                  },
+                }}
               />
               {changedFields.has("openTime") && (
                 <p className="text-sm text-blue-600">Open time changed</p>
@@ -399,12 +425,22 @@ export default function ResourceSuggestCard({
               <TimePicker
                 label="Close Time"
                 value={closeTime}
-                onChange={(newTime) => handleTimeChange("closeTime", newTime)}
+                onChange={validateAndSetCloseTime}
+                slotProps={{
+                  textField: {
+                    error: !!timeError,
+                  },
+                }}
               />
               {changedFields.has("closeTime") && (
                 <p className="text-sm text-blue-600">Close time changed</p>
               )}
             </div>
+            {timeError && (
+              <Alert severity="error" className="mt-2">
+                {timeError}
+              </Alert>
+            )}
           </LocalizationProvider>
 
           <button

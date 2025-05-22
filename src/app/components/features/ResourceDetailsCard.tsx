@@ -20,7 +20,6 @@ import toast from "react-hot-toast";
 import { useFavorites } from "../../hooks/useFavorites";
 import { useFetchResourceReview } from "../../hooks/useFetchResourceReview";
 
-import { format } from "date-fns";
 import { type Resource } from "@/app/lib/types";
 import { type User } from "@/app/lib/types";
 import { type ResourceReview } from "@/app/lib/types";
@@ -29,6 +28,10 @@ import TabButton from "./ResourceDetailCommon/TabButton";
 import Rating from "@mui/material/Rating";
 import ResourceHeader from "./ResourceDetailCommon/ResourceHeader";
 import ResourceActions from "./ResourceDetailCommon/ResourceActions";
+
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+dayjs.extend(utc);
 
 interface ResourceDetailsCardProps {
   resource: Resource | null;
@@ -73,27 +76,27 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
       <p>
         <span className="font-medium">Opens:</span>{" "}
         {formatOpenDays(resource.openDays || null)}
-    </p>
+      </p>
     )}
     {resource.openTime && resource.closeTime && (
       <p>
         <span className="font-medium">Business Hours:</span>{" "}
-        {format(new Date(resource.openTime), "hh:mm a")} -{" "}
-        {format(new Date(resource.closeTime), "hh:mm a")}
+        {dayjs.utc(resource.openTime).format("hh:mm A")} -{" "}
+        {dayjs.utc(resource.closeTime).format("hh:mm A")}
       </p>
-    )}  
+    )}
     {resource.url && (
-    <p>
-      <span className="font-medium">Website:</span>{" "}
-      <a 
-        href={resource.url} 
-        target="_blank" 
-        rel="noopener noreferrer"
-        className="text-blue-500 hover:underline"
-      >
-        {resource.url?.replace(/^https?:\/\//, '')}
-      </a>
-    </p>
+      <p>
+        <span className="font-medium">Website:</span>{" "}
+        <a
+          href={resource.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-500 hover:underline"
+        >
+          {resource.url?.replace(/^https?:\/\//, "")}
+        </a>
+      </p>
     )}
     {resource.email && (
       <p>
@@ -105,7 +108,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
         <span className="font-medium">Phone:</span> {resource.phone}
       </p>
     )}
-    
+
     <hr className="my-4 border-gray-300" />
 
     <div className="text-white text-center">

@@ -77,6 +77,31 @@ export async function addResource(formData: FormData) {
     const parsedCategoryId = categoryId
       ? parseInt(categoryId, 10)
       : null;
+
+      // check if address is in new york city
+      const isInNYC = address.toLowerCase().includes("new york") || address.toLowerCase().includes("ny");
+      if (!isInNYC) {
+        return { 
+          error: "Resource must be in New York City.",
+          status: 400 // Bad Request status code
+        };
+      }
+
+      // check first if already exist before allowing to add
+    
+    const existingResource = await prisma.resource.findFirst({
+      where: {
+        name: name,
+        address: address,
+      },
+    });
+
+    if (existingResource) {
+      return { 
+        error: "A resource with this name and address already exists.",
+        status: 409 // Conflict status code
+      };
+    }
     
     
       const newResource = await prisma.resource.create({
