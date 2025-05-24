@@ -5,10 +5,15 @@ export const formSchema = z.object({
     .min(2, "Name must be at least 2 characters")
     .regex(/^[a-zA-Z\s]+$/, "Name cannot contain numbers or special characters"),
   categoryId: z.string().min(1, "Please select a category"),
+  city: z.string().min(2, "City must be at least 2 characters"),
+  phone: z.string()
+    .regex(/^\d{3}-\d{3}-\d{4}$/, "Phone number must be in format: XXX-XXX-XXXX")
+    .optional()
+    .or(z.literal("")),
   address: z.string()
     .min(5, "Address must be at least 5 characters")
     .refine(
-      (address) => {
+      (address) => {  
         const parts = address.split(',').map(part => part.trim());
         if (parts.length < 3) return false;
         
@@ -37,10 +42,10 @@ export const formSchema = z.object({
       },
       "Address must include street, city, and state in format: Street, City, State ZIP"
     ),
-  phone: z.string()
-    .regex(/^\d{3}-\d{3}-\d{4}$/, "Phone number must be in format: XXX-XXX-XXXX")
-    .optional()
-    .or(z.literal("")),
+  // phone: z.string()
+  //   .regex(/^\d{3}-\d{3}-\d{4}$/, "Phone number must be in format: XXX-XXX-XXXX")
+  //   .optional()
+  //   .or(z.literal("")),
   url: z
     .string()
     .trim()

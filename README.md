@@ -188,16 +188,44 @@ src/
 ## Next steps / Future Enhancements
 
 #### Future enhancements
-- popover/modal for add resource 
-- borough autopopulate based on address entered 
-- For business hours input: Need 2 time inputs (open/close) for each day (m/t/w/th/f/sat/sun) so 14 time inputs
-- Phone number input masking
-- user warning system for profanity/curse words/bad input filter
+- Auth:
+  - Login:
+    - forgot password
+    - reset password
+- Add Resource:
+  - popover/modal for add resource instead of new page 
+  - borough auto populate based on address entered 
+  - For business hours input: Need 2 time inputs (open/close) for each day (m/t/w/th/f/sat/sun) so 14 time inputs
+  - Phone number input masking
+- Resource List:
+  - Upon hovering over resource card, light up the icon on map
+- Resource Details:
+  - Make the like button next to the location name b/c different functionality than social media buttons
+  - Instead of a “link not available” toast on social media link click, disable it and grey it out if there is no link
+- Review Card
+  - bring panel down instead of new window card
+- Profile:
+  - Change profile picture feature
+- Dashboard( user and admin)
+  - When approving/rejecting, option to send a message as well.
+  - View details popup - make this into a panel that drops down and show all details, and then emphasize what was changed
+  - Admin: Approved / Rejected - should show timestamp and then sorted by earliest date
+- Filters:
+  - no resources that match the filters, then the list should say “No resources available” or “No resources match filters”
+- Map:
+  - view details pop on map 
+  - When clicking on view details, bring a panel down because its blocking the map view
+  - When clicking on other icons on the map (museusms, landmarks) dont show the detail window
+  - When hovering over icon, we dont want the white arrow to cover the icon
+  - hovering over resource items on the list AND map should animate the icon on map and card on the list (both ways)
+  - Use clusters whenever there are many locations in one
+- Search:
+  - Zip
+- General:
+  - Improve separation of concern, reusable component, dont gov over 200-250 lines each file
+  - User editing → then go to new page. Website should warn user
+  - user warning system for profanity/curse words/bad input filter
   - regular expressions, machine learning, text analysis libraries 
-- When approving/rejecting, option to send a message as well.
-- User editing → then go to new page. Website should warn user
-- Upon hovering over resource card, light up the icon on map
-- Improve separation of concern, reusable component, dont gov over 200-250 lines each file
 - Next.js: 
   - all GET-requests to server component and 
   - convert all to server actions for POST/PUT/DELETE
@@ -205,6 +233,8 @@ src/
   - fetch data directly on server component using prisma rather than fetch with http method 
   - Caching: instead of using ```export const dynamic = "force-dynamic``` on top make it more granular and use ```cache: "no-cache" ``` with fetch. and if not changing very often statically render and use: ```next:{revalidate:3600.},``` e.g refetch every hour. 
   - follow best practice: review [All 29 Next.js Mistakes Beginners Make](https://youtu.be/5QP0mvrJkiY?si=64zvICvPg6hXxVeN), [NextJS Tutorial - All 12 Concepts You Need to Know](https://youtu.be/vwSlYG7hFk0?si=BlLwVYuc2n6666jC) etc.
+<!-- - React
+- Prisma DB: -->
 
 #### Nice to Haves 
 1. Multilingual Support

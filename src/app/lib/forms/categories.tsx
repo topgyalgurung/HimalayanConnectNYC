@@ -1,30 +1,30 @@
 export const categories = [
-    {
-      id: 1,
-      name: "community"
-    },
-    {
-      id: 2, 
-      name: "legal"
-    },
-    {
-      id: 3,
-      name: "health"
-    },
-    {
-      id: 4,
-      name: "education"
-    },
-    {
-      id: 5,
-      name: "finance"
-    },
-    {
-      id: 6,
-      name: "real estate"
-    },
-    {
-      id: 7,
-      name: "others"
-    }
-  ];
+  {
+    id: 1,
+    name: "Community",
+  },
+  {
+    id: 2,
+    name: "Legal",
+  },
+  {
+    id: 3,
+    name: "Health",
+  },
+  {
+    id: 4,
+    name: "Education",
+  },
+  {
+    id: 5,
+    name: "Finance",
+  },
+  {
+    id: 6,
+    name: "Real estate",
+  },
+  {
+    id: 7,
+    name: "Others",
+  },
+];

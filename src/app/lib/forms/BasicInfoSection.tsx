@@ -1,11 +1,17 @@
 import React from "react";
 import { FormValues } from "./validationSchema";
-import { categories } from "./categories";
+import { TextField } from "@mui/material";
+import MenuItem from "@mui/material/MenuItem";
+
+interface Category {
+  id: number;
+  name: string;
+}
 
 interface BasicInfoSectionProps {
   formData: FormValues;
   errors: Record<string, string>;
-  categories: typeof categories;
+  categories: Category[];
   handleChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => void;
@@ -20,46 +26,66 @@ export default function BasicInfoSection({
   return (
     <div className="space-y-2">
       {/* name  */}
-      <input
-        type="text"
+      <TextField
+        id="outlined-basic"
+        label="Enter Resource Name"
+        variant="outlined"
         name="name"
-        placeholder="Resource Name"
         value={formData.name}
-        onChange={handleChange}
+        onChange={(e) =>
+          handleChange(
+            e as React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+          )
+        }
         required
         className={`w-full px-3 py-2 border ${
           errors.name ? "border-red-500" : "border-gray-300"
         } rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
       />
       {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
-
-      <select
+      <TextField
+        id="filled-select-category"
+        select
         name="categoryId"
-        value={formData.categoryId}
-        onChange={handleChange}
+        label="Select Category"
+        defaultValue=""
+        value={formData.categoryId || ""}
+        onChange={(e) =>
+          handleChange(
+            e as React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+          )
+        }
         required
+        helperText="Please select category"
         className={`w-full px-3 py-2 border ${
-          errors.categoryId ? "border-red-500" : "border-gray-300"
+          errors.category ? "border-red-500" : "border-gray-300"
         } rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
-        aria-label="Select a category"
+        variant="filled"
       >
-        <option value="">Select a category</option>
+        <MenuItem value="">
+          <em>Select a category</em>
+        </MenuItem>
         {categories.map((category) => (
-          <option key={category.id} value={category.id}>
+          <MenuItem key={category.id} value={category.id.toString()}>
             {category.name}
-          </option>
+          </MenuItem>
         ))}
-      </select>
-      {errors.categoryId && (
-        <p className="text-red-500 text-sm">{errors.categoryId}</p>
+      </TextField>
+      {errors.category && (
+        <p className="text-red-500 text-sm">{errors.category}</p>
       )}
-      {/* address */}
-      <input
-        type="text"
+
+      <TextField
+        id="outlined-basic"
+        label="Enter Address : Street, City, State ZIP"
+        variant="outlined"
         name="address"
-        placeholder="Address : Street, City, State ZIP"
         value={formData.address}
-        onChange={handleChange}
+        onChange={(e) =>
+          handleChange(
+            e as React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+          )
+        }
         required
         className={`w-full px-3 py-2 border ${
           errors.address ? "border-red-500" : "border-gray-300"

@@ -1,15 +1,21 @@
-import React from 'react';
-import { FormValues } from './validationSchema';
+  import React from 'react';
+  import { FormValues } from './validationSchema';
 import { CldUploadWidget, CloudinaryUploadWidgetResults } from "next-cloudinary";
-import CitySelect from "@/app/components/features/CitySelect";
+import CitySelect from "@/app/lib/forms/CitySelect";
 import TimePickerSection from "@/app/components/features/TimePickerSection";
+// import InputMask from 'react-input-mask';
+// import PhoneNumberInput from 'react-phone-number-input';
+// import 'react-phone-number-input/style.css'
 import dayjs from "dayjs";
+import { TextField } from "@mui/material";
 
 interface AdditionalDetailsSectionProps {
   formData: FormValues;
   errors: Record<string, string>;
   handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   selectedDays: string[];
+  city: string;
+  phone: string;
   openTime: dayjs.Dayjs | null;
   closeTime: dayjs.Dayjs | null;
   onDayChange: (event: React.MouseEvent<HTMLElement>, newDays: string[]) => void;
@@ -18,18 +24,21 @@ interface AdditionalDetailsSectionProps {
   onImageUpload: (url: string) => void;
 }
 
+
 export default function AdditionalDetailsSection({
   formData,
   errors,
   handleChange,
   selectedDays,
-  openTime,
+  city,
+  // phone,
+  openTime, 
   closeTime,
   onDayChange,
   onOpenTimeChange,
   onCloseTimeChange,
   onImageUpload,
-}: AdditionalDetailsSectionProps) {
+}: AdditionalDetailsSectionProps) { 
   function handleUploadSuccess(result: CloudinaryUploadWidgetResults) {
     if (typeof result.info === 'object' && result.info?.secure_url) {
       onImageUpload(result.info.secure_url);
@@ -38,7 +47,9 @@ export default function AdditionalDetailsSection({
 
   return (
     <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
-      <CitySelect />
+      <CitySelect 
+        city={city}
+      />
 
       <div className="flex justify-center">
         <TimePickerSection
@@ -51,30 +62,47 @@ export default function AdditionalDetailsSection({
         />
       </div>
 
-      <input
-        type="tel"
+      {/* <PhoneNumberInput
+        defaultCountry="US"
+        value={phone}
+        onChange={(value) => handleChange({
+          target: {
+            name: 'phone',
+            value: value || ''
+          }
+        } as React.ChangeEvent<HTMLInputElement>)}
+        className={`w-full px-3 py-2 border ${errors.phone ? 'border-red-500' : 'border-gray-300'} rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+      />
+      {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>} */}
+
+      {/*  need to implement phone number masking */}
+      <TextField
+        id="outlined-basic"
+        label="Phone Number (XXX-XXX-XXXX) (optional)"
         name="phone"
-        placeholder="Phone Number (XXX-XXX-XXXX) (optional)"
+        variant="outlined"
         value={formData.phone}
         onChange={handleChange}
         className={`w-full px-3 py-2 border ${errors.phone ? 'border-red-500' : 'border-gray-300'} rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
       />
       {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
 
-      <input
-        type="url"
+      <TextField
+        id="outlined-basic"
+        label="URL (optional)"
         name="url"
-        placeholder=" URL (optional) e.g. must start with https:// or http://"
+        variant="outlined"
         value={formData.url}
         onChange={handleChange}
         className={`w-full px-3 py-2 border ${errors.url ? 'border-red-500' : 'border-gray-300'} rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
       />
       {errors.url && <p className="text-red-500 text-sm">{errors.url}</p>}
 
-      <input
-        type="url"
+      <TextField  
+        id="outlined-basic"
+        label="Facebook Link (optional)"
         name="facebookLink"
-        placeholder="Facebook Link (optional)"
+        variant="outlined"
         value={formData.facebookLink}
         onChange={handleChange}
         className={`w-full px-3 py-2 border ${errors.facebookLink ? 'border-red-500' : 'border-gray-300'} rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}

@@ -1,5 +1,5 @@
 /**
- * map component for the homepage of the Himalayan Connect NYC application. 
+ * map component for the homepage of the Himalayan Connect NYC application.
  * displays the map and the markers for the resources
  */
 
@@ -76,7 +76,7 @@ export default function MapView({
         )}
         {/* show edit resource card */}
         {editResource && (
-          <div className="absolute top-0 left-0 h-full w-[400px] z-50 shadow-lg overflow-y-auto">
+          <div className="absolute top-0 left-0 h-full w-[400px] z-30 shadow-md overflow-y-auto ">
             <ResourceSuggestCard
               resource={editResource}
               onEditCloseAction={onEditCloseAction}

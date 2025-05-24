@@ -11,18 +11,18 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-
 import { addResource, getCategories } from "@/app/actions/forms";
 import { formSchema, type FormValues } from "@/app/lib/forms/validationSchema";
 import BasicInfoSection from "@/app/lib/forms/BasicInfoSection";
 import AdditionalDetailsSection from "@/app/lib/forms/AdditionalDetailsSection";
 import dayjs from "dayjs";
+import toast from "react-hot-toast";
 
 import Accordion from "@mui/material/Accordion";
 import { AccordionSummary, Typography } from "@mui/material";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import toast from "react-hot-toast";
+
 
 export default function AddResourceForm() {
   const [message, setMessage] = useState("");
@@ -38,6 +38,7 @@ export default function AddResourceForm() {
     name: "",
     categoryId: "",
     address: "",
+    city: "",
     phone: "",
     url: "",
     facebookLink: "",
@@ -49,6 +50,7 @@ export default function AddResourceForm() {
   useEffect(() => {
     async function fetchCategories() {
       const data = await getCategories();
+      console.log("categories", data);
       setCategories(data);
     }
     fetchCategories();
@@ -78,6 +80,7 @@ export default function AddResourceForm() {
       const validationResult = formSchema.safeParse({
         name: formData.get("name"),
         categoryId: formData.get("categoryId"),
+        city: formData.get("city"),
         address: formData.get("address"),
         phone: formData.get("phone"),
         url: formData.get("url"),
@@ -182,15 +185,17 @@ export default function AddResourceForm() {
                 </Typography>
               </AccordionSummary>
               <AccordionDetails className="pt-2">
-                <Typography className="text-gray-600 mb-2">
-                  Add phone, hours, website, photos to verify this place
-                </Typography>
+                {/* <Typography className="text-gray-600 mb-4">
+                  Add other details to verify this place
+                </Typography> */}
 
                 <AdditionalDetailsSection
                   formData={formData}
                   errors={errors}
                   handleChange={handleChange}
                   selectedDays={selectedDays}
+                  city={formData.city}
+                  phone={formData.phone}
                   openTime={openTime}
                   closeTime={closeTime}
                   onDayChange={(_, newDays) => setSelectedDays(newDays)}
