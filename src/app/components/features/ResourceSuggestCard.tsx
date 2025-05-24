@@ -316,7 +316,7 @@ export default function ResourceSuggestCard({
   };
 
   return (
-    <div className="absolute top-4 right-4 z-50 w-96 bg-white rounded-lg shadow-xl p-6">
+    <div className="absolute top-4 right-4 z-30 w-[350px] bg-white rounded-md shadow-xl p-4 mb-4 max-h-[90vh] overflow-y-auto">
       <button
         onClick={() => onEditCloseAction(null)}
         className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
@@ -324,15 +324,26 @@ export default function ResourceSuggestCard({
         ✕
       </button>
 
-      <h1 className="text-lg font-bold mb-2">Suggest an Edit</h1>
+      <h1 className="text-lg font-bold text-center mb-2">Suggest an Edit</h1>
       <p className="text-sm text-gray-600 mb-4">
         Only changed fields will be submitted for review
       </p>
 
-      <form action={handleFormAction}>
+      <form action={handleFormAction} className="flex flex-col">
         <Box
           component="div"
-          sx={{ "& .MuiTextField-root": { m: 1, width: "25ch" } }}
+          sx={{ 
+            "& .MuiTextField-root": { 
+              m: 0.5, 
+              width: "100%",
+              maxWidth: "320px"
+            },
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 1,
+            mb: 2
+          }}
         >
           <input name="resourceId" value={resource?.id ?? ""} type="hidden" />
           <TextField
@@ -342,6 +353,7 @@ export default function ResourceSuggestCard({
             onChange={handleChange}
             variant="standard"
             error={!!errors.name}
+            size="small"
             helperText={
               errors.name ||
               (changedFields.has("name") ? "Changed" : "Original value")
@@ -354,6 +366,7 @@ export default function ResourceSuggestCard({
             onChange={handleChange}
             variant="standard"
             error={!!errors.address}
+            size="small"
             helperText={
               errors.address ||
               (changedFields.has("address") ? "Changed" : "Original value")
@@ -366,6 +379,7 @@ export default function ResourceSuggestCard({
             onChange={handleChange}
             variant="standard"
             error={!!errors.phone}
+            size="small"
             helperText={
               errors.phone ||
               (changedFields.has("phone") ? "Changed" : "Original value")
@@ -378,6 +392,7 @@ export default function ResourceSuggestCard({
             onChange={handleChange}
             variant="standard"
             error={!!errors.url}
+            size="small"
             helperText={
               errors.url ||
               (changedFields.has("url") ? "Changed" : "Original value")
@@ -407,7 +422,7 @@ export default function ResourceSuggestCard({
             </div>
 
             {/* Open and Close Times */}
-            <div className="space-y-4 mt-4">
+            <div className="space-y-4 mt-2">
               <TimePicker
                 label="Open Time"
                 value={openTime}
@@ -445,7 +460,7 @@ export default function ResourceSuggestCard({
 
           <button
             type="submit"
-            className="bg-blue-600 mt-4 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:bg-gray-400"
+            className="w-full max-w-[320px] bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:bg-gray-400 mt-4 sticky bottom-0"
             disabled={loading || changedFields.size === 0}
           >
             {loading ? "Submitting..." : "Submit Changes"}
