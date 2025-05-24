@@ -316,7 +316,7 @@ export default function ResourceSuggestCard({
   };
 
   return (
-    <div className="absolute top-4 right-4 z-30 w-[350px] bg-white rounded-md shadow-xl p-4 mb-4 max-h-[90vh] overflow-y-auto">
+    <div className="absolute m-4 z-30 w-[350px] bg-white rounded-md shadow-xl p-4 mb-6 max-h-[90vh] overflow-y-auto">
       <button
         onClick={() => onEditCloseAction(null)}
         className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
@@ -332,17 +332,17 @@ export default function ResourceSuggestCard({
       <form action={handleFormAction} className="flex flex-col">
         <Box
           component="div"
-          sx={{ 
-            "& .MuiTextField-root": { 
-              m: 0.5, 
+          sx={{
+            "& .MuiTextField-root": {
+              m: 0.5,
               width: "100%",
-              maxWidth: "320px"
+              maxWidth: "320px",
             },
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             gap: 1,
-            mb: 2
+            mb: 2,
           }}
         >
           <input name="resourceId" value={resource?.id ?? ""} type="hidden" />

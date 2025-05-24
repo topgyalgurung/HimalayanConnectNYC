@@ -222,7 +222,7 @@ export default function ResourceDetailsCard({
   const liked = isFavorite(Number(resource.id));
 
   return (
-    <div className="fixed md:absolute top-0 md:top-4 right-0 md:right-4 z-50 w-full md:w-96 bg-white rounded-lg shadow-xl p-4 md:p-6 max-h-screen md:max-h-[90vh] overflow-y-auto">
+    <div className="fixed md:absolute md:top-8 md:right-6 md:p-6 md:w-96 md:max-h-[90vh] top-12 right-2 left-2 z-50 w-full  bg-white rounded-lg shadow-xl p-4 max-h-screen  overflow-y-auto">
       <button
         onClick={() => onCloseAction()}
         className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"

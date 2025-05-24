@@ -190,18 +190,18 @@ src/
 #### Future enhancements
 - Auth:
   - Login:
-  - forgot password
-  - reset password
+    - forgot password
+    - reset password
 - Add Resource:
   - popover/modal for add resource instead of new page 
-  - borough autopopulate based on address entered 
+  - borough auto populate based on address entered 
   - For business hours input: Need 2 time inputs (open/close) for each day (m/t/w/th/f/sat/sun) so 14 time inputs
   - Phone number input masking
 - Resource List:
   - Upon hovering over resource card, light up the icon on map
 - Resource Details:
   - Make the like button next to the location name b/c different functionality than social media buttons
-  - Instead of a “link not available” toast on social media link click, please disable it and grey it out if there is no link
+  - Instead of a “link not available” toast on social media link click, disable it and grey it out if there is no link
 - Review Card
   - bring panel down instead of new window card
 - Profile:
