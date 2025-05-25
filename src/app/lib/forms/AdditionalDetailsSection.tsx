@@ -1,6 +1,9 @@
-  import React from 'react';
-  import { FormValues } from './validationSchema';
-import { CldUploadWidget, CloudinaryUploadWidgetResults } from "next-cloudinary";
+import React from "react";
+import { FormValues } from "./validationSchema";
+import {
+  CldUploadWidget,
+  CloudinaryUploadWidgetResults,
+} from "next-cloudinary";
 import CitySelect from "@/app/lib/forms/CitySelect";
 import TimePickerSection from "@/app/components/features/TimePickerSection";
 // import InputMask from 'react-input-mask';
@@ -8,22 +11,29 @@ import TimePickerSection from "@/app/components/features/TimePickerSection";
 // import 'react-phone-number-input/style.css'
 import dayjs from "dayjs";
 import { TextField } from "@mui/material";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import Image from "next/image";
 
 interface AdditionalDetailsSectionProps {
   formData: FormValues;
   errors: Record<string, string>;
-  handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  handleChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
   selectedDays: string[];
   city: string;
   phone: string;
   openTime: dayjs.Dayjs | null;
   closeTime: dayjs.Dayjs | null;
-  onDayChange: (event: React.MouseEvent<HTMLElement>, newDays: string[]) => void;
+  onDayChange: (
+    event: React.MouseEvent<HTMLElement>,
+    newDays: string[]
+  ) => void;
   onOpenTimeChange: (time: dayjs.Dayjs | null) => void;
   onCloseTimeChange: (time: dayjs.Dayjs | null) => void;
+  imageUrl: string | null;
   onImageUpload: (url: string) => void;
 }
-
 
 export default function AdditionalDetailsSection({
   formData,
@@ -32,24 +42,23 @@ export default function AdditionalDetailsSection({
   selectedDays,
   city,
   // phone,
-  openTime, 
+  openTime,
   closeTime,
   onDayChange,
   onOpenTimeChange,
   onCloseTimeChange,
   onImageUpload,
-}: AdditionalDetailsSectionProps) { 
+  imageUrl,
+}: AdditionalDetailsSectionProps) {
   function handleUploadSuccess(result: CloudinaryUploadWidgetResults) {
-    if (typeof result.info === 'object' && result.info?.secure_url) {
+    if (typeof result.info === "object" && result.info?.secure_url) {
       onImageUpload(result.info.secure_url);
     }
   }
 
   return (
     <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
-      <CitySelect 
-        city={city}
-      />
+      <CitySelect city={city} />
 
       <div className="flex justify-center">
         <TimePickerSection
@@ -83,7 +92,9 @@ export default function AdditionalDetailsSection({
         variant="outlined"
         value={formData.phone}
         onChange={handleChange}
-        className={`w-full px-3 py-2 border ${errors.phone ? 'border-red-500' : 'border-gray-300'} rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+        className={`w-full px-3 py-2 border ${
+          errors.phone ? "border-red-500" : "border-gray-300"
+        } rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
       />
       {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
 
@@ -94,47 +105,75 @@ export default function AdditionalDetailsSection({
         variant="outlined"
         value={formData.url}
         onChange={handleChange}
-        className={`w-full px-3 py-2 border ${errors.url ? 'border-red-500' : 'border-gray-300'} rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+        className={`w-full px-3 py-2 border ${
+          errors.url ? "border-red-500" : "border-gray-300"
+        } rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
       />
       {errors.url && <p className="text-red-500 text-sm">{errors.url}</p>}
 
-      <TextField  
+      <TextField
         id="outlined-basic"
         label="Facebook Link (optional)"
         name="facebookLink"
         variant="outlined"
         value={formData.facebookLink}
         onChange={handleChange}
-        className={`w-full px-3 py-2 border ${errors.facebookLink ? 'border-red-500' : 'border-gray-300'} rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+        className={`w-full px-3 py-2 border ${
+          errors.facebookLink ? "border-red-500" : "border-gray-300"
+        } rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
       />
-      {errors.facebookLink && <p className="text-red-500 text-sm">{errors.facebookLink}</p>}
+      {errors.facebookLink && (
+        <p className="text-red-500 text-sm">{errors.facebookLink}</p>
+      )}
 
       <textarea
         name="description"
         placeholder="Description (optional)"
         value={formData.description}
         onChange={handleChange}
-        className={`w-full px-3 py-2 border ${errors.description ? 'border-red-500' : 'border-gray-300'} rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[80px]`}
+        className={`w-full px-3 py-2 border ${
+          errors.description ? "border-red-500" : "border-gray-300"
+        } rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[80px]`}
       />
-      {errors.description && <p className="text-red-500 text-sm">{errors.description}</p>}
+      {errors.description && (
+        <p className="text-red-500 text-sm">{errors.description}</p>
+      )}
 
       <div className="pt-4 mt-4 border-t border-gray-200">
-        <CldUploadWidget
-          signatureEndpoint="/api/sign-image"
-          options={{ sources: ["local", "url"] }}
-          onSuccess={handleUploadSuccess}
-        >
-          {({ open }) => (
-            <button
-              type="button"
-              className="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200"
-              onClick={() => open()}
-            >
-              Upload an Image
-            </button>
-          )}
-        </CldUploadWidget>
+        {!imageUrl ? (
+          <CldUploadWidget
+            signatureEndpoint="/api/sign-image"
+            options={{ sources: ["local", "url"] }}
+            onSuccess={handleUploadSuccess}
+          >
+            {({ open }) => (
+              <button
+                type="button"
+                className="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200"
+                onClick={() => open()}
+              >
+                Upload an Image
+              </button>
+            )}
+          </CldUploadWidget>
+        ) : (
+          <div className="mt-4 space-y-2">
+            <div className="flex items-center gap-2 text-sm text-gray-600">
+              <CheckCircleIcon className="h-5 w-5 text-green-500" />
+              <span>Image attached</span>
+            </div>
+            <div className="relative rounded-lg overflow-hidden border border-gray-200 max-w-[200px] mx-auto">
+              <Image
+                src={imageUrl}
+                alt="Uploaded resource image"
+                className="w-full h-auto text-center"
+                width={200}
+                height={200}
+              />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
-} 
+}
