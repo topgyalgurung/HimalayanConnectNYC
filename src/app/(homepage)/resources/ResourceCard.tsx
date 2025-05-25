@@ -39,7 +39,10 @@ export default function ResourceCard({
                 {resource.ResourceCategory?.name || "no category"}
               </p>
               {resource.description && (
-                <p><strong>Description: </strong>{resource.description}</p>
+                <p>
+                  <strong>Description: </strong>
+                  {resource.description}
+                </p>
               )}
               {resource.city && (
                 <p>
@@ -50,32 +53,6 @@ export default function ResourceCard({
                 <strong>Address: </strong>
                 {resource.address ? resource.address : "No address available"}
               </p>
-              {/* <p>
-                <strong>Open Days :</strong>{" "}
-                {resource.openDays ? formatOpenDays(resource.openDays) : "N/A"}
-              </p> */}
-              {/* <p className="flex items-center gap-1">
-                <strong>Hours:</strong> */}
-                {/* this format does not work for openTime DateTime? @db.Time(6) in db */}
-                {/* <span className="text-gray-700">
-                  {resource.openTime
-                    ? format(resource.openTime, "hh:mm a")
-                    : "N/A"}{" "}
-                  -{" "}
-                  {resource.closeTime
-                    ? format(resource.closeTime, "hh:mm a")
-                    : "N/A"}
-                </span> */}
-                {/* <span className="text-gray-700">
-                  {resource.openTime
-                    ? dayjs.utc(resource.openTime).format("hh:mm a")
-                    : "N/A"}{" "}
-                  -{" "}
-                  {resource.closeTime
-                    ? dayjs.utc(resource.closeTime).format("hh:mm a")
-                    : "N/A"}
-                </span> */}
-              {/* </p> */}
             </div>
 
             <div className="flex items-end ml-4">

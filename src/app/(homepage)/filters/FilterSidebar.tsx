@@ -16,12 +16,12 @@ import type { Resource } from "@/app/lib/types";
 
 interface FilterSidebarProps {
   resources: Resource[];
-  onFilteredResourcesChange: (filteredResources: Resource[]) => void;
+  onFilterChangeAction: (filteredResources: Resource[]) => void;
 }
 
 export default function FilterSidebar({
   resources,
-  onFilteredResourcesChange,
+  onFilterChangeAction,
 }: FilterSidebarProps) {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedBoroughs, setSelectedBoroughs] = useState<string[]>([]);
@@ -45,13 +45,8 @@ export default function FilterSidebar({
       return categoryMatch && boroughMatch;
     });
 
-    onFilteredResourcesChange(filtered);
-  }, [
-    resources,
-    selectedCategories,
-    selectedBoroughs,
-    onFilteredResourcesChange,
-  ]);
+    onFilterChangeAction(filtered);
+  }, [resources, selectedCategories, selectedBoroughs, onFilterChangeAction]);
 
   return (
     <aside className="w-full top-0 left-0 md:w-[25%] lg:w-[20%] bg-white shadow-md flex flex-col h-[calc(92vh-90px)]">
@@ -60,6 +55,7 @@ export default function FilterSidebar({
           FILTERS
         </h2>
         <div className="flex-1 text-sm overflow-y-auto px-2 py-1 space-y-2">
+          {/* Resource name filter */}
           <div>
             <ResourceFilter
               selectedCategories={selectedCategories}
@@ -67,6 +63,7 @@ export default function FilterSidebar({
             />
           </div>
           <div>
+            {/* city borough name filter  */}
             <BoroughFilter
               selectedBoroughs={selectedBoroughs}
               onFilterChangeAction={setSelectedBoroughs}

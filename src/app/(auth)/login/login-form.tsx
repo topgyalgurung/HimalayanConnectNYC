@@ -3,21 +3,21 @@
  * handles user authentication, uses react server actions for form submission
  * and manages form state and user authentication flow
  */
-
-
-
-import { useActionState } from "react";
-import { login } from "@/app/actions/auth";
+// useActionState for form instead of onSubmit:
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+
+import { useActionState } from "react";
+import { login } from "@/app/actions/auth";
 import { useUser } from "@/app/context/UserProvider";
 
 export default function LoginForm() {
-  const { setUser } = useUser(); // Get context
-  const [state, action] = useActionState(login, undefined);
-  const [showPassword, setShowPassword] = useState(false);
+  const [state, formAction, isPending] = useActionState(login, undefined);
+  const [showPassword, setShowPassword] = useState(false); // show and hide password
   const [formData, setFormData] = useState({ email: "", password: "" });
+
+  const { setUser } = useUser(); // Get context
   const router = useRouter();
 
   useEffect(() => {
@@ -37,6 +37,7 @@ export default function LoginForm() {
   };
 
   return (
+    // next todo: implement material UI
     <div className="flex flex-col w-full items-center justify-start min-h-screen py-2">
       <div className="w-full max-w-lg bg-slate-100 p-6 rounded-lg shadow-lg mt-10 mx-4 md:mx-auto">
         <h1 className=" text-black text-3xl text-center">
@@ -45,7 +46,7 @@ export default function LoginForm() {
         <hr />
         <br />
         <section>
-          <form action={action}>
+          <form action={formAction}>
             {/* email section  */}
             <input
               type="email"
@@ -95,7 +96,7 @@ export default function LoginForm() {
               type="submit"
               className="p-2 border text-white border-gray-300 bg-blue-500 rounder-lg mb-4 focus:outline-none focus:border-gray-600 w-full"
             >
-              Login
+              {isPending ? "Logging in..." : "Login"}
             </button>
           </form>
           <div>

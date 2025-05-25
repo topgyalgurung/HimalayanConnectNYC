@@ -6,7 +6,8 @@
  * Uses Material-UI components for styling and functionality
  */
 
-import * as React from "react";
+import React from "react";
+
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -33,7 +34,6 @@ export default function BoroughFilter({
   selectedBoroughs = [],
 }: BoroughFilterProps) {
   // Function to handle borough checkbox change
-
   const handleBoroughCheckboxChange = (borough: string) => {
     // If the selected boroughs already include the current borough,
     // we filter it out. Otherwise, we add it to the selected boroughs.
@@ -55,7 +55,10 @@ export default function BoroughFilter({
       <div className="flex items-center justify-center mb-1 flex-wrap sm:flex-nowrap">
         <h3 className="font-semibold text-sm whitespace-nowrap">NYC Borough</h3>
         <span className="mx-2 border-l border-gray-300 h-6 ml-4 hidden sm:block" />
-        <button onClick={clearFilters} className="text-gray-500 ml-auto sm:ml-0">
+        <button
+          onClick={clearFilters}
+          className="text-gray-500 ml-auto sm:ml-0"
+        >
           Clear ×
         </button>
       </div>
@@ -71,9 +74,9 @@ export default function BoroughFilter({
                   size="small"
                 />
               </ListItemIcon>
-              <ListItemText 
-                className="capitalize text-sm sm:text-base" 
-                primary={borough.name} 
+              <ListItemText
+                className="capitalize text-sm sm:text-base"
+                primary={borough.name}
               />
             </ListItemButton>
           </ListItem>

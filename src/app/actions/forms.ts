@@ -10,14 +10,18 @@
 
 import {prisma} from "../lib/prisma";
 import { getSession } from '@/app/lib/session';
-// import { parse } from "date-fns";
 import { cache } from "react";
+
+// import { parse } from "date-fns";
+
 import { EditResourceInput, ResourceFormData } from "../lib/types";
 import { geocodeAddress } from "@/app/(homepage)/map/geocodeAddress";
+
 // cache categories to avoid re-fetching them on every request
 const getCachedCategories = cache(async () => {
   return await prisma.resourceCategory.findMany();
 });
+
 
 const parseTimeToSafeDate = (timeStr: string): Date | null => {
   if (!timeStr) return null;
@@ -39,17 +43,6 @@ const parseTimeToSafeDate = (timeStr: string): Date | null => {
 
   return date;
 };
-
-// Server action to get categories
-export async function getCategories() {
-  try {
-    return await getCachedCategories();
-  } catch (error) {
-    console.error("Error fetching categories: ", error);
-    return [];
-  }
-}
-
 
 
 // Server action 
@@ -242,14 +235,6 @@ export async function addEditResource(formData: FormData) {
   }
 }
 
-// will do this later 
-// export async function addReviewResource(formData: FormData) {
-//   if (!formData) {
-//     return { error: "No form data received" };
-//   }
-// }
-
-
 // Server action to update resource location
 export async function updateResourceLocation(resourceId: number, address: string) {
   try {
@@ -272,3 +257,22 @@ export async function updateResourceLocation(resourceId: number, address: string
     return { error: "Failed to update resource location" };
   }
 }
+
+
+
+// Server action to get categories
+export async function getCategories() {
+  try {
+    return await getCachedCategories();
+  } catch (error) {
+    console.error("Error fetching categories: ", error);
+    return [];
+  }
+}
+
+// will do this later 
+// export async function addReviewResource(formData: FormData) {
+//   if (!formData) {
+//     return { error: "No form data received" };
+//   }
+// }

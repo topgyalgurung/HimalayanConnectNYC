@@ -1,6 +1,7 @@
 /**
  * Contains Zod schemas and TypeScript types for form validation
-
+// for auth action forms 
+// login, signup
  */
 
 import { z } from 'zod'
@@ -34,6 +35,39 @@ export const LoginFormSchema = z.object({
     .trim(),
 });
  
+
+export const SuggestFormSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  address: z.string().min(5, "Address must be at least 5 characters"),
+  phone: z
+    .string()
+    .optional()
+    .refine(
+      (val) => !val || /^\d{3}-\d{3}-\d{4}$/.test(val),
+      "Phone number must be in format: XXX-XXX-XXXX"
+    ),
+  url: z
+    .string()
+    .optional()
+    .refine(
+      (val) => !val || /^https?:\/\/.+\.(com|org|net|edu|gov|io)$/i.test(val),
+      "URL must be a valid URL ending with .com, .org, etc."
+    ),
+});
+
+export type SuggestFormSchema = 
+  | {
+     errors?: {
+        email?: string[]
+        password?: string[]
+    }
+    name: string,
+    address: string,
+    phone: string,
+    url:string,
+    }
+  | undefined
+
 export type SignupFormState =
   | {
       errors?: {

@@ -12,6 +12,7 @@ import {
   CollisionBehavior,
   InfoWindow,
 } from "@vis.gl/react-google-maps";
+
 import { useState } from "react";
 import type { Resource } from "@/app/lib/types";
 import ResourceDetailsCard from "@/app/components/features/ResourceDetailsCard";
@@ -63,6 +64,7 @@ export default function MapView({
           </Map>
         </APIProvider>
         {/* show resource detail card on selectedResource */}
+        {/* next todoL show resourcedetails pop on top of resourcelist so it does not block map */}
         {selectedResource && (
           <div className="absolute top-2 left-2 h-full w-[90%] sm:w-[400px] z-40 shadow-lg overflow-y-auto">
             <ResourceDetailsCard
@@ -75,6 +77,7 @@ export default function MapView({
           </div>
         )}
         {/* show edit resource card */}
+
         {editResource && (
           <div className="absolute top-0 left-0 h-full w-[400px] z-30 shadow-md overflow-y-auto ">
             <ResourceSuggestCard
@@ -85,6 +88,7 @@ export default function MapView({
         )}
 
         {/* show submit review card */}
+        {/* next to do: make this as panel down on resource card */}
         {reviewResource && (
           <ReviewSubmitCard
             resource={reviewResource}
@@ -152,8 +156,9 @@ const Markers = ({ points }: MarkersProps) => {
         return (
           <div
             key={resource.id}
-            onClick={() => setActiveMarkerId(resource.id)}
+            // onClick={() => setActiveMarkerId(resource.id)}
             onMouseOver={() => setActiveMarkerId(resource.id)}
+            onMouseOut={() => setActiveMarkerId(null)}
             className="cursor-pointer"
           >
             <AdvancedMarker
@@ -181,6 +186,7 @@ const Markers = ({ points }: MarkersProps) => {
                   lat: location?.latitude ?? 0,
                   lng: location?.longitude ?? 0,
                 }}
+                pixelOffset={[0, -20]} // so it does not block pin
                 onCloseClick={() => setActiveMarkerId(null)}
               >
                 <div className="bg-white shadow-lg rounded-lg p-1 w-[250px]">

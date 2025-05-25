@@ -1,12 +1,11 @@
 /**
  * resource list for the homepage of the Himalayan Connect NYC application.
  * It displays the list of resources in a sidebar.
- * 
+ *
  */
 
 "use client";
 import { useSearchParams } from "next/navigation";
-// import { useEffect } from "react";
 import ResourceCard from "./ResourceCard";
 import type { Resource } from "@/app/lib/types";
 
@@ -33,26 +32,7 @@ const ResourceList = ({
       ?.toLowerCase()
       .includes(searchQueryLower);
 
-      return nameMatch || addressMatch || locationMatch;
-
-    // // Check if the resource belongs to a selected category (or allow all if none selected)
-    // const categoryMatch =
-    //   selectedCategories.length === 0 || // Allow all if no category is selected
-    //   selectedCategories.includes(
-    //     (resource.ResourceCategory?.name ?? "").toLowerCase()
-    //   );
-
-    // // Check if the resource is in a selected borough (or allow all if none selected)
-    // const boroughMatch =
-    //   selectedBoroughs.length === 0 ||
-    //   selectedBoroughs.includes(resource.city ?? "");
-
-    // // A resource is included if it matches name/address and selected category and borough
-    // return (
-    //   (nameMatch || addressMatch || locationMatch) &&
-    //   categoryMatch &&
-    //   boroughMatch
-    // );
+    return nameMatch || addressMatch || locationMatch;
   });
 
   return (
