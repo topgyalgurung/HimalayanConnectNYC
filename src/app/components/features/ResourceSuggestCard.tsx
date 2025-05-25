@@ -13,7 +13,7 @@ import { addEditResource } from "../../actions/forms";
 import dayjs from "dayjs";
 import { type Resource } from "@/app/lib/types";
 import toast from "react-hot-toast";
-import { z } from "zod";
+import { SuggestFormSchema } from "@/app/lib/forms/definitions";
 
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
@@ -21,25 +21,6 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { ToggleButton, ToggleButtonGroup, Alert } from "@mui/material";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-
-const formSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  address: z.string().min(5, "Address must be at least 5 characters"),
-  phone: z
-    .string()
-    .optional()
-    .refine(
-      (val) => !val || /^\d{3}-\d{3}-\d{4}$/.test(val),
-      "Phone number must be in format: XXX-XXX-XXXX"
-    ),
-  url: z
-    .string()
-    .optional()
-    .refine(
-      (val) => !val || /^https?:\/\/.+\.(com|org|net|edu|gov|io)$/i.test(val),
-      "URL must be a valid URL ending with .com, .org, etc."
-    ),
-});
 
 interface ResourceSuggestCardProps {
   resource: Resource | null;
@@ -64,8 +45,10 @@ export default function ResourceSuggestCard({
     phone: resource?.phone || "",
     url: resource?.url || "",
     openDays: resource?.openDays || "",
-    openTime: resource?.openTime || null,
-    closeTime: resource?.closeTime || null,
+    openTime: dayjs.utc(resource.openTime).format("hh:mm A") || null,
+    closeTime: dayjs.utc(resource.closeTime).format("hh:mm A") || null,
+    // openTime: resource?.openTime || null,
+    // closeTime: resource?.closeTime || null,
   });
 
   // Track current values
@@ -76,10 +59,27 @@ export default function ResourceSuggestCard({
     url: originalValues.url,
   });
 
+  useEffect(() => {
+    if (resource) {
+      if (resource.openTime) {
+        setOpenTime(dayjs.utc(resource.openTime));
+      }
+      if (resource.closeTime) {
+        setCloseTime(dayjs.utc(resource.closeTime));
+      }
+    }
+  }, [resource]);
+
   const validateAndSetOpenTime = (newTime: dayjs.Dayjs | null) => {
-    if (newTime && closeTime && newTime.isAfter(closeTime)) {
-      setTimeError("Open time must be before close time");
-      return;
+    if (newTime && closeTime) {
+      // Convert both times to the same day for comparison
+      const newTimeSameDay = newTime.hour(newTime.hour()).minute(newTime.minute());
+      const closeTimeSameDay = closeTime.hour(closeTime.hour()).minute(closeTime.minute());
+      
+      if (newTimeSameDay.isAfter(closeTimeSameDay)) {
+        setTimeError("Open time must be before close time");
+        return;
+      }
     }
     setTimeError("");
     setOpenTime(newTime);
@@ -87,9 +87,15 @@ export default function ResourceSuggestCard({
   };
 
   const validateAndSetCloseTime = (newTime: dayjs.Dayjs | null) => {
-    if (newTime && openTime && newTime.isBefore(openTime)) {
-      setTimeError("Close time must be after open time");
-      return;
+    if (newTime && openTime) {
+      // Convert both times to the same day for comparison
+      const newTimeSameDay = newTime.hour(newTime.hour()).minute(newTime.minute());
+      const openTimeSameDay = openTime.hour(openTime.hour()).minute(openTime.minute());
+      
+      if (newTimeSameDay.isBefore(openTimeSameDay)) {
+        setTimeError("Close time must be after open time");
+        return;
+      }
     }
     setTimeError("");
     setCloseTime(newTime);
@@ -98,17 +104,6 @@ export default function ResourceSuggestCard({
 
   // Track which fields have been changed
   const [changedFields, setChangedFields] = useState<Set<string>>(new Set());
-
-  useEffect(() => {
-    if (resource) {
-      if (resource.openTime) {
-        setOpenTime(dayjs(resource.openTime));
-      }
-      if (resource.closeTime) {
-        setCloseTime(dayjs(resource.closeTime));
-      }
-    }
-  }, [resource]);
 
   const handleDayChange = (
     event: React.MouseEvent<HTMLElement>,
@@ -197,7 +192,7 @@ export default function ResourceSuggestCard({
     setLoading(true);
     try {
       // Validate form data
-      const validationResult = formSchema.safeParse({
+      const validationResult = SuggestFormSchema.safeParse({
         name: formData.get("name"),
         address: formData.get("address"),
         phone: formData.get("phone"),

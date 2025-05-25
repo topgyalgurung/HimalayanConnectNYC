@@ -3,6 +3,7 @@
  * handles user authentication, uses react server actions for form submission
  * and manages form state and user authentication flow
  */
+// useActionState for form instead of onSubmit:
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -13,7 +14,7 @@ import { useUser } from "@/app/context/UserProvider";
 
 export default function LoginForm() {
   const [state, formAction, isPending] = useActionState(login, undefined);
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); // show and hide password
   const [formData, setFormData] = useState({ email: "", password: "" });
 
   const { setUser } = useUser(); // Get context
@@ -36,6 +37,7 @@ export default function LoginForm() {
   };
 
   return (
+    // next todo: implement material UI
     <div className="flex flex-col w-full items-center justify-start min-h-screen py-2">
       <div className="w-full max-w-lg bg-slate-100 p-6 rounded-lg shadow-lg mt-10 mx-4 md:mx-auto">
         <h1 className=" text-black text-3xl text-center">

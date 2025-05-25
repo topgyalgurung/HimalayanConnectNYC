@@ -6,12 +6,13 @@
 
 "use client";
 
-import { Suspense, useState } from "react";
+// import { Suspense, useState } from "react";
+import { useState } from "react";
 import FilterSidebar from "./filters/FilterSidebar"; // FilterSidebar component for resource filtering
 import ResourceListPanel from "./resources/ResourceListPanel"; // ResourceListPanel component for resource list display
 import MapView from "./map/Map"; // MapView component for map display
 import type { Resource } from "@/app/lib/types"; // Resource type definition
-import Loading from "./loading";
+// import Loading from "./loading";
 
 interface HomeClientProps {
   initialResources: Resource[];
@@ -60,14 +61,14 @@ export default function HomeClient({ initialResources }: HomeClientProps) {
     <div className="flex flex-col md:flex-row h-auto text-sm lg:text-sm md:h-[calc(100vh-90px)] ">
       <FilterSidebar
         resources={initialResources}
-        onFilteredResourcesChange={setFilteredResources}
+        onFilterChangeAction={setFilteredResources}
       />
-      <Suspense fallback={<Loading />}>
-        <ResourceListPanel
-          filteredResources={filteredResources}
-          onViewDetailsAction={handleToggleDetails}
-        />
-      </Suspense>
+      {/* <Suspense fallback={<Loading />}> */}
+      <ResourceListPanel
+        filteredResources={filteredResources}
+        onViewDetailsAction={handleToggleDetails}
+      />
+      {/* </Suspense> */}
 
       <MapView
         resources={filteredResources}

@@ -6,7 +6,8 @@
  * Uses Material-UI components for styling and functionality
  */
 
-import * as React from "react";
+import React from "react";
+
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -14,6 +15,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Checkbox from "@mui/material/Checkbox";
 import Image from "next/image";
+
 interface CategoryFilterProps {
   onFilterChangeAction: (category: string[]) => void;
   selectedCategories?: string[];
@@ -75,9 +77,11 @@ export default function ResourceFilter({
 
     onFilterChangeAction(updatedCategories);
   };
+
   const clearFilters = () => {
     onFilterChangeAction([]);
   };
+
   return (
     <div className="p-1 border rounded-md text-black text-sm">
       <div className="flex items-center justify-center mb-1">
@@ -89,7 +93,7 @@ export default function ResourceFilter({
       </div>
       <hr className="mb-1" />
 
-      <List dense sx={{ width: "100%", padding: 0, margin: 0}}>
+      <List dense sx={{ width: "100%", padding: 0, margin: 0 }}>
         {categories.map((cat) => (
           <ListItem key={cat.id} disablePadding>
             <ListItemButton>

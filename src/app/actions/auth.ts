@@ -3,6 +3,9 @@
 /**
  * authentication actions for the Himalayan Connect NYC application.
  */
+// login
+// signup
+// logout 
 
 import {
   SignupFormSchema,
@@ -10,11 +13,6 @@ import {
   SignupFormState,
   LoginFormState,
 } from "@/app/lib/forms/definitions";
-
-// login
-// signup
-// logout 
-
 
 import { createSession, deleteSession } from "@/app/lib/session";
 import bcrypt from "bcryptjs";
@@ -26,7 +24,7 @@ import { Role } from "@prisma/client";
 // SIGN UP
 export async function signup(state: SignupFormState, formData: FormData) {
     // simulate network delay for this async signup operation
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+  await new Promise((resolve) => setTimeout(resolve, 500));
   const email = formData.get("email") as string;
   
   // First check if email exists
@@ -120,7 +118,7 @@ export async function signup(state: SignupFormState, formData: FormData) {
 // login
 export async function login(prevState: LoginFormState, formData: FormData) {
   // simulate network delay for this async login operation
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+  await new Promise((resolve) => setTimeout(resolve, 500));
 
   // Validate form fields
   const validatedFields = LoginFormSchema.safeParse({

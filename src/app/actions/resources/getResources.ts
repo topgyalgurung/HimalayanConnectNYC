@@ -5,6 +5,8 @@
  * and includes related data like categories, locations, and user likes.
  */
 
+// todo: move both into one resource.ts 
+
 import { prisma } from "@/app/lib/prisma";
 import { getSession } from "@/app/lib/session";
 import type { Resource } from "@/app/lib/types";
@@ -14,6 +16,10 @@ interface GetResourcesOptions {
   categories?: string[];
   boroughs?: string[];
 }
+
+
+
+// getResources
 
 export async function getResources({ categories = [], boroughs = [] }: GetResourcesOptions = {}): Promise<Resource[]> {
   try {

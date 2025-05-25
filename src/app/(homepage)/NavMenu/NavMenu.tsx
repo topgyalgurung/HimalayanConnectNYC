@@ -14,14 +14,11 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-
 import { usePathname } from "next/navigation";
 // import SearchInput from "./SearchInput/SearchInput";
 import UserProfileMenu from "../ProfileCard/UserProfileMenu";
 import { useUser } from "@/app/context/UserProvider";
-
 import Button from "@mui/material/Button";
-
 import dynamic from "next/dynamic";
 
 const SearchInput = dynamic(() => import("./SearchInput/SearchInput"), {
@@ -34,12 +31,8 @@ export default function NavMenu() {
 
   return (
     <header>
-      {/* <AppBar position="static">
-        <Container maxWidth="xl">
-          <Toolbar disableGutters> */}
       <nav className="flex flex-col md:flex-row items-center justify-between gap-4 p-2 bg-white shadow-md flex-wrap border-b-1 w-full">
         {/* Logo */}
-
         <Link
           href="/"
           className={`font-bold mr-4 ${
@@ -56,7 +49,6 @@ export default function NavMenu() {
         </Link>
 
         {/* Search input  */}
-
         <div className="ml-0 md:ml-24 flex-grow flex justify-center">
           <div className="w-full md:w-grow md:max-w-xl">
             <SearchInput />

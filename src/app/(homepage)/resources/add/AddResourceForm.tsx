@@ -11,7 +11,8 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { addResource, getCategories } from "@/app/actions/forms";
+import { addResource } from "@/app/actions/forms";
+import { getCategories } from "@/app/actions/forms";
 import { formSchema, type FormValues } from "@/app/lib/forms/validationSchema";
 import BasicInfoSection from "@/app/lib/forms/BasicInfoSection";
 import AdditionalDetailsSection from "@/app/lib/forms/AdditionalDetailsSection";
@@ -22,7 +23,6 @@ import Accordion from "@mui/material/Accordion";
 import { AccordionSummary, Typography } from "@mui/material";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-
 
 export default function AddResourceForm() {
   const [message, setMessage] = useState("");

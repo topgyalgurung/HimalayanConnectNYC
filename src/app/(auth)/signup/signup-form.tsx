@@ -50,6 +50,8 @@ export default function SignupForm() {
   }, [state, router]);
 
   return (
+    // next todo: implement material UI
+
     <div className="flex flex-col items-center justify-start min-h-screen py-2">
       <div className="w-full max-w-lg  bg-slate-100 p-6 rounded-lg shadow-lg mt-10 mx-4 md:mx-auto">
         <h1 className="text-center text-black text-3xl">Sign Up</h1>

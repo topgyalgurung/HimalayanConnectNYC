@@ -226,6 +226,7 @@ src/
   - User editing → then go to new page. Website should warn user
   - user warning system for profanity/curse words/bad input filter
   - regular expressions, machine learning, text analysis libraries 
+  - implement draggable feature to change size for map, resourcelist and filter border like in leetcode and neetcode for better user experience in all screen sizes 
 - Next.js: 
   - all GET-requests to server component and 
   - convert all to server actions for POST/PUT/DELETE
