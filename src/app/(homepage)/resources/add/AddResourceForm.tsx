@@ -201,6 +201,7 @@ export default function AddResourceForm() {
                   onDayChange={(_, newDays) => setSelectedDays(newDays)}
                   onOpenTimeChange={setOpenTime}
                   onCloseTimeChange={setCloseTime}
+                  imageUrl={imageUrl}
                   onImageUpload={setImageUrl}
                 />
               </AccordionDetails>
