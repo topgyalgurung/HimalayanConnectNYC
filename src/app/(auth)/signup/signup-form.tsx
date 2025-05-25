@@ -17,7 +17,7 @@ import { useUser } from "@/app/context/UserProvider";
 
 export default function SignupForm() {
   const { setUser } = useUser();
-  const [state, action, pending] = useActionState(signup, undefined);
+  const [state, formAction, isPending] = useActionState(signup, undefined);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
@@ -55,7 +55,7 @@ export default function SignupForm() {
         <h1 className="text-center text-black text-3xl">Sign Up</h1>
         <hr />
 
-        <form action={action}>
+        <form action={formAction}>
           {/* firstname */}
           <div>
             <input
@@ -134,11 +134,11 @@ export default function SignupForm() {
           )}
           {/* signup  */}
           <button
-            disabled={pending}
+            // disabled={pending}
             type="submit"
             className="p-2 border text-white border-gray-300 bg-blue-500 rounder-lg mb-6 focus:outline-none focus:border-gray-600 w-full"
           >
-            Sign Up
+            {isPending ? "Signing up ..." : "Sign Up"}
           </button>
           <div className="flex justify-end">
             <Link

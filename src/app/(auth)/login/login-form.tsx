@@ -3,21 +3,20 @@
  * handles user authentication, uses react server actions for form submission
  * and manages form state and user authentication flow
  */
-
-
-
-import { useActionState } from "react";
-import { login } from "@/app/actions/auth";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+
+import { useActionState } from "react";
+import { login } from "@/app/actions/auth";
 import { useUser } from "@/app/context/UserProvider";
 
 export default function LoginForm() {
-  const { setUser } = useUser(); // Get context
-  const [state, action] = useActionState(login, undefined);
+  const [state, formAction, isPending] = useActionState(login, undefined);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({ email: "", password: "" });
+
+  const { setUser } = useUser(); // Get context
   const router = useRouter();
 
   useEffect(() => {
@@ -45,7 +44,7 @@ export default function LoginForm() {
         <hr />
         <br />
         <section>
-          <form action={action}>
+          <form action={formAction}>
             {/* email section  */}
             <input
               type="email"
@@ -95,7 +94,7 @@ export default function LoginForm() {
               type="submit"
               className="p-2 border text-white border-gray-300 bg-blue-500 rounder-lg mb-4 focus:outline-none focus:border-gray-600 w-full"
             >
-              Login
+              {isPending ? "Logging in..." : "Login"}
             </button>
           </form>
           <div>

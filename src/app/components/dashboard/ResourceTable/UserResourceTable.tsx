@@ -145,14 +145,14 @@ export const UserResourceTable = ({
       case "status":
         return (
           <span
-                className={`px-2 py-1 rounded-full text-xs ${
-                  row.status === "APPROVED"
-                    ? "bg-green-100 text-green-800"
-                    : row.status === "REJECTED"
-                    ? "bg-red-100 text-red-800"
-                    : "bg-yellow-100 text-yellow-800"
-                }`}
-              >
+            className={`px-2 py-1 rounded-full text-xs ${
+              row.status === "APPROVED"
+                ? "bg-green-100 text-green-800"
+                : row.status === "REJECTED"
+                ? "bg-red-100 text-red-800"
+                : "bg-yellow-100 text-yellow-800"
+            }`}
+          >
             {row.status}
           </span>
         );
@@ -160,7 +160,7 @@ export const UserResourceTable = ({
         return (
           <div className="flex items-center gap-2">
             <span className="line-clamp-2">{row.content}</span>
-            {row.content && row.content.length > 30 && (
+            {/* {row.content && row.content.length > 30 && (
               <Button
                 size="small"
                 onClick={(e) =>
@@ -173,7 +173,7 @@ export const UserResourceTable = ({
               >
                 View Full
               </Button>
-            )}
+            )} */}
           </div>
         );
       case "rating":
