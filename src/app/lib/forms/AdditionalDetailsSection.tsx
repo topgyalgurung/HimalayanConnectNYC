@@ -5,7 +5,7 @@ import {
   CloudinaryUploadWidgetResults,
 } from "next-cloudinary";
 import CitySelect from "@/app/lib/forms/CitySelect";
-import TimePickerSection from "@/app/components/features/TimePickerSection";
+import TimePickerSection from "@/app/lib/forms/TimePickerSection";
 // import InputMask from 'react-input-mask';
 // import PhoneNumberInput from 'react-phone-number-input';
 // import 'react-phone-number-input/style.css'
@@ -58,8 +58,9 @@ export default function AdditionalDetailsSection({
 
   return (
     <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+      {/* select city with dropdown */}
       <CitySelect city={city} />
-
+      {/* day, open and close time selector */}
       <div className="flex justify-center">
         <TimePickerSection
           selectedDays={selectedDays}
@@ -98,6 +99,21 @@ export default function AdditionalDetailsSection({
       />
       {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
 
+      {/* email */}
+      <TextField
+        id="outlined-basic"
+        label="Email (optional)"
+        name="email"
+        variant="outlined"
+        value={formData.email}
+        onChange={handleChange}
+        className={`w-full px-3 py-2 border ${
+          errors.email ? "border-red-500" : "border-gray-300"
+        } rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+      />
+      {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+
+      {/*   website url  */}
       <TextField
         id="outlined-basic"
         label="URL (optional)"
@@ -110,7 +126,7 @@ export default function AdditionalDetailsSection({
         } rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
       />
       {errors.url && <p className="text-red-500 text-sm">{errors.url}</p>}
-
+      {/* facebook link */}
       <TextField
         id="outlined-basic"
         label="Facebook Link (optional)"
@@ -125,7 +141,7 @@ export default function AdditionalDetailsSection({
       {errors.facebookLink && (
         <p className="text-red-500 text-sm">{errors.facebookLink}</p>
       )}
-
+      {/* description */}
       <textarea
         name="description"
         placeholder="Description (optional)"

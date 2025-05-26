@@ -10,7 +10,7 @@ import React from "react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { addEditResource } from "../../actions/forms";
-import dayjs from "dayjs";
+
 import { type Resource } from "@/app/lib/types";
 import toast from "react-hot-toast";
 import { SuggestFormSchema } from "@/app/lib/forms/definitions";
@@ -21,6 +21,12 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { ToggleButton, ToggleButtonGroup, Alert } from "@mui/material";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+
+import dayjs from "dayjs";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
+dayjs.extend(isSameOrAfter);
+dayjs.extend(isSameOrBefore);
 
 interface ResourceSuggestCardProps {
   resource: Resource | null;
@@ -73,10 +79,14 @@ export default function ResourceSuggestCard({
   const validateAndSetOpenTime = (newTime: dayjs.Dayjs | null) => {
     if (newTime && closeTime) {
       // Convert both times to the same day for comparison
-      const newTimeSameDay = newTime.hour(newTime.hour()).minute(newTime.minute());
-      const closeTimeSameDay = closeTime.hour(closeTime.hour()).minute(closeTime.minute());
-      
-      if (newTimeSameDay.isAfter(closeTimeSameDay)) {
+      const newTimeSameDay = newTime
+        .hour(newTime.hour())
+        .minute(newTime.minute());
+      const closeTimeSameDay = closeTime
+        .hour(closeTime.hour())
+        .minute(closeTime.minute());
+      // changed to sameorAfter not just after
+      if (newTimeSameDay.isSameOrAfter(closeTimeSameDay)) {
         setTimeError("Open time must be before close time");
         return;
       }
@@ -89,10 +99,14 @@ export default function ResourceSuggestCard({
   const validateAndSetCloseTime = (newTime: dayjs.Dayjs | null) => {
     if (newTime && openTime) {
       // Convert both times to the same day for comparison
-      const newTimeSameDay = newTime.hour(newTime.hour()).minute(newTime.minute());
-      const openTimeSameDay = openTime.hour(openTime.hour()).minute(openTime.minute());
-      
-      if (newTimeSameDay.isBefore(openTimeSameDay)) {
+      const newTimeSameDay = newTime
+        .hour(newTime.hour())
+        .minute(newTime.minute());
+      const openTimeSameDay = openTime
+        .hour(openTime.hour())
+        .minute(openTime.minute());
+
+      if (newTimeSameDay.isSameOrBefore(openTimeSameDay)) {
         setTimeError("Close time must be after open time");
         return;
       }
