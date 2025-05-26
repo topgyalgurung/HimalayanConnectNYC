@@ -11,17 +11,34 @@ import React from "react";
 import Image from "next/image";
 import { Box } from "@mui/material";
 import Rating from "@mui/material/Rating";
+import { motion } from "framer-motion";
+import IconButton from "@mui/material/IconButton";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import type { Resource } from "@/app/lib/types";
+import toast from "react-hot-toast";
 
 interface ResourceHeaderProps {
   resource: Resource;
+  liked: boolean;
+  onToggleFavorite: (id: number) => void;
   className?: string;
 }
 
 const ResourceHeader: React.FC<ResourceHeaderProps> = ({
   resource,
+  liked,
+  onToggleFavorite,
   className = "",
 }) => {
+  const handleFavoriteClick = () => {
+    onToggleFavorite(Number(resource.id));
+    if (!liked) {
+      toast("Added to your favorite", { icon: "👏" });
+    } else {
+      toast("Removed from your favorite", { icon: "❌" });
+    }
+  };
   return (
     <div className={`flex justify-between ${className}`}>
       <div>
@@ -36,7 +53,22 @@ const ResourceHeader: React.FC<ResourceHeaderProps> = ({
             />
           </div>
         )}
-        <h2 className="text-lg font-bold mb-2">{resource.name}</h2>
+        <div className="flex w-full justify-between items-center">
+          <h2 className="text-lg font-bold">{resource.name}</h2>
+          <motion.div
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            <IconButton
+              onClick={handleFavoriteClick}
+              color="error"
+              className="hover:bg-red-50"
+            >
+              {liked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+            </IconButton>
+          </motion.div>
+        </div>
+
         <div className="space-y-2">
           <p className="text-sm font-medium text-blue-600">
             {resource.ResourceCategory?.name || "No category"}
@@ -44,7 +76,9 @@ const ResourceHeader: React.FC<ResourceHeaderProps> = ({
           {resource.rating === 0 ? (
             <div className="text-yellow-500 text-sm">No ratings yet</div>
           ) : (
-            <Box sx={{ textAlign: "left", mb: 0.5, borderColor: "transparent" }}>
+            <Box
+              sx={{ textAlign: "left", mb: 0.5, borderColor: "transparent" }}
+            >
               <div className="flex items-center">
                 <Rating
                   name="rating"

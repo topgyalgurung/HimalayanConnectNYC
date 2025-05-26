@@ -9,25 +9,18 @@
  */
 "use client";
 
-import * as React from "react";
+import React from "react";
 
 import { useState, useEffect } from "react";
 import { useUser } from "../../context/UserProvider";
 import { useRouter } from "next/navigation";
-import { formatOpenDays } from "@/app/lib/helpers/formatOpenDays";
-import toast from "react-hot-toast";
-
 import { useFavorites } from "../../hooks/useFavorites";
 import { useFetchResourceReview } from "../../hooks/useFetchResourceReview";
-
-import { type Resource } from "@/app/lib/types";
-import { type User } from "@/app/lib/types";
-import { type ResourceReview } from "@/app/lib/types";
-
+import { type Resource, User } from "@/app/lib/types";
 import TabButton from "./ResourceDetailCommon/TabButton";
-import Rating from "@mui/material/Rating";
 import ResourceHeader from "./ResourceDetailCommon/ResourceHeader";
-import ResourceActions from "./ResourceDetailCommon/ResourceActions";
+import { ReviewTab } from "./ResourceDetailCommon/ReviewTab";
+import { OverviewTab } from "./ResourceDetailCommon/Overview";
 
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -39,147 +32,9 @@ interface ResourceDetailsCardProps {
   onSuggestEdit?: (resource: Resource) => void;
   onReviewResource?: (resource: Resource) => void;
   onCloseAction: () => void;
-}
-
-interface OverviewTabProps {
-  resource: Resource;
-  user: User | null;
-  onSuggestEdit: (resource: Resource) => void;
-  router: ReturnType<typeof useRouter>;
   liked: boolean;
   toggleFavorite: (id: number) => void;
 }
-
-const OverviewTab: React.FC<OverviewTabProps> = ({
-  resource,
-  user,
-  onSuggestEdit,
-  router,
-  liked,
-  toggleFavorite,
-}) => (
-  <div>
-    <ResourceActions
-      resource={resource}
-      liked={liked}
-      onToggleFavorite={toggleFavorite}
-      className="mb-4"
-    />
-
-    <hr className="my-4 border-gray-300" />
-    {resource.address && (
-      <p>
-        <span className="font-medium">Address:</span> {resource.address}
-      </p>
-    )}
-    {resource.openDays && (
-      <p>
-        <span className="font-medium">Opens:</span>{" "}
-        {formatOpenDays(resource.openDays || null)}
-      </p>
-    )}
-    {resource.openTime && resource.closeTime && (
-      <p>
-        <span className="font-medium">Business Hours:</span>{" "}
-        {dayjs.utc(resource.openTime).format("hh:mm A")} -{" "}
-        {dayjs.utc(resource.closeTime).format("hh:mm A")}
-      </p>
-    )}
-    {resource.url && (
-      <p>
-        <span className="font-medium">Website:</span>{" "}
-        <a
-          href={resource.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-blue-500 hover:underline"
-        >
-          {resource.url?.replace(/^https?:\/\//, "")}
-        </a>
-      </p>
-    )}
-    {resource.email && (
-      <p>
-        <span className="font-medium">Email:</span> {resource.email}
-      </p>
-    )}
-    {resource.phone && (
-      <p>
-        <span className="font-medium">Phone:</span> {resource.phone}
-      </p>
-    )}
-
-    <hr className="my-4 border-gray-300" />
-
-    <div className="text-white text-center">
-      <button
-        onClick={() => {
-          if (!user) {
-            toast.error("Please log in to suggest an edit.");
-            router.push("/login");
-            return;
-          }
-          onSuggestEdit(resource);
-        }}
-        className={`${
-          user ? "bg-blue-500" : "bg-blue-500 cursor-not-allowed"
-        } text-white py-2 px-3 rounded`}
-      >
-        Suggest Edit
-      </button>
-    </div>
-  </div>
-);
-
-interface ReviewTabProps {
-  resource: Resource;
-  user: User | null;
-  onReviewResource: (resource: Resource) => void;
-  router: ReturnType<typeof useRouter>;
-  reviews: ResourceReview[];
-}
-
-const ReviewTab: React.FC<ReviewTabProps> = ({
-  resource,
-  user,
-  onReviewResource,
-  router,
-  reviews,
-}) => (
-  <div>
-    <div className="self-start text-center">
-      <button
-        onClick={() => {
-          if (!user) {
-            toast.error("Please log in to submit a review.");
-            router.push("/login");
-            return;
-          }
-          onReviewResource(resource);
-        }}
-        className="text-center bg-blue-500 text-white py-2 px-3 rounded hover:bg-blue-600"
-      >
-        Write a Review
-      </button>
-    </div>
-    <hr className="my-4 border-gray-300" />
-
-    {reviews.length === 0 && <p>No reviews yet.</p>}
-
-    {reviews.map((r) => (
-      <div key={r.id}>
-        <p>{r.User?.firstName || "anonymous"}</p>
-        <p>{r.User?.createdAt}</p>
-        <Rating value={Number(r.rating)} readOnly precision={0.5} />
-        <p className="text-sm text-gray-600">
-          Rating: {Number(r.rating).toFixed(1)}
-        </p>
-        <p>{r.content}</p>
-        <hr className="my-4 border-gray-300" />
-      </div>
-    ))}
-  </div>
-);
 
 export default function ResourceDetailsCard({
   resource,
@@ -230,7 +85,11 @@ export default function ResourceDetailsCard({
         ✕
       </button>
 
-      <ResourceHeader resource={resource} />
+      <ResourceHeader
+        resource={resource}
+        liked={liked}
+        onToggleFavorite={toggleFavorite}
+      />
 
       <div className="flex justify-around mb-4 border-b overflow-x-auto">
         {["overview", "review", "about"].map((tab) => (
@@ -250,8 +109,8 @@ export default function ResourceDetailsCard({
             user={user as unknown as User | null}
             onSuggestEdit={onSuggestEdit!}
             router={router}
-            liked={liked}
-            toggleFavorite={toggleFavorite}
+            // liked={liked}
+            // toggleFavorite={toggleFavorite}
           />
         )}
 
