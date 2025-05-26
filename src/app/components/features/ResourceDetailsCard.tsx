@@ -32,8 +32,8 @@ interface ResourceDetailsCardProps {
   onSuggestEdit?: (resource: Resource) => void;
   onReviewResource?: (resource: Resource) => void;
   onCloseAction: () => void;
-  liked: boolean;
-  toggleFavorite: (id: number) => void;
+  liked?: boolean;
+  toggleFavorite?: (id: number) => void;
 }
 
 export default function ResourceDetailsCard({

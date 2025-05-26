@@ -3,7 +3,6 @@ import { formatOpenDays } from "@/app/lib/helpers/formatOpenDays";
 import toast from "react-hot-toast";
 
 import { type Resource, User } from "@/app/lib/types";
-import { type User } from "@/app/lib/types";
 import { useRouter } from "next/navigation";
 
 import dayjs from "dayjs";
