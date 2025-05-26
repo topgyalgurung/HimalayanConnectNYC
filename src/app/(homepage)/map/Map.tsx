@@ -79,7 +79,7 @@ export default function MapView({
         {/* show edit resource card */}
 
         {editResource && (
-          <div className="absolute top-0 left-0 h-full w-[400px] z-30 shadow-md overflow-y-auto ">
+          <div className="absolute top-0 left-0 h-[calc(100%-16px)] w-[400px] z-30 shadow-md m-4">
             <ResourceSuggestCard
               resource={editResource}
               onEditCloseAction={onEditCloseAction}
