@@ -8,6 +8,7 @@
  * - Validates that open time is before close time
  
  */
+// TODO: change dayjs to string since dayjs is not serializable
 
 "use client";
 
@@ -17,12 +18,19 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { ToggleButton, ToggleButtonGroup, Alert } from "@mui/material";
 import dayjs from "dayjs";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
+dayjs.extend(isSameOrAfter);
+dayjs.extend(isSameOrBefore);
 
 interface TimePickerSectionProps {
   selectedDays: string[];
   openTime: dayjs.Dayjs | null;
   closeTime: dayjs.Dayjs | null;
-  onDayChange: (event: React.MouseEvent<HTMLElement>, newDays: string[]) => void;
+  onDayChange: (
+    event: React.MouseEvent<HTMLElement>,
+    newDays: string[]
+  ) => void;
   onOpenTimeChange: (newTime: dayjs.Dayjs | null) => void;
   onCloseTimeChange: (newTime: dayjs.Dayjs | null) => void;
 }
@@ -38,7 +46,7 @@ export default function TimePickerSection({
   const [timeError, setTimeError] = useState<string>("");
 
   const validateAndSetOpenTime = (newTime: dayjs.Dayjs | null) => {
-    if (newTime && closeTime && newTime.isAfter(closeTime)) {
+    if (newTime && closeTime && newTime.isSameOrAfter(closeTime)) {
       setTimeError("Open time must be before close time");
       return;
     }
@@ -47,7 +55,7 @@ export default function TimePickerSection({
   };
 
   const validateAndSetCloseTime = (newTime: dayjs.Dayjs | null) => {
-    if (newTime && openTime && newTime.isBefore(openTime)) {
+    if (newTime && openTime && newTime.isSameOrBefore(openTime)) {
       setTimeError("Close time must be after open time");
       return;
     }

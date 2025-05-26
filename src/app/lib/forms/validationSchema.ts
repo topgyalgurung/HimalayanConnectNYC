@@ -6,6 +6,7 @@ export const formSchema = z.object({
     .regex(/^[a-zA-Z\s]+$/, "Name cannot contain numbers or special characters"),
   categoryId: z.string().min(1, "Please select a category"),
   city: z.string().min(2, "City must be at least 2 characters"),
+  email: z.string().email({ message: "Please enter a valid email." }).trim(),
   phone: z.string()
     .regex(/^\d{3}-\d{3}-\d{4}$/, "Phone number must be in format: XXX-XXX-XXXX")
     .optional()
