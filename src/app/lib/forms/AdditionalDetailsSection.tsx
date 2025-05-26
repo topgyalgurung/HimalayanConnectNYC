@@ -21,8 +21,8 @@ interface AdditionalDetailsSectionProps {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
   selectedDays: string[];
-  city: string;
-  phone: string;
+  city?: string;
+  phone?: string;
   openTime: dayjs.Dayjs | null;
   closeTime: dayjs.Dayjs | null;
   onDayChange: (
