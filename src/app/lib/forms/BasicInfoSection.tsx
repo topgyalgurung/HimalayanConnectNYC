@@ -43,6 +43,7 @@ export default function BasicInfoSection({
         } rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
       />
       {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
+      {/* category */}
       <TextField
         id="filled-select-category"
         select

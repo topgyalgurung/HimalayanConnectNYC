@@ -58,16 +58,30 @@ export default function SearchInput() {
   // };
 
   return (
-    <form className="flex space-x-2">
+    <form>
       <TextField
         id="search-bar"
         type="search"
-        placeholder="Search name"
-        // category, or location" not working now
+        placeholder="Search name or location"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         variant="outlined"
-        className="border-2 border-gray-300 bg-white h-12 px-7  rounded-lg text-m focus:outline-none focus:border-yellow-500   w-full max-w-2xl"
+        className="w-full max-w-2xl h-14 bg-white rounded-xl border-2 border-gray-300 px-6 text-base shadow-md transition-all duration-200 hover:border-blue-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+        sx={{
+          '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+              borderColor: '#e5e7eb',
+              borderWidth: '2px',
+            },
+            '&:hover fieldset': {
+              borderColor: '#60a5fa',
+            },
+            '&.Mui-focused fieldset': {
+              borderColor: '#3b82f6',
+              borderWidth: '2px',
+            },
+          },
+        }}
       />
       {/* <button
         type="submit"

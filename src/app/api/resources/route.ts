@@ -13,6 +13,9 @@ export async function GET() {
         const userId = session?.userId ? Number(session.userId) : null;
     
         const resources = await prisma.resource.findMany({
+            orderBy: [{
+                name:'asc',
+            }],
             include: {
                 ResourceCategory: {
                     select: { id: true, name: true },

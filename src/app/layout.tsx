@@ -29,6 +29,9 @@ import { UserProvider } from "@/app/context/UserProvider";
 import NavMenu from "./(homepage)/NavMenu/NavMenu";
 import theme from "../../theme";
 
+// recommended to  use to ensure styles appended to head and not rendering in the  body
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -56,19 +59,24 @@ export default function RootLayout({
       >
         {/* UserProvider wrapper enables user data access across all pages via useUser hook */}
         <UserProvider>
-          <ThemeProvider theme={theme}>
-            <NavMenu />
-            <Toaster position="top-center" toastOptions={{ duration: 2000 }} />
+          <AppRouterCacheProvider>
+            <ThemeProvider theme={theme}>
+              <NavMenu />
+              <Toaster
+                position="top-center"
+                toastOptions={{ duration: 2000 }}
+              />
 
-            <main className="flex-grow px-2 sm:px-6 pt-4 md:pt-6 lg:pt-2 overflow-y-auto">
-              {children}
-            </main>
+              <main className="flex-grow px-2 sm:px-6 pt-4 md:pt-6 lg:pt-2 overflow-y-auto">
+                {children}
+              </main>
 
-            {/* Footer component commented out for future implementation */}
-            {/* <footer className="bg-slate-900 text-white p-4 text-center shadow-md h-[60px] flex-none">
+              {/* Footer component commented out for future implementation */}
+              {/* <footer className="bg-slate-900 text-white p-4 text-center shadow-md h-[60px] flex-none">
               © Himalayan Connect NYC
             </footer> */}
-          </ThemeProvider>
+            </ThemeProvider>
+          </AppRouterCacheProvider>
         </UserProvider>
       </body>
     </html>

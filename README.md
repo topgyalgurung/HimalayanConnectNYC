@@ -199,6 +199,7 @@ src/
   - Phone number input masking
 - Resource List:
   - Upon hovering over resource card, light up the icon on map
+  - sort the resource name in alphabetical order
 - Resource Details:
   - Make the like button next to the location name b/c different functionality than social media buttons
   - Instead of a “link not available” toast on social media link click, disable it and grey it out if there is no link
@@ -207,6 +208,7 @@ src/
 - Profile:
   - Change profile picture feature
 - Dashboard( user and admin)
+  - edits, not clear what has been suggested, 
   - When approving/rejecting, option to send a message as well.
   - View details popup - make this into a panel that drops down and show all details, and then emphasize what was changed
   - Admin: Approved / Rejected - should show timestamp and then sorted by earliest date

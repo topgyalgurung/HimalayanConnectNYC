@@ -15,79 +15,228 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-// import SearchInput from "./SearchInput/SearchInput";
 import UserProfileMenu from "../ProfileCard/UserProfileMenu";
 import { useUser } from "@/app/context/UserProvider";
-import Button from "@mui/material/Button";
-import dynamic from "next/dynamic";
+import { usePopup } from "@/app/hooks/usePopup";
+import { useState } from "react";
+import AddResourcePopup from "@/app/components/dashboard/ResourcePopup/AddResourcePopup";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
-const SearchInput = dynamic(() => import("./SearchInput/SearchInput"), {
-  ssr: false,
-});
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import Menu from "@mui/material/Menu";
+import MenuIcon from "@mui/icons-material/Menu";
+import Container from "@mui/material/Container";
+import MenuItem from "@mui/material/MenuItem";
+import Button from "@mui/material/Button";
+
+const pages = [
+  { name: "Home", path: "/" },
+  { name: "About", path: "/about" }
+];
 
 export default function NavMenu() {
   const pathname = usePathname();
   const { user } = useUser();
+  const [mounted, setMounted] = React.useState(false);
+  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
+  const { isOpen, openPopup, closePopup } = usePopup();
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const router = useRouter();
+  // Handle hydration mismatch by only rendering after mount
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElNav(event.currentTarget);
+  };
+
+  const handleCloseNavMenu = () => {
+    setAnchorElNav(null);
+  };
+
+  const handleAddClick = (event: React.MouseEvent<HTMLElement>) => {
+    // check if user is logged in
+    if (!user) {
+      toast.error("Please login to add a resource");
+      router.push("/login");
+      return;
+    }
+    setAnchorEl(event.currentTarget);
+    openPopup({});
+  };
+
+  // Don't render anything until after hydration
+  if (!mounted) {
+    return null;
+  }
 
   return (
-    <header>
-      <nav className="flex flex-col md:flex-row items-center justify-between gap-4 p-2 bg-white shadow-md flex-wrap border-b-1 w-full">
-        {/* Logo */}
-        <Link
-          href="/"
-          className={`font-bold mr-4 ${
-            pathname === "/" ? "text-blue-500" : ""
-          }`}
+    <AppBar position="static" sx={{ bgcolor: "white", color: "black", height: "100px" }}>
+      <Container maxWidth="xl">
+        <Toolbar
+          disableGutters
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            paddingTop: '4px' // Added padding to the top
+          }}
         >
-          <Image
-            src="/logo.png"
-            alt="Himalayan Connect Logo"
-            width={200}
-            height={50}
-            className="ml-10 w-[100px] h-auto max-w-full object-contain"
-          />
-        </Link>
-
-        {/* Search input  */}
-        <div className="ml-0 md:ml-24 flex-grow flex justify-center">
-          <div className="w-full md:w-grow md:max-w-xl">
-            <SearchInput />
-          </div>
-        </div>
-
-        {/* add resource  */}
-        <Link
-          href="/resources/add"
-          className={`flex items-center text-blue-500 px-1 py-1 rounded-lg text-sm font-semibold transition-all 
-          ${pathname === "/add-resource" ? "text-blue-500" : "text-blue"}
-        `}
-        >
-          <Button
-            variant="contained"
-            color="primary"
-            // optional: adds margin-left for spacing
-          >
-            Add Resource ➕
-          </Button>
-        </Link>
-
-        {/* User profile menu */}
-        <div className="flex flex-1 items-center justify-end gap-8 ml-4">
-          {user ? (
-            <UserProfileMenu />
-          ) : (
-            <div className="flex items-center gap-4">
+          {/* Left side - Navigation Links */}
+          <Box sx={{ display: { xs: "none", md: "flex" }, gap: 2 }}>
+            {pages.map((page) => (
               <Link
-                href="/login"
-                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-all text-sm font-medium shadow-sm hover:shadow-md"
+                key={page.name}
+                href={page.path}
+                style={{
+                  padding: '0.5rem 1rem',
+                  borderRadius: '0.375rem',
+                  transition: 'all 0.2s',
+                  fontSize: '0.875rem',
+                  fontWeight: 500,
+                  boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+                  backgroundColor: pathname === page.path ? '#f87171' : '#f3f4f6',
+                  color: pathname === page.path ? 'white' : 'black',
+                }}
               >
-                Login / Sign Up
+                {page.name}
               </Link>
-            </div>
-          )}
-          {/* <UserProfileMenu /> */}
-        </div>
-      </nav>
-    </header>
+            ))}
+          </Box>
+
+          {/* Mobile Menu */}
+          <Box sx={{ display: { xs: "flex", md: "none" } }}>
+            <IconButton
+              size="large"
+              aria-label="menu"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={handleOpenNavMenu}
+              color="inherit"
+            >
+              <MenuIcon sx={{ color: "black" }} />
+            </IconButton>
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorElNav}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "left",
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "left",
+              }}
+              open={Boolean(anchorElNav)}
+              onClose={handleCloseNavMenu}
+              sx={{ display: { xs: "block", md: "none" } }}
+            >
+              {pages.map((page) => (
+                <MenuItem key={page.name} onClick={handleCloseNavMenu}>
+                  <Link href={page.path} style={{ width: '100%', textAlign: 'center' }}>
+                    <Typography sx={{ textAlign: "center" }}>{page.name}</Typography>
+                  </Link>
+                </MenuItem>
+              ))}
+            </Menu>
+          </Box>
+
+          {/* Center - Logo */}
+          <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', paddingTop: '10px' }}>
+            <Link href="/" style={{ display: 'flex', justifyContent: 'center' }}>
+              <Image
+                src="/logo.png"
+                alt="Himalayan Connect Logo"
+                width={200}
+                height={200}
+                style={{ width: '100px', height: 'auto', objectFit: 'contain' }}
+              />
+            </Link>
+          </Box>
+
+          {/* <Link
+                  href="/resources/add"
+                  style={{
+                    padding: '0.5rem 1rem',
+                    borderRadius: '0.375rem',
+                    transition: 'all 0.2s',
+                    fontSize: '0.875rem',
+                    fontWeight: 500,
+                    boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+                    backgroundColor: pathname === '/resources/add' ? '#f87171' : '#f3f4f6',
+                    color: pathname === '/resources/add' ? 'white' : 'black',
+                  }}
+                > */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, marginRight: 4 }}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleAddClick} 
+              sx={{
+                padding: '0.5rem 1rem',
+                backgroundColor: '#3b82f6',
+                color: 'white',
+                borderRadius: '0.375rem',
+                transition: 'all 0.2s',
+                fontSize: '0.875rem',
+                fontWeight: 500,
+                boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+                '&:hover': {
+                  backgroundColor: '#2563eb',
+                },
+              }}
+            >
+              <Image src="https://cdn-icons-png.flaticon.com/512/7887/7887095.png" alt="add" width={20} height={20} style={{ marginRight: 8 }} />
+              Add Resource
+            </Button>
+
+            <AddResourcePopup
+              anchor={anchorEl}
+              open={isOpen}
+              onClose={() => {
+                setAnchorEl(null);
+                closePopup();
+              }}
+            />
+          </Box>
+
+          {/* Right side - User Menu */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            {user ? (
+              <UserProfileMenu />
+            ) : (
+              <Button
+                variant="contained"
+                color="primary"
+                component={Link}
+                href="/login"
+                sx={{
+                  padding: '0.5rem 1rem',
+                  backgroundColor: '#3b82f6',
+                  color: 'white',
+                  borderRadius: '0.375rem',
+                  transition: 'all 0.2s',
+                  fontSize: '0.875rem',
+                  fontWeight: 500,
+                  boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+                  '&:hover': {
+                    backgroundColor: '#2563eb',
+                  },
+                }}
+              >
+                Login
+              </Button>
+            )}
+          </Box>
+        </Toolbar>
+      </Container>
+    </AppBar>
   );
 }

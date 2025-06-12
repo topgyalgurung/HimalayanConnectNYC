@@ -34,6 +34,10 @@ export const LoginFormSchema = z.object({
     .min(8, { message: "Password must be at least 8 characters" })
     .trim(),
 });
+
+export const ForgotFormSchema = z.object({
+  email:z.string().email({message: "Please enter a valid email."})
+})
  
 
 export const SuggestFormSchema = z.object({
@@ -103,3 +107,13 @@ export type LoginFormState =
       }
     }
   | undefined
+
+export type ForgotFormState =
+  | {
+    errors?: {
+      email?: string[]
+    }
+    message?: string
+    email:string
+  } 
+| undefined

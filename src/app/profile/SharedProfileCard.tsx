@@ -3,14 +3,6 @@
  *
  * A reusable client-side component that displays user profile information.
  * Can be used by both admin and user dashboards.
- *
- * @component
- * @param {Object} props
- * @param {string} props.userName - Name to display in greeting
- * @param {Function} props.onLogout - Logout handler function
- * @param {string} props.userType - Type of user ("admin" or "user")
- *
- * @example
  * <SharedProfileCard
  *   userName="John Doe"
  *   onLogout={handleLogout}
@@ -31,6 +23,9 @@ export const ProfileCard = ({
   onLogoutAction,
   userType,
 }: SharedProfileCardProps) => {
+  function capitalizeFirstLetter(str: string) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
   return (
     <div className="w-full md:w-1/3 p-4">
       <h1 className="text-4xl font-bold text-center mt-1">Profile</h1>
@@ -46,7 +41,7 @@ export const ProfileCard = ({
           />
         </div>
         <h2 className="text-xl font-bold mb-4">
-          Hello {userType === "admin" ? "Admin" : `User: ${userName}`}
+          Hello {userType === "admin" ? `Admin: ${capitalizeFirstLetter(userName)}` : `User: ${capitalizeFirstLetter(userName)}`}
         </h2>
         <div className="mt-6">
           <button

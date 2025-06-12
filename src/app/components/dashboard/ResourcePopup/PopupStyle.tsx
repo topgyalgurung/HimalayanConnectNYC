@@ -11,8 +11,8 @@ export const StyledPopup = styled("div")(({ theme }) => ({
   borderRadius: 8,
   padding: "8px 12px",
   minWidth: 280,
-  maxWidth: 360,
-  maxHeight: "65vh",
+  maxWidth: 500, // Increase width for forms
+  maxHeight: "80vh", // Increase height for forms
   position: "relative",
   overflow: "hidden",
   marginTop: 2,
@@ -22,7 +22,7 @@ export const PopupBody = styled(Box)(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   gap: theme.spacing(1),
-  maxHeight: "calc(65vh - 50px)",
+  maxHeight: "calc(80vh - 50px)",
   overflowY: "auto",
   paddingRight: 2,
   "&::-webkit-scrollbar": {
@@ -61,4 +61,10 @@ export const CloseButton = styled(IconButton)(({ theme }) => ({
   "&:hover": {
     color: theme.palette.grey[700],
   },
+}));
+
+export const PopupFormContent = styled(Box)(({ theme }) => ({
+  padding: theme.spacing(2),
+  overflowY: "auto",
+  maxHeight: "calc(80vh - 100px)",
 }));

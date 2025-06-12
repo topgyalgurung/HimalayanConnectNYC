@@ -1,9 +1,11 @@
 // JWT utils
 
 // server only session utility to be used on the server not directly on client
-
 // jose library compatible with edge runtime and react's server only package
 // to ensure server management logic executed only on server
+// side note: using .setExpirationTime() inside your encrypt() (SignJWT), so no need for expiresAt in the payload for creating session 
+
+// create session, encrypt, decrypt, getSession, updateSession, deleteSession, 
 
 // import "server-only";
 "use server";
@@ -17,11 +19,11 @@ const secretKey = process.env.JWT_SECRET;
 if (!secretKey) {
   throw new Error("JWT_SECRET environment variable is not set");
 }
-
 const key = new TextEncoder().encode(secretKey);
 
-// make role as role of user
+const SESSION_EXPIRATION_MS = 7 * 24 * 60 * 60 * 1000;
 
+// make role as role of user
 // i need to store image in session for faster load and avoid extra database queries
 export type SessionPayload = {
   userId: string; // Stored as string in JWT but converted to number when used with database
@@ -39,22 +41,25 @@ export async function createSession(
   try {
     // Ensure userId is string for JWT token
     const userIdStr = userId.toString();
-    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
+    const expiresAt = new Date(Date.now() + SESSION_EXPIRATION_MS); // 7 days 
 
     const session = await encrypt({
       userId: userIdStr,
       email,
-
       role: role.toString(),
-      expiresAt,
+      expiresAt,  
     });
+
     const cookieStore = await cookies();
 
     // Set HTTP-only cookie for security
     cookieStore.set("session", session, {
       httpOnly: true,
       secure: true,
-      expires: expiresAt,
+      sameSite: "lax", // prevents CSRF in most cases
+      //expires: expiresAt,  // need to store as ISOString() safer and 
+      // during verification: parse it bacK: new Date(payload.expiresAt) < new Date()
       path: "/",
     });
 
@@ -115,7 +120,7 @@ export async function decrypt(
     }
 
     // Check expiration date
-    if (new Date(payload.expiresAt) < new Date()) {
+    if (new Date(payload.expiresAt ) < new Date()) {
       console.warn("⚠ Session expired for user:", payload.userId);
       return null;
     }
@@ -160,17 +165,15 @@ export async function getSession(): Promise<SessionPayload | null> {
 
 //  Check if your auth library supports refresh tokens, which can be used to extend the user's session.
 export async function updateSession() {
-  const token = (await cookies()).get("session")?.value;
+  const token = (await cookies()).get("session")?.value; // getting same payload
   const payload = await decrypt(token);
   if (!token || !payload) return null;
 
-  const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-
   const cookieStore = await cookies();
+
   cookieStore.set("session", token, {
     httpOnly: true,
     secure: true,
-    expires: expires,
     sameSite: "lax",
     path: "/",
   });

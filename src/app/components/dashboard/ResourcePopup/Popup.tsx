@@ -29,7 +29,7 @@ import React, { ReactNode } from "react";
 import { Popover } from "@mui/material";
 import { Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { PopupHeader, PopupBody, StyledPopup, CloseButton } from "./PopupStyle";
+import { PopupHeader, PopupBody, StyledPopup,  CloseButton, PopupFormContent } from "./PopupStyle";
 
 interface PopupProps {
   anchor: HTMLElement | null;
@@ -38,6 +38,8 @@ interface PopupProps {
   title: string;
   content: ReactNode;
   showSubmission?: boolean;
+  isForm?: boolean;
+  formContent?: ReactNode;
 }
 
 export default function Popup({
@@ -46,6 +48,8 @@ export default function Popup({
   onClose,
   title,
   content,
+  formContent,
+  isForm = false,
   showSubmission = false,
 }: PopupProps) {
   return (
@@ -74,10 +78,16 @@ export default function Popup({
           </CloseButton>
         </PopupHeader>
         <PopupBody>
-          <Typography variant="body2" sx={{ mb: 0.5, color: "text.secondary" }}>
-            Name: {title}
+          <Typography variant="body2" sx={{ mb: 0.5, color: "text.secondary", textAlign: "center", fontWeight: 600, fontSize: "1.2rem" }}>
+             {title}
           </Typography>
-          {content}
+          {isForm ? (
+            <PopupFormContent>{formContent}</PopupFormContent>
+          ) : (
+            <>
+              {content}
+            </>
+          )}
         </PopupBody>
       </StyledPopup>
     </Popover>

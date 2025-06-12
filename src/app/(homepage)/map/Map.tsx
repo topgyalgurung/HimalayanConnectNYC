@@ -17,30 +17,23 @@ import { useState } from "react";
 import type { Resource } from "@/app/lib/types";
 import ResourceDetailsCard from "@/app/components/features/ResourceDetailsCard";
 import ResourceSuggestCard from "@/app/components/features/ResourceSuggestCard";
-import ReviewSubmitCard from "@/app/components/features/ReviewSubmitCard";
 import Image from "next/image";
 
 interface MapViewProps {
   resources: Resource[];
   selectedResource: Resource | null;
   editResource: Resource | null;
-  reviewResource: Resource | null;
   onSuggestEditAction: (resource: Resource) => void;
-  onReviewResourceAction: (resource: Resource | null) => void;
   onCloseAction: (resource: Resource | null) => void;
   onEditCloseAction: (resource: Resource | null) => void;
-  onReviewCloseAction: (resource: Resource | null) => void;
 }
 
 export default function MapView({
   resources,
   selectedResource,
   editResource,
-  reviewResource,
   onSuggestEditAction,
-  onReviewResourceAction,
   onCloseAction,
-  onReviewCloseAction,
   onEditCloseAction,
 }: MapViewProps) {
   // Add debugging logs
@@ -64,18 +57,19 @@ export default function MapView({
           </Map>
         </APIProvider>
         {/* show resource detail card on selectedResource */}
-        {/* next todoL show resourcedetails pop on top of resourcelist so it does not block map */}
+        {/* next todo show resourcedetails pop on top of resourcelist so it does not block map */}
         {selectedResource && (
           <div className="absolute top-2 left-2 h-full w-[90%] sm:w-[400px] z-40 shadow-lg overflow-y-auto">
             <ResourceDetailsCard
               resource={selectedResource}
               editResource={editResource}
               onSuggestEdit={onSuggestEditAction}
-              onReviewResource={onReviewResourceAction}
+              // onReviewResource={onReviewResourceAction}
               onCloseAction={() => onCloseAction(null)}
             />
           </div>
         )}
+
         {/* show edit resource card */}
 
         {editResource && (
@@ -85,15 +79,6 @@ export default function MapView({
               onEditCloseAction={onEditCloseAction}
             />
           </div>
-        )}
-
-        {/* show submit review card */}
-        {/* next to do: make this as panel down on resource card */}
-        {reviewResource && (
-          <ReviewSubmitCard
-            resource={reviewResource}
-            onReviewCloseAction={onReviewCloseAction}
-          />
         )}
       </div>
     </aside>

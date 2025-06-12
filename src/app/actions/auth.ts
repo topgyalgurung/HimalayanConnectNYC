@@ -12,12 +12,16 @@ import {
   LoginFormSchema,
   SignupFormState,
   LoginFormState,
+  ForgotFormState,
+  ForgotFormSchema,
+
 } from "@/app/lib/forms/definitions";
 
 import { createSession, deleteSession } from "@/app/lib/session";
 import bcrypt from "bcryptjs";
 import {prisma} from "../lib/prisma";
 import { Role } from "@prisma/client";
+import { sendEmail } from "../lib/helpers/mailer";
 
 // cookie should be set on the server to prevent client side tampering
 
@@ -164,7 +168,7 @@ export async function login(prevState: LoginFormState, formData: FormData) {
       };
     }
 
-    // Create JWT session
+    // Create JWT session, create session has JWT expiration 
     await createSession(user.id, user.email, user.role);
 
     // Return success status
@@ -207,5 +211,62 @@ export async function logout() {
       status: 500,
       message: "Error during logout",
     };
+  }
+}
+
+
+// forgot password 
+export async function forgotPassword(prevState: ForgotFormState, formData: FormData) {
+ 
+  // validate form fields
+  const validateFields = ForgotFormSchema.safeParse({
+    email: formData.get("email")
+  })
+
+  if (!validateFields.success) {
+    return {
+      errors: validateFields.error.flatten().fieldErrors,
+    };
+  }
+
+  try {
+    const { email } = validateFields.data;
+
+    const user = await prisma.user.findUnique({
+      where: {
+        email: email
+      }
+    });
+
+    if (!user) {
+      return {
+        message: "Account with this email does not exist. ",
+        status: 404
+      }
+    }
+    // If yes, use nodemailer to send token to the email and 
+        // also send the token to the database
+
+    // helper function sendEmail handles creating token and updating db
+    await sendEmail({
+      email,
+      emailType: "RESET",
+      userId: user.id
+    })
+    return {
+      message: "Check your email for reset password",
+      success: true,
+      user
+    }
+
+    
+  } catch (error) {
+    return {
+      message:
+        error instanceof Error ? error.message : "An error occured",
+      status: 500,
+   
+    }
+    
   }
 }

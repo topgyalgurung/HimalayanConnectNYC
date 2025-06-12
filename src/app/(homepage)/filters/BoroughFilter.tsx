@@ -14,6 +14,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Checkbox from "@mui/material/Checkbox";
+import Image from "next/image";
 
 interface BoroughFilterProps {
   onFilterChangeAction: (boroughs: string[]) => void; // Function to handle filter change
@@ -53,14 +54,15 @@ export default function BoroughFilter({
   return (
     <div className="p-1 border rounded-md text-black text-sm mt-2 w-full">
       <div className="flex items-center justify-center mb-1 flex-wrap sm:flex-nowrap">
-        <h3 className="font-semibold text-sm whitespace-nowrap">NYC Borough</h3>
+        <h3 className="font-semibold text-blue-500 text-sm whitespace-nowrap">
+          NYC BOROUGH
+        </h3>
         <span className="mx-2 border-l border-gray-300 h-6 ml-4 hidden sm:block" />
-        <button
-          onClick={clearFilters}
-          className="text-gray-500 ml-auto sm:ml-0"
-        >
-          Clear ×
+        <button onClick={clearFilters} className="text-red-500 ml-auto sm:ml-0 flex items-center gap-2">
+          CLEAR 
+          <Image src="https://cdn-icons-png.flaticon.com/512/399/399274.png" alt="clear" width={20} height={20} />
         </button>
+        
       </div>
       <hr className="mb-2" />
       <List dense sx={{ width: "100%", padding: 0 }}>

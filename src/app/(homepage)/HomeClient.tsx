@@ -19,16 +19,11 @@ interface HomeClientProps {
 }
 
 export default function HomeClient({ initialResources }: HomeClientProps) {
-  const [filteredResources, setFilteredResources] =
-    useState<Resource[]>(initialResources); // state for filtered resources
-  const [selectedResource, setSelectedResource] = useState<Resource | null>(
-    null
-  ); // state for selected resource
-  const [editResource, setEditResource] = useState<Resource | null>(null); // state for edit resource
-  const [reviewResource, setReviewResource] = useState<Resource | null>(null); // state for review resource
+  const [selectedResource, setSelectedResource] = useState<Resource | null>(null);
+  const [editResource, setEditResource] = useState<Resource | null>(null);
+  const [filteredResources, setFilteredResources] = useState<Resource[]>(initialResources);
 
-  // toggles to close or open the details of a resource
-  const handleToggleDetails = (resource: Resource) => {
+  const handleViewDetails = (resource: Resource) => {
     if (selectedResource?.id === resource.id) {
       setSelectedResource(null);
     } else {
@@ -37,7 +32,10 @@ export default function HomeClient({ initialResources }: HomeClientProps) {
     }
   };
 
-  // open or close the edit resource
+  const handleCloseDetails = () => {
+    setSelectedResource(null);
+  };
+
   const handleSuggestEdit = (resource: Resource) => {
     if (editResource?.id === resource.id) {
       setEditResource(null);
@@ -47,39 +45,34 @@ export default function HomeClient({ initialResources }: HomeClientProps) {
     }
   };
 
-  // open or close the review resource
-  // const handleReviewResource = (resource: Resource) => {
-  //   if (reviewResource?.id === resource.id) {
-  //     setReviewResource(null);
-  //   } else {
-  //     setReviewResource(resource);
-  //   }
-  // };
+  const handleEditClose = () => {
+    setEditResource(null);
+  };
 
   return (
     // render filter sidebar, resource list panel middle, and map view right
-    <div className="flex flex-col md:flex-row h-auto text-sm lg:text-sm md:h-[calc(100vh-90px)] ">
+    <div className="flex flex-col md:flex-row h-auto text-sm lg:text-sm md:h-[calc(100vh-90px)]">
+      {/* filter sidebar */}
       <FilterSidebar
         resources={initialResources}
         onFilterChangeAction={setFilteredResources}
       />
       {/* <Suspense fallback={<Loading />}> */}
+      {/* resource list panel */}
       <ResourceListPanel
         filteredResources={filteredResources}
-        onViewDetailsAction={handleToggleDetails}
+        onViewDetailsAction={handleViewDetails}
+        // isLoading={false}
       />
       {/* </Suspense> */}
 
       <MapView
         resources={filteredResources}
         selectedResource={selectedResource}
-        reviewResource={reviewResource}
-        onReviewResourceAction={setReviewResource}
         editResource={editResource}
         onSuggestEditAction={handleSuggestEdit}
-        onCloseAction={() => setSelectedResource(null)}
-        onEditCloseAction={() => setEditResource(null)}
-        onReviewCloseAction={() => setReviewResource(null)}
+        onCloseAction={handleCloseDetails}
+        onEditCloseAction={handleEditClose}
       />
     </div>
   );
