@@ -19,8 +19,9 @@ import { useFetchResourceReview } from "../../hooks/useFetchResourceReview";
 import { type Resource, User } from "@/app/lib/types";
 import TabButton from "./ResourceDetailCommon/TabButton";
 import ResourceHeader from "./ResourceDetailCommon/ResourceHeader";
-import { ReviewTab } from "./ResourceDetailCommon/ReviewTab";
+import ReviewTab from "./ResourceDetailCommon/ReviewTab";
 import { OverviewTab } from "./ResourceDetailCommon/Overview";
+import ReviewSubmitCard from "./ReviewSubmitCard";
 
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -30,7 +31,7 @@ interface ResourceDetailsCardProps {
   resource: Resource | null;
   editResource: Resource | null;
   onSuggestEdit?: (resource: Resource) => void;
-  onReviewResource?: (resource: Resource) => void;
+  // onReviewResource?: (resource: Resource) => void;
   onCloseAction: () => void;
   liked?: boolean;
   toggleFavorite?: (id: number) => void;
@@ -39,7 +40,7 @@ interface ResourceDetailsCardProps {
 export default function ResourceDetailsCard({
   resource,
   onSuggestEdit,
-  onReviewResource,
+  // onReviewResource,
   onCloseAction,
 }: ResourceDetailsCardProps) {
   const [activeTab, setActiveTab] = useState("overview");
@@ -49,6 +50,8 @@ export default function ResourceDetailsCard({
   const { reviews, refetch: refetchReviews } = useFetchResourceReview(
     Number(resource?.id) || null
   );
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const [isReviewPopupOpen, setIsReviewPopupOpen] = useState(false);
 
   // Refetch reviews when review tab is active or when a review is submitted
   useEffect(() => {
@@ -76,31 +79,41 @@ export default function ResourceDetailsCard({
   if (!resource) return null;
   const liked = isFavorite(Number(resource.id));
 
+  const handleOpenReviewPopup = () => {
+    setIsReviewPopupOpen(true);
+  };
+
+  const handleCloseReviewPopup = () => {
+    setIsReviewPopupOpen(false);
+    setAnchorEl(null);
+  };
+
   return (
-    <div className="fixed md:absolute md:top-8 md:right-6 md:p-6 md:w-96 md:max-h-[90vh] top-12 right-2 left-2 z-50 w-full  bg-white rounded-lg shadow-xl p-4 max-h-screen  overflow-y-auto">
-      <button
-        onClick={() => onCloseAction()}
-        className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
-      >
-        ✕
-      </button>
+    <>
+      <div className="fixed md:absolute md:top-8 md:right-6 md:p-6 md:w-96 md:max-h-[90vh] top-12 right-2 left-2 z-50 w-full  bg-white rounded-lg shadow-xl p-4 max-h-screen  overflow-y-auto">
+        <button
+          onClick={() => onCloseAction()}
+          className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+        >
+          ✕
+        </button>
 
-      <ResourceHeader
-        resource={resource}
-        liked={liked}
-        onToggleFavorite={toggleFavorite}
-      />
+        <ResourceHeader
+          resource={resource}
+          liked={liked}
+          onToggleFavorite={toggleFavorite}
+        />
 
-      <div className="flex justify-around mb-4 border-b overflow-x-auto">
-        {["overview", "review", "about"].map((tab) => (
-          <TabButton
-            key={tab}
-            label={tab}
-            isActive={activeTab === tab}
-            onClick={() => setActiveTab(tab)}
-          />
-        ))}
-      </div>
+        <div className="flex justify-around mb-4 border-b overflow-x-auto">
+          {["overview", "review", "about"].map((tab) => (
+            <TabButton
+              key={tab}
+              label={tab}
+              isActive={activeTab === tab}
+              onClick={() => setActiveTab(tab)}
+            />
+          ))}
+        </div>
 
       <div className="overflow-y-auto">
         {activeTab === "overview" && (
@@ -114,15 +127,24 @@ export default function ResourceDetailsCard({
           />
         )}
 
-        {activeTab === "review" && (
-          <ReviewTab
-            resource={resource}
-            user={user as unknown as User | null}
-            onReviewResource={onReviewResource!}
-            router={router}
-            reviews={reviews}
-          />
-        )}
+          {activeTab === "review" && (
+            <ReviewTab
+              resource={resource}
+              user={user as unknown as User | null}
+              openPopup={handleOpenReviewPopup}
+              setAnchorEl={setAnchorEl}
+              router={router}
+              reviews={reviews}
+            />
+          )}
+
+<ReviewSubmitCard
+      anchor={anchorEl}
+      open={isReviewPopupOpen} 
+      onClose={handleCloseReviewPopup}
+      resource={resource}
+    />
+  
 
         {activeTab === "about" && (
           <div>
@@ -131,5 +153,6 @@ export default function ResourceDetailsCard({
         )}
       </div>
     </div>
+    </>
   );
 }

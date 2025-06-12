@@ -43,6 +43,7 @@ export default function ResourceSuggestCard({
   const [closeTime, setCloseTime] = useState<dayjs.Dayjs | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [timeError, setTimeError] = useState<string>("");
+  const [error, setError] = useState(false);
 
   // Track original values
   const [originalValues] = useState({
@@ -88,6 +89,7 @@ export default function ResourceSuggestCard({
       // changed to sameorAfter not just after
       if (newTimeSameDay.isSameOrAfter(closeTimeSameDay)) {
         setTimeError("Open time must be before close time");
+        setError(true);
         return;
       }
     }
@@ -108,6 +110,7 @@ export default function ResourceSuggestCard({
 
       if (newTimeSameDay.isSameOrBefore(openTimeSameDay)) {
         setTimeError("Close time must be after open time");
+        setError(true);
         return;
       }
     }
@@ -328,11 +331,10 @@ export default function ResourceSuggestCard({
     <div className="w-[350px] bg-white rounded-md shadow-xl p-4 h-full overflow-y-auto">
       <button
         onClick={() => onEditCloseAction(null)}
-        className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+        className="absolute top-2 right-14 text-gray-500 hover:text-gray-700"
       >
         ✕
       </button>
-
       <h1 className="text-lg font-bold text-center mb-2">Suggest an Edit</h1>
       <p className="text-sm text-gray-600 mb-4">
         Only changed fields will be submitted for review
@@ -470,7 +472,7 @@ export default function ResourceSuggestCard({
           <button
             type="submit"
             className="w-full max-w-[320px] bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:bg-gray-400 mt-4 sticky bottom-0"
-            disabled={loading || changedFields.size === 0}
+            disabled={loading || changedFields.size === 0 || error}
           >
             {loading ? "Submitting..." : "Submit Changes"}
           </button>

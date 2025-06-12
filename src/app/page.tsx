@@ -9,22 +9,23 @@
  */
 
 import { Suspense } from "react"; // Suspense is a React component that allows you to render a fallback UI while a component is loading.
-import { getResources } from "./actions/resources/getResources"; //fetches resources from the database
+import { getResources } from "./actions/resources/getResources";
 import HomeClient from "./(homepage)/HomeClient"; // renders the homepage
 import Loading from "./(homepage)/loading";
 
-export const dynamic = "force-dynamic"; // setting for entire route, dynamically rendered
-// for more granular
-// better use cache: 'no-cache' with fetch or
-// next{revalidate:3600} with fetch (after 1 hour fetch new data)
+// Enable dynamic rendering for this route
+export const dynamic = "force-dynamic";
+
+// Add revalidation tags for manual revalidation
+export const revalidate = 300; // 5 minutes
+
 export default async function Home() {
-  // fix: move it down, no need to fetch here
-  // Fetch resources on the server
-  const resources = await getResources();
+  // Fetch initial resources on the server with caching
+  const initialResources = await getResources();
 
   return (
     <Suspense fallback={<Loading />}>
-      <HomeClient initialResources={resources} />
+      <HomeClient initialResources={initialResources} />
     </Suspense>
   );
 }

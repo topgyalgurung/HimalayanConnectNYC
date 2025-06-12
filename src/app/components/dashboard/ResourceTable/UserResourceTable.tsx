@@ -134,7 +134,14 @@ export const UserResourceTable = ({
     }
   };
 
-  const renderCell = (row: TableRow, column: Column, index: number) => {
+   /**
+   * Renders a cell in the table
+   * @param row - The row of the table
+   * @param column - The column of the table
+   * @param index - The index of the row
+   * @returns The rendered cell
+   */
+   const renderCell = (row: TableRow, column: Column, index: number) => {
     switch (column.id) {
       case "index":
         return index + 1;
@@ -237,7 +244,9 @@ export const UserResourceTable = ({
   return (
     <div className="max-h-[calc(100vh-300px)] overflow-y-auto mb-5">
       <TableContainer component={Paper}>
+
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          {/* TableHead is the header of the table that displays the column names */}
           <TableHead>
             <TableRow>
               {columns.map((column) => (
@@ -251,6 +260,7 @@ export const UserResourceTable = ({
               ))}
             </TableRow>
           </TableHead>
+          {/* TableBody is the body of the table that displays the data */}
           <TableBody>
             {data.length === 0 ? (
               <TableRow>
@@ -259,6 +269,7 @@ export const UserResourceTable = ({
                 </TableCell>
               </TableRow>
             ) : (
+              // data.map is used to map the data to the table rows
               data.map((row, index) => (
                 <TableRow key={row.id} hover role="checkbox" tabIndex={-1}>
                   {columns.map((column) => (

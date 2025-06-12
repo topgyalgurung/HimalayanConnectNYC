@@ -6,15 +6,13 @@
 
 import React from "react";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
-import { logout } from "../actions/auth";
 import { useFetchUser } from "../hooks/useFetchUsers";
-import { useUser } from "../context/UserProvider";
 import { usePopup } from "../hooks/usePopup";
 import { useDeleteItem } from "../hooks/useDeleteResource";
 import { useFetchResourceEdit } from "../hooks/useFetchResourceEdit";
 import { useFetchUserResources } from "../hooks/useFetchUserResources";
+import { useLogout } from "../hooks/useLogout";
 
 import { ProfileCard } from "./SharedProfileCard";
 import { TabNavigation } from "../components/dashboard/TabNavigation/TabNavigation";
@@ -29,25 +27,34 @@ import { Resource as BaseResource } from "@/app/lib/types";
  * Provides functionality for viewing, editing, and deleting user-related content.
  */
 export default function UserDashboard() {
-  const [activeTab, setActiveTab] = useState("new");
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [activeTab, setActiveTab] = useState("new"); // default tab
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null); // popup anchor element
 
-  const router = useRouter();
-  const { setUser } = useUser();
-  // note: we are using useFetchUser to get the user data
+  const { handleLogout } = useLogout();
+
   const { resources, refetch: refetchResources } = useFetchUserResources();
   const { editResources, refetch: refetchEditResources } =
     useFetchResourceEdit();
   const { data: user, refetch } = useFetchUser();
+
+  // usePopup to open the popup, data is the selected resource, openPopup is used to open the popup, closePopup is used to close the popup
   const {
     isOpen,
     data: selectedResource,
     openPopup,
     closePopup,
   } = usePopup<BaseResource>();
+
   const { deleteItem, deletingId } = useDeleteItem();
 
   if (!user) return <p>Loading user data...</p>;
+
+  const userTabs = [
+    { id: "new", label: "New", color: "bg-blue-500" },
+    { id: "suggest", label: "Suggest Edit", color: "bg-green-500" },
+    { id: "reviews", label: "Reviews", color: "bg-green-500" },
+    { id: "likes", label: "Favorites", color: "bg-green-500" },
+  ];
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
@@ -55,22 +62,16 @@ export default function UserDashboard() {
     closePopup();
   };
 
-  const handleLogout = async () => {
-    try {
-      await logout();
-      setUser(null);
-      router.replace("/");
-      router.refresh();
-    } catch (error) {
-      console.error("logout failed", error);
-    }
-  };
-
   const handleClosePopup = () => {
     setAnchorEl(null);
     closePopup();
   };
 
+  /**
+   * Handles the view click action for a resource
+   * @param resource - The resource or edit suggestion to view
+   * @param event - The event that triggered the view click
+   */
   const handleViewClick = (
     resource: Resource | ResourceEditSuggestion,
     event: React.MouseEvent<HTMLElement>
@@ -80,6 +81,7 @@ export default function UserDashboard() {
       closePopup();
     } else {
       setAnchorEl(event.currentTarget);
+      // if the resource is an edit suggestion, open the popup with the edit suggestion
       if ("type" in resource && resource.type === "edit") {
         const editResource = resource as ResourceEditSuggestion;
         openPopup({
@@ -95,35 +97,24 @@ export default function UserDashboard() {
           phone: editResource.phone,
           url: editResource.url,
           createdAt: editResource.createdAt,
-          // updatedAt: editResource.updatedAt,
           editResource: editResource,
         });
-      } else if ("resource" in resource && resource.resource) {
-        const fullResource = resource.resource;
+      } else {
+        // Handle regular resource
+        const resourceData = resource as Resource;
         openPopup({
-          ...fullResource,
-          id: fullResource.id.toString(),
-          name: fullResource.name,
-          description: fullResource.description || "",
-          address: fullResource.address || "",
-          city: fullResource.city || "",
-          openDays: fullResource.openDays || "",
-          openTime: fullResource.openTime,
-          closeTime: fullResource.closeTime,
-          phone: fullResource.phone || "",
-          email: fullResource.email || "",
-          url: fullResource.url || "",
-          facebookLink: fullResource.facebookLink || "",
-          rating: fullResource.rating,
-          imageUrl: fullResource.imageUrl,
-          ResourceCategory: fullResource.ResourceCategory,
-          Location: fullResource.Location,
-          createdAt: fullResource.createdAt,
-          // updatedAt: fullResource.updatedAt,
+          ...resourceData,
+          id: resourceData.id.toString(),
+          description: resourceData.description || "",
+          address: resourceData.address || "",
+          city: resourceData.city || "",
+          openDays: resourceData.openDays || "",
+          phone: resourceData.phone || "",
+          email: resourceData.email || "",
+          url: resourceData.url || "",
+          facebookLink: resourceData.facebookLink || "",
           editResource: null,
         });
-      } else {
-        openPopup(resource as BaseResource);
       }
     }
   };
@@ -161,13 +152,6 @@ export default function UserDashboard() {
     });
   };
 
-  const userTabs = [
-    { id: "new", label: "New", color: "bg-blue-500" },
-    { id: "suggest", label: "Suggest Edit", color: "bg-green-500" },
-    { id: "reviews", label: "Reviews", color: "bg-green-500" },
-    { id: "likes", label: "Favorites", color: "bg-green-500" },
-  ];
-
   return (
     <div className="flex flex-col  items-center justify-center">
       <div className="flex flex-col md:flex-row w-full">
@@ -181,16 +165,16 @@ export default function UserDashboard() {
           <div className="bg-white shadow-lg rounded-lg p-6">
             <h2 className="text-2xl font-bold mb-4">Your Dashboard</h2>
             <p className="text-gray-600 mb-4">
-              Welcome to your dashboard! Here you can manage your resource
-              submissions
+              Welcome to your dashboard! Here you can manage your resources
             </p>
 
             <TabNavigation
               activeTab={activeTab}
-              onTabChange={handleTabChange}
               tabs={userTabs}
+              onTabChange={handleTabChange}
             />
 
+            {/* UserResourceTable is the table that displays the user's resources */}
             <UserResourceTable
               activeTab={activeTab}
               resources={resources}
@@ -206,6 +190,7 @@ export default function UserDashboard() {
               onDeleteFavoriteAction={handleDeleteFavorite}
             />
 
+            {/* ResourceDetailsPopup is the popup that displays the details of the selected resource */}
             <ResourceDetailsPopup
               anchor={anchorEl}
               open={isOpen}

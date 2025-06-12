@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import ResourceListPanel from "../app/(homepage)/resources/ResourceListPanel";
+import ResourceListPanel from "../ResourceListPanel";
 
 // Mock the ResourceList component
 jest.mock("../app/(homepage)/resources/ResourceList", () => ({

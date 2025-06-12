@@ -85,10 +85,11 @@ export default function ResourceFilter({
   return (
     <div className="p-1 border rounded-md text-black text-sm">
       <div className="flex items-center justify-center mb-1">
-        <h3 className="font-semibold text-sm">Category</h3>
-        <span className="mx-2 border-l border-gray-300 h-6 ml-4" />
-        <button onClick={clearFilters} className=" ml-2 text-gray-500">
-          Clear ×
+        <h3 className="font-semibold text-blue-500 text-sm">CATEGORY</h3>
+        <span className="mx-2 border-l border-gray-300 h-6 ml-4 hidden sm:block" />
+        <button onClick={clearFilters} className="text-red-500 ml-auto sm:ml-0 flex items-center gap-2">
+          CLEAR 
+          <Image src="https://cdn-icons-png.flaticon.com/512/399/399274.png" alt="clear" width={20} height={20} />
         </button>
       </div>
       <hr className="mb-1" />

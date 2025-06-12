@@ -16,13 +16,15 @@
     "seed": "ts-node prisma/seed.ts"
   },
   "dependencies": {
+    "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@fontsource/roboto": "^5.2.5",
     "@googlemaps/markerclusterer": "^2.5.3",
     "@mui/icons-material": "^7.0.1",
     "@mui/joy": "^5.0.0-beta.52",
-    "@mui/material": "^7.0.1",
+    "@mui/material": "^7.1.1",
+    "@mui/material-nextjs": "^7.1.1",
     "@mui/x-date-pickers": "latest",
     "@mui/x-date-pickers-pro": "latest",
     "@prisma/client": "^6.7.0",

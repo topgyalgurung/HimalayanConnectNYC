@@ -8,6 +8,7 @@
 // todo: change to action instead of handleSubmit and calling api that post to db
 
 "use client";
+
 import { useEffect, useState } from "react";
 import Rating from "@mui/material/Rating";
 import Box from "@mui/material/Box";
@@ -17,15 +18,23 @@ import Button from "@mui/material/Button";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CircularProgress from "@mui/material/CircularProgress";
 
+import Popup from "../dashboard/ResourcePopup/Popup";
+
 import { type Resource } from "@/app/lib/types";
 interface ReviewResourceCardProps {
+  anchor: HTMLElement | null;
+  open: boolean;
+  onClose: () => void;
   resource: Resource | null;
-  onReviewCloseAction: (resource: Resource | null) => void;
+  // onReviewCloseAction: (resource: Resource | null) => void;
 }
 
 export default function ReviewSubmitCard({
+  anchor,
+  open,
+  onClose,
   resource,
-  onReviewCloseAction,
+  // onReviewCloseAction,
 }: ReviewResourceCardProps) {
   // not sure why i use useEffect to get user, might be able to call useUser later
   const [user, setUser] = useState<{
@@ -71,7 +80,7 @@ export default function ReviewSubmitCard({
         window.dispatchEvent(new Event("reviewSubmitted"));
         // Close the review card after a short delay
         setTimeout(() => {
-          onReviewCloseAction(null);
+          onClose();
         }, 2000);
       }
     } catch (error) {
@@ -81,74 +90,80 @@ export default function ReviewSubmitCard({
     }
   };
 
-  return (
-    <div className="absolute top-4 right-4 z-50 w-96 bg-white rounded-lg shadow-xl p-6">
-      <button
-        onClick={() => onReviewCloseAction(null)}
-        className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
-      >
-        ✕
-      </button>
+  const formContent = (
+    <div className="space-y-4">
 
-      {isSubmitted ? (
-        <Box className="text-center">
-          <CheckCircleOutlineIcon className="text-green-500 text-4xl mb-2" />
-          <Typography variant="h6">
-            Thank you for your review! <>{user?.firstName}</>
+    {isSubmitted ? (
+      <Box className="text-center">
+        <CheckCircleOutlineIcon className="text-green-500 text-4xl mb-2" />
+        <Typography variant="h6">
+          Thank you for your review! <>{user?.firstName}</>
+        </Typography>
+        <Typography variant="body2" className="mt-1 text-gray-500">
+          We appreciate your feedback.
+        </Typography>
+      </Box>
+    ) : (
+      <>
+        <h2>
+          {user?.firstName} {user?.lastName}
+        </h2>
+        <Typography variant="h6" gutterBottom>
+          <> {resource?.name}</>
+        </Typography>
+        <Box className="mb-4">
+          <Typography variant="body2" color="text.secondary" className="mb-2">
+            Hover over stars to rate
           </Typography>
-          <Typography variant="body2" className="mt-1 text-gray-500">
-            We appreciate your feedback.
+          <Rating
+            name="user-rating"
+            value={rating}
+            precision={0.5}
+            size="large"
+            onChange={(event, newValue) => {
+              setRating(newValue);
+            }}
+          />
+          <Typography variant="body2" color="text.secondary" className="mt-1">
+            {rating ? `${rating} stars` : "No rating selected"}
           </Typography>
         </Box>
-      ) : (
-        <>
-          <h2>
-            {user?.firstName} {user?.lastName}
-          </h2>
-          <Typography variant="h6" gutterBottom>
-            <>{resource?.name}</>
-          </Typography>
 
-          <Box className="mb-4">
-            <Rating
-              name="user-rating"
-              value={rating}
-              precision={0.5}
-              onChange={(event, newValue) => {
-                console.log("New rating value:", newValue);
-                setRating(newValue);
-              }}
-            />
-            <Typography variant="body2" color="text.secondary" className="mt-1">
-              {rating ? `Selected rating: ${rating}` : "No rating selected"}
-            </Typography>
-          </Box>
-
-          <TextField
-            label="Write a review"
-            multiline
-            rows={4}
-            fullWidth
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            variant="outlined"
-            className="mb-4"
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            fullWidth
-            onClick={handleSubmit}
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? (
-              <CircularProgress size={24} color="inherit" />
-            ) : (
-              "Submit Review"
-            )}
-          </Button>
-        </>
-      )}
+        <TextField
+          label="Write a review"
+          multiline
+          rows={4}
+          fullWidth
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          variant="outlined"
+          className="mb-4"
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          fullWidth
+          onClick={handleSubmit}
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? (
+            <CircularProgress size={24} color="inherit" />
+          ) : (
+            "Submit Review"
+          )}
+        </Button>
+      </>
+    )}
     </div>
+  );
+
+  return (
+    <Popup
+      anchor={anchor}
+      open={open}
+      onClose={onClose}
+      title="Write a Review"
+      content={formContent}
+    />
   );
 }

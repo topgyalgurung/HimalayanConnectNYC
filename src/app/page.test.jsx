@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
-import Home from "../app/page";
-import { getResources } from "../app/actions/resources/getResources";
+import Home from "./page";
+import { getResources } from "./actions/resources/getResources";
 
 // main app page test
 

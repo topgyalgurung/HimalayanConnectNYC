@@ -48,7 +48,9 @@ export default function AdminDashboard() {
     openPopup,
     closePopup,
   } = usePopup<Resource>();
-  const [loadingResourceId, setLoadingResourceId] = useState<string | null>(null);
+  const [loadingResourceId, setLoadingResourceId] = useState<string | null>(
+    null
+  );
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
@@ -189,11 +191,10 @@ export default function AdminDashboard() {
               activeTab={activeTab}
               filteredByStatus={filteredByStatus}
               filteredByEditStatus={filteredByEditStatus}
-              
               //resourceAnchorEl={resourceAnchorEl}
               onViewClickAction={handleViewClick}
               onStatusChangeAction={handleStatusChange}
-               loadingResourceId={loadingResourceId }
+              loadingResourceId={loadingResourceId}
               // !== null}
             />
 

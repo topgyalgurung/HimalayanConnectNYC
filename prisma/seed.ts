@@ -13,7 +13,6 @@ async function main() {
   await prisma.resource.deleteMany();
   await prisma.resourceCategory.deleteMany();
 
-  
 
   // Reset auto-increment counters
   // await prisma.$executeRaw`ALTER SEQUENCE "Resource_id_seq" RESTART WITH 1;`;

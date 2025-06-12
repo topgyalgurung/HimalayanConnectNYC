@@ -49,25 +49,27 @@ export default function FilterSidebar({
   }, [resources, selectedCategories, selectedBoroughs, onFilterChangeAction]);
 
   return (
-    <aside className="w-full top-0 left-0 md:w-[25%] lg:w-[20%] bg-white shadow-md flex flex-col h-[calc(92vh-90px)]">
+    <aside className="w-full top-0 left-0 md:w-[25%] sm:w-[50%] lg:w-[20%] bg-white shadow-md flex flex-col h-auto md:h-[calc(100vh-90px)]">
       <div className="flex flex-col h-full">
         <h2 className="text-lg text-center font-bold text-black p-2 top-0 z-10 bg-white border-b">
           FILTERS
         </h2>
-        <div className="flex-1 text-sm overflow-y-auto px-2 py-1 space-y-2">
-          {/* Resource name filter */}
-          <div>
-            <ResourceFilter
-              selectedCategories={selectedCategories}
-              onFilterChangeAction={setSelectedCategories}
-            />
-          </div>
-          <div>
-            {/* city borough name filter  */}
-            <BoroughFilter
-              selectedBoroughs={selectedBoroughs}
-              onFilterChangeAction={setSelectedBoroughs}
-            />
+        <div className="flex-1 text-sm overflow-y-auto px-2 py-1">
+          <div className="flex flex-row md:flex-col space-x-2 md:space-x-0 md:space-y-2">
+            {/* Resource name filter */}
+            <div className="w-1/2 md:w-full">
+              <ResourceFilter
+                selectedCategories={selectedCategories}
+                onFilterChangeAction={setSelectedCategories}
+              />
+            </div>
+            <div className="w-1/2 md:w-full">
+              {/* city borough name filter  */}
+              <BoroughFilter
+                selectedBoroughs={selectedBoroughs}
+                onFilterChangeAction={setSelectedBoroughs}
+              />
+            </div>
           </div>
         </div>
       </div>

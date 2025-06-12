@@ -38,12 +38,6 @@ export default function ResourceCard({
               <p className="text-blue-500">
                 {resource.ResourceCategory?.name || "no category"}
               </p>
-              {/* {resource.description && (
-                <p>
-                  <strong>Description: </strong>
-                  {resource.description}
-                </p>
-              )} */}
               {resource.city && (
                 <p>
                   <strong>Borough: </strong> {resource.city}
@@ -62,6 +56,7 @@ export default function ResourceCard({
               >
                 View Details
               </button>
+              
             </div>
           </div>
         ))}
