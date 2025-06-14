@@ -54,7 +54,7 @@ export default function ResourceListPanel({
     // };
 
   return (
-    <aside className="w-full md:w-[35%] text-md lg:w-[30%] pl-0 md:pl-4 flex-1 flex flex-col min-h-0 mb-4">
+    <>
       {/* Search input  */}
       <div className="mb-6">
         <SearchInput />
@@ -104,6 +104,6 @@ export default function ResourceListPanel({
         )} */}
       
       </main>
-    </aside>
+    </>
   );
 }

@@ -83,7 +83,7 @@ export default function ResourceFilter({
   };
 
   return (
-    <div className="p-1 border rounded-md text-black text-sm">
+    <div className="p-3 pr-4 border-2 rounded-md text-black text-sm">
       <div className="flex items-center justify-center mb-1">
         <h3 className="font-semibold text-blue-500 text-sm">CATEGORY</h3>
         <span className="mx-2 border-l border-gray-300 h-6 ml-4 hidden sm:block" />

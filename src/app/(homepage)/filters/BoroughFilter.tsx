@@ -52,7 +52,7 @@ export default function BoroughFilter({
 
   // Render the BoroughFilter component
   return (
-    <div className="p-1 border rounded-md text-black text-sm mt-2 w-full">
+    <div className="p-3 pr-4 border-2 rounded-md text-black text-sm">
       <div className="flex items-center justify-center mb-1 flex-wrap sm:flex-nowrap">
         <h3 className="font-semibold text-blue-500 text-sm whitespace-nowrap">
           NYC BOROUGH

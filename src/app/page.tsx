@@ -1,17 +1,21 @@
 /**
- * Home Page Component
+ * Home Page Component - Shell-First Architecture
  *
- * The main landing page that displays resources with server-side data fetching.
- * Uses Suspense for loading states and client-side interactivity.
+ * The main landing page that renders immediately with a shell structure,
+ * then streams in data using Suspense boundaries for optimal performance.
+ * Data is fetched server-side but rendered progressively.
  *
  * @component
- * @returns {JSX.Element} The home page with resources display
+ * @returns {JSX.Element} The home page with progressive loading
  */
 
-import { Suspense } from "react"; // Suspense is a React component that allows you to render a fallback UI while a component is loading.
-import { getResources } from "./actions/resources/getResources";
-import HomeClient from "./(homepage)/HomeClient"; // renders the homepage
-import Loading from "./(homepage)/loading";
+import { Suspense } from "react";
+import HomeServer from "./(homepage)/HomeServer";
+import FilterSkeleton from "./components/skeletons/FilterSkeleton";
+import ResourceListSkeleton from "./components/skeletons/ResourceListSkeleton";
+import MapSkeleton from "./components/skeletons/MapSkeleton";
+import ErrorBoundary from "./components/errors/ErrorBoundary";
+import ResourcesError from "./components/errors/ResourcesError";
 
 // Enable dynamic rendering for this route
 export const dynamic = "force-dynamic";
@@ -19,13 +23,30 @@ export const dynamic = "force-dynamic";
 // Add revalidation tags for manual revalidation
 export const revalidate = 300; // 5 minutes
 
-export default async function Home() {
-  // Fetch initial resources on the server with caching
-  const initialResources = await getResources();
 
+export default function Home() {
   return (
-    <Suspense fallback={<Loading />}>
-      <HomeClient initialResources={initialResources} />
-    </Suspense>
+    <>
+      {/* Shell renders immediately, data streams in */}
+      <ErrorBoundary fallback={ResourcesError}>
+        <Suspense 
+          fallback={
+            <div className="flex flex-col md:flex-row h-auto text-sm lg:text-sm md:h-[calc(100vh-90px)]">
+              <aside className="w-full top-0 left-0 md:w-[30%] lg:w-[25%] bg-white shadow-md flex flex-col h-auto md:h-[calc(100vh-90px)] px-2 sm:px-6">
+                <FilterSkeleton />
+              </aside>
+              <aside className="w-full md:w-[40%] lg:w-[35%] pl-0 md:pl-4 flex flex-col min-h-0 mb-4">
+                <ResourceListSkeleton />
+              </aside>
+              <aside className="w-full md:flex-1 lg:flex-1 bg-white shadow-md flex flex-col h-[500px] md:h-full border-2 border-gray-300">
+                <MapSkeleton />
+              </aside>
+            </div>
+          }
+        >
+          <HomeServer />
+        </Suspense>
+      </ErrorBoundary>
+    </>
   );
 }
