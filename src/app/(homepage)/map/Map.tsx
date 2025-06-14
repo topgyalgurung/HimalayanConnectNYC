@@ -41,8 +41,7 @@ export default function MapView({
   // console.log('Resources with locations:', resources.filter(r => r.Location?.[0]?.latitude && r.Location?.[0]?.longitude));
 
   return (
-    <aside className="w-full md:w-[50%] lg:w-[45%] bg-white shadow-md pl-4 flex flex-col h-[500px] md:h-full border-2 border-gray-300">
-      <div className="flex-1 relative border border-gray-400 rounded-lg overflow-hidden"></div>
+    <> 
       <div className="h-full w-full relative">
         <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? ""}>
           <Map
@@ -81,7 +80,7 @@ export default function MapView({
           </div>
         )}
       </div>
-    </aside>
+    </>
   );
 }
 

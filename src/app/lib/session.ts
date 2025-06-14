@@ -142,21 +142,23 @@ export async function decrypt(
 
 export async function getSession(): Promise<SessionPayload | null> {
   try {
-    const session = (await cookies()).get("session")?.value;
+    const cookieStore = await cookies();
+    const session = cookieStore.get("session")?.value;
     if (!session) {
-      console.log("No session cookie found");
+      // This is normal for unauthenticated users, no need to log as error
       return null;
     }
     const payload = await decrypt(session);
     if (!payload) {
-      console.log("Failed to decrypt session");
+      // Session exists but is invalid/expired, this is also normal
       return null;
     }
 
     return payload;
   } catch (error: Error | unknown) {
+    // Only log actual errors, not expected scenarios
     console.error("Error in getSession:", {
-      message: error instanceof Error ? error.message : 'Unknown error',
+      error: error instanceof Error ? error.message : String(error),
       stack: error instanceof Error ? error.stack : undefined,
     });
     return null;
