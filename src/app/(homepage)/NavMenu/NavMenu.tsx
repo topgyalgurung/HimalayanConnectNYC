@@ -33,11 +33,18 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
+import Brightness4Icon from "@mui/icons-material/Brightness4";
+import Brightness7Icon from "@mui/icons-material/Brightness7";
+import { useColorScheme } from "@mui/material/styles";
+
+
 
 const pages = [
   { name: "Home", path: "/" },
   { name: "About", path: "/about" }
 ];
+
+
 
 export default function NavMenu() {
   const pathname = usePathname();
@@ -47,10 +54,15 @@ export default function NavMenu() {
   const { isOpen, openPopup, closePopup } = usePopup();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const router = useRouter();
+  const { mode, setMode } = useColorScheme();
+
+
+ 
   // Handle hydration mismatch by only rendering after mount
   React.useEffect(() => {
     setMounted(true);
   }, []);
+
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -71,13 +83,17 @@ export default function NavMenu() {
     openPopup({});
   };
 
+  const handleThemeToggle = () => {
+    setMode(mode === 'light' ? 'dark' : 'light');
+  };
+
   // Don't render anything until after hydration
   if (!mounted) {
     return null;
   }
 
   return (
-    <AppBar position="static" sx={{ bgcolor: "white", color: "black", height: "100px" }}>
+    <AppBar position="static" sx={{ bgcolor: "background.paper", color: "text.primary", height: "100px" }}>
       <Container maxWidth="xl">
         <Toolbar
           disableGutters
@@ -101,8 +117,8 @@ export default function NavMenu() {
                   fontSize: '0.875rem',
                   fontWeight: 500,
                   boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-                  backgroundColor: pathname === page.path ? '#f87171' : '#f3f4f6',
-                  color: pathname === page.path ? 'white' : 'black',
+                  backgroundColor: pathname === page.path ? '#f87171' : 'rgba(0, 0, 0, 0.04)',
+                  color: pathname === page.path ? 'white' : 'inherit',
                 }}
               >
                 {page.name}
@@ -120,7 +136,7 @@ export default function NavMenu() {
               onClick={handleOpenNavMenu}
               color="inherit"
             >
-              <MenuIcon sx={{ color: "black" }} />
+              <MenuIcon sx={{ color: "text.primary" }} />
             </IconButton>
             <Menu
               id="menu-appbar"
@@ -161,20 +177,24 @@ export default function NavMenu() {
             </Link>
           </Box>
 
-          {/* <Link
-                  href="/resources/add"
-                  style={{
-                    padding: '0.5rem 1rem',
-                    borderRadius: '0.375rem',
-                    transition: 'all 0.2s',
-                    fontSize: '0.875rem',
-                    fontWeight: 500,
-                    boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-                    backgroundColor: pathname === '/resources/add' ? '#f87171' : '#f3f4f6',
-                    color: pathname === '/resources/add' ? 'white' : 'black',
-                  }}
-                > */}
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, marginRight: 4 }}>
+            {/* Theme Toggle Button */}
+            <IconButton
+              onClick={handleThemeToggle}
+              color="inherit"
+              sx={{
+                backgroundColor: 'action.hover',
+                color: 'text.primary',
+                '&:hover': {
+                  backgroundColor: 'action.selected',
+                },
+                borderRadius: '0.375rem',
+                padding: '0.5rem',
+              }}
+            >
+              {mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+            </IconButton>
+
             <Button
               variant="contained"
               color="primary"
@@ -205,6 +225,8 @@ export default function NavMenu() {
                 closePopup();
               }}
             />
+
+
           </Box>
 
           {/* Right side - User Menu */}

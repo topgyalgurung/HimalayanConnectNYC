@@ -3,6 +3,15 @@ import { decrypt } from "./app/lib/session";
 import { cookies } from "next/headers";
 // import toast from "react-hot-toast";
 
+// internationalization
+// import { match } from '@formatjs/intl-localematcher'
+// import Negotiator from 'negotiator'
+
+// let headers = { 'accept-language': 'en-US,en;q=0.5' }
+// let languages = new Negotiator({ headers }).languages()
+// let locales = ['en-US', 'nep-NP', 'nep']
+// let defaultLocale = 'en-US'
+
 const authRoutes = ['/login', '/signup'];
 const protectedRoutes = ["/dashboard", "/resources/add", "/profile"];
 // const publicRoutes = ["/", "/login", "/signup", "/verifyemail", "/forgotpassword", "/resetpassword"];
@@ -33,6 +42,8 @@ export default async function middleware(request: NextRequest) {
 // Allow request to continue if no redirection is needed
   return NextResponse.next();
 }
+
+// match(languages, locales, defaultLocale) // -> 'en-US'
 
 export const config = {
   matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],

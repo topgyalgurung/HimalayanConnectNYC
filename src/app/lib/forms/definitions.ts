@@ -39,6 +39,11 @@ export const ForgotFormSchema = z.object({
   email:z.string().email({message: "Please enter a valid email."})
 })
  
+export const ResetPasswordFormSchema = z.object({
+  password: z.string().min(8, { message: "Password must be at least 8 characters" }),
+  confirmPassword: z.string().min(8, { message: "Password must be at least 8 characters" }),
+})
+
 
 export const SuggestFormSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -116,4 +121,16 @@ export type ForgotFormState =
     message?: string
     email:string
   } 
+| undefined
+
+export type ResetPasswordFormState =
+  | {
+    errors?: {
+      password?: string[]
+      confirmPassword?: string[]
+    }
+    message?: string
+    success?: boolean
+
+  }
 | undefined
