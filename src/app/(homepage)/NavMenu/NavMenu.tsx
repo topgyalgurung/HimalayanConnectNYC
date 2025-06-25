@@ -234,6 +234,7 @@ export default function NavMenu() {
             {user ? (
               <UserProfileMenu />
             ) : (
+              <>
               <Button
                 variant="contained"
                 color="primary"
@@ -241,20 +242,39 @@ export default function NavMenu() {
                 href="/login"
                 sx={{
                   padding: '0.5rem 1rem',
-                  backgroundColor: '#3b82f6',
-                  color: 'white',
                   borderRadius: '0.375rem',
                   transition: 'all 0.2s',
                   fontSize: '0.875rem',
                   fontWeight: 500,
                   boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-                  '&:hover': {
-                    backgroundColor: '#2563eb',
-                  },
+                  backgroundColor: pathname === "/login" ? '#f87171' : 'rgba(0, 0, 0, 0.04)',
+                  color: pathname === "/login" ? 'white' : 'inherit',
                 }}
+
               >
                 Login
               </Button>
+
+               <Button
+                variant="contained"
+                color="primary"
+                component={Link}
+                href="/signup"
+                 sx={{
+                  padding: '0.5rem 1rem',
+                  borderRadius: '0.375rem',
+                  transition: 'all 0.2s',
+                  fontSize: '0.875rem',
+                  fontWeight: 500,
+                  boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+                  backgroundColor: pathname === "/signup" ? '#f87171' : 'rgba(0, 0, 0, 0.04)',
+                  color: pathname === "/signup" ? 'white' : 'inherit',
+                }}
+              >
+                Sign up
+              </Button>
+              </>
+
             )}
           </Box>
         </Toolbar>

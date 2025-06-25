@@ -29,7 +29,7 @@ const AboutPage = () => {
             About Himalayan Connect NYC
           </Typography>
           <Typography variant="h5" color="text.secondary" sx={{ maxWidth: '800px', mx: 'auto' }}>
-            Empowering the Nepalese Himalayan community in New York with essential resources and support
+            Empowering the Himalayan community in New York with essential resources and support
           </Typography>
         </Box>
 
@@ -40,7 +40,7 @@ const AboutPage = () => {
                 Our Mission
               </Typography>
               <Typography sx={{ mb: 2 }}>
-                We are dedicated to connecting the Nepalese Himalayan community in New York with vital resources including nonprofit services, legal assistance, immigration support, housing, and job opportunities.
+                We are dedicated to connecting the  Himalayan community in New York with vital resources including nonprofit services, legal assistance, immigration support, housing, and job opportunities.
               </Typography>
               <Typography>
                 Our platform serves as a centralized hub, making it easier for community members to access the support they need to thrive in New York City.
@@ -54,7 +54,7 @@ const AboutPage = () => {
                 Our Vision
               </Typography>
               <Typography sx={{ mb: 2 }}>
-                To create a strong, well-connected Nepalese Himalayan community in New York where every member has easy access to essential resources and support services.
+                To create a strong, well-connected Himalayan community in New York where every member has easy access to essential resources and support services.
               </Typography>
               <Typography>
                 We envision a future where our community members can navigate life in New York with confidence, supported by a network of trusted resources and services.
@@ -68,7 +68,7 @@ const AboutPage = () => {
                 Join Our Community
               </Typography>
               <Typography sx={{ textAlign: 'center', mb: 2 }}>
-                Whether you&apos;re seeking resources, looking to contribute, or want to stay connected with the Nepalese Himalayan community in New York, Himalayan Connect NYC is here for you.
+                Whether you&apos;re seeking resources, looking to contribute, or want to stay connected with the  Himalayan community in New York, Himalayan Connect NYC is here for you.
               </Typography>
               <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
                 <Link href="/" passHref>
