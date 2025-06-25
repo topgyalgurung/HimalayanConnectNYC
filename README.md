@@ -197,6 +197,7 @@ src/
   - [ ] Reset password
 
 ## ➕ Add Resource
+
 - [ ] Use popover/modal instead of new page
 - [ ] Auto-populate borough based on entered address
 - [ ] Add 14 time inputs for business hours (open/close for each day)
