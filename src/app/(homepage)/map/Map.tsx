@@ -36,6 +36,7 @@ export default function MapView({
   onCloseAction,
   onEditCloseAction,
 }: MapViewProps) {
+
   // Add debugging logs
   // console.log('Map Resources:', resources);
   // console.log('Resources with locations:', resources.filter(r => r.Location?.[0]?.latitude && r.Location?.[0]?.longitude));
@@ -55,6 +56,7 @@ export default function MapView({
             <Markers points={resources} />
           </Map>
         </APIProvider>
+        
         {/* show resource detail card on selectedResource */}
         {/* next todo show resourcedetails pop on top of resourcelist so it does not block map */}
         {selectedResource && (

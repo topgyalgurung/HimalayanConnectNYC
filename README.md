@@ -188,53 +188,69 @@ src/
 ## Next steps / Future Enhancements
 
 #### Future enhancements
-- Auth:
-  - Login:
-    - forgot password
-    - reset password
-- Add Resource:
-  - popover/modal for add resource instead of new page 
-  - borough auto populate based on address entered 
-  - For business hours input: Need 2 time inputs (open/close) for each day (m/t/w/th/f/sat/sun) so 14 time inputs
-  - Phone number input masking
-- Resource List:
-  - Upon hovering over resource card, light up the icon on map
-  - sort the resource name in alphabetical order
-- Resource Details:
-  - Make the like button next to the location name b/c different functionality than social media buttons
-  - Instead of a “link not available” toast on social media link click, disable it and grey it out if there is no link
-- Review Card
-  - bring panel down instead of new window card
-- Profile:
-  - Change profile picture feature
-- Dashboard( user and admin)
-  - edits, not clear what has been suggested, 
-  - When approving/rejecting, option to send a message as well.
-  - View details popup - make this into a panel that drops down and show all details, and then emphasize what was changed
-  - Admin: Approved / Rejected - should show timestamp and then sorted by earliest date
-- Filters:
-  - no resources that match the filters, then the list should say “No resources available” or “No resources match filters”
-- Map:
-  - view details pop on map 
-  - When clicking on view details, bring a panel down because its blocking the map view
-  - When clicking on other icons on the map (museusms, landmarks) dont show the detail window
-  - When hovering over icon, we dont want the white arrow to cover the icon
-  - hovering over resource items on the list AND map should animate the icon on map and card on the list (both ways)
-  - Use clusters whenever there are many locations in one
-- Search:
-  - Zip
-- General:
-  - Improve separation of concern, reusable component, dont gov over 200-250 lines each file
-  - User editing → then go to new page. Website should warn user
-  - user warning system for profanity/curse words/bad input filter
-  - regular expressions, machine learning, text analysis libraries 
-  - implement draggable feature to change size for map, resourcelist and filter border like in leetcode and neetcode for better user experience in all screen sizes 
-- Next.js: 
-  - all GET-requests to server component and 
-  - convert all to server actions for POST/PUT/DELETE
-  - improve use of Suspense 
-  - fetch data directly on server component using prisma rather than fetch with http method 
-  - Caching: instead of using ```export const dynamic = "force-dynamic``` on top make it more granular and use ```cache: "no-cache" ``` with fetch. and if not changing very often statically render and use: ```next:{revalidate:3600.},``` e.g refetch every hour. 
+
+# 📝 Feature Checklist
+
+## 🔐 Auth
+- [x] Login
+  - [ ] Forgot password
+  - [ ] Reset password
+
+## ➕ Add Resource
+- [ ] Use popover/modal instead of new page
+- [ ] Auto-populate borough based on entered address
+- [ ] Add 14 time inputs for business hours (open/close for each day)
+- [ ] Phone number input masking
+
+## 📋 Resource List
+- [ ] On hover, highlight corresponding icon on map
+- [ ] Sort resource names alphabetically
+
+## 📍 Resource Details
+- [ ] Move Like button next to location name (differentiate from social buttons)
+- [ ] Disable and grey out social media links if unavailable (instead of toast message)
+
+## 📝 Review Card
+- [ ] Display panel drop-down instead of new window/card
+
+## 👤 Profile
+- [ ] Allow profile picture change
+
+## 📊 Dashboard (User & Admin)
+- [ ] Edits: clarify suggested changes
+- [ ] Add option to send message on approve/reject
+- [ ] "View details" as dropdown panel with all info and highlighted changes
+- [ ] Admin: show Approved/Rejected timestamps
+- [ ] Sort admin dashboard by earliest date
+
+## 🔍 Filters
+- [ ] Show “No resources available” or “No resources match filters” if none found
+
+## 🗺️ Map
+- [ ] Show view details as dropdown panel (not blocking map)
+- [ ] Don’t show detail popup on clicking external map icons (museums, landmarks)
+- [ ] Avoid white arrow blocking icon on hover
+- [ ] Animate both map icon and list card on mutual hover
+- [ ] Use clusters for densely located points
+
+## 🔎 Search
+- [ ] Enable zip code search
+
+## ⚙️ General Improvements
+- [ ] Improve separation of concerns & use reusable components
+- [ ] Keep files ≤ 200–250 lines
+- [ ] Warn user before navigating away while editing
+- [ ] Profanity/bad input detection using regex or ML/text analysis
+- [ ] Add draggable resizing for map, resource list, and filter borders (like LeetCode/NeetCode)
+
+## ⚡ Next.js Optimization
+- [ ] Move all GET requests to server components
+- [ ] Use server actions for POST/PUT/DELETE
+- [ ] Improve Suspense usage
+- [ ] Fetch data directly in server components using Prisma
+- [ ] Prefer `fetch(..., { cache: "no-cache" })` over `export const dynamic = "force-dynamic"` for granular caching
+
+not changing very often statically render and use: ```next:{revalidate:3600.},``` e.g refetch every hour. 
   - follow best practice: review [All 29 Next.js Mistakes Beginners Make](https://youtu.be/5QP0mvrJkiY?si=64zvICvPg6hXxVeN), [NextJS Tutorial - All 12 Concepts You Need to Know](https://youtu.be/vwSlYG7hFk0?si=BlLwVYuc2n6666jC) etc.
 <!-- - React
 - Prisma DB: -->

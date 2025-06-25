@@ -20,11 +20,8 @@ interface GetResourcesOptions {
 
 // Cache the getResources function with a 5-minute revalidation period
 const getCachedResources = unstable_cache(
-  async ({ categories = [], boroughs = [] }: GetResourcesOptions = {}) => {
+  async ({ categories = [], boroughs = [], userId = null }: GetResourcesOptions & { userId?: number | null } = {}) => {
     try {
-      const session = await getSession();
-      const userId = session?.userId ? Number(session.userId) : null;
-
       // Build where clause based on filters
       const where = {
         ...(categories && categories.length > 0 && {
@@ -98,4 +95,17 @@ const getCachedResources = unstable_cache(
   }
 );
 
-export const getResources = getCachedResources; 
+// Wrapper function that handles session outside of cache
+export async function getResources({ categories = [], boroughs = [] }: GetResourcesOptions = {}) {
+  try {
+    // Get session outside of cached function
+    const session = await getSession();
+    const userId = session?.userId ? Number(session.userId) : null;
+    
+    // Pass userId to cached function
+    return await getCachedResources({ categories, boroughs, userId });
+  } catch (error) {
+    console.error("Error in getResources wrapper:", error);
+    throw new Error("Failed to fetch resources");
+  }
+} 

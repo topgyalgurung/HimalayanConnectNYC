@@ -22,14 +22,11 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Toaster } from "react-hot-toast";
-import { ThemeProvider } from "@mui/material/styles";
-// import { Suspense } from "react";
 
 import { UserProvider } from "@/app/context/UserProvider";
 import NavMenu from "./(homepage)/NavMenu/NavMenu";
-import theme from "../../theme";
 
-// recommended to  use to ensure styles appended to head and not rendering in the  body
+// recommended to use to ensure styles appended to head and not rendering in the body
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -60,22 +57,24 @@ export default function RootLayout({
         {/* UserProvider wrapper enables user data access across all pages via useUser hook */}
         <UserProvider>
           <AppRouterCacheProvider>
-            <ThemeProvider theme={theme}>
+            {/* <ThemeProvider theme={theme}> */}
               <NavMenu />
               <Toaster
                 position="top-center"
                 toastOptions={{ duration: 2000 }}
               />
 
-              <main className="flex-grow px-2 sm:px-6 pt-4 md:pt-6 lg:pt-2 overflow-y-auto">
-                {children}
+              <main className="flex-grow pt-4 md:pt-6 lg:pt-2 overflow-y-auto">
+                <div className="px-2 sm:px-6 [&>*:first-child]:!px-0 [&>*:first-child]:!mx-0">
+                  {children}
+                </div>
               </main>
 
               {/* Footer component commented out for future implementation */}
               {/* <footer className="bg-slate-900 text-white p-4 text-center shadow-md h-[60px] flex-none">
               © Himalayan Connect NYC
             </footer> */}
-            </ThemeProvider>
+            {/* </ThemeProvider> */}
           </AppRouterCacheProvider>
         </UserProvider>
       </body>

@@ -67,14 +67,14 @@ export default function LoginForm() {
             {state?.status === 200 && (
               <p className="text-green-500 text-sm mb-2 ">Login successful!</p>
             )}
-            {/* <div className="flex justify-end mt-1">
+            <div className="flex justify-end mt-1">
               <Link
-                href="/forgotpassword"
+                href="/forgot-password"
                 className="text-m text-blue-500 hover:underline"
               >
                 Forgot Password?
               </Link>
-            </div> */}
+            </div>
             {/* password section */}
             <div className="relative mt-3">
               <input

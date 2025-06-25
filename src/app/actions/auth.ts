@@ -6,6 +6,8 @@
 // login
 // signup
 // logout 
+// forgot password 
+// reset password 
 
 import {
   SignupFormSchema,
@@ -14,7 +16,8 @@ import {
   LoginFormState,
   ForgotFormState,
   ForgotFormSchema,
-
+  ResetPasswordFormSchema,  
+  ResetPasswordFormState, 
 } from "@/app/lib/forms/definitions";
 
 import { createSession, deleteSession } from "@/app/lib/session";
@@ -268,5 +271,75 @@ export async function forgotPassword(prevState: ForgotFormState, formData: FormD
    
     }
     
+  }
+}
+
+// reset password
+export async function resetPassword(prevState: ResetPasswordFormState, formData: FormData) {
+  const token = formData.get("token") as string;
+  
+  // validate form fields
+  const validateFields = ResetPasswordFormSchema.safeParse({
+    password: formData.get("password"),
+    confirmPassword: formData.get("confirmPassword"),
+  })
+
+  if (!validateFields.success) {
+    return {
+      errors: validateFields.error.flatten().fieldErrors,
+    };
+  }
+
+  try {
+    const { password, confirmPassword } = validateFields.data;  
+
+    if (password !== confirmPassword) {
+      return {
+        message: "Passwords do not match",
+        status: 400,
+      };
+    }
+
+    const user = await prisma.user.findFirst({
+      where: {
+        // forgotPasswordToken: hashedToken,
+        forgotPasswordToken: token,
+        forgotPasswordTokenExpiry: {
+          gt: new Date()
+        }
+      }
+    });
+
+    if (!user) {
+      return {
+        message: "Invalid or expired token",
+        status: 400,
+      };
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    await prisma.user.update({
+      where: {
+        id: user.id
+      },
+      data: {
+        password: hashedPassword,
+        forgotPasswordToken: null,
+        forgotPasswordTokenExpiry: null
+      }
+    })
+
+    return {
+      message: "Password reset successfully",
+      success: true,
+      status: 200
+    }
+  } catch (error) {
+    return {
+      message: error instanceof Error ? error.message : "An error occurred",
+      status: 500,
+    }
   }
 }
