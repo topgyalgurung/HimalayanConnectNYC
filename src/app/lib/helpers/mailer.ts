@@ -42,7 +42,7 @@ export const sendEmail = async ({ email, emailType, userId }: sendEmailParams) =
             });
         }
         
-        const domain = process.env.DOMAIN || 'http://localhost:3000';
+        const domain = process.env.DOMAIN ;
         const resetLink = `${domain}/${emailType === "VERIFY" ? "verifyemail" : "reset-password"}?token=${hashedToken}`;
         
         console.log('Attempting to send email with link:', resetLink);
