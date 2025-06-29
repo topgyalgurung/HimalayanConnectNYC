@@ -4,9 +4,6 @@
  * The main landing page that renders immediately with a shell structure,
  * then streams in data using Suspense boundaries for optimal performance.
  * Data is fetched server-side but rendered progressively.
- *
- * @component
- * @returns {JSX.Element} The home page with progressive loading
  */
 
 import { Suspense } from "react";

@@ -50,7 +50,7 @@ export default function FilterSidebar({
 
   return (
     <>
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-[95%]">
       <h2 className="text-lg text-center font-bold text-black p-2 top-0 z-10 bg-white border-b">
         FILTERS
       </h2>

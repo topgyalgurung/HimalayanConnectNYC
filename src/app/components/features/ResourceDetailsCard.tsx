@@ -99,6 +99,7 @@ export default function ResourceDetailsCard({
         </button>
 
         <ResourceHeader
+          user={user as unknown as User | null}
           resource={resource}
           liked={liked}
           onToggleFavorite={toggleFavorite}
