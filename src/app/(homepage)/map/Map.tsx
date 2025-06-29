@@ -4,15 +4,24 @@
  */
 
 "use client";
+import { useState } from "react";
 
 import {
   Map,
   APIProvider,
   ControlPosition,
-  MapControl
+  MapControl,
+  AdvancedMarker,
+  CollisionBehavior,
+  InfoWindow,
+  AdvancedMarkerAnchorPoint,
 } from "@vis.gl/react-google-maps";
 
-import { Markers } from "./Markers";
+interface MarkersProps {
+  points: Resource[];
+}
+
+import Image from "next/image";
 import type { Resource } from "@/app/lib/types";
 import ResourceDetailsCard from "@/app/components/features/ResourceDetailsCard";
 import ResourceSuggestCard from "@/app/components/features/ResourceSuggestCard";
@@ -35,24 +44,9 @@ export default function MapView({
   onCloseAction,
   onEditCloseAction,
 }: MapViewProps) {
-  // const mapStyles=[
-  //     {
-  //       featureType:"poi", // Target all Points of Interest
-  //       stylers: [{ visibility: "off" }], // Hide them
-  //     }
-  // ];
-  // Define map options using the MapOptions type
-  // const mapOptions: MapOptions = {
-  //   styles: mapStyles,
-  // Add other map options as needed (e.g., zoomControl, streetViewControl, etc.)
-  // };
-
-  // Add debugging logs
-  // console.log('Map Resources:', resources);
-  // console.log('Resources with locations:', resources.filter(r => r.Location?.[0]?.latitude && r.Location?.[0]?.longitude));
 
   return (
-    <> 
+    <>
       <div className="h-full w-full relative">
         <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? ""}>
           <Map
@@ -62,12 +56,12 @@ export default function MapView({
             gestureHandling={"greedy"}
             disableDefaultUI={true}
             mapId={process.env.NEXT_PUBLIC_MAP_ID ?? ""}
-            // Enable reuseMaps only if:
-            // 1. The map is shown in multiple routes/pages
-            // 2. The map is frequently mounted/unmounted (e.g., mobile toggle)
-            // 3. Features cause frequent map component remounts
-            // reuseMaps={true}
-            // options={mapOptions}
+          // Enable reuseMaps only if:
+          // 1. The map is shown in multiple routes/pages
+          // 2. The map is frequently mounted/unmounted (e.g., mobile toggle)
+          // 3. Features cause frequent map component remounts
+          // reuseMaps={true}
+          // options={mapOptions}
           >
             <MapControl position={ControlPosition.TOP_LEFT}>
 
@@ -75,7 +69,7 @@ export default function MapView({
             <Markers points={resources} />
           </Map>
         </APIProvider>
-        
+
         {/* show resource detail card on selectedResource */}
         {/* next todo show resourcedetails pop on top of resourcelist so it does not block map */}
         {selectedResource && (
@@ -104,5 +98,115 @@ export default function MapView({
     </>
   );
 }
+const Markers = ({ points }: MarkersProps) => {
+
+  const [activeMarkerId, setActiveMarkerId] = useState<string | null>(null);
+
+  return (
+    <>
+      {points.map((resource) => {
+        const location = resource.Location?.[0];
+
+        // once user submits a resource, the location is stored in the database
+        // but if does not exist, we need to call geocoding and update the location again
+        // this is to ensure that the location is always up to date
+        // await only allowed with async function // will do this later
+
+
+        // Determine if we should show the InfoWindow
+        const shouldShowInfoWindow = activeMarkerId === resource.id;
+
+        // Customize pin background color based on resource category
+        let image = "https://cdn-icons-png.flaticon.com/512/1946/1946436.png"; // default
+
+        switch (resource.ResourceCategory?.name?.toLowerCase()) {
+          case "community":
+            image = "https://cdn-icons-png.flaticon.com/512/7829/7829198.png";
+            break;
+          case "legal":
+            image = "https://cdn-icons-png.flaticon.com/512/4052/4052204.png";
+            break;
+          case "health":
+            image = "https://cdn-icons-png.flaticon.com/512/2382/2382533.png";
+            break;
+          case "education":
+            image = "https://cdn-icons-png.flaticon.com/512/4406/4406319.png";
+            break;
+          case "finance":
+            image = "https://cdn-icons-png.flaticon.com/512/4256/4256900.png";
+            break;
+          case "real estate":
+            image = "https://cdn-icons-png.flaticon.com/512/2238/2238337.png";
+            break;
+          case "other":
+            image = "https://cdn-icons-png.flaticon.com/512/3195/3195457.png";
+            break;
+        }
+
+        return (
+          <div
+            key={resource.id}
+            // onClick={() => setActiveMarkerId(resource.id)}
+            onMouseOver={() => setActiveMarkerId(resource.id)}
+            onMouseOut={() => setActiveMarkerId(null)}
+            className="cursor-pointer"
+          >
+            <AdvancedMarker
+              // ref={markerRef}
+              // onClick={handleMarkerClick}
+              collisionBehavior={CollisionBehavior.REQUIRED_AND_HIDES_OPTIONAL}
+              position={{
+                lat: location?.latitude ?? 0,
+                lng: location?.longitude ?? 0,
+              }}
+              anchorPoint={AdvancedMarkerAnchorPoint.TOP_LEFT}
+
+            >
+              <Image
+                src={image} //marker image 
+                alt={`${resource.ResourceCategory?.name} icon`}
+                style={{
+                  objectFit: "contain",
+                  // backgroundColor: "#FFEB3B", // Bright yellow background
+                }}
+                height={20}
+                width={20}
+              />
+            </AdvancedMarker>
+
+            {shouldShowInfoWindow && (
+              <InfoWindow
+                // headerContent={<h1 className="text-sm font-semibold text-gray-800">
+                //     {resource.name}
+                //   </h1>}
+                position={{
+                  lat: location?.latitude ?? 0,
+                  lng: location?.longitude ?? 0,
+                }}
+                pixelOffset={[0, -20]} // so it does not block pin
+                onCloseClick={() => setActiveMarkerId(null)}
+                shouldFocus={true}
+                headerDisabled={true}
+              >
+                <div className="bg-white shadow-lg rounded-lg p-1 w-[250px]">
+                  <h1 className="text-sm font-semibold text-gray-800">
+                    {resource.name}
+                  </h1>
+                  <p className="text-sm text-gray-600"> 📍{resource.address}</p>
+                  <p className="text-sm text-gray-500 mt-2">
+                    {resource.description && resource.description.length > 200
+                      ? `${resource.description.slice(0, 200)}...`
+                      : resource.description}
+                  </p>
+                </div>
+              </InfoWindow>
+            )}
+          </div>
+        );
+      })}
+    </>
+  );
+};
+
 
 export { MapView };
