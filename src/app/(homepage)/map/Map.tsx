@@ -12,7 +12,7 @@ import {
   MapControl
 } from "@vis.gl/react-google-maps";
 
-import { Markers } from "./Markers";
+import {Markers} from "./Markers";
 import type { Resource } from "@/app/lib/types";
 import ResourceDetailsCard from "@/app/components/features/ResourceDetailsCard";
 import ResourceSuggestCard from "@/app/components/features/ResourceSuggestCard";
