@@ -33,10 +33,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
-import Brightness4Icon from "@mui/icons-material/Brightness4";
-import Brightness7Icon from "@mui/icons-material/Brightness7";
-import { useColorScheme } from "@mui/material/styles";
-
 
 
 const pages = [
@@ -54,10 +50,8 @@ export default function NavMenu() {
   const { isOpen, openPopup, closePopup } = usePopup();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const router = useRouter();
-  const { mode, setMode } = useColorScheme();
 
 
- 
   // Handle hydration mismatch by only rendering after mount
   React.useEffect(() => {
     setMounted(true);
@@ -83,9 +77,6 @@ export default function NavMenu() {
     openPopup({});
   };
 
-  const handleThemeToggle = () => {
-    setMode(mode === 'light' ? 'dark' : 'light');
-  };
 
   // Don't render anything until after hydration
   if (!mounted) {
@@ -178,22 +169,7 @@ export default function NavMenu() {
           </Box>
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, marginRight: 4 }}>
-            {/* Theme Toggle Button */}
-            <IconButton
-              onClick={handleThemeToggle}
-              color="inherit"
-              sx={{
-                backgroundColor: 'action.hover',
-                color: 'text.primary',
-                '&:hover': {
-                  backgroundColor: 'action.selected',
-                },
-                borderRadius: '0.375rem',
-                padding: '0.5rem',
-              }}
-            >
-              {mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
-            </IconButton>
+        
 
             <Button
               variant="contained"

@@ -187,28 +187,31 @@ src/
 
 ## Next steps / Future Enhancements
 
-#### Future enhancements
+### 🔧 Updates
+
+- ✅ Fixed **Forgot Password** and **Reset Password** features  
+  - Integrated with **Mailtrap** using Nodemailer for testing  
+  - Added **Resend API** to send password reset emails to real user addresses
 
 # 📝 Feature Checklist
 
 ## 🔐 Auth
 - [x] Login
-  - [ ] Forgot password
-  - [ ] Reset password
+  - [x] Forgot password
+  - [x] Reset password
 
 ## ➕ Add Resource
-
-- [ ] Use popover/modal instead of new page
+- [x] Use popover/modal instead of new page
 - [ ] Auto-populate borough based on entered address
 - [ ] Add 14 time inputs for business hours (open/close for each day)
 - [ ] Phone number input masking
 
 ## 📋 Resource List
 - [ ] On hover, highlight corresponding icon on map
-- [ ] Sort resource names alphabetically
+- [x] Sort resource names alphabetically
 
 ## 📍 Resource Details
-- [ ] Move Like button next to location name (differentiate from social buttons)
+- [x] Move Like button next to location name (differentiate from social buttons)
 - [ ] Disable and grey out social media links if unavailable (instead of toast message)
 
 ## 📝 Review Card
@@ -247,14 +250,12 @@ src/
 ## ⚡ Next.js Optimization
 - [ ] Move all GET requests to server components
 - [ ] Use server actions for POST/PUT/DELETE
-- [ ] Improve Suspense usage
+- [x] Improve Suspense usage
 - [ ] Fetch data directly in server components using Prisma
-- [ ] Prefer `fetch(..., { cache: "no-cache" })` over `export const dynamic = "force-dynamic"` for granular caching
+- [ ] Prefer `fetch(..., { cache: "no-cache" })` over `export const dynamic = "force-dynamic"` for granular caching not changing very often statically render and use: ```next:{revalidate:3600.},``` e.g refetch every hour. 
 
-not changing very often statically render and use: ```next:{revalidate:3600.},``` e.g refetch every hour. 
-  - follow best practice: review [All 29 Next.js Mistakes Beginners Make](https://youtu.be/5QP0mvrJkiY?si=64zvICvPg6hXxVeN), [NextJS Tutorial - All 12 Concepts You Need to Know](https://youtu.be/vwSlYG7hFk0?si=BlLwVYuc2n6666jC) etc.
-<!-- - React
-- Prisma DB: -->
+Follow best practice: review [All 29 Next.js Mistakes Beginners Make](https://youtu.be/5QP0mvrJkiY?si=64zvICvPg6hXxVeN), [NextJS Tutorial - All 12 Concepts You Need to Know](https://youtu.be/vwSlYG7hFk0?si=BlLwVYuc2n6666jC) etc.
+
 
 #### Nice to Haves 
 1. Multilingual Support

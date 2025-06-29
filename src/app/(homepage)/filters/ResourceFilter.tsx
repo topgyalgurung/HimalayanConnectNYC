@@ -6,7 +6,7 @@
  * Uses Material-UI components for styling and functionality
  */
 
-import React from "react";
+import { useState } from "react";
 
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -15,6 +15,9 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Checkbox from "@mui/material/Checkbox";
 import Image from "next/image";
+import { Collapse } from "@mui/material";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
 
 interface CategoryFilterProps {
   onFilterChangeAction: (category: string[]) => void;
@@ -64,15 +67,16 @@ export default function ResourceFilter({
   onFilterChangeAction,
   selectedCategories = [],
 }: CategoryFilterProps) {
+  const [openResFilter, setOpenResFilter] = useState(true); // default: expanded
   const handleCategoryCheckboxChange = (category: string) => {
     //  checks if the selectedCategories array includes the category
     const updatedCategories = selectedCategories.includes(
       category.toLowerCase()
     )
       ? selectedCategories.filter(
-          //filtering out the unchecked category
-          (c) => c.toLowerCase() !== category.toLowerCase()
-        )
+        //filtering out the unchecked category
+        (c) => c.toLowerCase() !== category.toLowerCase()
+      )
       : [...selectedCategories, category];
 
     onFilterChangeAction(updatedCategories);
@@ -82,40 +86,54 @@ export default function ResourceFilter({
     onFilterChangeAction([]);
   };
 
+
+  const handleToggle = () => {
+    setOpenResFilter((prev) => !prev);
+  };
+
   return (
     <div className="p-3 pr-4 border-2 rounded-md text-black text-sm">
-      <div className="flex items-center justify-center mb-1">
-        <h3 className="font-semibold text-blue-500 text-sm">CATEGORY</h3>
-        <span className="mx-2 border-l border-gray-300 h-6 ml-4 hidden sm:block" />
-        <button onClick={clearFilters} className="text-red-500 ml-auto sm:ml-0 flex items-center gap-2">
-          CLEAR 
-          <Image src="https://cdn-icons-png.flaticon.com/512/399/399274.png" alt="clear" width={20} height={20} />
-        </button>
-      </div>
-      <hr className="mb-1" />
+      <List sx={{ width: "100%", padding: 0, margin: 0 }} dense>
+        {/* top section */}
+        <div className="flex items-center justify-center mb-1">
+          <h3 className="font-semibold text-blue-500 text-sm">CATEGORY</h3>
+          <span className="mx-2 border-l border-gray-300 h-6 ml-4 hidden sm:block" />
+          <button onClick={clearFilters} className="text-red-500 ml-auto sm:ml-0 flex items-center gap-2">
+            CLEAR
+            <Image src="https://cdn-icons-png.flaticon.com/512/399/399274.png" alt="clear" width={20} height={20} />
+          </button>
+          <ListItemButton onClick={handleToggle}>
+            <ListItemText />
+            {openResFilter ? <ExpandLess /> : <ExpandMore />}
+          </ListItemButton>
+        </div>
+        <hr className="mb-1" />
 
-      <List dense sx={{ width: "100%", padding: 0, margin: 0 }}>
-        {categories.map((cat) => (
-          <ListItem key={cat.id} disablePadding>
-            <ListItemButton>
-              <ListItemIcon className="min-w-0 mr-2">
-                <Checkbox
-                  checked={selectedCategories.includes(cat.name)}
-                  onChange={() => handleCategoryCheckboxChange(cat.name)}
-                  size="small"
-                />
-              </ListItemIcon>
-              <Image
-                src={cat.icon}
-                alt={cat.name}
-                className="mr-2"
-                width={25}
-                height={25}
-              />
-              <ListItemText primary={cat.name} className="capitalize" />
-            </ListItemButton>
-          </ListItem>
-        ))}
+        <Collapse in={openResFilter} timeout="auto" unmountOnExit>
+          <List dense sx={{ width: "100%", padding: 0 }}>
+            {categories.map((cat) => (
+              <ListItem key={cat.id} disablePadding>
+                <ListItemButton className="py-1">
+                  <ListItemIcon className="min-w-0 mr-2">
+                    <Checkbox
+                      checked={selectedCategories.includes(cat.name)}
+                      onChange={() => handleCategoryCheckboxChange(cat.name)}
+                      size="small"
+                    />
+                  </ListItemIcon>
+                  <Image
+                    src={cat.icon}
+                    alt={cat.name}
+                    className="mr-2"
+                    width={25}
+                    height={25}
+                  />
+                  <ListItemText primary={cat.name} className="capitalize" />
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
+        </Collapse>
       </List>
     </div>
   );

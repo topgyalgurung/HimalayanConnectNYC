@@ -15,11 +15,12 @@ import { motion } from "framer-motion";
 import IconButton from "@mui/material/IconButton";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import type { Resource } from "@/app/lib/types";
+import type { Resource, User } from "@/app/lib/types";
 import toast from "react-hot-toast";
 
 interface ResourceHeaderProps {
   resource: Resource;
+  user:User| null;
   liked: boolean;
   onToggleFavorite: (id: number) => void;
   className?: string;
@@ -27,6 +28,7 @@ interface ResourceHeaderProps {
 
 const ResourceHeader: React.FC<ResourceHeaderProps> = ({
   resource,
+  user,
   liked,
   onToggleFavorite,
   className = "",
@@ -41,6 +43,7 @@ const ResourceHeader: React.FC<ResourceHeaderProps> = ({
   };
   return (
     <div className={`flex justify-between ${className}`}>
+
       <div>
         {resource.imageUrl && (
           <div className="relative group">
@@ -55,6 +58,8 @@ const ResourceHeader: React.FC<ResourceHeaderProps> = ({
         )}
         <div className="flex w-full justify-between items-center">
           <h2 className="text-lg font-bold">{resource.name}</h2>
+          {/* if no use don't show favorite button */}
+          {user && 
           <motion.div
             whileTap={{ scale: 0.95 }}
             transition={{ type: "spring", stiffness: 300 }}
@@ -67,7 +72,10 @@ const ResourceHeader: React.FC<ResourceHeaderProps> = ({
               {liked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
             </IconButton>
           </motion.div>
+          }     
+
         </div>
+      
 
         <div className="space-y-2">
           <p className="text-sm font-medium text-blue-600">
