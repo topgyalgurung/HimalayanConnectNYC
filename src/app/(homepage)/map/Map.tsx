@@ -14,7 +14,6 @@ import {
   AdvancedMarker,
   CollisionBehavior,
   InfoWindow,
-  AdvancedMarkerAnchorPoint,
 } from "@vis.gl/react-google-maps";
 
 interface MarkersProps {
@@ -56,6 +55,8 @@ export default function MapView({
             gestureHandling={"greedy"}
             disableDefaultUI={true}
             mapId={process.env.NEXT_PUBLIC_MAP_ID ?? ""}
+
+          // {filteredResources && <ClusteredResMarkers res={filteredResources}/>}
           // Enable reuseMaps only if:
           // 1. The map is shown in multiple routes/pages
           // 2. The map is frequently mounted/unmounted (e.g., mobile toggle)
@@ -146,20 +147,20 @@ const Markers = ({ points }: MarkersProps) => {
         return (
           <div
             key={resource.id}
-            // onClick={() => setActiveMarkerId(resource.id)}
-            onMouseOver={() => setActiveMarkerId(resource.id)}
-            onMouseOut={() => setActiveMarkerId(null)}
+            onClick={() => setActiveMarkerId(resource.id)}
+            // onMouseOver={() => setActiveMarkerId(resource.id)}
+            // onMouseOut={() => setActiveMarkerId(null)}
             className="cursor-pointer"
           >
             <AdvancedMarker
               // ref={markerRef}
-              // onClick={handleMarkerClick}
+              //onClick={handleMarkerClick}
               collisionBehavior={CollisionBehavior.REQUIRED_AND_HIDES_OPTIONAL}
               position={{
                 lat: location?.latitude ?? 0,
                 lng: location?.longitude ?? 0,
               }}
-              anchorPoint={AdvancedMarkerAnchorPoint.TOP_LEFT}
+              // anchorPoint={AdvancedMarkerAnchorPoint.TOP_LEFT}
 
             >
               <Image
@@ -176,9 +177,9 @@ const Markers = ({ points }: MarkersProps) => {
 
             {shouldShowInfoWindow && (
               <InfoWindow
-                // headerContent={<h1 className="text-sm font-semibold text-gray-800">
-                //     {resource.name}
-                //   </h1>}
+                headerContent={<h1 className="text-sm font-semibold text-gray-800">
+                    {resource.name}
+                  </h1>}
                 position={{
                   lat: location?.latitude ?? 0,
                   lng: location?.longitude ?? 0,
@@ -186,13 +187,20 @@ const Markers = ({ points }: MarkersProps) => {
                 pixelOffset={[0, -20]} // so it does not block pin
                 onCloseClick={() => setActiveMarkerId(null)}
                 shouldFocus={true}
-                headerDisabled={true}
+                // headerDisabled={true}
               >
                 <div className="bg-white shadow-lg rounded-lg p-1 w-[250px]">
-                  <h1 className="text-sm font-semibold text-gray-800">
-                    {resource.name}
-                  </h1>
+                
                   <p className="text-sm text-gray-600"> 📍{resource.address}</p>
+                  <a
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                      resource.address
+                    )}`}
+                    className="text-blue-600 hover:text-blue-800 transition-colors no-underline hover:underline"
+                    >
+                    View on Google Maps
+                  </a>
+
                   <p className="text-sm text-gray-500 mt-2">
                     {resource.description && resource.description.length > 200
                       ? `${resource.description.slice(0, 200)}...`
