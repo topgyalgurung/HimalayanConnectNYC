@@ -235,7 +235,7 @@ src/
 - [ ] Don’t show detail popup on clicking external map icons (museums, landmarks)
 - [ ] Avoid white arrow blocking icon on hover
 - [ ] Animate both map icon and list card on mutual hover
-- [ ] Use clusters for densely located points
+- [ ] Use clusters for densely located points: [reference](https://github.com/visgl/react-google-maps/tree/main/examples/marker-clustering)
 
 ## 🔎 Search
 - [ ] Enable zip code search
