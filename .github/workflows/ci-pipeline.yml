@@ -1,0 +1,49 @@
+name:  CI Pipeline to staging/production environment
+
+# Trigger the workflow on push to main/master or on pull requests
+on:
+  push:
+    branches: [staging, master]
+  pull_request:
+    branches: [staging, master]
+
+jobs:
+  # Run unit tests
+  test:
+    runs-on: ubuntu-latest
+    name: "Run unit tests"
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./src
+    
+
+    steps:
+      - name: "Checkout repository"
+        uses: actions/checkout@v4
+        
+      # we can also cache the dependencies using npm ci to avoid re-installing the dependencies
+      - name: "Install dependencies"
+        run: npm install
+
+      - name: "Run tests"
+        run: npm run test
+
+  # Run linter to check for code style issues
+  lint:
+    name: "Run linter"
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./src
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        name: "Checkout repository"
+
+      - name: "Install dependencies"
+        run: npm install
+
+      - name: "Run lint"
+        run: npm run lint
