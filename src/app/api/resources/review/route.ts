@@ -1,11 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/app/lib/session"; // your secure session utils
 import { prisma } from "@/app/lib/prisma";
+import { checkRateLimit } from "@/app/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest) {
   try {
+    // Get client IP from request headers
+    const forwardedFor = req.headers.get('x-forwarded-for')
+    const ip = forwardedFor?.split(',')[0] || req.headers.get('x-real-ip') || 'unknown'
+    
+    // Check rate limit
+    const rateLimitResult = await checkRateLimit(ip)
+    if (rateLimitResult) return rateLimitResult
+
     const session = await getSession();
     console.log("Session in review API:", session);
 

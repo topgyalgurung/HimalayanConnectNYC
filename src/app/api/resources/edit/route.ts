@@ -1,11 +1,20 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import { prisma } from '@/app/lib/prisma';
 import { getSession } from '@/app/lib/session';
+import { checkRateLimit } from "@/app/lib/rate-limit";
 
 export const dynamic = 'force-dynamic';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    // Get client IP from request headers
+    const forwardedFor = request.headers.get('x-forwarded-for')
+    const ip = forwardedFor?.split(',')[0] || request.headers.get('x-real-ip') || 'unknown'
+    
+    // Check rate limit
+    const rateLimitResult = await checkRateLimit(ip)
+    if (rateLimitResult) return rateLimitResult
+
     const session = await getSession();
 
     if (!session || !session.userId) {
@@ -20,16 +29,14 @@ export async function GET() {
       });
   
       return NextResponse.json(suggestions);
-      
     }
+
     // If admin, fetch ALL suggestions
     const allSuggestions = await prisma.resourceEditSuggestion.findMany({
       orderBy: { createdAt: 'desc' },
     });
 
     return NextResponse.json(allSuggestions);
-
-   
   } catch (error) {
     console.error('Failed to fetch resource edit suggestions:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
@@ -37,12 +44,20 @@ export async function GET() {
 }
 
 // ADD POST 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
     try {
-      const session = await getSession();
-      if (!session || !session.userId) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-      }
+        // Get client IP from request headers
+        const forwardedFor = req.headers.get('x-forwarded-for')
+        const ip = forwardedFor?.split(',')[0] || req.headers.get('x-real-ip') || 'unknown'
+        
+        // Check rate limit
+        const rateLimitResult = await checkRateLimit(ip)
+        if (rateLimitResult) return rateLimitResult
+
+        const session = await getSession();
+        if (!session || !session.userId) {
+          return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
         
     const userId = Number(session.userId);
   

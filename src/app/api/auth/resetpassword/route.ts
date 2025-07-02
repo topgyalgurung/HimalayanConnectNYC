@@ -1,10 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { prisma } from '../../../lib/prisma';
+import { checkRateLimit } from "@/app/lib/rate-limit";
 
 // verify token and save new password after encrypting it 
 export async function POST(request: NextRequest) {
     try {
+        // Get client IP from request headers
+        const forwardedFor = request.headers.get('x-forwarded-for')
+        const ip = forwardedFor?.split(',')[0] || request.headers.get('x-real-ip') || 'unknown'
+        
+        // Check rate limit
+        const rateLimitResult = await checkRateLimit(ip)
+        if (rateLimitResult) return rateLimitResult
+
         const reqBody = await request.json();
         const { token, password } = reqBody;
         console.log("Token received: ", token);
