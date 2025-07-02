@@ -67,6 +67,14 @@ export default function AddResourcePopup({
     setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
+  const handlePhoneChange = (value: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      phone: value,
+    }));
+    setErrors((prev) => ({ ...prev, phone: "" }));
+  };
+
   const handleFormAction = async (formData: FormData) => {
     setLoading(true);
     setMessage("");
@@ -194,7 +202,7 @@ export default function AddResourcePopup({
               handleChange={handleChange}
               selectedDays={selectedDays}
               city={formData.city}
-              phone={formData.phone}
+              // phone={formData.phone}
               openTime={openTime}
               closeTime={closeTime}
               onDayChange={(_, newDays) => setSelectedDays(newDays)}
@@ -202,6 +210,7 @@ export default function AddResourcePopup({
               onCloseTimeChange={setCloseTime}
               imageUrl={imageUrl}
               onImageUpload={setImageUrl}
+              onPhoneChange={handlePhoneChange}
             />
           </AccordionDetails>
         </Accordion>

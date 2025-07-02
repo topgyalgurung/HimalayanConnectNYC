@@ -7,25 +7,35 @@ import { Redis } from '@upstash/redis'
 import { Ratelimit } from '@upstash/ratelimit'
 import { NextResponse } from 'next/server'
 
-// Create Redis instance using environment variables
-const redis = Redis.fromEnv()
+// Skip rate limiting entirely in development
+const isDevelopment = process.env.NODE_ENV === 'development';
 
-// const redis = new Redis({
-//   url: process.env.UPSTASH_REDIS_REST_URL!,
-//   token: process.env.UPSTASH_REDIS_REST_TOKEN!
-// })
+// Only create Redis instance in production
+const redis = !isDevelopment ? Redis.fromEnv() : null;
 
-// Create a new ratelimiter that allows 10 requests per 10 seconds
-const ratelimit = new Ratelimit({
-  redis,
-  limiter: Ratelimit.slidingWindow(10, '10 s'),
-  analytics: true,
-  prefix: '@upstash/ratelimit'
-})
+// Only create rate limiter in production
+const ratelimit = !isDevelopment 
+  ? new Ratelimit({
+      redis: redis!,
+      limiter: Ratelimit.slidingWindow(10, '10 s'),
+      analytics: true,
+      prefix: '@upstash/ratelimit'
+    })
+  : null;
 
 // Create a function that checks the rate limit for a given IP
 export async function checkRateLimit(ip: string) {
+  // Skip rate limiting in development
+  if (isDevelopment) {
+    return null;
+  }
+
   try {
+    if (!ratelimit) {
+      console.warn('Rate limiter not initialized');
+      return null;
+    }
+
     const { success, limit, reset, remaining } = await ratelimit.limit(ip || 'anonymous')
 
     if (!success) {

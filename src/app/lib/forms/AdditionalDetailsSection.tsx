@@ -6,9 +6,9 @@ import {
 } from "next-cloudinary";
 import CitySelect from "@/app/lib/forms/CitySelect";
 import TimePickerSection from "@/app/lib/forms/TimePickerSection";
-// import InputMask from 'react-input-mask';
-// import PhoneNumberInput from 'react-phone-number-input';
-// import 'react-phone-number-input/style.css'
+import PhoneInput from 'react-phone-input-2' // phone number input mask
+import 'react-phone-input-2/lib/style.css'
+
 import dayjs from "dayjs";
 import { TextField } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -22,7 +22,7 @@ interface AdditionalDetailsSectionProps {
   ) => void;
   selectedDays: string[];
   city?: string;
-  phone?: string;
+  // phone?: string;
   openTime: dayjs.Dayjs | null;
   closeTime: dayjs.Dayjs | null;
   onDayChange: (
@@ -33,6 +33,7 @@ interface AdditionalDetailsSectionProps {
   onCloseTimeChange: (time: dayjs.Dayjs | null) => void;
   imageUrl: string | null;
   onImageUpload: (url: string) => void;
+  onPhoneChange?: (value: string) => void; // handle phone number change
 }
 
 export default function AdditionalDetailsSection({
@@ -41,7 +42,6 @@ export default function AdditionalDetailsSection({
   handleChange,
   selectedDays,
   city,
-  // phone,
   openTime,
   closeTime,
   onDayChange,
@@ -49,12 +49,15 @@ export default function AdditionalDetailsSection({
   onCloseTimeChange,
   onImageUpload,
   imageUrl,
+  onPhoneChange,
 }: AdditionalDetailsSectionProps) {
   function handleUploadSuccess(result: CloudinaryUploadWidgetResults) {
     if (typeof result.info === "object" && result.info?.secure_url) {
       onImageUpload(result.info.secure_url);
     }
   }
+
+  // const mask = countryList.find({code}) => code === countryCode)?.mask;
 
   return (
     <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
@@ -72,34 +75,28 @@ export default function AdditionalDetailsSection({
         />
       </div>
 
-      {/* <PhoneNumberInput
-        defaultCountry="US"
-        value={phone}
-        onChange={(value) => handleChange({
-          target: {
-            name: 'phone',
-            value: value || ''
+      <PhoneInput
+        country={'us'}
+        placeholder="Enter phone number"
+        value={formData.phone || ''}
+        onChange={(value) => {
+          if (onPhoneChange) {
+            onPhoneChange(value);
           }
-        } as React.ChangeEvent<HTMLInputElement>)}
-        className={`w-full px-3 py-2 border ${errors.phone ? 'border-red-500' : 'border-gray-300'} rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
-      />
-      {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>} */}
-
-      {/*  need to implement phone number masking */}
-      <TextField
-        id="outlined-basic"
-        label="Phone Number (XXX-XXX-XXXX) (optional)"
-        name="phone"
-        variant="outlined"
-        value={formData.phone}
-        onChange={handleChange}
-        className={`w-full px-3 py-2 border ${
-          errors.phone ? "border-red-500" : "border-gray-300"
-        } rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+        }}
+        containerClass="phone-input-container"
+        inputClass="phone-input"
+        specialLabel=""
+        enableSearch={false}
+        disableSearchIcon={true}
+        inputProps={{
+          name: 'phone',
+          required: false,
+        }}
+      
       />
       {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
 
-      {/* email */}
       <TextField
         id="outlined-basic"
         label="Email (optional)"
