@@ -51,10 +51,14 @@ export default function AdditionalDetailsSection({
   imageUrl,
   onPhoneChange,
 }: AdditionalDetailsSectionProps) {
-  function handleUploadSuccess(result: CloudinaryUploadWidgetResults) {
+    function handleUploadSuccess(result: CloudinaryUploadWidgetResults) {
     if (typeof result.info === "object" && result.info?.secure_url) {
       onImageUpload(result.info.secure_url);
     }
+  }
+
+  function handleDelete(){
+    onImageUpload(null);
   }
 
   // const mask = countryList.find({code}) => code === countryCode)?.mask;
@@ -174,6 +178,15 @@ export default function AdditionalDetailsSection({
             <div className="flex items-center gap-2 text-sm text-gray-600">
               <CheckCircleIcon className="h-5 w-5 text-green-500" />
               <span>Image attached</span>
+              {/* Pushes the delete button to the right */}
+    <button
+      onClick={handleDelete}
+      className="ml-auto px-2 py-1 text-sm text-white bg-red-500 hover:bg-red-600 rounded transition-colors"
+      aria-label="Remove image"
+    >
+      ✕
+    </button>
+             
             </div>
             <div className="relative rounded-lg overflow-hidden border border-gray-200 max-w-[200px] mx-auto">
               <Image
@@ -184,6 +197,7 @@ export default function AdditionalDetailsSection({
                 height={200}
               />
             </div>
+           
           </div>
         )}
       </div>

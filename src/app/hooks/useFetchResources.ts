@@ -9,7 +9,7 @@
  * @returns {Function} refetch - Function to manually refresh resources
  */
 import { useState, useEffect } from "react";
-import type { Resource } from "../lib/types";
+import type { Resource } from "@/app/lib/types";
 
 // const RESOURCE_CACHE_KEY = "resourcecache"; // key for localStorage
 
@@ -17,19 +17,6 @@ export function useFetchResources() {
   const [resources, setResources] = useState<Resource[]>([]);
 
   useEffect(() => {
-    // const cacheResources = localStorage.getItem(RESOURCE_CACHE_KEY);
-    
-    // if (cacheResources) {
-    //   const parsedResources = JSON.parse(cacheResources);
-    //   // Only set if it's an array
-    //   if (Array.isArray(parsedResources)) {
-    //     setResources(parsedResources);
-    //   } else {
-    //     console.log("Invalid cache format, fetching fresh data");
-    //     fetchResources();
-    //   }
-    // } else {
-    //   console.log("No cache found, fetching fresh data");
       fetchResources();
   }, []);
 

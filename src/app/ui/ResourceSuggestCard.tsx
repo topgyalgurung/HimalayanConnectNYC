@@ -54,7 +54,8 @@ export default function ResourceSuggestCard({
     openDays: resource?.openDays || "",
     openTime: dayjs.utc(resource.openTime).format("hh:mm A") || null,
     closeTime: dayjs.utc(resource.closeTime).format("hh:mm A") || null,
-
+    // openTime: resource?.openTime || null,
+    // closeTime: resource?.closeTime || null,
   });
 
   // Track current values

@@ -1,3 +1,10 @@
+// src/app/components/features/ReviewSubmitCard.tsx
+/**
+ * ReviewSubmitCard Component
+ *
+ * This component is the form for submitting a review for a resource.
+ *
+ */
 // todo: change to action instead of handleSubmit and calling api that post to db
 
 "use client";
@@ -11,7 +18,7 @@ import Button from "@mui/material/Button";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CircularProgress from "@mui/material/CircularProgress";
 
-import Popup from "../dashboard/ResourcePopup/Popup";
+import Popup from "@/app/components/dashboard/ResourcePopup/Popup";
 
 import { type Resource } from "@/app/lib/types";
 interface ReviewResourceCardProps {

@@ -1,10 +1,13 @@
-import LoginForm from "./login-form";
+import LoginForm from "@/app/ui/auth/login-form";
+import { Suspense } from "react";
 
-export const dynamic = 'force-dynamic'
 export default function LoginPage() {
   return (
     <div>
-      <LoginForm />
+      <Suspense>
+   <LoginForm />
+      </Suspense>
+   
     </div>
   );
 }
