@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import Link from "next/link";
-import { forgotPassword } from "@/app/actions/auth";
+import { forgotPassword } from "@/app/lib/auth";
 import { User } from "@prisma/client";
 
 interface ForgotPasswordState {

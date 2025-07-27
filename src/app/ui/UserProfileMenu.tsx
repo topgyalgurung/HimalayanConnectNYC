@@ -1,11 +1,3 @@
-/**
- * UserProfileMenu Component
- *
- * This component is the user profile menu for the homepage of the Himalayan Connect NYC application.
- * It allows the user to login, sign up, and logout.
- *
- */
-
 "use client";
 
 import React from "react";

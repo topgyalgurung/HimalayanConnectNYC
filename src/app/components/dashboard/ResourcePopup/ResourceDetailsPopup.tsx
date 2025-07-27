@@ -1,8 +1,7 @@
 import React from "react";
 import Popup from "./Popup";
-import type { Resource } from "@/app/lib/types";
 import dayjs from "dayjs";
-import { ResourceEditSuggestion } from "@/app/lib/types";
+import { ResourceEditSuggestion, Resource } from "@/app/lib/types";
 import utc from "dayjs/plugin/utc";
 dayjs.extend(utc);
 
@@ -189,18 +188,7 @@ export default function ResourceDetailsPopup({
                 </span>
               </div>
             )}
-            {/* {resource.Location && resource.Location.length > 0 && (
-              <div className="flex items-center gap-2 text-sm">
-                <span className="text-gray-500 font-medium min-w-[80px]">
-                  Location:
-                </span>
-                <span className="text-gray-700">
-                  {resource.Location.map(
-                    (loc) => `${loc.latitude}, ${loc.longitude}`
-                  ).join(", ")}
-                </span>
-              </div>
-            )} */}
+
           </div>
         </div>
 

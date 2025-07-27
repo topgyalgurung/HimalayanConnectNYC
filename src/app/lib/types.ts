@@ -1,5 +1,7 @@
 export type ResourceStatus = "PENDING" | "APPROVED" | "REJECTED";
 
+// type definitions 
+
 export type Location = {
   id: number;
   latitude: number | null;

@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from "react";
 import Popup from "./Popup";
 import { useRouter } from "next/navigation";
-import { addResource } from "@/app/actions/forms";
-import { getCategories } from "@/app/actions/forms";
+import { addResource } from "@/app/lib/forms";
+import { getCategories } from "@/app/lib/forms";
 import { formSchema, type FormValues } from "@/app/lib/forms/validationSchema";
 import BasicInfoSection from "@/app/lib/forms/BasicInfoSection";
 import AdditionalDetailsSection from "@/app/lib/forms/AdditionalDetailsSection";

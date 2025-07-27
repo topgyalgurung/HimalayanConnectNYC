@@ -1,5 +1,5 @@
 import Rating from "@mui/material/Rating";
-import { type ResourceReview, Resource, User } from "@/app/lib/definitions";
+import { type ResourceReview, Resource, User } from "@/app/lib/types";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 

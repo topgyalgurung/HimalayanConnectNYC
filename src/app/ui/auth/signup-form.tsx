@@ -7,13 +7,12 @@
  * Manages form state and user registration flow
  */
 
-import { signup } from "@/app/lib/auth";
 import { useActionState } from "react";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/app/context/UserProvider";
+import { signup } from "@/app/lib/auth";
 
 export default function SignupForm() {
   const { setUser } = useUser();

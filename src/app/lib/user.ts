@@ -4,7 +4,7 @@
  * user action to get user data from the database
  */
 
-import { prisma } from "./prisma";
+import { prisma } from "@/app/lib/prisma";
 
 export async function getUserData(userId: string) {
   try {

@@ -9,7 +9,7 @@
 import React from "react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { addEditResource } from "../../actions/forms";
+import { addEditResource } from "@/app/lib/forms";
 
 import { type Resource } from "@/app/lib/types";
 import toast from "react-hot-toast";
@@ -54,8 +54,7 @@ export default function ResourceSuggestCard({
     openDays: resource?.openDays || "",
     openTime: dayjs.utc(resource.openTime).format("hh:mm A") || null,
     closeTime: dayjs.utc(resource.closeTime).format("hh:mm A") || null,
-    // openTime: resource?.openTime || null,
-    // closeTime: resource?.closeTime || null,
+
   });
 
   // Track current values

@@ -1,27 +1,20 @@
-/**
- * NavMenu Component
- *
- * The main navigation menu component that provides:
- * - Logo and branding
- * - Search functionality
- * - User authentication state
- * - Profile menu with user actions
- * - Login/Signup buttons for unauthenticated users
- */
+
 
 "use client";
 
-import React from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
-import UserProfileMenu from "../ProfileCard/UserProfileMenu";
-import { useUser } from "@/app/context/UserProvider";
-import { usePopup } from "@/app/hooks/usePopup";
-import { useState } from "react";
-import AddResourcePopup from "@/app/components/dashboard/ResourcePopup/AddResourcePopup";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { usePathname } from "next/navigation";
+import { useUser } from "@/app/context/UserProvider";
+import { usePopup } from "@/app/hooks/usePopup";
+
+import AddResourcePopup from "@/app/components/dashboard/ResourcePopup/AddResourcePopup";
+
+
+import UserProfileMenu from "./UserProfileMenu";
 
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -45,15 +38,15 @@ const pages = [
 export default function NavMenu() {
   const pathname = usePathname();
   const { user } = useUser();
-  const [mounted, setMounted] = React.useState(false);
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
+  const [mounted, setMounted] = useState(false);
+  const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const { isOpen, openPopup, closePopup } = usePopup();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const router = useRouter();
 
 
   // Handle hydration mismatch by only rendering after mount
-  React.useEffect(() => {
+  useEffect(() => {
     setMounted(true);
   }, []);
 

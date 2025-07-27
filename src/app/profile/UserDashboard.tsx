@@ -6,21 +6,19 @@
 
 import React from "react";
 import { useState } from "react";
-
-import { useFetchUser } from "../hooks/useFetchUsers";
-import { usePopup } from "../hooks/usePopup";
-import { useDeleteItem } from "../hooks/useDeleteResource";
-import { useFetchResourceEdit } from "../hooks/useFetchResourceEdit";
-import { useFetchUserResources } from "../hooks/useFetchUserResources";
-import { useLogout } from "../hooks/useLogout";
-
 import { ProfileCard } from "./SharedProfileCard";
-import { TabNavigation } from "../components/dashboard/TabNavigation/TabNavigation";
-import { UserResourceTable } from "../components/dashboard/ResourceTable/UserResourceTable";
-import ResourceDetailsPopup from "../components/dashboard/ResourcePopup/ResourceDetailsPopup";
-import type { ResourceEditSuggestion } from "../lib/types";
-import type { Resource } from "../lib/types";
-import { Resource as BaseResource } from "@/app/lib/types";
+
+import { useFetchUser } from "@/app/hooks/useFetchUsers";
+import { usePopup } from "@/app/hooks/usePopup";
+import { useDeleteItem } from "@/app/hooks/useDeleteResource";
+import { useFetchResourceEdit } from "@/app/hooks/useFetchResourceEdit";
+import { useFetchUserResources } from "@/app/hooks/useFetchUserResources";
+import { useLogout } from "@/app/hooks/useLogout";
+
+import { TabNavigation } from "@/app/components/dashboard/TabNavigation/TabNavigation";
+import { UserResourceTable } from "@/app/components/dashboard/ResourceTable/UserResourceTable";
+import ResourceDetailsPopup from "@/app/components/dashboard/ResourcePopup/ResourceDetailsPopup";
+import { Resource as BaseResource, Resource, ResourceEditSuggestion } from "@/app/lib/types";
 
 /**
  * Main dashboard component for users to manage their resources, edits, reviews and favorites.

@@ -2,8 +2,9 @@
 
 import { useActionState, useState } from "react";
 import Link from "next/link";
-import { resetPassword } from "@/app/actions/auth";
 import { useSearchParams } from "next/navigation";
+import { resetPassword } from "@/app/lib/auth";
+
 
 interface ResetPasswordState {
   errors?: {

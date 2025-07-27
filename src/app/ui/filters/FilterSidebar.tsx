@@ -1,11 +1,4 @@
-// src/app/(homepage)/filters/FilterSidebar.tsx
-/**
- * FilterSidebar Component
- *
- * This component is the filter sidebar for the homepage of the Himalayan Connect NYC application.
- * It displays the filter options for the resources.
- *
- */
+
 
 "use client";
 
@@ -51,9 +44,7 @@ export default function FilterSidebar({
   return (
     <>
     <div className="flex flex-col h-[95%]">
-      <h2 className="text-lg text-center font-bold text-black p-2 top-0 z-10 bg-white border-b">
-        FILTERS
-      </h2>
+      
       <div className="flex-1 text-sm overflow-y-auto px-2 py-1 custom-scrollbar">
         <div className="flex flex-row md:flex-col space-x-2 md:space-x-0 md:space-y-2">
           {/* Resource name filter */}
@@ -76,3 +67,5 @@ export default function FilterSidebar({
     </>
   );
 }
+
+

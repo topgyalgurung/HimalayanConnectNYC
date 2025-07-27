@@ -18,7 +18,7 @@ interface ResourceListPanelProps {
   onViewDetailsAction: (resource: Resource) => void;
 }
 const SearchInput = dynamic(
-  () => import("../NavMenu/SearchInput/SearchInput"),
+  () => import("@/app/ui/SearchInput"),
   {
     ssr: false,
   }
@@ -27,22 +27,9 @@ const SearchInput = dynamic(
 export default function ResourceListPanel({
   filteredResources,
   onViewDetailsAction,
-  // onSuggestEditAction,
-  // editResource,
-  // onReviewResourceAction,
-  // onCloseAction,
-  // onEditCloseAction,
-  // onReviewCloseAction,
-  // selectedResource,
 
-  // onViewDetailsAction,
 }: ResourceListPanelProps) {
-  // const [selectedResource, setSelectedResource] = useState<Resource | null>(null);
-  // const pathname = usePathname();
 
-    // const handleViewDetails = (resource: Resource) => {
-    //   setSelectedResource(resource);
-    // };
 
   return (
     <>

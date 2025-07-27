@@ -1,10 +1,3 @@
-// src/app/components/features/ReviewSubmitCard.tsx
-/**
- * ReviewSubmitCard Component
- *
- * This component is the form for submitting a review for a resource.
- *
- */
 // todo: change to action instead of handleSubmit and calling api that post to db
 
 "use client";

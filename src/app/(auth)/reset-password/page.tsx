@@ -1,4 +1,4 @@
-import ResetPassword from "@/app/components/auth/reset-password";
+import ResetPassword from "@/app/ui/auth/reset-password";
 import { Suspense } from "react";
 
 const ResetPasswordPage = () => {

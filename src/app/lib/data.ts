@@ -1,7 +1,7 @@
 import { ResourceStatus, Prisma } from "@prisma/client";
 import { prisma } from "@/app/lib/prisma";
 import { getSession } from "@/app/lib/session";
-import type { Resource, Location } from "./definitions";
+import type { Resource, Location } from "./types";
 
 const ITEMS_PER_PAGE = 6;
 

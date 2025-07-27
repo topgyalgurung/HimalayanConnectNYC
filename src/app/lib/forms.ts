@@ -8,14 +8,14 @@
 // Server Actions are best for form submissions and other server-side mutations within the Next.js application itself, offering a more direct integration with React components.
 // API Routes, on the other hand, are more flexible and suitable for building public APIs, handling external interactions, and managing complex routing scenarios
 
-import {prisma} from "./prisma";
+import {prisma} from "@/app/lib/prisma";
 import { getSession } from '@/app/lib/session';
 import { cache } from "react";
 
 // import { parse } from "date-fns";
 
-import { EditResourceInput, ResourceFormData } from "./definitions";
-import { geocodeAddress } from "@/app/(homepage)/map/geocodeAddress";
+import { EditResourceInput, ResourceFormData } from "@/app/lib/types";
+import { geocodeAddress } from "@/app/lib/geocodeAddress";
 
 // cache categories to avoid re-fetching them on every request
 const getCachedCategories = cache(async () => {
@@ -81,6 +81,7 @@ export async function addResource(formData: FormData) {
       }
 
       // check first if already exist before allowing to add
+    
     const existingResource = await prisma.resource.findFirst({
       where: {
         name: name,
@@ -94,6 +95,7 @@ export async function addResource(formData: FormData) {
         status: 409 // Conflict status code
       };
     }
+    
     
       const newResource = await prisma.resource.create({
         data: {
@@ -122,7 +124,24 @@ export async function addResource(formData: FormData) {
   
       // call geocoding and update location 
       updateResourceLocation(newResource.id, data.address);
- 
+      // try {
+      //   const location = await geocodeAddress(data.address);
+      //  if(location){
+      //     await prisma.resource.update({
+      //       where: { id: newResource.id },
+      //       data: {
+      //         Location: {
+      //           create: {
+      //             latitude: location.lat,
+      //             longitude: location.lng,
+      //           },
+      //         },
+      //       },
+      //     });
+      //   }
+      // } catch (geoErr) {
+      //   console.error("Failed to geocode and store location:", geoErr);
+      // }
     /**
      * Prisma returns the rating field as a Decimal object (from the @db.Decimal(2, 1) in your schema), 
      * but Next.js Server Actions can only return plain JavaScript objects to Client Components. 
@@ -137,7 +156,7 @@ export async function addResource(formData: FormData) {
     return { success: "resource added successfully", resource: serializedResource };
   } catch (error) {
     // if (error instanceof Prisma.PrismaClientKnownRequestError) {
-    // for unique constraint error 
+    //   // for unique constraint error 
     //   if (error.code === 'P2002') {
     //     return { error: "Resource with this name already exists" };
     //   }
@@ -250,3 +269,10 @@ export async function getCategories() {
     return [];
   }
 }
+
+// will do this later 
+// export async function addReviewResource(formData: FormData) {
+//   if (!formData) {
+//     return { error: "No form data received" };
+//   }
+// }

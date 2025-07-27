@@ -133,22 +133,18 @@ export  function MapSkeleton() {
 
 export function DashboardSkeleton() {
   return (
-    <>
      <div className={`${shimmer}flex flex-col md:flex-row h-auto text-sm lg:text-sm md:h-[calc(100vh-90px)] w-full`}>
         <aside className="w-full md:w-[30%] lg:w-[25%] bg-white shadow-md flex flex-col h-auto md:h-[calc(100vh-90px)] px-2 sm:px-6">
             <FilterSkeleton/>
         </aside>
-
         <aside className="w-full md:w-[40%] lg:w-[35%] pl-0 md:pl-4 flex flex-col min-h-0 mb-4">
             <ResourceListSkeleton/>
         </aside>
       <aside className="w-full md:w-[40%] lg:w-[45%] bg-white shadow-md flex flex-col h-[500px] md:h-full border-2 border-gray-300">
-
         <MapSkeleton/>
     </aside>
     
       </div>
-      </>
   );
 }
 

@@ -1,10 +1,5 @@
 "use client";
 
-/**
- * BoroughFilter Component
- * A component that allows users to filter by borough
- * Uses Material-UI components for styling and functionality
- */
 
 import { useState } from "react";
 

@@ -5,17 +5,6 @@
  * @version 1.0.0
  */
 
-/**
- * RootLayout Component
- *
- * Serves as the root layout wrapper for the entire application.
- * Implements theme provider, user context, and global UI elements.
- *
- * Note: Due to Next.js partial rendering, layout components don't re-render on navigation.
- * User session checks should be handled at the page level rather than in layouts.
- *
- * {children} renders the homepage, file page.tsx exist in (homepage)
- */
 
 import "./globals.css";
 
@@ -24,7 +13,7 @@ import { Inter } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 
 import { UserProvider } from "@/app/context/UserProvider";
-import NavMenu from "./(homepage)/NavMenu/NavMenu";
+import NavMenu from "@/app/ui/NavMenu";
 
 // recommended to use to ensure styles appended to head and not rendering in the body
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
@@ -44,8 +33,6 @@ export default function RootLayout({
   return (
     <html lang="en" data-theme="winter">
       <head>
-        {/* <meta name="viewport" content="width=device-width, initial-scale=1" /> */}
-        {/* viewport configuration  */}
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
@@ -63,7 +50,6 @@ export default function RootLayout({
                 position="top-center"
                 toastOptions={{ duration: 2000 }}
               />
-
               <main className="flex-grow pt-4 md:pt-6 lg:pt-2 overflow-y-auto">
                 <div className="px-2 sm:px-6 [&>*:first-child]:!px-0 [&>*:first-child]:!mx-0">
                   {children}

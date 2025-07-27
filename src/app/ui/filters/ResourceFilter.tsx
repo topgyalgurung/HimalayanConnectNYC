@@ -1,11 +1,5 @@
 "use client";
 
-/**
- * ResourceFilter Component
- * A component that allows users to filter resources by category
- * Uses Material-UI components for styling and functionality
- */
-
 import { useState } from "react";
 
 import List from "@mui/material/List";
@@ -85,7 +79,6 @@ export default function ResourceFilter({
   const clearFilters = () => {
     onFilterChangeAction([]);
   };
-
 
   const handleToggle = () => {
     setOpenResFilter((prev) => !prev);

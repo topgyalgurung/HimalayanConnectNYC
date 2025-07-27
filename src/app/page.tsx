@@ -7,12 +7,10 @@
  */
 
 import { Suspense } from "react";
-import HomeServer from "./(homepage)/HomeServer";
-import FilterSkeleton from "./components/skeletons/FilterSkeleton";
-import ResourceListSkeleton from "./components/skeletons/ResourceListSkeleton";
-import MapSkeleton from "./components/skeletons/MapSkeleton";
-import ErrorBoundary from "./components/errors/ErrorBoundary";
-import ResourcesError from "./components/errors/ResourcesError";
+import HomeServer from "@/app/(homepage)/HomeServer";
+import { FilterSkeleton,ResourceListSkeleton, MapSkeleton  } from "./ui/skeletons";
+import ErrorBoundary from "@/app/components/errors/ErrorBoundary";
+import ResourcesError from "@/app/components/errors/ResourcesError";
 
 // Enable dynamic rendering for this route
 export const dynamic = "force-dynamic";

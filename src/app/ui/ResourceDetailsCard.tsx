@@ -14,9 +14,10 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { useUser } from "../context/UserProvider";
 import { useRouter } from "next/navigation";
-import { useFavorites } from "../hooks/useFavorites";
-import { useFetchResourceReview } from "../hooks/useFetchResourceReview";
-import { type Resource, User } from "@/app/lib/definitions";
+import { useFavorites } from "@/app/hooks/useFavorites";
+import { useFetchResourceReview } from "@/app/hooks/useFetchResourceReview";
+import { type Resource, User } from "@/app/lib/types";
+
 import TabButton from "./ResourceDetailCommon/TabButton";
 import ResourceHeader from "./ResourceDetailCommon/ResourceHeader";
 import ReviewTab from "./ResourceDetailCommon/ReviewTab";

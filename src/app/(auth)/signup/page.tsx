@@ -1,6 +1,5 @@
-import SignupForm from "./signup-form";
+import SignupForm from "@/app/ui/auth/signup-form";
 
-export const dynamic = "force-dynamic";
 export default function LoginPage() {
   return (
     <div>

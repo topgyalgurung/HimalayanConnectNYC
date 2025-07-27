@@ -1,5 +1,14 @@
 "use server";
 
+/**
+ * authentication actions for the Himalayan Connect NYC application.
+ */
+// login
+// signup
+// logout 
+// forgot password 
+// reset password 
+
 import {
   SignupFormSchema,
   LoginFormSchema,
@@ -13,15 +22,15 @@ import {
 
 import { createSession, deleteSession } from "@/app/lib/session";
 import bcrypt from "bcryptjs";
-import {prisma} from "./prisma";
+import {prisma} from "@/app/lib/prisma";
 import { Role } from "@prisma/client";
-import { sendEmail } from "./helpers/mailer";
+import { sendEmail } from "@/app/lib/helpers/mailer";
 
 // cookie should be set on the server to prevent client side tampering
 
+// SIGN UP
 export async function signup(state: SignupFormState, formData: FormData) {
-    // simulate network delay for this async signup operation
-  await new Promise((resolve) => setTimeout(resolve, 500));
+
   const email = formData.get("email") as string;
   
   // First check if email exists
@@ -84,7 +93,7 @@ export async function signup(state: SignupFormState, formData: FormData) {
       throw new Error("Failed to create user account");
     }
 
-    // Create JWT session and set cookie expiration 7 days 
+    // Create JWT session
     await createSession(newUser.id, newUser.email, newUser.role);
 
     // Return success status
@@ -112,9 +121,9 @@ export async function signup(state: SignupFormState, formData: FormData) {
   }
 }
 
+// login
 export async function login(prevState: LoginFormState, formData: FormData) {
-  // simulate network delay for this async login operation
-  await new Promise((resolve) => setTimeout(resolve, 500));
+
 
   // Validate form fields
   const validatedFields = LoginFormSchema.safeParse({
@@ -154,22 +163,20 @@ export async function login(prevState: LoginFormState, formData: FormData) {
     // Verify password
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) {
-      console.log("incorrect password")
       return {
         message: "Password is incorrect",
         status: 401,
       };
     }
-    // create token
-    // set user cookie 
 
-    // createSession handles all create token and set user cookie  
+    // Create JWT session, create session has JWT expiration 
     await createSession(user.id, user.email, user.role);
 
     // Return success status
     return {
       status: 200, // or true 
       message: "Logged in successfully",
+      redirect: "/profile",
       // return user to setUser 
       user: {
         userId: user.id.toString(),

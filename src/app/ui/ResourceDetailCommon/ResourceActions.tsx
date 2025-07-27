@@ -18,7 +18,7 @@ import { IoNavigateCircleOutline } from "react-icons/io5";
 // import IconButton from "@mui/material/IconButton";
 // import FavoriteIcon from "@mui/icons-material/Favorite";
 // import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import type { Resource } from "@/app/lib/definitions";
+import type { Resource } from "@/app/lib/types";
 import toast from "react-hot-toast";
 
 interface ResourceActionsProps {

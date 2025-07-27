@@ -1,14 +1,5 @@
-/**
- * Profile Page Component
- * 
- * A dynamic page component that renders either AdminDashboard or UserDashboard
- * based on the user's role. Handles authentication and role-based routing.
- * 
- * @component
- * @returns {JSX.Element} The appropriate dashboard based on user role
- */
-"use client";
 
+"use client"
 /**
  * note: redirect vs useRouter
  * redirect: redirect user after a mutation or event, in server component, server action
@@ -19,7 +10,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import AdminDashboard from "../profile/AdminDashboard";
 import UserDashboard from "../profile/UserDashboard";
-import { getSession } from "../lib/session";
+
+import { getSession } from "@/app/lib/session";
 
 export default function Profile() {
   // const session = await verifySession()

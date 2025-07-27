@@ -16,23 +16,22 @@
 "use client";
 import { useState } from "react";
 import React from "react";
-import { useFetchResources } from "../hooks/useFetchResources";
-import { useFetchResourceEdit } from "../hooks/useFetchResourceEdit";
-
-import { usePopup } from "../hooks/usePopup";
-import { useLogout } from "../hooks/useLogout";
+import { useFetchResources } from "@/app/hooks/useFetchResources";
+import { useFetchResourceEdit } from "@/app/hooks/useFetchResourceEdit";
+import { usePopup } from "@/app/hooks/usePopup";
+import { useLogout } from "@/app/hooks/useLogout";
 
 import { ProfileCard } from "./SharedProfileCard";
-import { TabNavigation } from "../components/dashboard/TabNavigation/TabNavigation";
-import { AdminResourceTable } from "../components/dashboard/ResourceTable/AdminResourceTable";
-import { updateResourceStatus } from "../actions/resources/updateResourceStatus";
+import { TabNavigation } from "@/app/components/dashboard/TabNavigation/TabNavigation";
+import { AdminResourceTable } from "@/app/components/dashboard/ResourceTable/AdminResourceTable";
+import { updateResourceStatus } from "@/app/lib/resources/updateResourceStatus";
 import { toast } from "react-hot-toast";
 import type {
   Resource,
   ResourceEditSuggestion,
   ResourceStatus,
-} from "../lib/types";
-import ResourceDetailsPopup from "../components/dashboard/ResourcePopup/ResourceDetailsPopup";
+} from "@/app/lib/types";
+import ResourceDetailsPopup from "@/app/components/dashboard/ResourcePopup/ResourceDetailsPopup";
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("new");

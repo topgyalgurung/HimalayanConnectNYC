@@ -1,7 +1,6 @@
 import { TextField } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import { useState } from "react";
-import React from "react";
 
 const NYC_BOROUGHS = [
   { id: 1, name: "Manhattan" },

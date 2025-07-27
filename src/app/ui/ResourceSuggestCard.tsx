@@ -9,9 +9,9 @@
 import React from "react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { addEditResource } from "../lib/forms";
+import { addEditResource } from "@/app/lib/forms";
 
-import { type Resource } from "@/app/lib/definitions";
+import { type Resource } from "@/app/lib/types";
 import toast from "react-hot-toast";
 import { SuggestFormSchema } from "@/app/lib/forms/definitions";
 
