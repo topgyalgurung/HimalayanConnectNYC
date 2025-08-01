@@ -328,13 +328,14 @@ export default function ResourceSuggestCard({
   };
 
   return (
-    <div className="w-[350px] bg-white rounded-md shadow-xl p-4 h-full overflow-y-auto">
-      <button
-        onClick={() => onEditCloseAction(null)}
-        className="absolute top-2 right-14 text-gray-500 hover:text-gray-700"
-      >
-        ✕
-      </button>
+    <div className="relative w-[350px] bg-white rounded-md shadow-xl p-4 h-full overflow-y-auto">
+    <button
+      onClick={() => onEditCloseAction(null)}
+      className="absolute top-2 left-2 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center text-white text-xs hover:bg-red-600 transition-colors"
+      aria-label="Close"
+    >
+      ✕
+    </button>
       <h1 className="text-lg font-bold text-center mb-2">Suggest an Edit</h1>
       <p className="text-sm text-gray-600 mb-4">
         Only changed fields will be submitted for review

@@ -1,16 +1,4 @@
-/**
- * @file UserProvider.tsx
- * @description A React context provider component that manages user session data on the client side.
- * This component provides user authentication state and session management functionality
- * throughout the application.
- * 
- * @module UserProvider
- * @exports UserProvider
- * @exports useUser
- * 
- * // Use the user context in any component
- * const { user, setUser } = useUser();
- */
+
 
 "use client";
 

@@ -55,7 +55,7 @@ export async function createSession(
 
     // Set HTTP-only cookie for security
     cookieStore.set("session", session, {
-      httpOnly: true,
+      httpOnly: true, // standard prevention for XSS 
       secure: true,
       sameSite: "lax", // prevents CSRF in most cases
       //expires: expiresAt,  // need to store as ISOString() safer and 

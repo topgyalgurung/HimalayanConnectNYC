@@ -1,10 +1,4 @@
-// src/app/components/dashboard/TabNavigation.tsx
-/**
- * tab navigation component for the dashboard
- * displays a set of tabs with customizable colors and labels.
- * provides a clean and consistent way to switch between different views or sections.
 
- */
 "use client";
 
 import React from "react";

@@ -16,16 +16,16 @@
 "use client";
 import { useState } from "react";
 import React from "react";
+import { toast } from "react-hot-toast";
+import { ProfileCard } from "./SharedProfileCard";
+
 import { useFetchResources } from "@/app/hooks/useFetchResources";
 import { useFetchResourceEdit } from "@/app/hooks/useFetchResourceEdit";
 import { usePopup } from "@/app/hooks/usePopup";
 import { useLogout } from "@/app/hooks/useLogout";
-
-import { ProfileCard } from "./SharedProfileCard";
 import { TabNavigation } from "@/app/components/dashboard/TabNavigation/TabNavigation";
 import { AdminResourceTable } from "@/app/components/dashboard/ResourceTable/AdminResourceTable";
 import { updateResourceStatus } from "@/app/lib/resources/updateResourceStatus";
-import { toast } from "react-hot-toast";
 import type {
   Resource,
   ResourceEditSuggestion,

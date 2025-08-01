@@ -1,9 +1,4 @@
-/**
- * Resources Error Component
- * 
- * Error fallback component displayed when resource loading fails.
- * Provides user-friendly error message and retry option.
- */
+
 
 "use client";
 

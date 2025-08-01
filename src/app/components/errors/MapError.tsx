@@ -1,9 +1,4 @@
-/**
- * Map Error Component
- * 
- * Error fallback component displayed when map loading fails.
- * Provides user-friendly error message and fallback content.
- */
+
 
 "use client";
 
