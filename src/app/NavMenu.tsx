@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -10,10 +8,7 @@ import toast from "react-hot-toast";
 import { usePathname } from "next/navigation";
 import { useUser } from "@/app/context/UserProvider";
 import { usePopup } from "@/app/hooks/usePopup";
-
 import AddResourcePopup from "@/app/components/dashboard/ResourcePopup/AddResourcePopup";
-
-
 import UserProfileMenu from "@/app/ui/UserProfileMenu";
 
 import AppBar from "@mui/material/AppBar";
@@ -27,13 +22,10 @@ import Container from "@mui/material/Container";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
 
-
 const pages = [
   { name: "Home", path: "/" },
   { name: "About", path: "/about" }
 ];
-
-
 
 export default function NavMenu() {
   const pathname = usePathname();
@@ -44,12 +36,10 @@ export default function NavMenu() {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const router = useRouter();
 
-
   // Handle hydration mismatch by only rendering after mount
   useEffect(() => {
     setMounted(true);
   }, []);
-
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -69,7 +59,6 @@ export default function NavMenu() {
     setAnchorEl(event.currentTarget);
     openPopup({});
   };
-
 
   // Don't render anything until after hydration
   if (!mounted) {

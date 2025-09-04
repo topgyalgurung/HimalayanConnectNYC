@@ -8,16 +8,14 @@
 
 import { Suspense } from "react";
 import HomeServer from "@/app/(homepage)/HomeServer";
-import { FilterSkeleton,ResourceListSkeleton, MapSkeleton  } from "./ui/skeletons";
+import { FilterSkeleton,ResourceListSkeleton, MapSkeleton  } from "@/app/ui/skeletons";
 import ErrorBoundary from "@/app/components/errors/ErrorBoundary";
 import ResourcesError from "@/app/components/errors/ResourcesError";
 
-// Enable dynamic rendering for this route
 export const dynamic = "force-dynamic";
 
 // Add revalidation tags for manual revalidation
 export const revalidate = 300; // 5 minutes
-
 
 export default function Home() {
   return (

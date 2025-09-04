@@ -1,10 +1,3 @@
-/**
- * @file layout.tsx
- * @description Root layout component for the Himalayan Connect NYC application
- * @author Topgyal Gurung
- * @version 1.0.0
- */
-
 
 import "./globals.css";
 
@@ -12,6 +5,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 import { UserProvider } from "@/app/context/UserProvider";
 import NavMenu from "@/app/ui/NavMenu";
@@ -42,10 +36,8 @@ export default function RootLayout({
       <body
         className={`${inter.className} min-h-screen flex flex-col lg:overflow-hidden`}
       >
-        {/* UserProvider wrapper enables user data access across all pages via useUser hook */}
         <UserProvider>
           <AppRouterCacheProvider>
-            {/* <ThemeProvider theme={theme}> */}
               <NavMenu />
               <Toaster
                 position="top-center"
@@ -55,6 +47,7 @@ export default function RootLayout({
                 <div className="px-2 sm:px-6 [&>*:first-child]:!px-0 [&>*:first-child]:!mx-0">
                   {children}
                   <Analytics/>
+                   <SpeedInsights />
                 </div>
               </main>
 
