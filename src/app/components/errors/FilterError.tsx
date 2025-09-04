@@ -1,9 +1,4 @@
-/**
- * Filter Error Component
- * 
- * Error fallback component displayed when filter loading fails.
- * Provides user-friendly error message and basic filter functionality.
- */
+
 
 "use client";
 

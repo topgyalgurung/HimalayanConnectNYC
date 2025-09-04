@@ -1,9 +1,3 @@
-/**
- * Error Boundary Component
- * 
- * React Error Boundary that catches JavaScript errors anywhere in the child
- * component tree and displays a fallback UI instead of crashing the app.
- */
 
 "use client";
 

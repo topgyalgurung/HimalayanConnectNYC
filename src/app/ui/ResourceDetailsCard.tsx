@@ -94,7 +94,7 @@ export default function ResourceDetailsCard({
       <div className="fixed md:absolute md:top-8 md:right-6 md:p-6 md:w-96 md:max-h-[90vh] top-12 right-2 left-2 z-50 w-full  bg-white rounded-lg shadow-xl p-4 max-h-screen  overflow-y-auto">
         <button
           onClick={() => onCloseAction()}
-          className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+          className="absolute top-2 left-2 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center text-white text-xs hover:bg-red-600 transition-colors"
         >
           ✕
         </button>

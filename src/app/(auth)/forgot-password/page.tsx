@@ -6,7 +6,6 @@ const ForgotPasswordPage = () => {
     <div>
       <Suspense>
          <ForgotPassword />
-
       </Suspense>
      
     </div>
