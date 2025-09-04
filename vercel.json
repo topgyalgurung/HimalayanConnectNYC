@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "git":{
+    "autoDeploymentEnabled": false
+  },
+  "crons": [{
+    "path": "/api/cron",
+    "schedule": "0 10 * * *"
+  }]
+
+}
