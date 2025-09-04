@@ -5,6 +5,7 @@
 import { useState, useEffect } from "react";
 import ResourceFilter from "./ResourceFilter";
 import BoroughFilter from "./BoroughFilter";
+import MobileFilterButton from "./MobileFilterButton";
 import type { Resource } from "@/app/lib/types";
 
 interface FilterSidebarProps {
@@ -43,27 +44,35 @@ export default function FilterSidebar({
 
   return (
     <>
-    <div className="flex flex-col h-[95%]">
-      
-      <div className="flex-1 text-sm overflow-y-auto px-2 py-1 custom-scrollbar">
-        <div className="flex flex-row md:flex-col space-x-2 md:space-x-0 md:space-y-2">
-          {/* Resource name filter */}
-          <div className="w-1/2 md:w-full">
-            <ResourceFilter
-              selectedCategories={selectedCategories}
-              onFilterChangeAction={setSelectedCategories}
-            />
-          </div>
-          <div className="w-1/2 md:w-full">
-            {/* city borough name filter  */}
-            <BoroughFilter
-              selectedBoroughs={selectedBoroughs}
-              onFilterChangeAction={setSelectedBoroughs}
-            />
+      {/* Desktop Filters */}
+      <div className="hidden md:flex flex-col h-[95%]">
+        <div className="flex-1 text-sm overflow-y-auto px-2 py-1 custom-scrollbar">
+          <div className="flex flex-col space-y-2">
+            {/* Resource name filter */}
+            <div className="w-full">
+              <ResourceFilter
+                selectedCategories={selectedCategories}
+                onFilterChangeAction={setSelectedCategories}
+              />
+            </div>
+            <div className="w-full">
+              {/* city borough name filter  */}
+              <BoroughFilter
+                selectedBoroughs={selectedBoroughs}
+                onFilterChangeAction={setSelectedBoroughs}
+              />
+            </div>
           </div>
         </div>
       </div>
-    </div>
+
+      {/* Mobile Filters */}
+      <MobileFilterButton
+        selectedCategories={selectedCategories}
+        selectedBoroughs={selectedBoroughs}
+        onCategoryChange={setSelectedCategories}
+        onBoroughChange={setSelectedBoroughs}
+      />
     </>
   );
 }
