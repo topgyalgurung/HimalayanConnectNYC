@@ -33,14 +33,15 @@ export default function ResourceListPanel({
 
   return (
     <>
-      {/* Search input  */}
-      <div className="mb-6">
-        <SearchInput />
-      </div>
+  
 
       <h2 className="text-lg text-center font-bold text-black mb-2 top-0 z-10 p-2 shadow bg-white">
         RESOURCES
       </h2>
+       {/* Search input  */}
+       <div className="mb-6">
+        <SearchInput />
+      </div>
 
       <main className="flex-1 bg-gray-50 p-4 overflow-y-auto mb-4">
         <ResourceList
