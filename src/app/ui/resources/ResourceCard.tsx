@@ -18,11 +18,13 @@ dayjs.extend(utc);
 interface ResourceCardProps {
   resources: Resource[];
   onViewDetailsAction?: (resource: Resource) => void;
+  onResourceHover?: (resourceId: string | null) => void;
 }
 // ResourceCard component: Displays a list of resources
 export default function ResourceCard({
   resources,
   onViewDetailsAction,
+  onResourceHover,
 }: ResourceCardProps) {
   return (
     <div className="flex flex-col  justify-between space-y-4 pb-20">
@@ -32,6 +34,8 @@ export default function ResourceCard({
           <div
             key={resource.id}
             className="flex flex-col md:flex-row space-y-4 justify-between p-4 border rounded-md shadow-md bg-white transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:scale-[1.02]"
+            onMouseEnter={() => onResourceHover?.(resource.id)}
+            onMouseLeave={() => onResourceHover?.(null)}
           >
             <div className="flex-1">
               <h4 className="text-lg font-bold">{resource.name}</h4>

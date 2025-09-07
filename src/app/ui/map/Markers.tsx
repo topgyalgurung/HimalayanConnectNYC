@@ -1,5 +1,4 @@
 "use client";
-
 import Image from "next/image";
 import { getMarkerIconByCategory } from "./utils/markerIcons";
 import { AdvancedMarker, CollisionBehavior, InfoWindow } from "@vis.gl/react-google-maps";
@@ -8,16 +7,18 @@ import { useState } from "react";
 
 interface MarkersProps {
     points: Resource[];
+    hoveredResourceId?: string | null;
   }
-export const Markers = ({ points }: MarkersProps) => {
-    const [activeMarkerId, setActiveMarkerId] = useState<string | null>(null);
+export const Markers = ({ points, hoveredResourceId }: MarkersProps) => {
+  // Keep track of which marker was clicked
+  const [activeMarkerId, setActiveMarkerId] = useState<string | null>(null);
     return (
       <>
         {points.map((resource) => {
           const location = resource.Location?.[0];
           
-          // Determine if we should show the InfoWindow
-          const shouldShowInfoWindow = activeMarkerId === resource.id;
+          // Show InfoWindow on either hover or click
+          const shouldShowInfoWindow = hoveredResourceId === resource.id || activeMarkerId === resource.id;
   
           // Get marker icon based on resource category
           const image = getMarkerIconByCategory(resource.ResourceCategory?.name);
@@ -28,7 +29,12 @@ export const Markers = ({ points }: MarkersProps) => {
               data-marker-id={resource.id}
               className="cursor-pointer"
               style={{ position: 'relative' }}
-              onMouseOver={() => setActiveMarkerId(resource.id)}
+              
+              onClick={(e) => {
+                e.stopPropagation();
+                // Toggle active state on click
+                setActiveMarkerId(activeMarkerId === resource.id ? null : resource.id);
+              }}
               onMouseOut={(e) => {
                 const toElement = e.relatedTarget as HTMLElement;
                 if (toElement?.closest(`#infowindow-${resource.id}`)) {
@@ -55,12 +61,19 @@ export const Markers = ({ points }: MarkersProps) => {
                     alignItems: "center",
                     justifyContent: "center",
                     borderRadius: "50%",
-                    background: "linear-gradient(135deg, #f0f4ff 0%, #e0e7ef 100%)",
-                    boxShadow: "0 2px 8px rgba(60, 72, 88, 0.10)",
+                    background: hoveredResourceId === resource.id 
+                      ? "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)"
+                      : "linear-gradient(135deg, #f0f4ff 0%, #e0e7ef 100%)",
+                    boxShadow: hoveredResourceId === resource.id
+                      ? "0 4px 12px rgba(37, 99, 235, 0.3)"
+                      : "0 2px 8px rgba(60, 72, 88, 0.10)",
                     padding: 4,
-                    border: "1.5px solid #bfc8d6",
-                    width: 28,
-                    height: 28,
+                    border: hoveredResourceId === resource.id
+                      ? "1.5px solid #2563eb"
+                      : "1.5px solid #bfc8d6",
+                    width: hoveredResourceId === resource.id ? 32 : 28,
+                    height: hoveredResourceId === resource.id ? 32 : 28,
+                    transition: "all 0.2s ease-in-out",
                   }}
                 >
                   <Image
@@ -69,6 +82,9 @@ export const Markers = ({ points }: MarkersProps) => {
                     style={{
                       objectFit: "contain",
                       backgroundColor: "transparent",
+                      filter: hoveredResourceId === resource.id ? "brightness(0) invert(1)" : "none",
+                      transform: hoveredResourceId === resource.id ? "scale(1.1)" : "scale(1)",
+                      transition: "all 0.2s ease-in-out",
                     }}
                     height={20}
                     width={20}
@@ -88,10 +104,16 @@ export const Markers = ({ points }: MarkersProps) => {
                     lng: location?.longitude ?? 0,
                   }}
                   pixelOffset={[0, -30]} // Increased offset to move it higher above the pin
-                  onCloseClick={() => setActiveMarkerId(null)}
-                  shouldFocus={false}
-                  zIndex={99999}
-                  disableAutoPan={true}
+              onCloseClick={() => {
+                setActiveMarkerId(null);
+                // Don't clear hover state on close click as it's managed by the card hover
+              }}
+              shouldFocus={false}
+              zIndex={99999}
+              disableAutoPan={true}
+              className={`transition-opacity duration-200 ${
+                shouldShowInfoWindow ? 'opacity-100' : 'opacity-0'
+              }`}
                 >
                   <div
                     id={`infowindow-${resource.id}`}

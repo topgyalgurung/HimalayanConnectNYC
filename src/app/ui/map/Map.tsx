@@ -19,6 +19,7 @@ interface MapViewProps {
   onSuggestEditAction: (resource: Resource) => void;
   onCloseAction: (resource: Resource | null) => void;
   onEditCloseAction: (resource: Resource | null) => void;
+  hoveredResourceId?: string | null;
 }
 
 export default function MapView({
@@ -28,10 +29,12 @@ export default function MapView({
   onSuggestEditAction,
   onCloseAction,
   onEditCloseAction,
+  hoveredResourceId,
 }: MapViewProps) {
   return (
     <>
       <div className="h-full w-full relative">
+        {/* to show the map */}
         <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? ""}>
           <Map
             className="h-full w-full"
@@ -41,12 +44,21 @@ export default function MapView({
             disableDefaultUI={true}
             mapId={process.env.NEXT_PUBLIC_MAP_ID ?? ""}
           >
-            <MapControl position={ControlPosition.TOP_LEFT}>
-            </MapControl>
-            <Markers points={resources} />
+         <MapControl position={ControlPosition.TOP_LEFT}>
+          <div className="m-2 bg-white rounded-lg shadow-lg p-3 space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-gray-600">
+                {resources.length} Resources Found
+              </span>
+              
+            </div>
+          </div>
+        </MapControl>
+            <Markers points={resources} hoveredResourceId={hoveredResourceId} />
           </Map>
         </APIProvider>
 
+        {/* to show selected resource on top of map when clicked */}
         {selectedResource && (
           <div className="absolute top-2 left-2 h-full w-[90%] sm:w-[400px] z-40 shadow-lg overflow-y-auto">
             <ResourceDetailsCard
@@ -57,7 +69,7 @@ export default function MapView({
             />
           </div>
         )}
-
+        {/* to show edit resource on top of map when clicked  */}
         {editResource && (
           <div className="absolute top-0 left-0 h-[calc(100%-16px)] w-[400px] z-30 shadow-md m-4">
             <ResourceSuggestCard

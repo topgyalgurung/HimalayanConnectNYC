@@ -16,6 +16,7 @@ import dynamic from "next/dynamic";
 interface ResourceListPanelProps {
   filteredResources: Resource[];
   onViewDetailsAction: (resource: Resource) => void;
+  onResourceHover?: (resourceId: string | null) => void;
 }
 const SearchInput = dynamic(
   () => import("@/app/ui/SearchInput"),
@@ -27,7 +28,7 @@ const SearchInput = dynamic(
 export default function ResourceListPanel({
   filteredResources,
   onViewDetailsAction,
-
+  onResourceHover,
 }: ResourceListPanelProps) {
 
 
@@ -47,6 +48,7 @@ export default function ResourceListPanel({
         <ResourceList
           filteredResources={filteredResources}
           onViewDetailsAction={onViewDetailsAction}
+          onResourceHover={onResourceHover}
         />
       
       </main>
