@@ -21,6 +21,7 @@ export default function HomeClient({ initialResources }: HomeClientProps) {
   const [selectedResource, setSelectedResource] = useState<Resource | null>(null);
   const [editResource, setEditResource] = useState<Resource | null>(null);
   const [filteredResources, setFilteredResources] = useState<Resource[]>(initialResources);
+  const [hoveredResourceId, setHoveredResourceId] = useState<string | null>(null);
 
   const handleViewDetails = (resource: Resource) => {
     if (selectedResource?.id === resource.id) {
@@ -64,6 +65,7 @@ export default function HomeClient({ initialResources }: HomeClientProps) {
         <ResourceListPanel
           filteredResources={filteredResources}
           onViewDetailsAction={handleViewDetails}
+          onResourceHover={setHoveredResourceId}
         />
       </aside>
 
@@ -75,6 +77,7 @@ export default function HomeClient({ initialResources }: HomeClientProps) {
           onSuggestEditAction={handleSuggestEdit}
           onCloseAction={handleCloseDetails}
           onEditCloseAction={handleEditClose}
+          hoveredResourceId={hoveredResourceId}
         />
       </aside>
     </div>

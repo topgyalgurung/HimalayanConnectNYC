@@ -12,11 +12,13 @@ import type { Resource } from "@/app/lib/types";
 interface ResourceListProps {
   filteredResources: Resource[];
   onViewDetailsAction: (resource: Resource) => void;
+  onResourceHover?: (resourceId: string | null) => void;
 }
 
 const ResourceList = ({
   filteredResources,
   onViewDetailsAction,
+  onResourceHover,
 }: ResourceListProps) => {
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("query")?.toLowerCase() || "";
@@ -40,6 +42,7 @@ const ResourceList = ({
       <ResourceCard
         resources={searchFilteredResources}
         onViewDetailsAction={onViewDetailsAction}
+        onResourceHover={onResourceHover}
       />
     </div>
   );
