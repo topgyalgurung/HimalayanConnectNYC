@@ -1,23 +1,16 @@
-"use client";
-import { useState } from "react";
 
 import {
   Map,
   APIProvider,
   ControlPosition,
   MapControl,
-  AdvancedMarker,
-  CollisionBehavior,
-  InfoWindow,
 } from "@vis.gl/react-google-maps";
-interface MarkersProps {
-  points: Resource[];
-}
-import Image from "next/image";
+
 import type { Resource } from "@/app/lib/types";
 import ResourceDetailsCard from "@/app/components/features/ResourceDetailsCard";
 import ResourceSuggestCard from "@/app/components/features/ResourceSuggestCard";
-import { getMarkerIconByCategory } from "./utils/markerIcons";
+import { Markers } from "./Markers";
+
 
 interface MapViewProps {
   resources: Resource[];
@@ -36,7 +29,6 @@ export default function MapView({
   onCloseAction,
   onEditCloseAction,
 }: MapViewProps) {
-
   return (
     <>
       <div className="h-full w-full relative">
@@ -78,99 +70,6 @@ export default function MapView({
     </>
   );
 }
-const Markers = ({ points }: MarkersProps) => {
-  const [activeMarkerId, setActiveMarkerId] = useState<string | null>(null);
-  return (
-    <>
-      {points.map((resource) => {
-        const location = resource.Location?.[0];
-        
-        // Determine if we should show the InfoWindow
-        const shouldShowInfoWindow = activeMarkerId === resource.id;
 
-        // Get marker icon based on resource category
-        const image = getMarkerIconByCategory(resource.ResourceCategory?.name);
-
-        return (
-          <div
-            key={resource.id}
-            // onClick={() => setActiveMarkerId(resource.id)}
-             onMouseOver={() => setActiveMarkerId(resource.id)}
-            onMouseOut={() => setActiveMarkerId(null)}
-            className="cursor-pointer"
-          >
-            <AdvancedMarker
-              collisionBehavior={CollisionBehavior.REQUIRED_AND_HIDES_OPTIONAL}
-              position={{
-                lat: location?.latitude ?? 0,
-                lng: location?.longitude ?? 0,
-              }}
-            >
-              <span
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: "50%",
-                  background: "linear-gradient(135deg, #f0f4ff 0%, #e0e7ef 100%)",
-                  boxShadow: "0 2px 8px rgba(60, 72, 88, 0.10)",
-                  padding: 4,
-                  border: "1.5px solid #bfc8d6",
-                  width: 28,
-                  height: 28,
-                }}
-              >
-                <Image
-                  src={image}
-                  alt={`${resource.ResourceCategory?.name} icon`}
-                  style={{
-                    objectFit: "contain",
-                    backgroundColor: "transparent",
-                  }}
-                  height={20}
-                  width={20}
-                />
-              </span>
-            </AdvancedMarker>
-
-            {shouldShowInfoWindow && (
-              <InfoWindow
-                headerContent={<h1 className="text-sm font-semibold text-gray-800">
-                    {resource.name}
-                  </h1>}
-                position={{
-                  lat: location?.latitude ?? 0,
-                  lng: location?.longitude ?? 0,
-                }}
-                pixelOffset={[0, -20]} // so it does not block pin
-                onCloseClick={() => setActiveMarkerId(null)}
-                shouldFocus={true}
-              >
-                <div className="bg-white shadow-lg rounded-lg p-1 w-[250px]">
-                
-                  <p className="text-sm text-gray-600"> 📍{resource.address}</p>
-                  <a
-                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                      resource.address
-                    )}`}
-                    className="text-blue-600 hover:text-blue-800 transition-colors no-underline hover:underline"
-                    >
-                    View on Google Maps
-                  </a>
-
-                  <p className="text-sm text-gray-500 mt-2">
-                    {resource.description && resource.description.length > 200
-                      ? `${resource.description.slice(0, 200)}...`
-                      : resource.description}
-                  </p>
-                </div>
-              </InfoWindow>
-            )}
-          </div>
-        );
-      })}
-    </>
-  );
-};
 
 export { MapView };
