@@ -17,7 +17,7 @@ import { useLogout } from "@/app/hooks/useLogout";
 
 import { TabNavigation } from "@/app/components/dashboard/TabNavigation/TabNavigation";
 import { UserResourceTable } from "@/app/components/dashboard/ResourceTable/UserResourceTable";
-import ResourceDetailsPopup from "@/app/components/dashboard/ResourcePopup/ResourceDetailsPopup";
+import ResourceDetailsPopup from "@/app/components/ResourcePopup/ResourceDetailsPopup";
 import { Resource as BaseResource, Resource, ResourceEditSuggestion } from "@/app/lib/types";
 
 /**

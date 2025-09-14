@@ -15,7 +15,6 @@ import { EditResourceInput, ResourceFormData } from "@/app/lib/types";
 import { geocodeAddress } from "@/app/lib/geocodeAddress";
 // import { parse } from "date-fns";
 
-
 // cache categories to avoid re-fetching them on every request
 const getCachedCategories = cache(async () => {
   return await prisma.resourceCategory.findMany();
@@ -123,24 +122,25 @@ export async function addResource(formData: FormData) {
   
       // call geocoding and update location 
       updateResourceLocation(newResource.id, data.address);
-      // try {
-      //   const location = await geocodeAddress(data.address);
-      //  if(location){
-      //     await prisma.resource.update({
-      //       where: { id: newResource.id },
-      //       data: {
-      //         Location: {
-      //           create: {
-      //             latitude: location.lat,
-      //             longitude: location.lng,
-      //           },
-      //         },
-      //       },
-      //     });
-      //   }
-      // } catch (geoErr) {
-      //   console.error("Failed to geocode and store location:", geoErr);
-      // }
+      try {
+        const location = await geocodeAddress(data.address);
+       if(location){
+          await prisma.resource.update({
+            where: { id: newResource.id },
+            data: {
+              Location: {
+                create: {
+                  latitude: location.lat,
+                  longitude: location.lng,
+                },
+              },
+            },
+          });
+        }
+      } catch (geoErr) {
+        console.error("Failed to geocode and store location:", geoErr);
+      }
+
     /**
      * Prisma returns the rating field as a Decimal object (from the @db.Decimal(2, 1) in your schema), 
      * but Next.js Server Actions can only return plain JavaScript objects to Client Components. 

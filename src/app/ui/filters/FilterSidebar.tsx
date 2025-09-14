@@ -45,9 +45,9 @@ export default function FilterSidebar({
   return (
     <>
       {/* Desktop Filters */}
-      <div className="hidden md:flex flex-col h-[95%]">
-        <div className="flex-1 text-sm overflow-y-auto px-2 py-1 custom-scrollbar">
-          <div className="flex flex-col space-y-2">
+      <div className="hidden md:flex flex-col h-full max-h-[calc(100vh-90px)] overflow-hidden">
+        <div className="flex-1 text-sm overflow-y-auto px-2 py-1 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent hover:scrollbar-thumb-gray-400">
+          <div className="flex flex-col space-y-4 pb-4">
             {/* Resource name filter */}
             <div className="w-full">
               <ResourceFilter

@@ -18,7 +18,7 @@ import Button from "@mui/material/Button";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CircularProgress from "@mui/material/CircularProgress";
 
-import Popup from "@/app/components/dashboard/ResourcePopup/Popup";
+import Popup from "@/app/components/ResourcePopup/Popup";
 
 import { type Resource } from "@/app/lib/types";
 interface ReviewResourceCardProps {

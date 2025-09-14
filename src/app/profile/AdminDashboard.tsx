@@ -31,7 +31,7 @@ import type {
   ResourceEditSuggestion,
   ResourceStatus,
 } from "@/app/lib/types";
-import ResourceDetailsPopup from "@/app/components/dashboard/ResourcePopup/ResourceDetailsPopup";
+import ResourceDetailsPopup from "@/app/components/ResourcePopup/ResourceDetailsPopup";
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("new");

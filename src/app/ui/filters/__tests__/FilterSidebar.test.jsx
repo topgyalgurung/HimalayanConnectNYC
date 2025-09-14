@@ -1,8 +1,8 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import FilterSidebar from "../app/(homepage)/filters/FilterSidebar";
+import FilterSidebar from "@/app/ui/filters/FilterSidebar";
 
 // Mock child components
-jest.mock("../app/(homepage)/filters/ResourceFilter", () => ({
+jest.mock("@/app/ui/filters/ResourceFilter", () => ({
   __esModule: true,
   default: ({ onFilterChangeAction }) => (
     <div data-testid="resource-filter">
@@ -16,7 +16,7 @@ jest.mock("../app/(homepage)/filters/ResourceFilter", () => ({
   ),
 }));
 
-jest.mock("../app/(homepage)/filters/BoroughFilter", () => ({
+jest.mock("@/app/ui/filters/BoroughFilter", () => ({
   __esModule: true,
   default: ({ onFilterChangeAction }) => (
     <div data-testid="borough-filter">
