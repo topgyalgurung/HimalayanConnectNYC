@@ -85,47 +85,83 @@ export default function ResourceFilter({
   };
 
   return (
-    <div className="p-3 pr-4 border-2 rounded-md text-black text-sm">
+    <div className="p-3 border border-gray-200 rounded-lg shadow-sm bg-white transition-all duration-200 hover:border-gray-300">
       <List sx={{ width: "100%", padding: 0, margin: 0 }} dense>
-        {/* top section */}
-        <div className="flex items-center justify-center mb-1">
-          <h3 className="font-semibold text-blue-500 text-sm">CATEGORY</h3>
-          <span className="mx-2 border-l border-gray-300 h-6 ml-4 hidden sm:block" />
-          <button onClick={clearFilters} className="text-red-500 ml-auto sm:ml-0 flex items-center gap-2">
-            CLEAR
-            <Image src="https://cdn-icons-png.flaticon.com/512/399/399274.png" alt="clear" width={20} height={20} />
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-2">
+            <h3 className="font-medium text-gray-700 text-sm tracking-wide">
+              CATEGORY
+            </h3>
+            <span className="h-4 w-px bg-gray-200 mx-2" />
+            <button 
+              onClick={clearFilters} 
+              className="text-red-500 text-xs hover:text-red-600 transition-colors duration-200 flex items-center gap-1"
+            >
+              CLEAR
+              <Image 
+                src="https://cdn-icons-png.flaticon.com/512/399/399274.png" 
+                alt="clear" 
+                width={16} 
+                height={16} 
+                className="opacity-75"
+              />
+            </button>
+          </div>
+          <button
+            onClick={handleToggle}
+            className="p-1 hover:bg-gray-50 rounded-full transition-colors duration-200"
+          >
+            {openResFilter ? <ExpandLess fontSize="small" /> : <ExpandMore fontSize="small" />}
           </button>
-          <ListItemButton onClick={handleToggle}>
-            <ListItemText />
-            {openResFilter ? <ExpandLess /> : <ExpandMore />}
-          </ListItemButton>
         </div>
-        <hr className="mb-1" />
 
         <Collapse in={openResFilter} timeout="auto" unmountOnExit>
-          <List dense sx={{ width: "100%", padding: 0 }}>
+          <div className="space-y-1">
             {categories.map((cat) => (
-              <ListItem key={cat.id} disablePadding>
-                <ListItemButton className="py-1">
+              <ListItem 
+                key={cat.id} 
+                disablePadding 
+                sx={{ 
+                  margin: 0,
+                  borderRadius: '0.375rem',
+                  '&:hover': { backgroundColor: '#f8fafc' }
+                }}
+              >
+                <ListItemButton 
+                  className="py-1 px-2 rounded-md transition-colors duration-200"
+                >
                   <ListItemIcon className="min-w-0 mr-2">
                     <Checkbox
                       checked={selectedCategories.includes(cat.name)}
                       onChange={() => handleCategoryCheckboxChange(cat.name)}
                       size="small"
+                      sx={{
+                        color: '#94a3b8',
+                        '&.Mui-checked': {
+                          color: '#3b82f6',
+                        },
+                      }}
                     />
                   </ListItemIcon>
-                  <Image
-                    src={cat.icon}
-                    alt={cat.name}
-                    className="mr-2"
-                    width={25}
-                    height={25}
-                  />
-                  <ListItemText primary={cat.name} className="capitalize" />
+                  <div className="flex items-center gap-2 flex-1">
+                    <Image
+                      src={cat.icon}
+                      alt={cat.name}
+                      width={20}
+                      height={20}
+                      className="opacity-75"
+                    />
+                    <ListItemText
+                      primary={cat.name}
+                      primaryTypographyProps={{
+                        className: "text-sm font-medium text-gray-700 capitalize"
+                      }}
+                    />
+                  </div>
                 </ListItemButton>
               </ListItem>
             ))}
-          </List>
+          </div>
         </Collapse>
       </List>
     </div>

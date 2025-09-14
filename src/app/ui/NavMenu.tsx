@@ -11,7 +11,7 @@ import { usePathname } from "next/navigation";
 import { useUser } from "@/app/context/UserProvider";
 import { usePopup } from "@/app/hooks/usePopup";
 
-import AddResourcePopup from "@/app/components/dashboard/ResourcePopup/AddResourcePopup";
+import AddResourcePopup from "@/app/components/ResourcePopup/AddResourcePopup";
 
 
 import UserProfileMenu from "./UserProfileMenu";
