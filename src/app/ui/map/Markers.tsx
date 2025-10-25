@@ -169,7 +169,7 @@ export const Markers = ({ points, hoveredResourceId }: MarkersProps) => {
                     
                     <a
                       href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                        resource.address
+                        resource.address || ""
                       )}`}
                       target="_blank"
                       rel="noopener noreferrer"

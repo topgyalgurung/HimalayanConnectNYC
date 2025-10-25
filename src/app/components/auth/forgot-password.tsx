@@ -3,27 +3,18 @@
 import { useActionState } from "react";
 import Link from "next/link";
 import { forgotPassword } from "@/app/lib/auth";
-import { User } from "@prisma/client";
-
-interface ForgotPasswordState {
-  errors?: {
-    email?: string[];
-  };
-  message?: string;
-  status?: number;
-  success?: boolean;
-  user?: User;
-}
+import { ForgotFormState } from "@/app/lib/forms/definitions";
 
 
 const ForgotPassword = () => {
-    const [state, formAction, isPending] = useActionState<ForgotPasswordState, FormData>(
+    const [state, formAction, isPending] = useActionState<ForgotFormState, FormData>(
         forgotPassword,
         {
           errors: {
             email: [],
           },
           message: "",
+          email: "",
         }
       );
 

@@ -64,7 +64,7 @@ const ResourceActions: React.FC<ResourceActionsProps> = ({
       {/* {resource.facebookLink && ( */}
 
       <a
-        href={resource.facebookLink}
+        href={resource.facebookLink || "#"}
         target="_blank"
         rel="noopener noreferrer"
         className="text-blue-600 hover:text-blue-800 transition-colors"

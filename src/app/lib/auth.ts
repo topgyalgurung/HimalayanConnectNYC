@@ -227,6 +227,11 @@ export async function forgotPassword(prevState: ForgotFormState, formData: FormD
   if (!validateFields.success) {
     return {
       errors: validateFields.error.flatten().fieldErrors,
+      message: undefined,
+      email: undefined,
+      success: undefined,
+      user: undefined,
+      status: undefined,
     };
   }
 
@@ -242,7 +247,11 @@ export async function forgotPassword(prevState: ForgotFormState, formData: FormD
     if (!user) {
       return {
         message: "Account with this email does not exist. ",
-        status: 404
+        status: 404,
+        errors: undefined,
+        email: undefined,
+        success: undefined,
+        user: undefined,
       }
     }
     // If yes, use nodemailer to send token to the email and 
@@ -257,7 +266,10 @@ export async function forgotPassword(prevState: ForgotFormState, formData: FormD
     return {
       message: "Check your email for reset password",
       success: true,
-      user
+      user,
+      errors: undefined,
+      email: undefined,
+      status: undefined,
     }
 
     
@@ -266,7 +278,10 @@ export async function forgotPassword(prevState: ForgotFormState, formData: FormD
       message:
         error instanceof Error ? error.message : "An error occured",
       status: 500,
-   
+      errors: undefined,
+      email: undefined,
+      success: undefined,
+      user: undefined,
     }
     
   }

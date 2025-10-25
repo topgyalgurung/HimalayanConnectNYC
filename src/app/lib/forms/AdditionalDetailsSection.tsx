@@ -58,7 +58,7 @@ export default function AdditionalDetailsSection({
   }
 
   function handleDelete(){
-    onImageUpload(null);
+    onImageUpload("");
   }
 
   // const mask = countryList.find({code}) => code === countryCode)?.mask;
@@ -66,7 +66,7 @@ export default function AdditionalDetailsSection({
   return (
     <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
       {/* select city with dropdown */}
-      <CitySelect city={city} />
+      <CitySelect city={city || ""} />
       {/* day, open and close time selector */}
       <div className="flex justify-center">
         <TimePickerSection

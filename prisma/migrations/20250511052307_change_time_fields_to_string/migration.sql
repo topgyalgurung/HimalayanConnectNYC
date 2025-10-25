@@ -1,7 +1,0 @@
--- AlterTable
-ALTER TABLE "Resource" ALTER COLUMN "openTime" SET DATA TYPE TEXT,
-ALTER COLUMN "closeTime" SET DATA TYPE TEXT;
-
--- AlterTable
-ALTER TABLE "ResourceEditSuggestion" ALTER COLUMN "openTime" SET DATA TYPE TEXT,
-ALTER COLUMN "closeTime" SET DATA TYPE TEXT;

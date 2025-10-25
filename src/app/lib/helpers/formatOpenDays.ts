@@ -14,7 +14,7 @@
 
     if (indices.length === 0) return "Invalid";
 
-    const ranges = [];
+    const ranges: number[][] = [];
     let start = indices[0];
     let end = start;
 

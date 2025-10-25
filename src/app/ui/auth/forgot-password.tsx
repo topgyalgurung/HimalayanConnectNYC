@@ -3,29 +3,19 @@
 import { useActionState } from "react";
 import Link from "next/link";
 import { forgotPassword } from "@/app/lib/auth";
-import { User } from "@prisma/client";
-
-interface ForgotPasswordState {
-  errors?: {
-    email?: string[];
-  };
-  message?: string;
-  status?: number;
-  success?: boolean;
-  user?: User;
-}
-
+import { ForgotFormState } from "@/app/lib/forms/definitions";
 
 const ForgotPassword = () => {
-    const [state, formAction, isPending] = useActionState<ForgotPasswordState, FormData>(
-        forgotPassword,
-        {
-          errors: {
-            email: [],
-          },
-          message: "",
-        }
-      );
+  const [state, formAction, isPending] = useActionState<
+    ForgotFormState,
+    FormData
+  >(forgotPassword, {
+    errors: {
+      email: [],
+    },
+    message: "",
+    email: "",
+  });
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
@@ -63,11 +53,13 @@ const ForgotPassword = () => {
       </form>
 
       {state?.message && (
-        <p className={`text-sm mt-4 ${state.status === 404 ? "text-red-500" : "text-green-500"}`}>
+        <p
+          className={`text-sm mt-4 ${state.status === 404 ? "text-red-500" : "text-green-500"}`}
+        >
           {state.message}
         </p>
       )}
-      
+
       {state?.success && (
         <div className="mt-4 text-center">
           <p className="text-gray-600 text-sm mt-2">
@@ -76,15 +68,11 @@ const ForgotPassword = () => {
         </div>
       )}
 
-      <Link 
-        href="/login" 
-        className="mt-4 text-blue-600 hover:underline"
-      >
+      <Link href="/login" className="mt-4 text-blue-600 hover:underline">
         Back to Login
       </Link>
-
     </div>
   );
 };
 
-export default ForgotPassword;  
+export default ForgotPassword;

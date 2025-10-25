@@ -52,8 +52,8 @@ export default function ResourceSuggestCard({
     phone: resource?.phone || "",
     url: resource?.url || "",
     openDays: resource?.openDays || "",
-    openTime: dayjs.utc(resource.openTime).format("hh:mm A") || null,
-    closeTime: dayjs.utc(resource.closeTime).format("hh:mm A") || null,
+    openTime: resource?.openTime ? dayjs.utc(resource.openTime).format("hh:mm A") : null,
+    closeTime: resource?.closeTime ? dayjs.utc(resource.closeTime).format("hh:mm A") : null,
     // openTime: resource?.openTime || null,
     // closeTime: resource?.closeTime || null,
   });

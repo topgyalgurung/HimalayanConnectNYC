@@ -119,7 +119,15 @@ export type ForgotFormState =
       email?: string[]
     }
     message?: string
-    email:string
+    email?: string
+    success?: boolean
+    user?: {
+      id: number;
+      email: string;
+      firstName?: string;
+      lastName?: string;
+    }
+    status?: number
   } 
 | undefined
 
