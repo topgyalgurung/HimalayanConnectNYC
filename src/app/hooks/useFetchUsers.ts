@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import type { User } from "../lib/types";
+import type { User } from "@/app/lib/types";
 
 export function useFetchUser() {
   const [data, setData] = useState<User | null>(null);
