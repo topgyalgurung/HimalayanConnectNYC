@@ -1,14 +1,5 @@
 "use server";
 
-/**
- * authentication actions for the Himalayan Connect NYC application.
- */
-// login
-// signup
-// logout 
-// forgot password 
-// reset password 
-
 import {
   SignupFormSchema,
   LoginFormSchema,

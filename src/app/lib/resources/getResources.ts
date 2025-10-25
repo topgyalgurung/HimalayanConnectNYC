@@ -16,11 +16,17 @@ import { unstable_cache } from 'next/cache';
 interface GetResourcesOptions {
   categories?: string[];
   boroughs?: string[];
+  search?: string;
+  page?: number;
 }
 
 // Cache the getResources function with a 5-minute revalidation period
+// unstable cache - cache expensive result
+// unstable cache replaced by usecache when stable 
 const getCachedResources = unstable_cache(
-  async ({ categories = [], boroughs = [], userId = null }: GetResourcesOptions & { userId?: number | null } = {}) => {
+  async ({ categories = [], boroughs = [], userId = null, page = 1 }: GetResourcesOptions & { userId?: number | null } ) => {
+     const GROUPS_PER_PAGE = 6;
+     const skip = (page - 1) * GROUPS_PER_PAGE; // offset
     try {
       // Build where clause based on filters
       const where = {
@@ -34,6 +40,9 @@ const getCachedResources = unstable_cache(
             in: boroughs
           }
         }),
+        // name:{
+        //   contains:search,
+        // },
         status: ResourceStatus.APPROVED // Only show approved resources
       };
 
@@ -43,6 +52,8 @@ const getCachedResources = unstable_cache(
             name:'asc'
           }
         ],
+        skip,
+        take: GROUPS_PER_PAGE,
         where,
         include: {
           ResourceCategory: {
@@ -64,25 +75,21 @@ const getCachedResources = unstable_cache(
             : false,
         },
       });
+      // count total number of resources
+      const total = await prisma.resource.count({ where }); // total number of resources
 
       // Serialize all Decimal fields to numbers and convert IDs to strings
-      return resources.map(resource => ({
+      const serializedResources = resources.map((resource) => ({
         ...resource,
         id: String(resource.id),
-        rating: Number(resource.rating),
-        Location: resource.Location.map(loc => ({
-          ...loc,
-          latitude: loc.latitude ? Number(loc.latitude) : null,
-          longitude: loc.longitude ? Number(loc.longitude) : null,
-        })),
-        createdAt: resource.createdAt,
-        openTime: resource.openTime || null,
-        closeTime: resource.closeTime || null,
-        ResourceCategory: resource.ResourceCategory ? {
-          ...resource.ResourceCategory,
-          id: String(resource.ResourceCategory.id),
-        } : null,
+        rating: resource.rating ? Number(resource.rating) : null,
+        createdAt: resource.createdAt.toISOString(),
+        openTime: resource.openTime?.toISOString() || null,
+        closeTime: resource.closeTime?.toISOString() || null,
       }));
+
+      // return data, total number of resources, and total number of pages
+      return { data: serializedResources, total, perPage: GROUPS_PER_PAGE };
     } catch (error) {
       console.error("Error fetching resources:", error);
       throw new Error("Failed to fetch resources");
@@ -96,14 +103,16 @@ const getCachedResources = unstable_cache(
 );
 
 // Wrapper function that handles session outside of cache
-export async function getResources({ categories = [], boroughs = [] }: GetResourcesOptions = {}) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function getResources({ search, page, categories = [], boroughs = []}: GetResourcesOptions ) {
   try {
+
     // Get session outside of cached function
     const session = await getSession();
     const userId = session?.userId ? Number(session.userId) : null;
     
     // Pass userId to cached function
-    return await getCachedResources({ categories, boroughs, userId });
+    return await getCachedResources({ categories, boroughs, userId, page });
   } catch (error) {
     console.error("Error in getResources wrapper:", error);
     throw new Error("Failed to fetch resources");

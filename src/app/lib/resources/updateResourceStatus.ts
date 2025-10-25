@@ -1,9 +1,4 @@
 'use server';
-
-/**
- * updates the status of a resource
- */
-
 import { revalidatePath } from 'next/cache';
 import { prisma } from '@/app/lib/prisma';
 import { ResourceStatus, Resource } from '@prisma/client';

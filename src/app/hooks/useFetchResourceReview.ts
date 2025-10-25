@@ -1,4 +1,4 @@
-import type { ResourceReview } from '../lib/types';
+import type { ResourceReview } from '@/app/lib/types';
 import { useState, useEffect, useCallback } from 'react';
 
 export function useFetchResourceReview(resourceId: number | null) {

@@ -48,6 +48,11 @@ export async function GET(request: NextRequest) {
         });
         const resourcesWithLikeStatus = resources.map((res) => ({
             ...res,
+            id: String(res.id),
+            rating: res.rating ? Number(res.rating) : null,
+            createdAt: res.createdAt.toISOString(),
+            openTime: res.openTime?.toISOString() || null,
+            closeTime: res.closeTime?.toISOString() || null,
             isLiked: res.ResourceLike && res.ResourceLike.length > 0,
         }));
         // console.log("API Resources:", JSON.stringify(resourcesWithLikeStatus, null, 2));
