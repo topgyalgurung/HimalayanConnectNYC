@@ -17,7 +17,9 @@ export const dynamic = "force-dynamic";
 // Add revalidation tags for manual revalidation
 export const revalidate = 300; // 5 minutes
 
-export default function Home() {
+export default function Home({searchParams}: {searchParams: {search?:string, page?: string}}) {
+  const search = searchParams.search || "";
+  const page = searchParams.page ? parseInt(searchParams.page) : 1;
   return (
     <>
       {/* Shell renders immediately, data streams in */}
@@ -29,6 +31,7 @@ export default function Home() {
                 <FilterSkeleton />
               </aside>
               <aside className="w-full md:w-[40%] lg:w-[35%] pl-0 md:pl-4 flex flex-col min-h-0 mb-4">
+                
                 <ResourceListSkeleton />
               </aside>
               <aside className="w-full md:flex-1 lg:flex-1 bg-white shadow-md flex flex-col h-[500px] md:h-full border-2 border-gray-300">
@@ -37,7 +40,7 @@ export default function Home() {
             </div>
           }
         >
-          <HomeServer />
+          <HomeServer search={search} page={page} />
         </Suspense>
       </ErrorBoundary>
     </>

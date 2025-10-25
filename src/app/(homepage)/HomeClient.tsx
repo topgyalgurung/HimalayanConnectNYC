@@ -7,9 +7,12 @@ import FilterSidebar from "../ui/filters/FilterSidebar"; // FilterSidebar compon
 import ResourceListPanel from "../ui/resources/ResourceListPanel"; // ResourceListPanel component for resource list display
 import MapView from "../ui/map/Map"; // MapView component for map display
 import type { Resource } from "@/app/lib/types"; // Resource type definition
+import Pagination from "@/app/ui/resources/pagination";
 
 interface HomeClientProps {
   initialResources: Resource[];
+  totalPages: number;
+  page: number;
 }
 import { Metadata } from 'next';
 
@@ -17,11 +20,12 @@ export const metadata: Metadata = {
   title: 'Himalayan Connect NYC HomePage',
 };
 
-export default function HomeClient({ initialResources }: HomeClientProps) {
+export default function HomeClient({ initialResources, totalPages, page }: HomeClientProps) {
   const [selectedResource, setSelectedResource] = useState<Resource | null>(null);
   const [editResource, setEditResource] = useState<Resource | null>(null);
   const [filteredResources, setFilteredResources] = useState<Resource[]>(initialResources);
   const [hoveredResourceId, setHoveredResourceId] = useState<string | null>(null);
+
 
   const handleViewDetails = (resource: Resource) => {
     if (selectedResource?.id === resource.id) {
@@ -62,11 +66,12 @@ export default function HomeClient({ initialResources }: HomeClientProps) {
      
 
       <aside className="w-full md:w-[40%] lg:w-[35%] pl-0 md:pl-4 flex flex-col min-h-0 mb-4">
-        <ResourceListPanel
+        <ResourceListPanel  
           filteredResources={filteredResources}
           onViewDetailsAction={handleViewDetails}
           onResourceHover={setHoveredResourceId}
         />
+        <Pagination totalPages={totalPages} page={page} />
       </aside>
 
       <aside className="w-full md:w-[40%] lg:w-[45%] bg-white shadow-md flex flex-col h-[500px] md:h-full border-2 border-gray-300">
