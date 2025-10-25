@@ -29,7 +29,16 @@ export async function GET(req: NextRequest,
       },
     });
 
-    return NextResponse.json(reviews);
+    // Serialize Decimal fields
+    const serializedReviews = reviews.map((review) => ({
+      ...review,
+      id: String(review.id),
+      rating: review.rating ? Number(review.rating) : null,
+      createdAt: review.createdAt.toISOString(),
+      updatedAt: review.updatedAt.toISOString(),
+    }));
+
+    return NextResponse.json(serializedReviews);
   } catch (error: unknown) {
     console.error("Error showing reviews:", {
       message: error instanceof Error ? error.message : 'Unknown error',

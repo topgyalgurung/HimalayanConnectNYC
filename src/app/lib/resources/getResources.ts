@@ -21,8 +21,10 @@ interface GetResourcesOptions {
 }
 
 // Cache the getResources function with a 5-minute revalidation period
+// unstable cache - cache expensive result
+// unstable cache replaced by usecache when stable 
 const getCachedResources = unstable_cache(
-  async ({ categories = [], boroughs = [], userId = null, search , page = 1 }: GetResourcesOptions & { userId?: number | null } ) => {
+  async ({ categories = [], boroughs = [], userId = null, page = 1 }: GetResourcesOptions & { userId?: number | null } ) => {
      const GROUPS_PER_PAGE = 6;
      const skip = (page - 1) * GROUPS_PER_PAGE; // offset
     try {
@@ -38,6 +40,9 @@ const getCachedResources = unstable_cache(
             in: boroughs
           }
         }),
+        // name:{
+        //   contains:search,
+        // },
         status: ResourceStatus.APPROVED // Only show approved resources
       };
 
@@ -74,8 +79,17 @@ const getCachedResources = unstable_cache(
       const total = await prisma.resource.count({ where }); // total number of resources
 
       // Serialize all Decimal fields to numbers and convert IDs to strings
+      const serializedResources = resources.map((resource) => ({
+        ...resource,
+        id: String(resource.id),
+        rating: resource.rating ? Number(resource.rating) : null,
+        createdAt: resource.createdAt.toISOString(),
+        openTime: resource.openTime?.toISOString() || null,
+        closeTime: resource.closeTime?.toISOString() || null,
+      }));
+
       // return data, total number of resources, and total number of pages
-      return { data: resources, total, perPage: GROUPS_PER_PAGE };
+      return { data: serializedResources, total, perPage: GROUPS_PER_PAGE };
     } catch (error) {
       console.error("Error fetching resources:", error);
       throw new Error("Failed to fetch resources");
@@ -89,6 +103,7 @@ const getCachedResources = unstable_cache(
 );
 
 // Wrapper function that handles session outside of cache
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function getResources({ search, page, categories = [], boroughs = []}: GetResourcesOptions ) {
   try {
 
@@ -97,7 +112,7 @@ export async function getResources({ search, page, categories = [], boroughs = [
     const userId = session?.userId ? Number(session.userId) : null;
     
     // Pass userId to cached function
-    return await getCachedResources({ categories, boroughs, userId, search, page });
+    return await getCachedResources({ categories, boroughs, userId, page });
   } catch (error) {
     console.error("Error in getResources wrapper:", error);
     throw new Error("Failed to fetch resources");

@@ -17,9 +17,9 @@ export const dynamic = "force-dynamic";
 // Add revalidation tags for manual revalidation
 export const revalidate = 300; // 5 minutes
 
-export default function Home({searchParams}: {searchParams: {search?:string, page?: string}}) {
-  const search = searchParams.search || "";
-  const page = searchParams.page ? parseInt(searchParams.page) : 1;
+export default async function Home({searchParams}: {searchParams: Promise<{search?:string, page?: number}>}) {
+  const {search, page} = await searchParams;
+  const pageNumber = page ? Number(page) : 1;
   return (
     <>
       {/* Shell renders immediately, data streams in */}
@@ -40,7 +40,7 @@ export default function Home({searchParams}: {searchParams: {search?:string, pag
             </div>
           }
         >
-          <HomeServer search={search} page={page} />
+          <HomeServer search={search} page={pageNumber} />
         </Suspense>
       </ErrorBoundary>
     </>

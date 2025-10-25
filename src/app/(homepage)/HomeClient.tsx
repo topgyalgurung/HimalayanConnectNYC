@@ -3,9 +3,9 @@
 "use client";
 
 import { useState } from "react";
-import FilterSidebar from "../ui/filters/FilterSidebar"; // FilterSidebar component for resource filtering
-import ResourceListPanel from "../ui/resources/ResourceListPanel"; // ResourceListPanel component for resource list display
-import MapView from "../ui/map/Map"; // MapView component for map display
+import FilterSidebar from "@/app/ui/filters/FilterSidebar"; // FilterSidebar component for resource filtering
+import ResourceListPanel from "@/app/ui/resources/ResourceListPanel"; // ResourceListPanel component for resource list display
+import MapView from "@/app/ui/map/Map"; // MapView component for map display
 import type { Resource } from "@/app/lib/types"; // Resource type definition
 import Pagination from "@/app/ui/resources/pagination";
 
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   title: 'Himalayan Connect NYC HomePage',
 };
 
-export default function HomeClient({ initialResources, totalPages, page }: HomeClientProps) {
+export default function HomeClient({ initialResources, totalPages }: HomeClientProps) {
   const [selectedResource, setSelectedResource] = useState<Resource | null>(null);
   const [editResource, setEditResource] = useState<Resource | null>(null);
   const [filteredResources, setFilteredResources] = useState<Resource[]>(initialResources);
@@ -71,7 +71,9 @@ export default function HomeClient({ initialResources, totalPages, page }: HomeC
           onViewDetailsAction={handleViewDetails}
           onResourceHover={setHoveredResourceId}
         />
-        <Pagination totalPages={totalPages} page={page} />
+        <div className="flex justify-center mb-3">
+          <Pagination totalPages={totalPages}  />
+        </div>
       </aside>
 
       <aside className="w-full md:w-[40%] lg:w-[45%] bg-white shadow-md flex flex-col h-[500px] md:h-full border-2 border-gray-300">

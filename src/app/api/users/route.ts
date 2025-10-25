@@ -97,8 +97,30 @@ export async function GET() {
         if (!user) {
             return NextResponse.json({ error: "User not found" }, { status: 404 });
           }
-        // console.log("Fetched users:", JSON.stringify(user))
-        return NextResponse.json(user);
+        
+        // Serialize Decimal fields
+        const serializedUser = {
+            ...user,
+            reviews: user.reviews.map((review) => ({
+                ...review,
+                rating: review.rating ? Number(review.rating) : null,
+                createdAt: review.createdAt.toISOString(),
+            })),
+            likes: user.likes.map((like) => ({
+                ...like,
+                resource: {
+                    ...like.resource,
+                    id: String(like.resource.id),
+                    rating: like.resource.rating ? Number(like.resource.rating) : null,
+                    createdAt: like.resource.createdAt.toISOString(),
+                    openTime: like.resource.openTime?.toISOString() || null,
+                    closeTime: like.resource.closeTime?.toISOString() || null,
+                },
+            })),
+        };
+        
+        // console.log("Fetched users:", JSON.stringify(serializedUser))
+        return NextResponse.json(serializedUser);
     } catch (error) {
         console.log("Error fetching users: ", error);
         return NextResponse.json({error: "Failed to fetch users"},{status: 500})
