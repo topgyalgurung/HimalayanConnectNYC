@@ -1,11 +1,11 @@
-
 "use client";
+
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-import TextField from "@mui/material/TextField";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
-export default function SearchInput() {
+export default function SearchInput({ placeholder }: { placeholder: string }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentQuery = searchParams.get("query") || ""; // Get the 'query' from the URL (default to empty string if not found)
@@ -28,33 +28,15 @@ export default function SearchInput() {
     return () => clearTimeout(debounceTimer); // cleanup debounce
   }, [inputValue, router]);
 
-
   return (
-    <form>
-      <TextField
-        id="search-bar"
-        type="search"
-        placeholder="Search name or location"
+    <div className="relative flex flex-1 flex-shrink-0">
+      <input
+        placeholder={placeholder}
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
-        variant="outlined"
-        className="w-full max-w-2xl h-14 bg-white rounded-xl border-2 border-gray-300 px-6 text-base shadow-md transition-all duration-200 hover:border-blue-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
-        sx={{
-          '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-              borderColor: '#e5e7eb',
-              borderWidth: '2px',
-            },
-            '&:hover fieldset': {
-              borderColor: '#60a5fa',
-            },
-            '&.Mui-focused fieldset': {
-              borderColor: '#3b82f6',
-              borderWidth: '2px',
-            },
-          },
-        }}
+        className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
       />
-    </form>
+      <MagnifyingGlassIcon className="absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+    </div>
   );
 }
