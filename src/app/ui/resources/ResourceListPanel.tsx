@@ -18,23 +18,30 @@ interface ResourceListPanelProps {
   onViewDetailsAction: (resource: Resource) => void;
   onResourceHover?: (resourceId: string | null) => void;
 }
-const SearchInput = dynamic(() => import("@/app/ui/SearchInput"), {
-  ssr: false,
-});
+const SearchInput = dynamic(
+  () => import("@/app/ui/SearchInput"),
+  {
+    ssr: false,
+  }
+);
 
 export default function ResourceListPanel({
   filteredResources,
   onViewDetailsAction,
   onResourceHover,
 }: ResourceListPanelProps) {
+
+
   return (
     <>
+  
+
       <h2 className="text-lg text-center font-bold text-black mb-2 top-0 z-10 p-2 shadow bg-white">
         RESOURCES
       </h2>
-      {/* Search input  */}
-      <div className="mb-6">
-        <SearchInput placeholder="Search resources by name or location" />
+       {/* Search input  */}
+       <div className="mb-6">
+        <SearchInput />
       </div>
 
       <main className="flex-1 bg-gray-50 p-4 overflow-y-auto mb-4">
@@ -43,6 +50,7 @@ export default function ResourceListPanel({
           onViewDetailsAction={onViewDetailsAction}
           onResourceHover={onResourceHover}
         />
+      
       </main>
     </>
   );
