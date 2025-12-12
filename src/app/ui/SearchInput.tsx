@@ -1,8 +1,7 @@
 "use client";
-import { useState, useEffect } from "react";
+
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import TextField from "@mui/material/TextField";
 
 export default function SearchInput({ placeholder }): { placeholder: string } {
   const searchParams = useSearchParams();

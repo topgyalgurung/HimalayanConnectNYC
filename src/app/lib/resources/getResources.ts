@@ -16,13 +16,11 @@ import { unstable_cache } from 'next/cache';
 interface GetResourcesOptions {
   categories?: string[];
   boroughs?: string[];
-  search?: string;
   page?: number;
 }
 
 // Cache the getResources function with a 5-minute revalidation period
-// unstable cache - cache expensive result
-// unstable cache replaced by usecache when stable 
+// unstable cache to cache expensive result, unstable cache will be replaced by usecache when stable 
 const getCachedResources = unstable_cache(
   async ({ categories = [], boroughs = [], userId = null, page = 1 }: GetResourcesOptions & { userId?: number | null } ) => {
      const GROUPS_PER_PAGE = 6;
@@ -104,9 +102,8 @@ const getCachedResources = unstable_cache(
 
 // Wrapper function that handles session outside of cache
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function getResources({ search, page, categories = [], boroughs = []}: GetResourcesOptions ) {
+export async function getResources({ page, categories = [], boroughs = []}: GetResourcesOptions ) {
   try {
-
     // Get session outside of cached function
     const session = await getSession();
     const userId = session?.userId ? Number(session.userId) : null;
