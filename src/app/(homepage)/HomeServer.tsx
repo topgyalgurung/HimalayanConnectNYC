@@ -8,7 +8,7 @@ export default async function HomeServer({
   query?: string;
   page: number;
 }) {
-  const { data, perPage, total } = await getResources({ page });
+  const { data, perPage, total } = await getResources({ query, page });
   return (
     <HomeClient
       initialResources={data as unknown as Resource[]}
