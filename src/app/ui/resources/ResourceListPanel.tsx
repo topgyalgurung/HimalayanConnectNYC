@@ -14,6 +14,8 @@ import type { Resource } from "@/app/lib/types";
 import dynamic from "next/dynamic";
 
 interface ResourceListPanelProps {
+  query: string;
+  page: number;
   filteredResources: Resource[];
   onViewDetailsAction: (resource: Resource) => void;
   onResourceHover?: (resourceId: string | null) => void;
@@ -23,6 +25,8 @@ const SearchInput = dynamic(() => import("@/app/ui/SearchInput"), {
 });
 
 export default function ResourceListPanel({
+  query,
+  page,
   filteredResources,
   onViewDetailsAction,
   onResourceHover,

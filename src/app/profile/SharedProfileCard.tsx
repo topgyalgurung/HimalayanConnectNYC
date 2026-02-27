@@ -14,12 +14,14 @@ import Image from "next/image";
 
 interface SharedProfileCardProps {
   userName: string;
+  userImage?: string | null;
   onLogoutAction: () => void;
   userType: "admin" | "user";
 }
 
 export const ProfileCard = ({
   userName,
+  userImage,
   onLogoutAction,
   userType,
 }: SharedProfileCardProps) => {
@@ -33,7 +35,7 @@ export const ProfileCard = ({
       <div className="flex flex-col items-center bg-white shadow-lg rounded-lg p-6">
         <div className="relative w-32 h-32 mb-4">
           <Image
-            src={"/user.png"}
+            src={userImage || "/user.png"}
             alt="Profile Picture"
             fill
             className="rounded-full object-cover"

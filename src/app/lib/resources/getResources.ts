@@ -22,9 +22,9 @@ interface GetResourcesOptions {
 // Cache the getResources function with a 5-minute revalidation period
 // unstable cache to cache expensive result, unstable cache will be replaced by usecache when stable 
 const getCachedResources = unstable_cache(
-  async ({ categories = [], boroughs = [], userId = null, page = 1 }: GetResourcesOptions & { userId?: number | null } ) => {
-     const GROUPS_PER_PAGE = 6;
-     const skip = (page - 1) * GROUPS_PER_PAGE; // offset
+  async ({ categories = [], boroughs = [], userId = null, page = 1 }: GetResourcesOptions & { userId?: number | null }) => {
+    const GROUPS_PER_PAGE = 6;
+    const skip = (page - 1) * GROUPS_PER_PAGE; // offset
     try {
       // Build where clause based on filters
       const where = {
@@ -47,7 +47,7 @@ const getCachedResources = unstable_cache(
       const resources = await prisma.resource.findMany({
         orderBy: [
           {
-            name:'asc'
+            name: 'asc'
           }
         ],
         skip,
@@ -67,9 +67,9 @@ const getCachedResources = unstable_cache(
           },
           ResourceLike: userId
             ? {
-                where: { userId },
-                select: { id: true },
-              }
+              where: { userId },
+              select: { id: true },
+            }
             : false,
         },
       });
@@ -101,13 +101,12 @@ const getCachedResources = unstable_cache(
 );
 
 // Wrapper function that handles session outside of cache
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function getResources({ page, categories = [], boroughs = []}: GetResourcesOptions ) {
+export async function getResources({ page, categories = [], boroughs = [] }: GetResourcesOptions) {
   try {
     // Get session outside of cached function
     const session = await getSession();
     const userId = session?.userId ? Number(session.userId) : null;
-    
+
     // Pass userId to cached function
     return await getCachedResources({ categories, boroughs, userId, page });
   } catch (error) {

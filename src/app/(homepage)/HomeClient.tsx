@@ -13,15 +13,11 @@ interface HomeClientProps {
   query: string;
   page: number;
 }
-import { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Himalayan Connect NYC HomePage",
-};
-
 export default function HomeClient({
   initialResources,
   totalPages,
+  query,
+  page,
 }: HomeClientProps) {
   const [selectedResource, setSelectedResource] = useState<Resource | null>(
     null
@@ -72,7 +68,7 @@ export default function HomeClient({
       <aside className="w-full md:w-[40%] lg:w-[35%] pl-0 md:pl-4 flex flex-col min-h-0 mb-4">
         <ResourceListPanel
           query={query}
-          currentPage={currentPage}
+          page={page}
           filteredResources={filteredResources}
           onViewDetailsAction={handleViewDetails}
           onResourceHover={setHoveredResourceId}

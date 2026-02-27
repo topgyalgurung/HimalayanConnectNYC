@@ -5,10 +5,10 @@
  */
 
 "use client";
-import { useSearchParams } from "next/navigation";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import ResourceCard from "./ResourceCard";
 import type { Resource } from "@/app/lib/types";
-import { fetchFilteredResources } from "@/app/lib/data";
 
 interface ResourceListProps {
   query?: string;
@@ -20,28 +20,47 @@ interface ResourceListProps {
 
 const ResourceList = ({
   query,
-  page,
   filteredResources,
   onViewDetailsAction,
   onResourceHover,
 }: ResourceListProps) => {
-  // const searchParams = useSearchParams();
-  // const searchQuery = searchParams.get("query")?.toLowerCase() || "";
-  const searchFilteredResources = fetchFilteredResources(query, currentPage);
+  const pathname = usePathname();
 
-  // Filter resources based on search query only
-  // const searchFilteredResources = filteredResources.filter((resource) => {
-  //   const searchQueryLower = searchQuery.trim().toLowerCase();
-  //   const nameMatch = resource.name?.toLowerCase().includes(searchQueryLower);
-  //   const addressMatch = resource.address
-  //     ?.toLowerCase()
-  //     .includes(searchQueryLower);
-  //   const locationMatch = resource.city
-  //     ?.toLowerCase()
-  //     .includes(searchQueryLower);
+  const searchQuery = (query ?? "").trim();
+  const searchQueryLower = searchQuery.toLowerCase();
 
-  //   return nameMatch || addressMatch || locationMatch;
-  // });
+  const searchFilteredResources = searchQuery
+    ? filteredResources.filter((resource) => {
+        const nameMatch = resource.name?.toLowerCase().includes(searchQueryLower);
+        const addressMatch = resource.address
+          ?.toLowerCase()
+          .includes(searchQueryLower);
+        const cityMatch = resource.city
+          ?.toLowerCase()
+          .includes(searchQueryLower);
+        const descriptionMatch = resource.description
+          ?.toLowerCase()
+          .includes(searchQueryLower);
+
+        return nameMatch || addressMatch || cityMatch || descriptionMatch;
+      })
+    : filteredResources;
+
+  if (searchFilteredResources.length === 0) {
+    return (
+      <div className="flex flex-col h-full items-center justify-center py-12 px-4 text-center">
+        <p className="text-gray-600 mb-4">
+          No resources match your filters. Try adjusting your search or filters.
+        </p>
+        <Link
+          href={pathname}
+          className="text-blue-600 hover:text-blue-700 font-medium underline"
+        >
+          Clear search and filters
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-full">
