@@ -11,42 +11,19 @@ import ResourceCard from "./ResourceCard";
 import type { Resource } from "@/app/lib/types";
 
 interface ResourceListProps {
-  query?: string;
-  page?: number;
   filteredResources: Resource[];
   onViewDetailsAction: (resource: Resource) => void;
   onResourceHover?: (resourceId: string | null) => void;
 }
 
 const ResourceList = ({
-  query,
   filteredResources,
   onViewDetailsAction,
   onResourceHover,
 }: ResourceListProps) => {
   const pathname = usePathname();
 
-  const searchQuery = (query ?? "").trim();
-  const searchQueryLower = searchQuery.toLowerCase();
-
-  const searchFilteredResources = searchQuery
-    ? filteredResources.filter((resource) => {
-        const nameMatch = resource.name?.toLowerCase().includes(searchQueryLower);
-        const addressMatch = resource.address
-          ?.toLowerCase()
-          .includes(searchQueryLower);
-        const cityMatch = resource.city
-          ?.toLowerCase()
-          .includes(searchQueryLower);
-        const descriptionMatch = resource.description
-          ?.toLowerCase()
-          .includes(searchQueryLower);
-
-        return nameMatch || addressMatch || cityMatch || descriptionMatch;
-      })
-    : filteredResources;
-
-  if (searchFilteredResources.length === 0) {
+  if (filteredResources.length === 0) {
     return (
       <div className="flex flex-col h-full items-center justify-center py-12 px-4 text-center">
         <p className="text-gray-600 mb-4">
@@ -65,7 +42,7 @@ const ResourceList = ({
   return (
     <div className="flex flex-col h-full">
       <ResourceCard
-        resources={searchFilteredResources}
+        resources={filteredResources}
         onViewDetailsAction={onViewDetailsAction}
         onResourceHover={onResourceHover}
       />

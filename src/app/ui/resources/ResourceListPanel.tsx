@@ -14,8 +14,6 @@ import type { Resource } from "@/app/lib/types";
 import dynamic from "next/dynamic";
 
 interface ResourceListPanelProps {
-  query: string;
-  page: number;
   filteredResources: Resource[];
   onViewDetailsAction: (resource: Resource) => void;
   onResourceHover?: (resourceId: string | null) => void;
@@ -25,8 +23,6 @@ const SearchInput = dynamic(() => import("@/app/ui/SearchInput"), {
 });
 
 export default function ResourceListPanel({
-  query,
-  page,
   filteredResources,
   onViewDetailsAction,
   onResourceHover,
@@ -43,8 +39,6 @@ export default function ResourceListPanel({
 
       <main className="flex-1 bg-gray-50 p-4 overflow-y-auto mb-4">
         <ResourceList
-          query={query}
-          page={page}
           filteredResources={filteredResources}
           onViewDetailsAction={onViewDetailsAction}
           onResourceHover={onResourceHover}

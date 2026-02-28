@@ -13,8 +13,6 @@ export default async function HomeServer({
     <HomeClient
       initialResources={data as unknown as Resource[]}
       totalPages={Math.ceil(total / perPage)}
-      query={query ?? ""}
-      page={page}
     />
   );
 }
