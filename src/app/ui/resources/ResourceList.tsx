@@ -5,7 +5,8 @@
  */
 
 "use client";
-import { useSearchParams } from "next/navigation";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import ResourceCard from "./ResourceCard";
 import type { Resource } from "@/app/lib/types";
 
@@ -20,27 +21,28 @@ const ResourceList = ({
   onViewDetailsAction,
   onResourceHover,
 }: ResourceListProps) => {
-  const searchParams = useSearchParams();
-  const searchQuery = searchParams.get("query")?.toLowerCase() || "";
+  const pathname = usePathname();
 
-  // Filter resources based on search query only
-  const searchFilteredResources = filteredResources.filter((resource) => {
-    const searchQueryLower = searchQuery.trim().toLowerCase();
-    const nameMatch = resource.name?.toLowerCase().includes(searchQueryLower);
-    const addressMatch = resource.address
-      ?.toLowerCase()
-      .includes(searchQueryLower);
-    const locationMatch = resource.city
-      ?.toLowerCase()
-      .includes(searchQueryLower);
-
-    return nameMatch || addressMatch || locationMatch;
-  });
+  if (filteredResources.length === 0) {
+    return (
+      <div className="flex flex-col h-full items-center justify-center py-12 px-4 text-center">
+        <p className="text-gray-600 mb-4">
+          No resources match your filters. Try adjusting your search or filters.
+        </p>
+        <Link
+          href={pathname}
+          className="text-blue-600 hover:text-blue-700 font-medium underline"
+        >
+          Clear search and filters
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-full">
       <ResourceCard
-        resources={searchFilteredResources}
+        resources={filteredResources}
         onViewDetailsAction={onViewDetailsAction}
         onResourceHover={onResourceHover}
       />

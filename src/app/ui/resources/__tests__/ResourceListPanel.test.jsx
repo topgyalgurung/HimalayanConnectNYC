@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import ResourceListPanel from "../ResourceListPanel";
 
 // Mock the ResourceList component
-jest.mock("../app/(homepage)/resources/ResourceList", () => ({
+jest.mock("../ResourceList", () => ({
   __esModule: true,
   default: ({ filteredResources, onViewDetailsAction }) => (
     <div data-testid="resource-list">
@@ -48,7 +48,7 @@ describe("ResourceListPanel", () => {
       <ResourceListPanel
         filteredResources={mockResources}
         onViewDetailsAction={mockOnViewDetailsAction}
-      />
+      />,
     );
 
     expect(screen.getByText("RESOURCES")).toBeInTheDocument();
@@ -61,7 +61,7 @@ describe("ResourceListPanel", () => {
       <ResourceListPanel
         filteredResources={mockResources}
         onViewDetailsAction={mockOnViewDetailsAction}
-      />
+      />,
     );
 
     expect(screen.getByTestId("resource-1")).toBeInTheDocument();
@@ -74,7 +74,7 @@ describe("ResourceListPanel", () => {
       <ResourceListPanel
         filteredResources={[]}
         onViewDetailsAction={mockOnViewDetailsAction}
-      />
+      />,
     );
 
     expect(screen.getByTestId("resource-list")).toBeInTheDocument();
@@ -87,7 +87,7 @@ describe("ResourceListPanel", () => {
       <ResourceListPanel
         filteredResources={mockResources}
         onViewDetailsAction={mockOnViewDetailsAction}
-      />
+      />,
     );
 
     const viewDetailsButton = screen.getByTestId("view-details-1");
@@ -102,10 +102,10 @@ describe("ResourceListPanel", () => {
       <ResourceListPanel
         filteredResources={mockResources}
         onViewDetailsAction={mockOnViewDetailsAction}
-      />
+      />,
     );
 
-    const aside = container.querySelector("aside");
-    expect(aside).toHaveClass("w-full", "md:w-[35%]", "lg:w-[30%]");
+    const main = container.querySelector("main");
+    expect(main).toHaveClass("flex-1", "bg-gray-50", "overflow-y-auto");
   });
 });

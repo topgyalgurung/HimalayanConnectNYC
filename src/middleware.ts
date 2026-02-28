@@ -1,50 +1,47 @@
 import { NextRequest, NextResponse } from "next/server";
 import { decrypt } from "./app/lib/session";
 import { cookies } from "next/headers";
-// import toast from "react-hot-toast";
-
-// internationalization
-// import { match } from '@formatjs/intl-localematcher'
-// import Negotiator from 'negotiator'
-
-// let headers = { 'accept-language': 'en-US,en;q=0.5' }
-// let languages = new Negotiator({ headers }).languages()
-// let locales = ['en-US', 'nep-NP', 'nep']
-// let defaultLocale = 'en-US'
 
 const authRoutes = ['/login', '/signup'];
 const protectedRoutes = ["/dashboard", "/resources/add", "/profile"];
-// const publicRoutes = ["/", "/login", "/signup", "/verifyemail", "/forgotpassword", "/resetpassword"];
 
 export default async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
+
+  // Skip middleware for NextAuth API routes
+  if (path.startsWith("/api/auth")) {
+    return NextResponse.next();
+  }
+
   const isProtectedRoute = protectedRoutes.includes(path);
   const isAuthRoute = authRoutes.includes(path);
 
-  // get session from cookie 
+  // Check custom JWT session
   const cookie = (await cookies()).get("session")?.value;
-  const session = await decrypt(cookie);
+  const customSession = await decrypt(cookie);
+  const hasCustomSession = !!customSession?.userId;
 
-   // If session is undefined or decryption fails, user is treated as NOT logged in
-  const isAuthenticated = !!session?.userId;
+  // Check NextAuth session cookie (authjs.session-token or __Secure-authjs.session-token)
+  const cookieStore = await cookies();
+  const nextAuthCookie = cookieStore.get("authjs.session-token")?.value
+    || cookieStore.get("__Secure-authjs.session-token")?.value;
+  const hasNextAuthSession = !!nextAuthCookie;
 
-   // If user is NOT authenticated and tries to access a PROTECTED route → Redirect to /login
+  const isAuthenticated = hasCustomSession || hasNextAuthSession;
+
+  // If user is NOT authenticated and tries to access a PROTECTED route → Redirect to /login
   if (isProtectedRoute && !isAuthenticated) {
-    // toast.error("🔒 Unauthorized access attempt. Redirecting to /login");
     return NextResponse.redirect(new URL("/login", request.url));
   }
   // if user authenticated should not be able to access login and signup
   if (isAuthenticated && isAuthRoute) {
-    return NextResponse.redirect(new URL('/profile', request.url))
-    
+    return NextResponse.redirect(new URL('/profile', request.url));
   }
 
-// Allow request to continue if no redirection is needed
+  // Allow request to continue if no redirection is needed
   return NextResponse.next();
 }
 
-// match(languages, locales, defaultLocale) // -> 'en-US'
-
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
+  matcher: ["/((?!api/auth|_next/static|_next/image|.*\\.png$).*)"],
 };

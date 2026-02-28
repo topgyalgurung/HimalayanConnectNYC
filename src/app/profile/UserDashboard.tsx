@@ -155,6 +155,7 @@ export default function UserDashboard() {
       <div className="flex flex-col md:flex-row w-full">
         <ProfileCard
           userName={user.firstName}
+          userImage={user.image}
           onLogoutAction={handleLogout}
           userType="user"
         />
