@@ -16,18 +16,18 @@ import { unstable_cache } from 'next/cache';
 interface GetResourcesOptions {
   categories?: string[];
   boroughs?: string[];
-  search?: string;
+  query?: string;
   page?: number;
 }
 
 // Cache the getResources function with a 5-minute revalidation period
-// unstable cache - cache expensive result
-// unstable cache replaced by usecache when stable 
+// unstable cache to cache expensive result, unstable cache will be replaced by usecache when stable 
 const getCachedResources = unstable_cache(
-  async ({ categories = [], boroughs = [], userId = null, page = 1 }: GetResourcesOptions & { userId?: number | null } ) => {
-     const GROUPS_PER_PAGE = 6;
-     const skip = (page - 1) * GROUPS_PER_PAGE; // offset
+  async ({ categories = [], boroughs = [], userId = null, page = 1, query = "" }: GetResourcesOptions & { userId?: number | null }) => {
+    const GROUPS_PER_PAGE = 6;
+    const skip = (page - 1) * GROUPS_PER_PAGE; // offset
     try {
+      const search = query.trim();
       // Build where clause based on filters
       const where = {
         ...(categories && categories.length > 0 && {
@@ -40,16 +40,21 @@ const getCachedResources = unstable_cache(
             in: boroughs
           }
         }),
-        // name:{
-        //   contains:search,
-        // },
+        ...(search && {
+          OR: [
+            { name: { contains: search, mode: "insensitive" as const } },
+            { city: { contains: search, mode: "insensitive" as const } },
+            { address: { contains: search, mode: "insensitive" as const } },
+            { description: { contains: search, mode: "insensitive" as const } },
+          ],
+        }),
         status: ResourceStatus.APPROVED // Only show approved resources
       };
 
       const resources = await prisma.resource.findMany({
         orderBy: [
           {
-            name:'asc'
+            name: 'asc'
           }
         ],
         skip,
@@ -69,9 +74,9 @@ const getCachedResources = unstable_cache(
           },
           ResourceLike: userId
             ? {
-                where: { userId },
-                select: { id: true },
-              }
+              where: { userId },
+              select: { id: true },
+            }
             : false,
         },
       });
@@ -95,7 +100,7 @@ const getCachedResources = unstable_cache(
       throw new Error("Failed to fetch resources");
     }
   },
-  ['resources'], // Cache key
+  ['resources'], // Cache key (unstable_cache differentiates by function args)
   {
     revalidate: 300, // Revalidate every 5 minutes
     tags: ['resources'] // Tag for manual revalidation
@@ -103,16 +108,14 @@ const getCachedResources = unstable_cache(
 );
 
 // Wrapper function that handles session outside of cache
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function getResources({ search, page, categories = [], boroughs = []}: GetResourcesOptions ) {
+export async function getResources({ page, categories = [], boroughs = [], query = "" }: GetResourcesOptions) {
   try {
-
     // Get session outside of cached function
     const session = await getSession();
     const userId = session?.userId ? Number(session.userId) : null;
-    
-    // Pass userId to cached function
-    return await getCachedResources({ categories, boroughs, userId, page });
+
+    // Pass userId and query to cached function (search runs server-side across all resources)
+    return await getCachedResources({ categories, boroughs, userId, page, query });
   } catch (error) {
     console.error("Error in getResources wrapper:", error);
     throw new Error("Failed to fetch resources");

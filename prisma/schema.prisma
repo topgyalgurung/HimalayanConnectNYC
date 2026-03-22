@@ -15,8 +15,10 @@ model User {
   firstName                 String
   lastName                  String
   email                     String                   @unique
-  password                  String
+  password                  String?
   image                     String?
+  authProvider              String?                  @default("credentials")
+  providerId                String?
   role                      Role                     @default(USER)
   isVerified                Boolean                  @default(false)
   forgotPasswordToken       String?

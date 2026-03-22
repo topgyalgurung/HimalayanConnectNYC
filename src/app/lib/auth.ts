@@ -7,13 +7,13 @@ import {
   LoginFormState,
   ForgotFormState,
   ForgotFormSchema,
-  ResetPasswordFormSchema,  
-  ResetPasswordFormState, 
+  ResetPasswordFormSchema,
+  ResetPasswordFormState,
 } from "@/app/lib/forms/definitions";
 
 import { createSession, deleteSession } from "@/app/lib/session";
 import bcrypt from "bcryptjs";
-import {prisma} from "@/app/lib/prisma";
+import { prisma } from "@/app/lib/prisma";
 import { Role } from "@prisma/client";
 import { sendEmail } from "@/app/lib/helpers/mailer";
 
@@ -23,7 +23,7 @@ import { sendEmail } from "@/app/lib/helpers/mailer";
 export async function signup(state: SignupFormState, formData: FormData) {
 
   const email = formData.get("email") as string;
-  
+
   // First check if email exists
   try {
     const existingUser = await prisma.user.findUnique({
@@ -77,7 +77,7 @@ export async function signup(state: SignupFormState, formData: FormData) {
         role: Role.USER,
         password: hashedPassword,
       },
-      select: { id: true, email: true, firstName:true, role: true },
+      select: { id: true, email: true, firstName: true, role: true },
     });
 
     if (!newUser?.id) {
@@ -98,7 +98,7 @@ export async function signup(state: SignupFormState, formData: FormData) {
         email: newUser.email,
         role: newUser.role,
       }, // include user data to avoid re-fetching
-      
+
     };
   } catch (error) {
     console.error("Error in signup:", error);
@@ -147,6 +147,14 @@ export async function login(prevState: LoginFormState, formData: FormData) {
     if (!user?.id) {
       return {
         message: "Invalid email or user does not exist",
+        status: 401,
+      };
+    }
+
+    // Check if user signed up via OAuth only (no password set)
+    if (!user.password) {
+      return {
+        message: "This account uses Google sign-in. Please use the 'Sign in with Google' button.",
         status: 401,
       };
     }
@@ -209,7 +217,7 @@ export async function logout() {
 
 // forgot password 
 export async function forgotPassword(prevState: ForgotFormState, formData: FormData) {
- 
+
   // validate form fields
   const validateFields = ForgotFormSchema.safeParse({
     email: formData.get("email")
@@ -246,7 +254,7 @@ export async function forgotPassword(prevState: ForgotFormState, formData: FormD
       }
     }
     // If yes, use nodemailer to send token to the email and 
-        // also send the token to the database
+    // also send the token to the database
 
     // helper function sendEmail handles creating token and updating db
     await sendEmail({
@@ -263,7 +271,7 @@ export async function forgotPassword(prevState: ForgotFormState, formData: FormD
       status: undefined,
     }
 
-    
+
   } catch (error) {
     return {
       message:
@@ -274,14 +282,14 @@ export async function forgotPassword(prevState: ForgotFormState, formData: FormD
       success: undefined,
       user: undefined,
     }
-    
+
   }
 }
 
 // reset password
 export async function resetPassword(prevState: ResetPasswordFormState, formData: FormData) {
   const token = formData.get("token") as string;
-  
+
   // validate form fields
   const validateFields = ResetPasswordFormSchema.safeParse({
     password: formData.get("password"),
@@ -295,7 +303,7 @@ export async function resetPassword(prevState: ResetPasswordFormState, formData:
   }
 
   try {
-    const { password, confirmPassword } = validateFields.data;  
+    const { password, confirmPassword } = validateFields.data;
 
     if (password !== confirmPassword) {
       return {
