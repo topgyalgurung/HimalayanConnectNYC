@@ -1,5 +1,5 @@
 import { prisma } from "@/app/lib/prisma";
-import { getSession } from "@/app/lib/session";
+import { getSession } from "@/app/lib/auth-session";
 import { NextResponse } from "next/server";
 
 export const dynamic = 'force-dynamic'

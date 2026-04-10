@@ -101,8 +101,8 @@ const AboutPage = () => {
         <Box sx={{ mt: 8, textAlign: 'center' }}>
           <Typography variant="body2" color="text.secondary">
             Built with <span role="img" aria-label="love">❤️</span> by{' '}
-            <Link href="https://www.linkedin.com/in/topgyalgurung" target="_blank" rel="noopener noreferrer" style={{ color: '#1a237e', textDecoration: 'underline' }}>
-              my LinkedIn
+            <Link href="https://www.linkedin.com/in/topgyal" target="_blank" rel="noopener noreferrer" style={{ color: '#1a237e', textDecoration: 'underline' }}>
+              Topgyal Gurung
             </Link>
           </Typography>
         </Box>

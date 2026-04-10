@@ -8,7 +8,7 @@
  */
 
 import { prisma } from "@/app/lib/prisma";
-import { getSession } from "@/app/lib/session";
+import { getSession } from "@/app/lib/auth-session";
 // import type { Resource } from "@/app/lib/types";
 import { ResourceStatus } from "@prisma/client";
 import { unstable_cache } from 'next/cache';

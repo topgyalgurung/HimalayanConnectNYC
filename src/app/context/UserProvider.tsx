@@ -3,7 +3,7 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect } from "react";
-import { getSession } from "@/app/lib/session";
+import { getClientSession } from "@/app/lib/client-session";
 
 export interface User {
   userId?: string;
@@ -30,28 +30,19 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const fetchSession = async () => {
-      // First try custom JWT session
-      const customSession = await getSession();
-      if (customSession) {
-        setUser(customSession);
-        return;
-      }
-
-      // Fallback: check NextAuth session
       try {
-        const res = await fetch("/api/auth/session");
-        const nextAuthSession = await res.json();
-        if (nextAuthSession?.user?.email) {
+        const session = await getClientSession();
+        if (session?.userId && session?.email) {
           setUser({
-            userId: nextAuthSession.userId || nextAuthSession.user?.id,
-            email: nextAuthSession.email || nextAuthSession.user?.email,
-            role: nextAuthSession.role || "USER",
-            image: nextAuthSession.user?.image,
+            userId: session.userId,
+            email: session.email,
+            role: session.role || "USER",
+            image: session.image,
           });
           return;
         }
       } catch {
-        // NextAuth session not available, user is not authenticated
+        // Session is not available, user is not authenticated
       }
 
       setUser(null);

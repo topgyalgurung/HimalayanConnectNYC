@@ -1,6 +1,6 @@
 // GET, POST
 import { prisma } from "@/app/lib/prisma";
-import { getSession } from "@/app/lib/session";
+import { getSession } from "@/app/lib/auth-session";
 import { NextResponse, NextRequest } from "next/server";
 import { checkRateLimit } from "@/app/lib/rate-limit";
 

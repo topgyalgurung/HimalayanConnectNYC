@@ -42,22 +42,26 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                     const email = user.email;
                     if (!email) return false;
 
-                    // Check if user already exists
+                    // Check if user already exists. Select only columns that are
+                    // known to exist in the current database schema.
                     const existingUser = await prisma.user.findUnique({
                         where: { email },
+                        select: {
+                            id: true,
+                            image: true,
+                        },
                     });
 
                     if (existingUser) {
-                        // Link Google account to existing user if not already linked
-                        if (!existingUser.providerId) {
+                        // Keep the user's Google avatar fresh if we already know this email.
+                        if (user.image && user.image !== existingUser.image) {
                             await prisma.user.update({
                                 where: { email },
                                 data: {
-                                    providerId: account.providerAccountId,
-                                    authProvider: existingUser.authProvider === "credentials"
-                                        ? "credentials,google"
-                                        : existingUser.authProvider,
-                                    image: user.image || existingUser.image,
+                                    image: user.image,
+                                },
+                                select: {
+                                    id: true,
                                 },
                             });
                         }
@@ -73,9 +77,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                                 firstName,
                                 lastName,
                                 image: user.image || null,
-                                authProvider: "google",
-                                providerId: account.providerAccountId,
                                 role: "USER",
+                            },
+                            select: {
+                                id: true,
+                                email: true,
                             },
                         });
                     }

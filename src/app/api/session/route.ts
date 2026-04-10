@@ -1,5 +1,5 @@
 // /app/api/session/route.ts
-import { getSession } from "@/app/lib/session";
+import { getSession } from "@/app/lib/auth-session";
 
 export const dynamic = 'force-dynamic';
 

@@ -153,7 +153,6 @@ export async function getSession(): Promise<SessionPayload | null> {
       // Session exists but is invalid/expired, this is also normal
       return null;
     }
-
     return payload;
   } catch (error: Error | unknown) {
     // Only log actual errors, not expected scenarios

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSession } from "@/app/lib/session"; // your secure session utils
+import { getSession } from "@/app/lib/auth-session"; // supports custom JWT and NextAuth
 import { prisma } from "@/app/lib/prisma";
 import { checkRateLimit } from "@/app/lib/rate-limit";
 

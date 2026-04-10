@@ -10,26 +10,33 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import AdminDashboard from "../profile/AdminDashboard";
 import UserDashboard from "../profile/UserDashboard";
-
-import { getSession } from "@/app/lib/session";
+import { getClientSession } from "@/app/lib/client-session";
 
 export default function Profile() {
-  // const session = await verifySession()
-  // const userRole = session?.role;
   const [userRole, setUserRole] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
     const fetchSession = async () => {
-      const session = await getSession();
-      if (!session) {
-        router.replace("/login");
-      } else {
-        setUserRole(session?.role);
+      try {
+        const session = await getClientSession();
+        if (!session?.userId) {
+          router.replace("/login");
+          return;
+        }
+
+        setUserRole(session.role);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchSession();
   }, [router]);
+
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <div>{userRole === "ADMIN" ? <AdminDashboard /> : <UserDashboard />}</div>

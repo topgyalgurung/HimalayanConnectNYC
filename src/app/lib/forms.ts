@@ -9,7 +9,7 @@
 // API Routes, on the other hand, are more flexible and suitable for building public APIs, handling external interactions, and managing complex routing scenarios
 
 import {prisma} from "@/app/lib/prisma";
-import { getSession } from '@/app/lib/session';
+import { getSession } from '@/app/lib/auth-session';
 import { cache } from "react";
 import { EditResourceInput, ResourceFormData } from "@/app/lib/types";
 import { geocodeAddress } from "@/app/lib/geocodeAddress";
