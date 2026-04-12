@@ -42,48 +42,41 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                     const email = user.email;
                     if (!email) return false;
 
-                    // Check if user already exists. Select only columns that are
-                    // known to exist in the current database schema.
+                    // Keep Google avatar fresh for existing users; create missing users.
+                    const nameParts = (user.name || "").trim().split(/\s+/);
+                    const firstName = nameParts[0] || "User";
+                    const lastName = nameParts.slice(1).join(" ") || "";
+
                     const existingUser = await prisma.user.findUnique({
                         where: { email },
-                        select: {
-                            id: true,
-                            image: true,
-                        },
+                        select: { id: true, image: true },
                     });
 
                     if (existingUser) {
-                        // Keep the user's Google avatar fresh if we already know this email.
                         if (user.image && user.image !== existingUser.image) {
                             await prisma.user.update({
                                 where: { email },
-                                data: {
-                                    image: user.image,
-                                },
-                                select: {
-                                    id: true,
-                                },
+                                data: { image: user.image },
+                                select: { id: true },
                             });
                         }
                     } else {
-                        // Create new user from Google profile
-                        const nameParts = (user.name || "").split(" ");
-                        const firstName = nameParts[0] || "User";
-                        const lastName = nameParts.slice(1).join(" ") || "";
-
-                        await prisma.user.create({
-                            data: {
-                                email,
-                                firstName,
-                                lastName,
-                                image: user.image || null,
-                                role: "USER",
-                            },
-                            select: {
-                                id: true,
-                                email: true,
-                            },
-                        });
+                        // Avoid Prisma create here because the live DB schema can lag
+                        // behind the Prisma model in some environments.
+                        try {
+                            await prisma.$executeRaw`
+                                INSERT INTO "User" ("firstName", "lastName", "email", "password", "image", "createdAt", "updatedAt")
+                                VALUES (${firstName}, ${lastName}, ${email}, ${null}, ${user.image ?? null}, NOW(), NOW())
+                                ON CONFLICT ("email") DO NOTHING
+                            `;
+                        } catch {
+                            // Some older DBs may still enforce password as NOT NULL.
+                            await prisma.$executeRaw`
+                                INSERT INTO "User" ("firstName", "lastName", "email", "password", "image", "createdAt", "updatedAt")
+                                VALUES (${firstName}, ${lastName}, ${email}, ${""}, ${user.image ?? null}, NOW(), NOW())
+                                ON CONFLICT ("email") DO NOTHING
+                            `;
+                        }
                     }
 
                     return true;
@@ -96,18 +89,33 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             return true;
         },
 
-        async jwt({ token, account }: { token: JWT; account?: { provider: string } | null }) {
-            if (account) {
-                // On initial sign-in, fetch user from DB to get userId and role
-                const dbUser = await prisma.user.findUnique({
-                    where: { email: token.email! },
-                    select: { id: true, role: true, email: true },
-                });
+        async jwt({
+            token,
+            account,
+            user,
+        }: {
+            token: JWT;
+            account?: { provider: string } | null;
+            user?: { email?: string | null } | null;
+        }) {
+            if (account || !token.userId) {
+                try {
+                    const email = token.email ?? user?.email ?? null;
+                    if (!email) return token;
 
-                if (dbUser) {
-                    token.userId = dbUser.id.toString();
-                    token.role = dbUser.role;
-                    token.email = dbUser.email;
+                    // Fetch the app user record to attach role/id to the token.
+                    const dbUser = await prisma.user.findUnique({
+                        where: { email },
+                        select: { id: true, role: true, email: true },
+                    });
+
+                    if (dbUser) {
+                        token.userId = dbUser.id.toString();
+                        token.role = dbUser.role;
+                        token.email = dbUser.email;
+                    }
+                } catch (error) {
+                    console.error("Error during JWT callback:", error);
                 }
             }
 
