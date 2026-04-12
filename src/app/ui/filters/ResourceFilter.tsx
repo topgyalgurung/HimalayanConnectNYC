@@ -12,50 +12,12 @@ import Image from "next/image";
 import { Collapse } from "@mui/material";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
+import { CATEGORY_FILTERS } from "@/app/lib/resources/filterOptions";
 
 interface CategoryFilterProps {
   onFilterChangeAction: (category: string[]) => void;
   selectedCategories?: string[];
 }
-
-// Add icon URLs for each category
-const categories = [
-  {
-    id: 1,
-    name: "community",
-    icon: "https://cdn-icons-png.flaticon.com/512/7829/7829198.png",
-  },
-  {
-    id: 2,
-    name: "legal",
-    icon: "https://cdn-icons-png.flaticon.com/512/4052/4052204.png",
-  },
-  {
-    id: 3,
-    name: "health",
-    icon: "https://cdn-icons-png.flaticon.com/512/2382/2382533.png",
-  },
-  {
-    id: 4,
-    name: "education",
-    icon: "https://cdn-icons-png.flaticon.com/512/4406/4406319.png",
-  },
-  {
-    id: 5,
-    name: "finance",
-    icon: "https://cdn-icons-png.flaticon.com/512/4256/4256900.png",
-  },
-  {
-    id: 6,
-    name: "real estate",
-    icon: "https://cdn-icons-png.flaticon.com/512/2238/2238337.png",
-  },
-  {
-    id: 7,
-    name: "other",
-    icon: "https://cdn-icons-png.flaticon.com/512/3195/3195457.png",
-  },
-];
 
 export default function ResourceFilter({
   onFilterChangeAction,
@@ -63,13 +25,9 @@ export default function ResourceFilter({
 }: CategoryFilterProps) {
   const [openResFilter, setOpenResFilter] = useState(true); // default: expanded
   const handleCategoryCheckboxChange = (category: string) => {
-    //  checks if the selectedCategories array includes the category
-    const updatedCategories = selectedCategories.includes(
-      category.toLowerCase()
-    )
+    const updatedCategories = selectedCategories.includes(category)
       ? selectedCategories.filter(
-        //filtering out the unchecked category
-        (c) => c.toLowerCase() !== category.toLowerCase()
+          (selectedCategory) => selectedCategory !== category
       )
       : [...selectedCategories, category];
 
@@ -117,7 +75,7 @@ export default function ResourceFilter({
 
         <Collapse in={openResFilter} timeout="auto" unmountOnExit>
           <div className="space-y-1">
-            {categories.map((cat) => (
+            {CATEGORY_FILTERS.map((cat) => (
               <ListItem 
                 key={cat.id} 
                 disablePadding 
@@ -154,7 +112,7 @@ export default function ResourceFilter({
                     <ListItemText
                       primary={cat.name}
                       primaryTypographyProps={{
-                        className: "text-sm font-medium text-gray-700 capitalize"
+                        className: "text-sm font-medium text-gray-700"
                       }}
                     />
                   </div>

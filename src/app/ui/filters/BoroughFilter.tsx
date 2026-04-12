@@ -13,20 +13,12 @@ import Image from "next/image";
 import { Collapse } from "@mui/material";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
+import { BOROUGH_FILTERS } from "@/app/lib/resources/filterOptions";
 
 interface BoroughFilterProps {
   onFilterChangeAction: (boroughs: string[]) => void; // Function to handle filter change
   selectedBoroughs?: string[]; // Optional array of selected boroughs
 }
-
-// Define the list of boroughs
-const boroughs = [
-  { id: 1, name: "Manhattan" },
-  { id: 2, name: "Brooklyn" },
-  { id: 3, name: "Queens" },
-  { id: 4, name: "Bronx" },
-  { id: 5, name: "Staten Island" },
-];
 
 export default function BoroughFilter({
   onFilterChangeAction,
@@ -88,7 +80,7 @@ export default function BoroughFilter({
 
         <Collapse in={open} timeout="auto" unmountOnExit>
           <div className="space-y-1">
-            {boroughs.map((borough) => (
+            {BOROUGH_FILTERS.map((borough) => (
               <ListItem 
                 key={borough.id} 
                 disablePadding 

@@ -15,6 +15,7 @@ import {
 } from "@/app/ui/skeletons";
 import ErrorBoundary from "@/app/components/errors/ErrorBoundary";
 import ResourcesError from "@/app/components/errors/ResourcesError";
+import { parseListParam } from "@/app/lib/resources/filterOptions";
 
 export const dynamic = "force-dynamic";
 
@@ -24,10 +25,17 @@ export const revalidate = 300; // 5 minutes
 export default async function Home({
   searchParams,
 }: {
-  searchParams: Promise<{ query?: string; page?: number }>;
+  searchParams: Promise<{
+    query?: string;
+    page?: string;
+    categories?: string | string[];
+    boroughs?: string | string[];
+  }>;
 }) {
-  const { query, page } = await searchParams;
+  const { query, page, categories, boroughs } = await searchParams;
   const pageNumber = page ? Number(page) : 1;
+  const selectedCategories = parseListParam(categories);
+  const selectedBoroughs = parseListParam(boroughs);
   return (
     <>
       {/* Shell renders immediately, data streams in */}
@@ -47,7 +55,12 @@ export default async function Home({
             </div>
           }
         >
-          <HomeServer query={query} page={pageNumber} />
+          <HomeServer
+            query={query}
+            page={pageNumber}
+            categories={selectedCategories}
+            boroughs={selectedBoroughs}
+          />
         </Suspense>
       </ErrorBoundary>
     </>

@@ -31,14 +31,16 @@ const getCachedResources = unstable_cache(
       // Build where clause based on filters
       const where = {
         ...(categories && categories.length > 0 && {
-          categoryId: {
-            in: categories.map(Number)
-          }
+          ResourceCategory: {
+            name: {
+              in: categories,
+            },
+          },
         }),
         ...(boroughs && boroughs.length > 0 && {
           city: {
-            in: boroughs
-          }
+            in: boroughs,
+          },
         }),
         ...(search && {
           OR: [
@@ -48,7 +50,7 @@ const getCachedResources = unstable_cache(
             { description: { contains: search, mode: "insensitive" as const } },
           ],
         }),
-        status: ResourceStatus.APPROVED // Only show approved resources
+        status: ResourceStatus.APPROVED, // Only show approved resources
       };
 
       const resources = await prisma.resource.findMany({
@@ -114,7 +116,7 @@ export async function getResources({ page, categories = [], boroughs = [], query
     const session = await getSession();
     const userId = session?.userId ? Number(session.userId) : null;
 
-    // Pass userId and query to cached function (search runs server-side across all resources)
+    // Pass filters into the cached function so pagination happens after filtering.
     return await getCachedResources({ categories, boroughs, userId, page, query });
   } catch (error) {
     console.error("Error in getResources wrapper:", error);

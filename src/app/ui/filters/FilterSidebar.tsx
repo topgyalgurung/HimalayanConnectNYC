@@ -2,45 +2,47 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useCallback } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import ResourceFilter from "./ResourceFilter";
 import BoroughFilter from "./BoroughFilter";
 import MobileFilterButton from "./MobileFilterButton";
-import type { Resource } from "@/app/lib/types";
 
 interface FilterSidebarProps {
-  resources: Resource[];
-  onFilterChangeAction: (filteredResources: Resource[]) => void;
+  selectedCategories: string[];
+  selectedBoroughs: string[];
 }
 
 export default function FilterSidebar({
-  resources,
-  onFilterChangeAction,
+  selectedCategories,
+  selectedBoroughs,
 }: FilterSidebarProps) {
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [selectedBoroughs, setSelectedBoroughs] = useState<string[]>([]);
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const { replace } = useRouter();
 
-  // filtering logic moved closer to the component from homeclient before
-  useEffect(() => {
-    const filtered = resources.filter((resource) => {
-      const categoryMatch =
-        selectedCategories.length === 0 ||
-        selectedCategories.includes(
-          (resource.ResourceCategory?.name ?? "").toLowerCase()
-        );
+  const updateFilters = useCallback(
+    (nextCategories: string[], nextBoroughs: string[]) => {
+      const params = new URLSearchParams(searchParams);
 
-      const boroughMatch =
-        selectedBoroughs.length === 0 ||
-        selectedBoroughs.some(
-          (borough) =>
-            resource.city?.toLowerCase().trim() === borough.toLowerCase().trim()
-        );
+      if (nextCategories.length > 0) {
+        params.set("categories", nextCategories.join(","));
+      } else {
+        params.delete("categories");
+      }
 
-      return categoryMatch && boroughMatch;
-    });
+      if (nextBoroughs.length > 0) {
+        params.set("boroughs", nextBoroughs.join(","));
+      } else {
+        params.delete("boroughs");
+      }
 
-    onFilterChangeAction(filtered);
-  }, [resources, selectedCategories, selectedBoroughs, onFilterChangeAction]);
+      params.delete("page");
+      const nextQuery = params.toString();
+      replace(nextQuery ? `${pathname}?${nextQuery}` : pathname);
+    },
+    [pathname, replace, searchParams]
+  );
 
   return (
     <>
@@ -52,14 +54,18 @@ export default function FilterSidebar({
             <div className="w-full">
               <ResourceFilter
                 selectedCategories={selectedCategories}
-                onFilterChangeAction={setSelectedCategories}
+                onFilterChangeAction={(nextCategories) =>
+                  updateFilters(nextCategories, selectedBoroughs)
+                }
               />
             </div>
             <div className="w-full">
               {/* city borough name filter  */}
               <BoroughFilter
                 selectedBoroughs={selectedBoroughs}
-                onFilterChangeAction={setSelectedBoroughs}
+                onFilterChangeAction={(nextBoroughs) =>
+                  updateFilters(selectedCategories, nextBoroughs)
+                }
               />
             </div>
           </div>
@@ -70,8 +76,12 @@ export default function FilterSidebar({
       <MobileFilterButton
         selectedCategories={selectedCategories}
         selectedBoroughs={selectedBoroughs}
-        onCategoryChange={setSelectedCategories}
-        onBoroughChange={setSelectedBoroughs}
+        onCategoryChange={(nextCategories) =>
+          updateFilters(nextCategories, selectedBoroughs)
+        }
+        onBoroughChange={(nextBoroughs) =>
+          updateFilters(selectedCategories, nextBoroughs)
+        }
       />
     </>
   );

@@ -1,14 +1,25 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import FilterSidebar from "@/app/ui/filters/FilterSidebar";
 
+const replaceMock = jest.fn();
+
+jest.mock("next/navigation", () => ({
+  useRouter: () => ({
+    replace: replaceMock,
+  }),
+  usePathname: () => "/",
+  useSearchParams: () => new URLSearchParams("query=help&page=2"),
+}));
+
 // Mock child components
-jest.mock("@/app/ui/filters/ResourceFilter", () => ({
+jest.mock("../ResourceFilter", () => ({
   __esModule: true,
-  default: ({ onFilterChangeAction }) => (
+  default: ({ onFilterChangeAction, selectedCategories }) => (
     <div data-testid="resource-filter">
+      <span data-testid="selected-categories">{selectedCategories.join(",")}</span>
       <button
         data-testid="category-filter-button"
-        onClick={() => onFilterChangeAction(["community"])}
+        onClick={() => onFilterChangeAction(["Community"])}
       >
         Filter by Community
       </button>
@@ -16,10 +27,11 @@ jest.mock("@/app/ui/filters/ResourceFilter", () => ({
   ),
 }));
 
-jest.mock("@/app/ui/filters/BoroughFilter", () => ({
+jest.mock("../BoroughFilter", () => ({
   __esModule: true,
-  default: ({ onFilterChangeAction }) => (
+  default: ({ onFilterChangeAction, selectedBoroughs }) => (
     <div data-testid="borough-filter">
+      <span data-testid="selected-boroughs">{selectedBoroughs.join(",")}</span>
       <button
         data-testid="borough-filter-button"
         onClick={() => onFilterChangeAction(["Manhattan"])}
@@ -31,87 +43,60 @@ jest.mock("@/app/ui/filters/BoroughFilter", () => ({
 }));
 
 describe("FilterSidebar", () => {
-  // Test data
-  const mockResources = [
-    { id: "1", ResourceCategory: { name: "community" }, city: "Manhattan" },
-    { id: "2", ResourceCategory: { name: "health" }, city: "Brooklyn" },
-    { id: "3", ResourceCategory: { name: "legal" }, city: "Manhattan" },
-  ];
-
-  const mockOnFilteredResourcesChange = jest.fn();
-
   beforeEach(() => {
-    mockOnFilteredResourcesChange.mockClear();
+    replaceMock.mockClear();
   });
 
-  // Test that verifies both ResourceFilter and BoroughFilter components are properly rendered
-  // in the FilterSidebar component
   it("renders filter components", () => {
     render(
       <FilterSidebar
-        resources={mockResources}
-        onFilteredResourcesChange={mockOnFilteredResourcesChange}
+        selectedCategories={[]}
+        selectedBoroughs={[]}
       />
     );
     expect(screen.getByTestId("resource-filter")).toBeInTheDocument();
     expect(screen.getByTestId("borough-filter")).toBeInTheDocument();
   });
 
-  // Test that verifies filtering functionality by resource category
-  // When clicking the category filter button, it should filter resources to only show
-  // those matching the selected category (e.g., "community")
-  it("filters by category", () => {
+  it("updates the URL when a category is selected", () => {
     render(
       <FilterSidebar
-        resources={mockResources}
-        onFilteredResourcesChange={mockOnFilteredResourcesChange}
+        selectedCategories={[]}
+        selectedBoroughs={[]}
       />
     );
+
     fireEvent.click(screen.getByTestId("category-filter-button"));
-    expect(mockOnFilteredResourcesChange).toHaveBeenCalledWith(
-      expect.arrayContaining([
-        expect.objectContaining({ ResourceCategory: { name: "community" } }),
-      ])
-    );
+
+    expect(replaceMock).toHaveBeenCalledWith("/?query=help&categories=Community");
   });
 
-  // Test that verifies filtering functionality by borough
-  // When clicking the borough filter button, it should filter resources to only show
-  // those in the selected borough (e.g., "Manhattan")
-  it("filters by borough", () => {
+  it("updates the URL when a borough is selected", () => {
     render(
       <FilterSidebar
-        resources={mockResources}
-        onFilteredResourcesChange={mockOnFilteredResourcesChange}
+        selectedCategories={[]}
+        selectedBoroughs={[]}
       />
     );
+
     fireEvent.click(screen.getByTestId("borough-filter-button"));
-    expect(mockOnFilteredResourcesChange).toHaveBeenCalledWith(
-      expect.arrayContaining([expect.objectContaining({ city: "Manhattan" })])
-    );
+
+    expect(replaceMock).toHaveBeenCalledWith("/?query=help&boroughs=Manhattan");
   });
 
-  // Test that verifies the combination of multiple filters
-  // When applying both category and borough filters, it should only show resources
-  // that match both criteria (e.g., community resources in Manhattan)
-  it("combines filters", () => {
+  it("preserves existing filters and resets pagination", () => {
     render(
       <FilterSidebar
-        resources={mockResources}
-        onFilteredResourcesChange={mockOnFilteredResourcesChange}
+        selectedCategories={["Community"]}
+        selectedBoroughs={[]}
       />
     );
-    fireEvent.click(screen.getByTestId("category-filter-button"));
+
     fireEvent.click(screen.getByTestId("borough-filter-button"));
 
-    // Should only show resources that match both filters
-    expect(mockOnFilteredResourcesChange).toHaveBeenCalledWith(
-      expect.arrayContaining([
-        expect.objectContaining({
-          ResourceCategory: { name: "community" },
-          city: "Manhattan",
-        }),
-      ])
+    expect(screen.getByTestId("selected-categories")).toHaveTextContent("Community");
+    expect(replaceMock).toHaveBeenCalledWith(
+      "/?query=help&categories=Community&boroughs=Manhattan"
     );
   });
 });
