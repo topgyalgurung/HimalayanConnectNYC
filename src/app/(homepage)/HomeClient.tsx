@@ -56,14 +56,14 @@ export default function HomeClient({
   return (
     // render filter sidebar, resource list panel middle, and map view right
     <div className="flex flex-col md:flex-row h-auto text-sm lg:text-sm md:h-[calc(100vh-90px)] w-full">
-      <aside className="w-full md:w-[30%] lg:w-[25%] bg-white shadow-md flex flex-col h-auto md:h-[calc(100vh-90px)] px-2 sm:px-6">
+      <aside className="w-full md:w-[26%] lg:w-[20%] xl:w-[18%] bg-white shadow-md flex flex-col h-auto md:h-[calc(100vh-90px)] px-2 md:px-3 lg:px-4">
         <FilterSidebar
           selectedCategories={selectedCategories}
           selectedBoroughs={selectedBoroughs}
         />
       </aside>
 
-      <aside className="w-full md:w-[40%] lg:w-[35%] pl-0 md:pl-4 flex flex-col min-h-0 mb-4">
+      <aside className="w-full md:w-[36%] lg:w-[34%] pl-0 md:pl-4 flex flex-col min-h-0 mb-4">
         <ResourceListPanel
           filteredResources={initialResources}
           onViewDetailsAction={handleViewDetails}
@@ -74,7 +74,7 @@ export default function HomeClient({
         </div>
       </aside>
 
-      <aside className="w-full md:w-[40%] lg:w-[45%] bg-white shadow-md flex flex-col h-[500px] md:h-full border-2 border-gray-300">
+      <aside className="w-full md:flex-1 bg-white shadow-md flex flex-col h-[500px] md:h-full border-2 border-gray-300">
         <MapView
           resources={initialResources}
           selectedResource={selectedResource}

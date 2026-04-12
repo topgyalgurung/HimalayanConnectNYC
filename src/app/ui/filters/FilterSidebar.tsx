@@ -48,9 +48,15 @@ export default function FilterSidebar({
     <>
       {/* Desktop Filters */}
       <div className="hidden md:flex flex-col h-full max-h-[calc(100vh-90px)] overflow-hidden">
-        <div className="flex-1 text-sm overflow-y-auto px-2 py-1 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent hover:scrollbar-thumb-gray-400">
-          <div className="flex flex-col space-y-4 pb-4">
-            {/* Resource name filter */}
+        <div className="border-b border-gray-200 bg-white py-3">
+          <h2 className="text-base font-semibold text-gray-900">Filters</h2>
+          <p className="mt-1 text-xs text-gray-500">
+            Refine resources by category or borough.
+          </p>
+        </div>
+
+        <div className="flex-1 overflow-y-auto py-3 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent hover:scrollbar-thumb-gray-400">
+          <div className="flex flex-col gap-3 pb-3">
             <div className="w-full">
               <ResourceFilter
                 selectedCategories={selectedCategories}
@@ -60,7 +66,6 @@ export default function FilterSidebar({
               />
             </div>
             <div className="w-full">
-              {/* city borough name filter  */}
               <BoroughFilter
                 selectedBoroughs={selectedBoroughs}
                 onFilterChangeAction={(nextBoroughs) =>

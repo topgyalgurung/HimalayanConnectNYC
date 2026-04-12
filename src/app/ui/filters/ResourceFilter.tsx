@@ -24,6 +24,8 @@ export default function ResourceFilter({
   selectedCategories = [],
 }: CategoryFilterProps) {
   const [openResFilter, setOpenResFilter] = useState(true); // default: expanded
+  const hasActiveFilters = selectedCategories.length > 0;
+
   const handleCategoryCheckboxChange = (category: string) => {
     const updatedCategories = selectedCategories.includes(category)
       ? selectedCategories.filter(
@@ -43,76 +45,79 @@ export default function ResourceFilter({
   };
 
   return (
-    <div className="p-3 border border-gray-200 rounded-lg shadow-sm bg-white transition-all duration-200 hover:border-gray-300">
+    <div className="rounded-lg border border-gray-200 bg-white px-2 py-2 shadow-sm">
       <List sx={{ width: "100%", padding: 0, margin: 0 }} dense>
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-2">
-            <h3 className="font-medium text-gray-700 text-sm tracking-wide">
+        <div className="mb-1.5 flex items-center justify-between gap-2">
+          <div className="flex min-w-0 items-center gap-2">
+            <h3 className="text-xs font-semibold tracking-[0.16em] text-gray-700">
               CATEGORY
             </h3>
-            <span className="h-4 w-px bg-gray-200 mx-2" />
-            <button 
-              onClick={clearFilters} 
-              className="text-red-500 text-xs hover:text-red-600 transition-colors duration-200 flex items-center gap-1"
-            >
-              CLEAR
-              <Image 
-                src="https://cdn-icons-png.flaticon.com/512/399/399274.png" 
-                alt="clear" 
-                width={16} 
-                height={16} 
-                className="opacity-75"
-              />
-            </button>
+            {hasActiveFilters ? (
+              <button
+                onClick={clearFilters}
+                className="ml-auto inline-flex items-center gap-1 text-[11px] font-medium text-gray-500 transition-colors duration-200 hover:text-red-500"
+              >
+                Clear
+                <Image
+                  src="https://cdn-icons-png.flaticon.com/512/399/399274.png"
+                  alt="clear"
+                  width={12}
+                  height={12}
+                  className="opacity-70"
+                />
+              </button>
+            ) : null}
           </div>
           <button
             onClick={handleToggle}
-            className="p-1 hover:bg-gray-50 rounded-full transition-colors duration-200"
+            className="rounded-full p-1 text-gray-400 transition-colors duration-200 hover:bg-gray-50 hover:text-gray-600"
           >
             {openResFilter ? <ExpandLess fontSize="small" /> : <ExpandMore fontSize="small" />}
           </button>
         </div>
 
         <Collapse in={openResFilter} timeout="auto" unmountOnExit>
-          <div className="space-y-1">
+          <div className="space-y-0.5">
             {CATEGORY_FILTERS.map((cat) => (
               <ListItem 
                 key={cat.id} 
                 disablePadding 
                 sx={{ 
                   margin: 0,
-                  borderRadius: '0.375rem',
-                  '&:hover': { backgroundColor: '#f8fafc' }
+                  borderRadius: "0.5rem",
+                  "&:hover": { backgroundColor: "#f9fafb" },
                 }}
               >
                 <ListItemButton 
-                  className="py-1 px-2 rounded-md transition-colors duration-200"
+                  className="min-h-[34px] rounded-md px-1.5 py-0.5 transition-colors duration-200"
+                  sx={{ minHeight: 34 }}
                 >
-                  <ListItemIcon className="min-w-0 mr-2">
+                  <ListItemIcon className="mr-1.5 min-w-0">
                     <Checkbox
                       checked={selectedCategories.includes(cat.name)}
                       onChange={() => handleCategoryCheckboxChange(cat.name)}
                       size="small"
                       sx={{
-                        color: '#94a3b8',
-                        '&.Mui-checked': {
-                          color: '#3b82f6',
+                        padding: "4px",
+                        color: "#9ca3af",
+                        "&.Mui-checked": {
+                          color: "#2563eb",
                         },
                       }}
                     />
                   </ListItemIcon>
-                  <div className="flex items-center gap-2 flex-1">
+                  <div className="flex flex-1 items-center gap-2">
                     <Image
                       src={cat.icon}
                       alt={cat.name}
-                      width={20}
-                      height={20}
+                      width={16}
+                      height={16}
                       className="opacity-75"
                     />
                     <ListItemText
                       primary={cat.name}
                       primaryTypographyProps={{
-                        className: "text-sm font-medium text-gray-700"
+                        className: "text-[13px] font-medium text-gray-700"
                       }}
                     />
                   </div>
