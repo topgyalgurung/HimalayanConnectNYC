@@ -29,6 +29,30 @@ export default function ResourceDetailsPopup({
      
 
       <div className="grid grid-cols-1 gap-2">
+        {resource.submitter && (
+          <div className="bg-gray-50 p-3 rounded-lg">
+            <h3 className="text-lg font-semibold text-gray-700 mb-2">
+              Submitter Information
+            </h3>
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-sm">
+                <span className="text-gray-500 font-medium min-w-[80px]">
+                  Name:
+                </span>
+                <span className="text-gray-700">
+                  {`${resource.submitter.firstName} ${resource.submitter.lastName}`.trim()}
+                </span>
+              </div>
+              <div className="flex items-center gap-2 text-sm">
+                <span className="text-gray-500 font-medium min-w-[80px]">
+                  Email:
+                </span>
+                <span className="text-gray-700">{resource.submitter.email}</span>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Basic Information */}
         <div className="bg-gray-50 p-3 rounded-lg">
           <h3 className="text-lg font-semibold text-gray-700 mb-2">

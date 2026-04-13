@@ -28,6 +28,19 @@ export type User = {
   likes: { id: number; user: User; resource: Resource };
 };
 
+export type AdminUserListItem = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+};
+
+export type SubmitterInfo = {
+  firstName: string;
+  lastName: string;
+  email: string;
+};
+
 export interface Resource {
   id: string;
   name: string;
@@ -52,6 +65,7 @@ export interface Resource {
   facebookLink?: string | null;
   ResourceCategory?: { name: string } | null;
   Location: Location[];
+  submitter?: SubmitterInfo | null;
   // updatedAt: Date;
   editResource?: ResourceEditSuggestion | null;
 }
@@ -72,6 +86,7 @@ export type ResourceEditSuggestion = {
   status: string |undefined;
   createdAt: Date;
   Location: Location[]
+  submitter?: SubmitterInfo | null;
   updatedAt: Date;
 };
 

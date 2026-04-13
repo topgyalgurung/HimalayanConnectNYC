@@ -6,6 +6,7 @@
 "use client";
 
 import React from "react";
+import DeleteIcon from "@mui/icons-material/Delete";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -29,7 +30,9 @@ interface AdminResourceTableProps {
     newStatus: string,
     resourceType: "new" | "edit"
   ) => void;
+  onDeleteAction: (resourceId: string, resourceType: "new" | "edit") => void;
   loadingResourceId?: string | null;
+  deletingResourceId?: string | null;
 }
 
 interface Column {
@@ -45,7 +48,9 @@ export const AdminResourceTable = ({
   filteredByEditStatus,
   onViewClickAction,
   onStatusChangeAction,
+  onDeleteAction,
   loadingResourceId,
+  deletingResourceId,
 }: AdminResourceTableProps) => {
   const getColumns = (): Column[] => {
     if (activeTab === "new" || activeTab === "edit") {
@@ -53,8 +58,7 @@ export const AdminResourceTable = ({
         { id: "index", label: "Index", minWidth: 70 },
         { id: "name", label: "Name", minWidth: 100 },
         { id: "view", label: "View Details", minWidth: 100 },
-        { id: "approve", label: "Approve", minWidth: 100 },
-        { id: "reject", label: "Reject", minWidth: 100 },
+        { id: "action", label: "Actions", minWidth: 160 },
       ];
     } else {
       return [
@@ -116,41 +120,42 @@ export const AdminResourceTable = ({
         );
       case "view":
         return <Button onClick={(e) => onViewClickAction(row, e)}>View</Button>;
-      case "approve":
-        return (
-          <Button
-            variant="contained"
-            color="success"
-            onClick={() =>
-              onStatusChangeAction(
-                row.id.toString(),
-                "APPROVED",
-                row.type || "new"
-              )
-            }
-            disabled={loadingResourceId == row.id}
-          >
-            {loadingResourceId == row.id ? "Updating..." : "Approve"}
-          </Button>
-        );
-      case "reject":
-        return (
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() =>
-              onStatusChangeAction(
-                row.id.toString(),
-                "REJECTED",
-                row.type || "new"
-              )
-            }
-            disabled={loadingResourceId == row.id}
-          >
-            {loadingResourceId == row.id ? "Updating..." : "Reject"}
-          </Button>
-        );
       case "action":
+        if (activeTab === "new" || activeTab === "edit") {
+          return (
+            <div className="flex flex-wrap gap-2">
+              <Button
+                variant="contained"
+                color="success"
+                onClick={() =>
+                  onStatusChangeAction(
+                    row.id.toString(),
+                    "APPROVED",
+                    row.type || "new"
+                  )
+                }
+                disabled={loadingResourceId == row.id}
+              >
+                {loadingResourceId == row.id ? "Updating..." : "Approve"}
+              </Button>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={() =>
+                  onStatusChangeAction(
+                    row.id.toString(),
+                    "REJECTED",
+                    row.type || "new"
+                  )
+                }
+                disabled={loadingResourceId == row.id}
+              >
+                {loadingResourceId == row.id ? "Updating..." : "Reject"}
+              </Button>
+            </div>
+          );
+        }
+
         if (activeTab === "approved") {
           return (
             <Button
@@ -163,27 +168,38 @@ export const AdminResourceTable = ({
                   row.type || "new"
                 )
               }
-              disabled={loadingResourceId == row.id}
+              disabled={loadingResourceId == row.id || deletingResourceId == row.id}
             >
               {loadingResourceId == row.id ? "Updating..." : "Reject"}
             </Button>
           );
         } else if (activeTab === "rejected") {
           return (
-            <Button
-              variant="contained"
-              color="success"
-              onClick={() =>
-                onStatusChangeAction(
-                  row.id.toString(),
-                  "APPROVED",
-                  row.type || "new"
-                )
-              }
-              disabled={loadingResourceId == row.id}
-            >
-              {loadingResourceId == row.id ? "Updating..." : "Approve"}
-            </Button>
+            <div className="flex flex-wrap gap-2">
+              <Button
+                variant="contained"
+                color="success"
+                onClick={() =>
+                  onStatusChangeAction(
+                    row.id.toString(),
+                    "APPROVED",
+                    row.type || "new"
+                  )
+                }
+                disabled={loadingResourceId == row.id || deletingResourceId == row.id}
+              >
+                {loadingResourceId == row.id ? "Updating..." : "Approve"}
+              </Button>
+              <Button
+                variant="outlined"
+                color="error"
+                startIcon={<DeleteIcon />}
+                onClick={() => onDeleteAction(row.id.toString(), row.type || "new")}
+                disabled={deletingResourceId == row.id || loadingResourceId == row.id}
+              >
+                {deletingResourceId == row.id ? "Deleting..." : "Delete"}
+              </Button>
+            </div>
           );
         }
         return null;

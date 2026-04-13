@@ -21,6 +21,8 @@ import { ProfileCard } from "./SharedProfileCard";
 
 import { useFetchResources } from "@/app/hooks/useFetchResources";
 import { useFetchResourceEdit } from "@/app/hooks/useFetchResourceEdit";
+import { useFetchAdminUsers } from "@/app/hooks/useFetchUsers";
+import { useDeleteItem } from "@/app/hooks/useDeleteResource";
 import { usePopup } from "@/app/hooks/usePopup";
 import { useLogout } from "@/app/hooks/useLogout";
 import { TabNavigation } from "@/app/components/dashboard/TabNavigation/TabNavigation";
@@ -41,6 +43,7 @@ export default function AdminDashboard() {
   const { resources, refetch: refetchResources } = useFetchResources();
   const { editResources, refetch: refetchEditResources } =
     useFetchResourceEdit();
+  const { data: adminUsers, isLoading: isLoadingUsers } = useFetchAdminUsers();
   const {
     isOpen,
     data: selectedResource,
@@ -50,6 +53,7 @@ export default function AdminDashboard() {
   const [loadingResourceId, setLoadingResourceId] = useState<string | null>(
     null
   );
+  const { deleteItem, deletingId } = useDeleteItem();
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
@@ -87,6 +91,28 @@ export default function AdminDashboard() {
     } finally {
       setLoadingResourceId(null);
     }
+  };
+
+  const handleDeleteItem = async (
+    resourceId: string,
+    resourceType: "new" | "edit"
+  ) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to permanently delete this item from the database?"
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    const path = resourceType === "edit" ? "resources/edit" : "resources";
+
+    await deleteItem(path, resourceId, {
+      onSuccess: async () => {
+        await Promise.all([refetchResources(), refetchEditResources()]);
+        handleClosePopup();
+      },
+    });
   };
 
   /**
@@ -193,7 +219,9 @@ export default function AdminDashboard() {
               //resourceAnchorEl={resourceAnchorEl}
               onViewClickAction={handleViewClick}
               onStatusChangeAction={handleStatusChange}
+              onDeleteAction={handleDeleteItem}
               loadingResourceId={loadingResourceId}
+              deletingResourceId={deletingId}
               // !== null}
             />
 
@@ -205,6 +233,38 @@ export default function AdminDashboard() {
               editResource={null}
               showSubmission={false}
             />
+
+            <div className="mt-8 border-t pt-6">
+              <h3 className="text-xl font-bold mb-3">User Information</h3>
+              <p className="text-gray-600 mb-4">
+                Name and email list for all registered users
+              </p>
+
+              {isLoadingUsers ? (
+                <p className="text-sm text-gray-500">Loading users...</p>
+              ) : adminUsers.length === 0 ? (
+                <p className="text-sm text-gray-500">No users found.</p>
+              ) : (
+                <div className="max-h-72 overflow-y-auto rounded-lg border">
+                  <div className="grid grid-cols-[1.2fr_1.5fr] gap-4 bg-gray-50 px-4 py-3 text-sm font-semibold text-gray-700">
+                    <span>Name</span>
+                    <span>Email</span>
+                  </div>
+                  {adminUsers.map((user) => (
+                    <div
+                      key={user.id}
+                      className="grid grid-cols-[1.2fr_1.5fr] gap-4 border-t px-4 py-3 text-sm"
+                    >
+                      <span className="text-gray-800">
+                        {[user.firstName, user.lastName].filter(Boolean).join(" ") ||
+                          "Unnamed User"}
+                      </span>
+                      <span className="text-gray-600 break-all">{user.email}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

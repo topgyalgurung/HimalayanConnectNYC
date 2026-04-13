@@ -3,6 +3,7 @@ import { prisma } from "@/app/lib/prisma";
 import { getSession } from "@/app/lib/auth-session";
 import { NextResponse, NextRequest } from "next/server";
 import { checkRateLimit } from "@/app/lib/rate-limit";
+import { Role } from "@prisma/client";
 
 // to disable default cached GET routes of next.js to prevent getting same results even after adding new data through api
 // second option: you can use  revalidate option for time based validation to determine when you want to revaildate an api route
@@ -20,6 +21,7 @@ export async function GET(request: NextRequest) {
 
         const session = await getSession();
         const userId = session?.userId ? Number(session.userId) : null;
+        const isAdmin = session?.role === Role.ADMIN;
     
         const resources = await prisma.resource.findMany({
             orderBy: [{
@@ -44,6 +46,15 @@ export async function GET(request: NextRequest) {
                         select: { id: true },
                     }
                     : false,
+                User: isAdmin
+                    ? {
+                        select: {
+                            firstName: true,
+                            lastName: true,
+                            email: true,
+                        },
+                    }
+                    : false,
             },
         });
         const resourcesWithLikeStatus = resources.map((res) => ({
@@ -54,6 +65,13 @@ export async function GET(request: NextRequest) {
             openTime: res.openTime?.toISOString() || null,
             closeTime: res.closeTime?.toISOString() || null,
             isLiked: res.ResourceLike && res.ResourceLike.length > 0,
+            submitter: isAdmin && res.User
+                ? {
+                    firstName: res.User.firstName,
+                    lastName: res.User.lastName,
+                    email: res.User.email,
+                }
+                : null,
         }));
         // console.log("API Resources:", JSON.stringify(resourcesWithLikeStatus, null, 2));
         // console.log("Resources with locations:", resourcesWithLikeStatus.filter(r => r.Location?.[0]?.latitude && r.Location?.[0]?.longitude));

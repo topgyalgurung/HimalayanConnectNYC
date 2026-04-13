@@ -4,6 +4,7 @@
 // import resources from '@/app/api/db' // for testing
 
 import { NextRequest, NextResponse } from "next/server";
+import { Role } from "@prisma/client";
 import { prisma } from "@/app/lib/prisma";
 import { getSession } from "@/app/lib/auth-session";
 
@@ -32,6 +33,7 @@ export async function DELETE(request: NextRequest, props: { params: Promise<{ id
     }
 
     const userId = parseInt(session.userId, 10);
+    const isAdmin = session.role === Role.ADMIN;
     console.log(`User ID: ${userId}`);
 
     // Fetch the resource to verify existence and ownership
@@ -44,8 +46,7 @@ export async function DELETE(request: NextRequest, props: { params: Promise<{ id
       return NextResponse.json({ error: "Resource not found" }, { status: 404 });
     }
 
-    // Handle case where resource has no createdById
-    if (!resource.createdById) {
+    if (!isAdmin && !resource.createdById) {
       console.log(`Resource ID: ${resourceId} has no associated user`);
       return NextResponse.json(
         { error: "Cannot delete resource with no associated user" },
@@ -53,7 +54,7 @@ export async function DELETE(request: NextRequest, props: { params: Promise<{ id
       );
     }
 
-    if (resource.createdById !== userId) {
+    if (!isAdmin && resource.createdById !== userId) {
       console.log(`Forbidden: User ID ${userId} does not own resource ID ${resourceId}`);
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }

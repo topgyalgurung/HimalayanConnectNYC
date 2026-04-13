@@ -14,7 +14,7 @@ import toast from "react-hot-toast";
 
 interface DeleteItemOptions {
   refetchUser?: () => Promise<void>;
-  onSuccess?: () => void;
+  onSuccess?: () => void | Promise<void>;
 }
 
 export function useDeleteItem() {
@@ -43,7 +43,7 @@ export function useDeleteItem() {
       
       // Call onSuccess callback if provided
       if (options.onSuccess) {
-        options.onSuccess();
+        await options.onSuccess();
       } else {
         // Fallback to page refresh if no onSuccess callback
         router.refresh();

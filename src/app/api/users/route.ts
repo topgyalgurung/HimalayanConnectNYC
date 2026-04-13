@@ -2,17 +2,45 @@
 
 import { prisma } from "@/app/lib/prisma";
 import { getSession } from "@/app/lib/auth-session";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { Role } from "@prisma/client";
 
 export const dynamic = 'force-dynamic';
 // already cache:"no-store"
 
-export async function GET() {
+export async function GET(request: NextRequest) {
     try {
         const session = await getSession();
         if (!session || !session.userId) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
           }
+
+        const searchParams = request.nextUrl.searchParams;
+        const listAllUsers = searchParams.get("list") === "all";
+
+        if (listAllUsers) {
+            if (session.role !== Role.ADMIN) {
+                return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+            }
+
+            const users = await prisma.user.findMany({
+                orderBy: [{ firstName: "asc" }, { lastName: "asc" }],
+                select: {
+                    id: true,
+                    firstName: true,
+                    lastName: true,
+                    email: true,
+                },
+            });
+
+            return NextResponse.json(
+                users.map((user) => ({
+                    ...user,
+                    id: String(user.id),
+                }))
+            );
+        }
+
         const user = await prisma.user.findUnique({
             where: {
                 id:parseInt(session.userId),

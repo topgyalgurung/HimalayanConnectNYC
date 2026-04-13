@@ -34,9 +34,34 @@ export async function GET(request: NextRequest) {
     // If admin, fetch ALL suggestions
     const allSuggestions = await prisma.resourceEditSuggestion.findMany({
       orderBy: { createdAt: 'desc' },
+      include: {
+        User: {
+          select: {
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+      },
     });
 
-    return NextResponse.json(allSuggestions);
+    return NextResponse.json(
+      allSuggestions.map((suggestion) => ({
+        ...suggestion,
+        id: String(suggestion.id),
+        resourceId: String(suggestion.resourceId),
+        createdAt: suggestion.createdAt.toISOString(),
+        openTime: suggestion.openTime?.toISOString() || null,
+        closeTime: suggestion.closeTime?.toISOString() || null,
+        submitter: suggestion.User
+          ? {
+              firstName: suggestion.User.firstName,
+              lastName: suggestion.User.lastName,
+              email: suggestion.User.email,
+            }
+          : null,
+      }))
+    );
   } catch (error) {
     console.error('Failed to fetch resource edit suggestions:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { Role } from "@prisma/client";
 import { prisma } from "@/app/lib/prisma";
 import { getSession } from "@/app/lib/auth-session";
 
@@ -23,6 +24,7 @@ export async function DELETE(
     }
 
     const userId = parseInt(session.userId, 10);
+    const isAdmin = session.role === Role.ADMIN;
     console.log(`User ID: ${userId}`);
 
     const suggestion = await prisma.resourceEditSuggestion.findUnique({
@@ -37,8 +39,7 @@ export async function DELETE(
       );
     }
 
-    // Handle case where resource has no createdById
-    if (!suggestion.suggestedById) {
+    if (!isAdmin && !suggestion.suggestedById) {
       console.log(`Resource ID: ${resourceId} has no associated user`);
       return NextResponse.json(
         { error: "Cannot delete resource with no associated user" },
@@ -46,7 +47,7 @@ export async function DELETE(
       );
     }
 
-    if (suggestion.suggestedById !== userId) {
+    if (!isAdmin && suggestion.suggestedById !== userId) {
       console.log(
         `Forbidden: User ID ${userId} does not own resource ID ${resourceId}`
       );
