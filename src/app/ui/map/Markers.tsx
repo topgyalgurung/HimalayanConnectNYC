@@ -1,13 +1,15 @@
 "use client";
 import Image from "next/image";
 import { getMarkerIconByCategory } from "./utils/markerIcons";
+import { MarkerClusterer } from "@googlemaps/markerclusterer";
 import {
   AdvancedMarker,
   CollisionBehavior,
   InfoWindow,
+  useMap,
 } from "@vis.gl/react-google-maps";
 import { Resource } from "@/app/lib/types";
-import { useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 interface MarkersProps {
   points: Resource[];
@@ -16,14 +18,110 @@ interface MarkersProps {
 export const Markers = ({ points, hoveredResourceId }: MarkersProps) => {
   // Keep track of which marker was clicked
   const [activeMarkerId, setActiveMarkerId] = useState<string | null>(null);
+  const map = useMap();
+  const markersRef = useRef<Record<string, google.maps.marker.AdvancedMarkerElement>>(
+    {}
+  );
+
+  const clusterer = useMemo(() => {
+    if (!map) return null;
+
+    return new MarkerClusterer({
+      map,
+      renderer: {
+        render: ({ count, position }) =>
+          new google.maps.Marker({
+            position,
+            zIndex: 1000 + count,
+            icon: {
+              path: google.maps.SymbolPath.CIRCLE,
+              fillColor: "#2563eb",
+              fillOpacity: 0.9,
+              strokeColor: "#ffffff",
+              strokeOpacity: 1,
+              strokeWeight: 2,
+              scale: count >= 20 ? 24 : count >= 10 ? 20 : 17,
+            },
+            label: {
+              text: String(count),
+              color: "#ffffff",
+              fontSize: "12px",
+              fontWeight: "700",
+            },
+          }),
+      },
+    });
+  }, [map]);
+
+  useEffect(() => {
+    return () => {
+      clusterer?.clearMarkers();
+    };
+  }, [clusterer]);
+
+  const setMarkerRef = useCallback(
+    (
+      marker: google.maps.marker.AdvancedMarkerElement | null,
+      resourceId: string
+    ) => {
+      if (!clusterer) return;
+
+      const currentMarker = markersRef.current[resourceId];
+
+      if (marker && currentMarker === marker) {
+        return;
+      }
+
+      if (!marker && !currentMarker) {
+        return;
+      }
+
+      if (currentMarker) {
+        clusterer.removeMarker(currentMarker);
+        delete markersRef.current[resourceId];
+      }
+
+      if (marker) {
+        markersRef.current[resourceId] = marker;
+        clusterer.addMarker(marker);
+      }
+    },
+    [clusterer]
+  );
+
   return (
     <>
+      <style>{`
+        @keyframes marker-pulse {
+          0% {
+            transform: scale(0.95);
+            opacity: 0.95;
+          }
+          70% {
+            transform: scale(1.14);
+            opacity: 0.2;
+          }
+          100% {
+            transform: scale(1.22);
+            opacity: 0;
+          }
+        }
+      `}</style>
       {points.map((resource) => {
         const location = resource.Location?.[0];
+        if (
+          !location ||
+          location.latitude === null ||
+          location.longitude === null
+        ) {
+          return null;
+        }
+
+        const isHighlighted =
+          hoveredResourceId === resource.id || activeMarkerId === resource.id;
 
         // Show InfoWindow on either hover or click
-        const shouldShowInfoWindow =
-          hoveredResourceId === resource.id || activeMarkerId === resource.id;
+        const shouldShowInfoWindow = isHighlighted;
 
         // Get marker icon based on resource category
         const image = getMarkerIconByCategory(resource.ResourceCategory?.name);
@@ -57,63 +155,96 @@ export const Markers = ({ points, hoveredResourceId }: MarkersProps) => {
             }}
           >
             <AdvancedMarker
+              ref={(marker) => setMarkerRef(marker, resource.id)}
               collisionBehavior={CollisionBehavior.REQUIRED_AND_HIDES_OPTIONAL}
               position={{
-                lat: location?.latitude ?? 0,
-                lng: location?.longitude ?? 0,
+                lat: location.latitude,
+                lng: location.longitude,
               }}
             >
-              <span
+              <div
                 style={{
-                  display: "inline-flex",
+                  position: "relative",
+                  display: "flex",
+                  flexDirection: "column",
                   alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: "50%",
-                  background:
-                    hoveredResourceId === resource.id
-                      ? "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)"
-                      : "linear-gradient(135deg, #f0f4ff 0%, #e0e7ef 100%)",
-                  boxShadow:
-                    hoveredResourceId === resource.id
-                      ? "0 4px 12px rgba(37, 99, 235, 0.3)"
-                      : "0 2px 8px rgba(60, 72, 88, 0.10)",
-                  padding: 4,
-                  border:
-                    hoveredResourceId === resource.id
-                      ? "1.5px solid #2563eb"
-                      : "1.5px solid #bfc8d6",
-                  width: hoveredResourceId === resource.id ? 32 : 28,
-                  height: hoveredResourceId === resource.id ? 32 : 28,
-                  transition: "all 0.2s ease-in-out",
+                  transform: isHighlighted ? "scale(1.04)" : "scale(1)",
+                  transition: "transform 0.2s ease-in-out",
                 }}
               >
-                <Image
-                  src={image}
-                  alt={`${resource.ResourceCategory?.name} icon`}
+                <span
                   style={{
-                    objectFit: "contain",
-                    backgroundColor: "transparent",
-                    filter:
-                      hoveredResourceId === resource.id
-                        ? "brightness(0) invert(1)"
-                        : "none",
-                    transform:
-                      hoveredResourceId === resource.id
-                        ? "scale(1.1)"
-                        : "scale(1)",
-                    transition: "all 0.2s ease-in-out",
+                    position: "absolute",
+                    top: -2,
+                    width: isHighlighted ? 30 : 24,
+                    height: isHighlighted ? 30 : 24,
+                    borderRadius: "9999px",
+                    background: isHighlighted
+                      ? "rgba(37, 99, 235, 0.16)"
+                      : "rgba(37, 99, 235, 0.08)",
+                    border: isHighlighted
+                      ? "1px solid rgba(37, 99, 235, 0.28)"
+                      : "1px solid rgba(37, 99, 235, 0.12)",
+                    boxShadow: "0 0 0 3px rgba(255,255,255,0.26)",
+                    animation: isHighlighted
+                      ? "marker-pulse 1.6s ease-out infinite"
+                      : "none",
                   }}
-                  height={20}
-                  width={20}
                 />
-              </span>
+                <div
+                  style={{
+                    position: "relative",
+                    zIndex: 1,
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: isHighlighted ? 24 : 20,
+                    height: isHighlighted ? 24 : 20,
+                    borderRadius: "9999px",
+                    background: isHighlighted
+                      ? "#2563eb"
+                      : "#3b82f6",
+                    border: "2px solid #ffffff",
+                    boxShadow: isHighlighted
+                      ? "0 6px 12px rgba(37, 99, 235, 0.24)"
+                      : "0 3px 8px rgba(15, 23, 42, 0.20)",
+                  }}
+                >
+                  <Image
+                    src={image}
+                    alt={`${resource.ResourceCategory?.name} icon`}
+                    style={{
+                      objectFit: "contain",
+                      backgroundColor: "transparent",
+                      filter: "brightness(0) invert(1)",
+                    }}
+                    height={isHighlighted ? 12 : 10}
+                    width={isHighlighted ? 12 : 10}
+                  />
+                </div>
+                <span
+                  style={{
+                    position: "relative",
+                    zIndex: 0,
+                    marginTop: -1,
+                    width: 0,
+                    height: 0,
+                    borderLeft: "5px solid transparent",
+                    borderRight: "5px solid transparent",
+                    borderTop: isHighlighted
+                      ? "10px solid #2563eb"
+                      : "9px solid #3b82f6",
+                    filter: "drop-shadow(0 2px 3px rgba(15, 23, 42, 0.16))",
+                  }}
+                />
+              </div>
             </AdvancedMarker>
 
             {shouldShowInfoWindow && (
               <InfoWindow
                 position={{
-                  lat: location?.latitude ?? 0,
-                  lng: location?.longitude ?? 0,
+                  lat: location.latitude,
+                  lng: location.longitude,
                 }}
                 pixelOffset={[0, -35]}
                 onCloseClick={() => {
