@@ -119,7 +119,7 @@ export default function AddResourcePopup({
       }
 
       if (result.status === 400) {
-        toast.error("Resource must be in New York City.");
+        toast.error(result.error || "Please enter a valid New York address.");
         setMessage(result.error);
         setLoading(false);
         return;

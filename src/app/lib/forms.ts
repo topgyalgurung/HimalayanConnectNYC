@@ -42,6 +42,25 @@ const parseTimeToSafeDate = (timeStr: string): Date | null => {
   return date;
 };
 
+const buildGeocodingAddress = (address: string, city?: string | null): string => {
+  const trimmedAddress = address.trim();
+  const trimmedCity = city?.trim();
+
+  // If the user already entered a complete New York address, use it as-is.
+  const lowerAddress = trimmedAddress.toLowerCase();
+  if (
+    lowerAddress.includes("new york") ||
+    lowerAddress.includes(", ny") ||
+    lowerAddress.includes(" ny ")
+  ) {
+    return trimmedAddress;
+  }
+
+  return [trimmedAddress, trimmedCity, "New York, NY"]
+    .filter(Boolean)
+    .join(", ");
+};
+
 
 // Server action 
 // use zod for form validation 
@@ -95,6 +114,20 @@ export async function addResource(formData: FormData) {
     }
     
     
+      const geocodingAddress = buildGeocodingAddress(address, data.city);
+      const location = await geocodeAddress(geocodingAddress).catch((error) => {
+        console.error("Failed to geocode resource address:", error);
+        return null;
+      });
+
+      if (!location) {
+        return {
+          error:
+            "We could not locate that address on the map. Please enter a complete New York address and try again.",
+          status: 400,
+        };
+      }
+
       const newResource = await prisma.resource.create({
         data: {
           createdById: currentUserId,
@@ -117,29 +150,14 @@ export async function addResource(formData: FormData) {
           description: data.description as string | null,
           imageUrl: data.image as string | null, // Cloudinary URL if used
           status: "PENDING",
+          Location: {
+            create: {
+              latitude: location.lat,
+              longitude: location.lng,
+            },
+          },
         },
       });
-  
-      // call geocoding and update location 
-      updateResourceLocation(newResource.id, data.address);
-      try {
-        const location = await geocodeAddress(data.address);
-       if(location){
-          await prisma.resource.update({
-            where: { id: newResource.id },
-            data: {
-              Location: {
-                create: {
-                  latitude: location.lat,
-                  longitude: location.lng,
-                },
-              },
-            },
-          });
-        }
-      } catch (geoErr) {
-        console.error("Failed to geocode and store location:", geoErr);
-      }
 
     /**
      * Prisma returns the rating field as a Decimal object (from the @db.Decimal(2, 1) in your schema), 
@@ -243,6 +261,7 @@ export async function updateResourceLocation(resourceId: number, address: string
         where: { id: resourceId },
         data: {
           Location: {
+            deleteMany: {},
             create: {
               latitude: location.lat,
               longitude: location.lng,

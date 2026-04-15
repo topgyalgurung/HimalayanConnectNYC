@@ -18,12 +18,32 @@ interface GetResourcesOptions {
   boroughs?: string[];
   query?: string;
   page?: number;
+  sort?: "alphabetical" | "newest" | "oldest";
 }
+
+const getOrderBy = (sort: GetResourcesOptions["sort"]) => {
+  switch (sort) {
+    case "newest":
+      return [{ createdAt: "desc" as const }];
+    case "oldest":
+      return [{ createdAt: "asc" as const }];
+    case "alphabetical":
+    default:
+      return [{ name: "asc" as const }];
+  }
+};
 
 // Cache the getResources function with a 5-minute revalidation period
 // unstable cache to cache expensive result, unstable cache will be replaced by usecache when stable 
 const getCachedResources = unstable_cache(
-  async ({ categories = [], boroughs = [], userId = null, page = 1, query = "" }: GetResourcesOptions & { userId?: number | null }) => {
+  async ({
+    categories = [],
+    boroughs = [],
+    userId = null,
+    page = 1,
+    query = "",
+    sort = "alphabetical",
+  }: GetResourcesOptions & { userId?: number | null }) => {
     const GROUPS_PER_PAGE = 6;
     const skip = (page - 1) * GROUPS_PER_PAGE; // offset
     try {
@@ -54,11 +74,7 @@ const getCachedResources = unstable_cache(
       };
 
       const resources = await prisma.resource.findMany({
-        orderBy: [
-          {
-            name: 'asc'
-          }
-        ],
+        orderBy: getOrderBy(sort),
         skip,
         take: GROUPS_PER_PAGE,
         where,
@@ -110,14 +126,27 @@ const getCachedResources = unstable_cache(
 );
 
 // Wrapper function that handles session outside of cache
-export async function getResources({ page, categories = [], boroughs = [], query = "" }: GetResourcesOptions) {
+export async function getResources({
+  page,
+  categories = [],
+  boroughs = [],
+  query = "",
+  sort = "alphabetical",
+}: GetResourcesOptions) {
   try {
     // Get session outside of cached function
     const session = await getSession();
     const userId = session?.userId ? Number(session.userId) : null;
 
     // Pass filters into the cached function so pagination happens after filtering.
-    return await getCachedResources({ categories, boroughs, userId, page, query });
+    return await getCachedResources({
+      categories,
+      boroughs,
+      userId,
+      page,
+      query,
+      sort,
+    });
   } catch (error) {
     console.error("Error in getResources wrapper:", error);
     throw new Error("Failed to fetch resources");

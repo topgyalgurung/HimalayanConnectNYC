@@ -109,13 +109,13 @@ export default function ResourceFilter({
                   <div className="flex flex-1 items-center gap-2">
                     <Image
                       src={cat.icon}
-                      alt={cat.name}
+                      alt={cat.label}
                       width={16}
                       height={16}
                       className="opacity-75"
                     />
                     <ListItemText
-                      primary={cat.name}
+                      primary={cat.label}
                       primaryTypographyProps={{
                         className: "text-[13px] font-medium text-gray-700"
                       }}

@@ -6,17 +6,23 @@ export default async function HomeServer({
   page,
   categories,
   boroughs,
+  sort,
 }: {
   query?: string;
   page: number;
   categories: string[];
   boroughs: string[];
+  sort?: string;
 }) {
   const { data, perPage, total } = await getResources({
     query,
     page,
     categories,
     boroughs,
+    sort:
+      sort === "newest" || sort === "oldest" || sort === "alphabetical"
+        ? sort
+        : "alphabetical",
   });
   return (
     <HomeClient
@@ -24,6 +30,11 @@ export default async function HomeServer({
       totalPages={Math.ceil(total / perPage)}
       selectedCategories={categories}
       selectedBoroughs={boroughs}
+      selectedSort={
+        sort === "newest" || sort === "oldest" || sort === "alphabetical"
+          ? sort
+          : "alphabetical"
+      }
     />
   );
 }

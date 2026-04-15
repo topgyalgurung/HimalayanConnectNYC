@@ -30,9 +30,10 @@ export default async function Home({
     page?: string;
     categories?: string | string[];
     boroughs?: string | string[];
+    sort?: string;
   }>;
 }) {
-  const { query, page, categories, boroughs } = await searchParams;
+  const { query, page, categories, boroughs, sort } = await searchParams;
   const pageNumber = page ? Number(page) : 1;
   const selectedCategories = parseListParam(categories);
   const selectedBoroughs = parseListParam(boroughs);
@@ -60,6 +61,7 @@ export default async function Home({
             page={pageNumber}
             categories={selectedCategories}
             boroughs={selectedBoroughs}
+            sort={sort}
           />
         </Suspense>
       </ErrorBoundary>

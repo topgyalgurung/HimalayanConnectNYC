@@ -12,12 +12,14 @@ interface HomeClientProps {
   totalPages: number;
   selectedCategories: string[];
   selectedBoroughs: string[];
+  selectedSort: "alphabetical" | "newest" | "oldest";
 }
 export default function HomeClient({
   initialResources,
   totalPages,
   selectedCategories,
   selectedBoroughs,
+  selectedSort,
 }: HomeClientProps) {
   const [selectedResource, setSelectedResource] = useState<Resource | null>(
     null
@@ -66,6 +68,7 @@ export default function HomeClient({
       <aside className="w-full md:w-[36%] lg:w-[34%] pl-0 md:pl-4 flex flex-col min-h-0 mb-4">
         <ResourceListPanel
           filteredResources={initialResources}
+          selectedSort={selectedSort}
           onViewDetailsAction={handleViewDetails}
           onResourceHover={setHoveredResourceId}
         />

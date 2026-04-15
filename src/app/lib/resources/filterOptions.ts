@@ -2,36 +2,43 @@ export const CATEGORY_FILTERS = [
   {
     id: 1,
     name: "Community",
+    label: "Community",
     icon: "https://cdn-icons-png.flaticon.com/512/7829/7829198.png",
   },
   {
     id: 2,
     name: "Legal",
+    label: "Legal",
     icon: "https://cdn-icons-png.flaticon.com/512/4052/4052204.png",
   },
   {
     id: 3,
     name: "Health",
+    label: "Health",
     icon: "https://cdn-icons-png.flaticon.com/512/2382/2382533.png",
   },
   {
     id: 4,
     name: "Education",
+    label: "Education",
     icon: "https://cdn-icons-png.flaticon.com/512/4406/4406319.png",
   },
   {
     id: 5,
     name: "Finance",
+    label: "Finance",
     icon: "https://cdn-icons-png.flaticon.com/512/4256/4256900.png",
   },
   {
     id: 6,
     name: "Real Estate",
+    label: "Rental / Buying",
     icon: "https://cdn-icons-png.flaticon.com/512/2238/2238337.png",
   },
   {
     id: 7,
     name: "Other",
+    label: "Other",
     icon: "https://cdn-icons-png.flaticon.com/512/3195/3195457.png",
   },
 ] as const;
