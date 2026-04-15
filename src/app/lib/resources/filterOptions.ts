@@ -37,6 +37,12 @@ export const CATEGORY_FILTERS = [
   },
   {
     id: 7,
+    name: "Business",
+    label: "Business",
+    icon: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
+  },
+  {
+    id: 8,
     name: "Other",
     label: "Other",
     icon: "https://cdn-icons-png.flaticon.com/512/3195/3195457.png",

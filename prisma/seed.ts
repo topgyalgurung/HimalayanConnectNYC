@@ -56,6 +56,12 @@ async function main() {
     },
   });
 
+  const businessCategory = await prisma.resourceCategory.create({
+    data: {
+      name: 'Business',
+    },
+  });
+
   const otherCategory = await prisma.resourceCategory.create({
     data: {
       name: 'Other',
@@ -119,6 +125,23 @@ async function main() {
   });
 
  
+
+  await prisma.resource.create({
+    data: {
+      name: 'Everest Momo Spot',
+      address: '75-18 Broadway, Elmhurst, NY 11373',
+      city: 'Queens',
+      description: 'Local Himalayan small business serving momos and community favorites in Elmhurst.',
+      status: 'APPROVED',
+      categoryId: businessCategory.id,
+      Location: {
+        create: {
+          latitude: 40.7469737,
+          longitude: -73.8910821,
+        },
+      },
+    },
+  });
 
   await prisma.resource.create({
     data: {

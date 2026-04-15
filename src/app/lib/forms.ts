@@ -13,11 +13,33 @@ import { getSession } from '@/app/lib/auth-session';
 import { cache } from "react";
 import { EditResourceInput, ResourceFormData } from "@/app/lib/types";
 import { geocodeAddress } from "@/app/lib/geocodeAddress";
+import { CATEGORY_FILTERS } from "@/app/lib/resources/filterOptions";
 // import { parse } from "date-fns";
 
 // cache categories to avoid re-fetching them on every request
+const DEFAULT_CATEGORY_NAMES = CATEGORY_FILTERS.map((category) => category.name);
+
 const getCachedCategories = cache(async () => {
-  return await prisma.resourceCategory.findMany();
+  await Promise.all(
+    DEFAULT_CATEGORY_NAMES.map((name) =>
+      prisma.resourceCategory.upsert({
+        where: { name },
+        update: {},
+        create: { name },
+      })
+    )
+  );
+
+  const categories = await prisma.resourceCategory.findMany();
+  const categoryOrder: Map<string, number> = new Map(
+    DEFAULT_CATEGORY_NAMES.map((name, index) => [name, index])
+  );
+
+  return categories.sort(
+    (a, b) =>
+      (categoryOrder.get(a.name) ?? Number.MAX_SAFE_INTEGER) -
+      (categoryOrder.get(b.name) ?? Number.MAX_SAFE_INTEGER)
+  );
 });
 
 

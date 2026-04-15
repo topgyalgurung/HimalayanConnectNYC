@@ -15,6 +15,7 @@ import dynamic from "next/dynamic";
 
 interface ResourceListPanelProps {
   filteredResources: Resource[];
+  selectedCategories: string[];
   selectedSort: "alphabetical" | "newest" | "oldest";
   onViewDetailsAction: (resource: Resource) => void;
   onResourceHover?: (resourceId: string | null) => void;
@@ -25,6 +26,7 @@ const SearchInput = dynamic(() => import("@/app/ui/SearchInput"), {
 
 export default function ResourceListPanel({
   filteredResources,
+  selectedCategories,
   selectedSort,
   onViewDetailsAction,
   onResourceHover,
@@ -39,6 +41,8 @@ export default function ResourceListPanel({
     params.delete("page");
     replace(`${pathname}?${params.toString()}`);
   };
+
+  const isBusinessFilterActive = selectedCategories.includes("Business");
 
   return (
     <>
@@ -62,6 +66,12 @@ export default function ResourceListPanel({
           <option value="oldest">Oldest</option>
         </select>
       </div>
+
+      {isBusinessFilterActive ? (
+        <div className="mb-3 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm font-medium text-amber-900">
+          Support local business
+        </div>
+      ) : null}
 
       <main className="flex-1 bg-gray-50 p-4 overflow-y-auto mb-4">
         <ResourceList

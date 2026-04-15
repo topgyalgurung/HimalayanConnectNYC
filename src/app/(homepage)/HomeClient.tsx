@@ -192,6 +192,7 @@ export default function HomeClient({
       >
         <ResourceListPanel
           filteredResources={initialResources}
+          selectedCategories={selectedCategories}
           selectedSort={selectedSort}
           onViewDetailsAction={handleViewDetails}
           onResourceHover={setHoveredResourceId}

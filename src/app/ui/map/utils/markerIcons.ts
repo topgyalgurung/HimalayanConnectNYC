@@ -11,6 +11,7 @@ export const getMarkerIconByCategory = (category?: string): string => {
     education: "https://cdn-icons-png.flaticon.com/512/4406/4406319.png",
     finance: "https://cdn-icons-png.flaticon.com/512/4256/4256900.png",
     "real estate": "https://cdn-icons-png.flaticon.com/512/2238/2238337.png",
+    business: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
     other: "https://cdn-icons-png.flaticon.com/512/3195/3195457.png"
   };
 

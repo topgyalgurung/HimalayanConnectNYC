@@ -25,6 +25,10 @@ export const categories = [
   },
   {
     id: 7,
+    name: "Business",
+  },
+  {
+    id: 8,
     name: "Others",
   },
 ];
