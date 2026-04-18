@@ -124,7 +124,7 @@ export default function SignupForm() {
               name="lastName"
               value={formData.lastName}
               onChange={handleInputChange}
-              placeholder="Last Name"
+              placeholder="Last Name (optional)"
               className="text-black p-2 border border-gray-50 rounded-md mb-6 focus:outline-none focus:border-gray-600 w-full"
             />
           </div>
@@ -145,7 +145,7 @@ export default function SignupForm() {
           {state?.errors?.email && (
             <p className="text-red-500 text-sm mb-2">{state.errors.email}</p>
           )}
-          {state?.status === 400 && state?.message && (
+          {state?.message && (
             <p className="text-red-500 text-sm mb-2">{state.message}</p>
           )}
 

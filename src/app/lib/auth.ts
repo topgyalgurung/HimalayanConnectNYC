@@ -21,31 +21,6 @@ import { sendEmail } from "@/app/lib/helpers/mailer";
 
 // SIGN UP
 export async function signup(state: SignupFormState, formData: FormData) {
-
-  const email = formData.get("email") as string;
-
-  // First check if email exists
-  try {
-    const existingUser = await prisma.user.findUnique({
-      where: { email },
-      select: { id: true }, // Only fetch ID for efficiency
-    });
-
-    if (existingUser) {
-      return {
-        message: "An account with this email already exists.",
-        status: 400,
-      };
-    }
-  } catch (error) {
-    console.error("Error checking existing user:", error);
-    return {
-      message: "An error occurred while checking email availability.",
-      status: 500,
-    };
-  }
-
-  // Then validate all form fields
   const validatedFields = SignupFormSchema.safeParse({
     firstName: formData.get("firstName"),
     lastName: formData.get("lastName"),
@@ -61,22 +36,39 @@ export async function signup(state: SignupFormState, formData: FormData) {
   }
 
   // Prepare data for insertion into database
-  const { firstName, lastName, password } = validatedFields.data;
+  const { firstName, lastName, email, password } = validatedFields.data;
 
   try {
+    const existingUser = await prisma.user.findUnique({
+      where: { email },
+      select: {
+        id: true,
+        password: true,
+      },
+    });
+
+    if (existingUser) {
+      return {
+        message: existingUser.password
+          ? "An account with this email already exists."
+          : "This email is already linked to Google sign-in. Please use the 'Sign up with Google' button.",
+        status: 400,
+      };
+    }
+
     // Hash the password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Create new user with default role
-    const newUser = await prisma.user.create({
-      data: {
-        firstName,
-        lastName,
-        email,
-        role: Role.USER,
-        password: hashedPassword,
-      },
+    // Avoid Prisma create here because the live DB schema can lag behind
+    // the Prisma model in some environments.
+    await prisma.$executeRaw`
+      INSERT INTO "User" ("firstName", "lastName", "email", "password", "role", "createdAt", "updatedAt")
+      VALUES (${firstName}, ${lastName}, ${email}, ${hashedPassword}, ${Role.USER}::"Role", NOW(), NOW())
+    `;
+
+    const newUser = await prisma.user.findUnique({
+      where: { email },
       select: { id: true, email: true, firstName: true, role: true },
     });
 

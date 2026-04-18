@@ -1,5 +1,3 @@
-"use server";
-
 import { Role } from "@prisma/client";
 import { auth } from "@/auth";
 import {

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { decrypt } from "./app/lib/session";
-import { cookies } from "next/headers";
+import { decrypt } from "./app/lib/session-edge";
+import { getToken } from "next-auth/jwt";
 
 const authRoutes = ['/login', '/signup'];
 const protectedRoutes = ["/dashboard", "/resources/add", "/profile"];
@@ -17,15 +17,22 @@ export default async function middleware(request: NextRequest) {
   const isAuthRoute = authRoutes.includes(path);
 
   // Check custom JWT session
-  const cookie = (await cookies()).get("session")?.value;
+  const cookie = request.cookies.get("session")?.value;
   const customSession = await decrypt(cookie);
   const hasCustomSession = !!customSession?.userId;
 
-  // Check NextAuth session cookie (authjs.session-token or __Secure-authjs.session-token)
-  const cookieStore = await cookies();
-  const nextAuthCookie = cookieStore.get("authjs.session-token")?.value
-    || cookieStore.get("__Secure-authjs.session-token")?.value;
-  const hasNextAuthSession = !!nextAuthCookie;
+  // Validate the Auth.js JWT instead of trusting mere cookie presence.
+  let hasNextAuthSession = false;
+  try {
+    const nextAuthToken = await getToken({
+      req: request,
+      secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET,
+      secureCookie: request.nextUrl.protocol === "https:",
+    });
+    hasNextAuthSession = !!nextAuthToken;
+  } catch {
+    hasNextAuthSession = false;
+  }
 
   const isAuthenticated = hasCustomSession || hasNextAuthSession;
 
