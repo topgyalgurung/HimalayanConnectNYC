@@ -117,6 +117,21 @@ export async function POST(request: NextRequest) {
             categoryId,
         } = body;
 
+        if (typeof name !== "string" || !name.trim() || typeof address !== "string" || !address.trim()) {
+            return NextResponse.json(
+                { error: "name and address are required" },
+                { status: 400 }
+            );
+        }
+
+        let parsedCategoryId: number | null = null;
+        if (categoryId !== undefined && categoryId !== null) {
+            parsedCategoryId = Number(categoryId);
+            if (!Number.isInteger(parsedCategoryId)) {
+                return NextResponse.json({ error: "Invalid categoryId" }, { status: 400 });
+            }
+        }
+
         // Only accept fields a submitter should control - status/rating/id
         // etc. are set by the system (status defaults to PENDING moderation).
         const resource = await prisma.resource.create({
@@ -133,7 +148,7 @@ export async function POST(request: NextRequest) {
                 facebookLink,
                 email,
                 url,
-                categoryId,
+                categoryId: parsedCategoryId,
                 createdById: Number(session.userId),
             },
         });

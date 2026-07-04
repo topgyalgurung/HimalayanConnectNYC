@@ -1,15 +1,13 @@
 
-import { NextRequest, NextResponse } from "next/server"
+import { NextRequest, NextResponse, after } from "next/server"
 import { prisma } from '@/app/lib/prisma'
 import { sendEmail } from "@/app/lib/helpers/mailer"
-import { checkRateLimit } from "@/app/lib/rate-limit"
+import { checkRateLimit, getClientIp } from "@/app/lib/rate-limit"
 
 // backend generates a token, stores in db and sends email with token using nodemailer
 export async function POST(request: NextRequest) {
     try {
-        // Get client IP from request headers
-        const forwardedFor = request.headers.get('x-forwarded-for')
-        const ip = forwardedFor?.split(',')[0] || request.headers.get('x-real-ip') || 'unknown'
+        const ip = getClientIp(request.headers)
 
         // Check rate limit
         const rateLimitResult = await checkRateLimit(ip)
@@ -28,13 +26,15 @@ export async function POST(request: NextRequest) {
             select: { id: true },
         });
 
-        // helper function sendEmail handles creating token and updating db
+        // Send after the response goes out (rather than awaiting here) so a
+        // real account and a nonexistent one take the same time to respond -
+        // otherwise the email round-trip would leak account existence via timing.
         if (user) {
-            await sendEmail({
-                email,
-                emailType: "RESET",
-                userId: user.id
-            })
+            after(() =>
+                sendEmail({ email, emailType: "RESET", userId: user.id }).catch((err) => {
+                    console.error("Failed to send reset email:", err);
+                })
+            );
         }
 
         // Respond identically whether or not the account exists, so this

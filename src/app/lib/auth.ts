@@ -15,15 +15,15 @@ import { createSession, deleteSession } from "@/app/lib/session";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import { headers } from "next/headers";
+import { after } from "next/server";
 import { prisma } from "@/app/lib/prisma";
 import { Role } from "@prisma/client";
 import { sendEmail } from "@/app/lib/helpers/mailer";
-import { checkRateLimit } from "@/app/lib/rate-limit";
+import { checkRateLimit, getClientIp } from "@/app/lib/rate-limit";
 
 async function getRequestIp() {
   const headersList = await headers();
-  const forwardedFor = headersList.get("x-forwarded-for");
-  return forwardedFor?.split(",")[0] || headersList.get("x-real-ip") || "unknown";
+  return getClientIp(headersList);
 }
 
 // cookie should be set on the server to prevent client side tampering
@@ -163,7 +163,7 @@ export async function login(prevState: LoginFormState, formData: FormData) {
     // generic message for both "no such account" and "wrong password".
     const validPassword = await bcrypt.compare(
       password,
-      user?.password ?? "$2a$10$invalidsaltinvalidsaltinvalidsalte"
+      user?.password ?? "$2b$10$SivJBKGRRn1C27z9MOyLzuz1IOP.HW4EU.ggVVN/DOZ7FgsK1TYIe"
     );
     if (!user?.id || !validPassword) {
       return {
@@ -258,13 +258,15 @@ export async function forgotPassword(prevState: ForgotFormState, formData: FormD
       select: { id: true },
     });
 
-    // helper function sendEmail handles creating token and updating db
+    // Send after the response goes out (rather than awaiting here) so a real
+    // account and a nonexistent one take the same time to respond - otherwise
+    // the email round-trip would leak account existence via timing.
     if (user) {
-      await sendEmail({
-        email,
-        emailType: "RESET",
-        userId: user.id
-      })
+      after(() =>
+        sendEmail({ email, emailType: "RESET", userId: user.id }).catch((err) => {
+          console.error("Failed to send reset email:", err);
+        })
+      );
     }
 
     // Respond identically whether or not the account exists, so this
@@ -313,6 +315,13 @@ export async function resetPassword(prevState: ResetPasswordFormState, formData:
     if (password !== confirmPassword) {
       return {
         message: "Passwords do not match",
+        status: 400,
+      };
+    }
+
+    if (!token || typeof token !== "string") {
+      return {
+        message: "Invalid or expired token",
         status: 400,
       };
     }

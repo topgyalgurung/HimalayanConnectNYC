@@ -34,7 +34,7 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { paramsToSign } = body;
 
-    if (!paramsToSign || typeof paramsToSign !== 'object') {
+    if (!paramsToSign || typeof paramsToSign !== 'object' || Array.isArray(paramsToSign)) {
         return Response.json({ error: 'Invalid request' }, { status: 400 });
     }
 

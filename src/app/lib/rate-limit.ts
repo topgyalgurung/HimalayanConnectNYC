@@ -28,6 +28,23 @@ const ratelimit = !isDevelopment
     })
   : null;
 
+// Extract the client IP from request headers. The first hop of X-Forwarded-For
+// is whatever the client sent and can be spoofed, so prefer x-real-ip / the
+// platform-appended x-vercel-proxied-for, falling back to the *last* hop of
+// X-Forwarded-For (appended by our own proxy, not attacker-controlled).
+export function getClientIp(headersLike: { get(name: string): string | null }): string {
+  const trusted = headersLike.get('x-real-ip') || headersLike.get('x-vercel-proxied-for');
+  if (trusted) return trusted;
+
+  const forwardedFor = headersLike.get('x-forwarded-for');
+  if (forwardedFor) {
+    const ips = forwardedFor.split(',').map((ip) => ip.trim()).filter(Boolean);
+    if (ips.length > 0) return ips[ips.length - 1];
+  }
+
+  return 'unknown';
+}
+
 // Create a function that checks the rate limit for a given IP
 export async function checkRateLimit(ip: string) {
   // Skip rate limiting in development
