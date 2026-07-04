@@ -124,14 +124,8 @@ export type ForgotFormState =
     message?: string
     email?: string
     success?: boolean
-    user?: {
-      id: number;
-      email: string;
-      firstName?: string;
-      lastName?: string;
-    }
     status?: number
-  } 
+  }
 | undefined
 
 export type ResetPasswordFormState =

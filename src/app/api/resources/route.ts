@@ -101,10 +101,40 @@ export async function POST(request: NextRequest) {
         }
 
         const body = await request.json();
+        const {
+            name,
+            description,
+            address,
+            city,
+            openDays,
+            openTime,
+            closeTime,
+            phone,
+            imageUrl,
+            facebookLink,
+            email,
+            url,
+            categoryId,
+        } = body;
+
+        // Only accept fields a submitter should control - status/rating/id
+        // etc. are set by the system (status defaults to PENDING moderation).
         const resource = await prisma.resource.create({
             data: {
-                ...body,
-                userId: Number(session.userId),
+                name,
+                description,
+                address,
+                city,
+                openDays,
+                openTime: openTime ? new Date(openTime) : null,
+                closeTime: closeTime ? new Date(closeTime) : null,
+                phone,
+                imageUrl,
+                facebookLink,
+                email,
+                url,
+                categoryId,
+                createdById: Number(session.userId),
             },
         });
 

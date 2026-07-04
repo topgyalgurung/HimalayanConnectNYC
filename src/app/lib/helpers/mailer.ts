@@ -1,5 +1,5 @@
 import { Resend } from 'resend';
-import bcryptjs from 'bcryptjs';
+import crypto from 'crypto';
 // import nodemailer from 'nodemailer';
 import { PrismaClient } from '@prisma/client';
 
@@ -19,10 +19,13 @@ interface sendEmailParams {
 // use case: send email for verify token, forgot pw
 export const sendEmail = async ({ email, emailType, userId }: sendEmailParams) => {
     try {
-        // create a hashed token using userId
-        const hashedToken = await bcryptjs.hash(userId.toString(), 10)
+        // Generate a cryptographically random token. Only its SHA-256 hash is
+        // persisted, so a database leak alone can't be used to reset an account -
+        // the raw token (sent only in the email link) is required.
+        const rawToken = crypto.randomBytes(32).toString('hex')
+        const hashedToken = crypto.createHash('sha256').update(rawToken).digest('hex')
 
-        // update db with token field we created for forgotPasswordToken etc. check schema 
+        // update db with token field we created for forgotPasswordToken etc. check schema
         //token update for verifyToken
         if (emailType === "VERIFY") {
             await prisma.user.update({
@@ -41,11 +44,9 @@ export const sendEmail = async ({ email, emailType, userId }: sendEmailParams) =
                 }
             });
         }
-        
+
         const domain = process.env.DOMAIN ;
-        const resetLink = `${domain}/${emailType === "VERIFY" ? "verifyemail" : "reset-password"}?token=${hashedToken}`;
-        
-        console.log('Attempting to send email with link:', resetLink);
+        const resetLink = `${domain}/${emailType === "VERIFY" ? "verifyemail" : "reset-password"}?token=${rawToken}`;
 
         // =============== NODEMAILER IMPLEMENTATION (FOR REFERENCE) ===============
         /*

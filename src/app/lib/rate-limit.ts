@@ -56,23 +56,12 @@ export async function checkRateLimit(ip: string) {
         }
       )
     }
-    // do expensive calculation
-    return NextResponse.json({message:"Request successful"})
+    // Within limits: return null so the caller proceeds with its own logic.
+    return null
   } catch (error) {
     console.error('Rate limit error:', error)
     // If rate limiting fails, we should allow the request to proceed
     // rather than blocking legitimate traffic
     return null
   }
-} 
-
-// handler definition
-/**
- * export default async function handler(req, res) {
-  const { success } = await rateLimit.limit(req.ip);
-  if (!success) {
-    return res.status(429).json('Too many requests');
-  }
-  res.status(200).json({ message: 'Request successful' });
 }
- */

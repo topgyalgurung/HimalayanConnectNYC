@@ -13,9 +13,18 @@ import {
 
 import { createSession, deleteSession } from "@/app/lib/session";
 import bcrypt from "bcryptjs";
+import crypto from "crypto";
+import { headers } from "next/headers";
 import { prisma } from "@/app/lib/prisma";
 import { Role } from "@prisma/client";
 import { sendEmail } from "@/app/lib/helpers/mailer";
+import { checkRateLimit } from "@/app/lib/rate-limit";
+
+async function getRequestIp() {
+  const headersList = await headers();
+  const forwardedFor = headersList.get("x-forwarded-for");
+  return forwardedFor?.split(",")[0] || headersList.get("x-real-ip") || "unknown";
+}
 
 // cookie should be set on the server to prevent client side tampering
 
@@ -121,6 +130,11 @@ export async function login(prevState: LoginFormState, formData: FormData) {
   }
 
   try {
+    const rateLimited = await checkRateLimit(await getRequestIp());
+    if (rateLimited) {
+      return { message: "Too many attempts. Please try again shortly.", status: 429 };
+    }
+
     const { email, password } = validatedFields.data;
 
     // Get user with minimal data needed
@@ -136,26 +150,24 @@ export async function login(prevState: LoginFormState, formData: FormData) {
       },
     });
 
-    if (!user?.id) {
-      return {
-        message: "Invalid email or user does not exist",
-        status: 401,
-      };
-    }
-
     // Check if user signed up via OAuth only (no password set)
-    if (!user.password) {
+    if (user && !user.password) {
       return {
         message: "This account uses Google sign-in. Please use the 'Sign in with Google' button.",
         status: 401,
       };
     }
 
-    // Verify password
-    const validPassword = await bcrypt.compare(password, user.password);
-    if (!validPassword) {
+    // Verify password. Compare against a dummy hash when the user doesn't
+    // exist so response timing doesn't reveal account existence, and use one
+    // generic message for both "no such account" and "wrong password".
+    const validPassword = await bcrypt.compare(
+      password,
+      user?.password ?? "$2a$10$invalidsaltinvalidsaltinvalidsalte"
+    );
+    if (!user?.id || !validPassword) {
       return {
-        message: "Password is incorrect",
+        message: "Invalid email or password",
         status: 401,
       };
     }
@@ -221,43 +233,45 @@ export async function forgotPassword(prevState: ForgotFormState, formData: FormD
       message: undefined,
       email: undefined,
       success: undefined,
-      user: undefined,
       status: undefined,
     };
   }
 
   try {
-    const { email } = validateFields.data;
-
-    const user = await prisma.user.findUnique({
-      where: {
-        email: email
-      }
-    });
-
-    if (!user) {
+    const rateLimited = await checkRateLimit(await getRequestIp());
+    if (rateLimited) {
       return {
-        message: "Account with this email does not exist. ",
-        status: 404,
+        message: "Too many attempts. Please try again shortly.",
+        status: 429,
         errors: undefined,
         email: undefined,
         success: undefined,
-        user: undefined,
-      }
+      };
     }
-    // If yes, use nodemailer to send token to the email and 
-    // also send the token to the database
+
+    const { email } = validateFields.data;
+
+    // Look up only the id - never return the full user record, which
+    // would include the password hash and reset/verify tokens.
+    const user = await prisma.user.findUnique({
+      where: { email },
+      select: { id: true },
+    });
 
     // helper function sendEmail handles creating token and updating db
-    await sendEmail({
-      email,
-      emailType: "RESET",
-      userId: user.id
-    })
+    if (user) {
+      await sendEmail({
+        email,
+        emailType: "RESET",
+        userId: user.id
+      })
+    }
+
+    // Respond identically whether or not the account exists, so this
+    // endpoint can't be used to enumerate registered emails.
     return {
-      message: "Check your email for reset password",
+      message: "If an account with that email exists, you'll receive a password reset link shortly.",
       success: true,
-      user,
       errors: undefined,
       email: undefined,
       status: undefined,
@@ -272,7 +286,6 @@ export async function forgotPassword(prevState: ForgotFormState, formData: FormD
       errors: undefined,
       email: undefined,
       success: undefined,
-      user: undefined,
     }
 
   }
@@ -304,10 +317,13 @@ export async function resetPassword(prevState: ResetPasswordFormState, formData:
       };
     }
 
+    // The DB only stores a SHA-256 hash of the token, so hash the incoming
+    // raw token before looking it up.
+    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+
     const user = await prisma.user.findFirst({
       where: {
-        // forgotPasswordToken: hashedToken,
-        forgotPasswordToken: token,
+        forgotPasswordToken: hashedToken,
         forgotPasswordTokenExpiry: {
           gt: new Date()
         }

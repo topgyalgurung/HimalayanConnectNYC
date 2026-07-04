@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
+import crypto from "crypto";
 import { prisma } from '@/app/lib/prisma';
 import { checkRateLimit } from "@/app/lib/rate-limit";
 //import { checkRateLimit } from '@vercel/firewall';
@@ -29,16 +30,19 @@ export async function POST(request: NextRequest) {
         // continue
         const reqBody = await request.json();
         const { token, password } = reqBody;
-        console.log("Token received: ", token);
-        
+
         if (!token || !password) {
             return NextResponse.json({ error: "Token and password are required." }, { status: 400 });
         }
 
+        // The DB only stores a SHA-256 hash of the token, so hash the incoming
+        // raw token before looking it up.
+        const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+
         // validate token and find the user
         const user = await prisma.user.findFirst({
             where: {
-                forgotPasswordToken: token,
+                forgotPasswordToken: hashedToken,
                 forgotPasswordTokenExpiry: {
                     gt: new Date()
                 }

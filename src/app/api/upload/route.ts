@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 // import cloudinary from "cloudinary";
 import { v2 as cloudinary } from "cloudinary";
 import { checkRateLimit } from "@/app/lib/rate-limit";
+import { getSession } from "@/app/lib/auth-session";
 
 export const dynamic = 'force-dynamic';  
 
@@ -27,6 +28,11 @@ export async function POST(req: NextRequest) {
     // Check rate limit
     const rateLimitResult = await checkRateLimit(ip)
     if (rateLimitResult) return rateLimitResult
+
+    const session = await getSession();
+    if (!session?.userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
     const data = await req.json();
     const file = data.image; // Base64 image string
