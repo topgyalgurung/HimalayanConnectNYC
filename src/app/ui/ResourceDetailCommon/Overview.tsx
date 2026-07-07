@@ -1,13 +1,13 @@
 import ResourceActions from "./ResourceActions";
 import { formatOpenDays } from "@/app/lib/helpers/formatOpenDays";
+import {
+  formatTimeRange,
+  getOpenStatus,
+} from "@/app/lib/helpers/formatHours";
 import toast from "react-hot-toast";
 
 import { type Resource, User } from "@/app/lib/types";
 import { useRouter } from "next/navigation";
-
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-dayjs.extend(utc);
 
 interface OverviewTabProps {
   resource: Resource;
@@ -25,7 +25,15 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
   router,
   // liked,
   // toggleFavorite,
-}) => (
+}) => {
+  const hours = formatTimeRange(resource.openTime, resource.closeTime);
+  const openStatus = getOpenStatus(
+    resource.openDays,
+    resource.openTime,
+    resource.closeTime
+  );
+
+  return (
   <div>
     <ResourceActions
       resource={resource}
@@ -42,15 +50,32 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
     )}
     {resource.openDays && (
       <p>
-        <span className="font-medium">Opens:</span>{" "}
+        <span className="font-medium">Open:</span>{" "}
         {formatOpenDays(resource.openDays || null)}
+        {hours ? `, ${hours}` : ""}
       </p>
     )}
-    {resource.openTime && resource.closeTime && (
+    {!resource.openDays && hours && (
       <p>
-        <span className="font-medium">Business Hours:</span>{" "}
-        {dayjs.utc(resource.openTime).format("hh:mm A")} -{" "}
-        {dayjs.utc(resource.closeTime).format("hh:mm A")}
+        <span className="font-medium">Hours:</span> {hours}
+      </p>
+    )}
+    {openStatus && (
+      <p>
+        <span
+          className={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-semibold ${
+            openStatus.isOpen
+              ? "bg-green-100 text-green-700"
+              : "bg-red-100 text-red-700"
+          }`}
+        >
+          <span
+            className={`h-1.5 w-1.5 rounded-full ${
+              openStatus.isOpen ? "bg-green-600" : "bg-red-600"
+            }`}
+          />
+          {openStatus.label}
+        </span>
       </p>
     )}
     {resource.url && (
@@ -97,4 +122,5 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
       </button>
     </div>
   </div>
-);
+  );
+};

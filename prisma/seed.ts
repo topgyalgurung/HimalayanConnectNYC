@@ -151,10 +151,99 @@ async function main() {
       description: 'Consulate General of Nepal in New York City.',
       status: 'APPROVED',
       categoryId: legalCategory.id,
+      openDays: 'Mon,Tue,Wed,Thu,Fri',
+      openTime: new Date('1970-01-01T09:30:00Z'),
+      closeTime: new Date('1970-01-01T17:00:00Z'),
       Location: {
         create: {
           latitude: 40.7519151,
           longitude: -73.9744031,
+        },
+      },
+    },
+  });
+
+  // openTime/closeTime are stored as time-of-day (Postgres `time`), so seed
+  // them as 1970-01-01 UTC dates - only the clock portion is persisted.
+  await prisma.resource.create({
+    data: {
+      name: 'The Tibet Fund',
+      address: '241 E 32nd St, New York, NY 10016',
+      city: 'Manhattan',
+      description:
+        'Nonprofit supporting Tibetan communities through education, health, and cultural preservation programs.',
+      status: 'APPROVED',
+      categoryId: communityCategory.id,
+      openDays: 'Mon,Tue,Wed,Thu,Fri',
+      openTime: new Date('1970-01-01T09:00:00Z'),
+      closeTime: new Date('1970-01-01T17:00:00Z'),
+      Location: {
+        create: {
+          latitude: 40.7443,
+          longitude: -73.9787,
+        },
+      },
+    },
+  });
+
+  await prisma.resource.create({
+    data: {
+      name: 'Tibet House US',
+      address: '22 W 15th St, New York, NY 10011',
+      city: 'Manhattan',
+      description:
+        'Cultural center dedicated to preserving Tibetan culture through exhibitions, classes, and public programs.',
+      status: 'APPROVED',
+      categoryId: educationCategory.id,
+      openDays: 'Mon,Tue,Wed,Thu,Fri',
+      openTime: new Date('1970-01-01T11:00:00Z'),
+      closeTime: new Date('1970-01-01T17:00:00Z'),
+      Location: {
+        create: {
+          latitude: 40.7374,
+          longitude: -73.9939,
+        },
+      },
+    },
+  });
+
+  await prisma.resource.create({
+    data: {
+      name: 'Queens Public Library - Woodside',
+      address: '54-22 Skillman Ave, Woodside, NY 11377',
+      city: 'Queens',
+      description:
+        'Neighborhood library branch with free ESOL classes, citizenship resources, and multilingual services.',
+      status: 'APPROVED',
+      categoryId: educationCategory.id,
+      openDays: 'Mon,Tue,Wed,Thu,Fri,Sat',
+      openTime: new Date('1970-01-01T10:00:00Z'),
+      closeTime: new Date('1970-01-01T18:00:00Z'),
+      Location: {
+        create: {
+          latitude: 40.7471,
+          longitude: -73.9063,
+        },
+      },
+    },
+  });
+
+  await prisma.resource.create({
+    data: {
+      name: 'NYC Health + Hospitals / Elmhurst',
+      address: '79-01 Broadway, Elmhurst, NY 11373',
+      city: 'Queens',
+      description:
+        'Public hospital serving the Elmhurst and Jackson Heights communities, with interpretation services available.',
+      status: 'APPROVED',
+      categoryId: healthCategory.id,
+      openDays: 'Mon,Tue,Wed,Thu,Fri,Sat,Sun',
+      openTime: new Date('1970-01-01T00:00:00Z'),
+      closeTime: new Date('1970-01-01T23:59:00Z'),
+      Location: {
+        create: {
+          latitude: 40.7445,
+          longitude: -73.8861,
         },
       },
     },

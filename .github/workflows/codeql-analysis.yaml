@@ -26,6 +26,10 @@ jobs:
       RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
       UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
       UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
+      # session-edge.ts throws at import time when JWT_SECRET is missing, which
+      # breaks `next build` during page-data collection. CI only compiles the
+      # app - it never signs real sessions - so a build-only fallback is safe.
+      JWT_SECRET: ${{ secrets.JWT_SECRET || 'codeql-build-only-secret-0123456789abcdef' }}
     permissions:
       actions: read
       contents: read

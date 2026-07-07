@@ -73,9 +73,14 @@ export async function PATCH(
   try {
     const params = await props.params;
     const resourceId = parseInt(params.id, 10);
-    
+
     if (isNaN(resourceId)) {
       return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
+    }
+
+    const session = await getSession();
+    if (!session || !session.userId || session.role !== Role.ADMIN) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     const body = await req.json();

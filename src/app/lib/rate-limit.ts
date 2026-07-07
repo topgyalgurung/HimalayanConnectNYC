@@ -28,6 +28,23 @@ const ratelimit = !isDevelopment
     })
   : null;
 
+// Extract the client IP from request headers. The first hop of X-Forwarded-For
+// is whatever the client sent and can be spoofed, so prefer x-real-ip / the
+// platform-appended x-vercel-proxied-for, falling back to the *last* hop of
+// X-Forwarded-For (appended by our own proxy, not attacker-controlled).
+export function getClientIp(headersLike: { get(name: string): string | null }): string {
+  const trusted = headersLike.get('x-real-ip') || headersLike.get('x-vercel-proxied-for');
+  if (trusted) return trusted;
+
+  const forwardedFor = headersLike.get('x-forwarded-for');
+  if (forwardedFor) {
+    const ips = forwardedFor.split(',').map((ip) => ip.trim()).filter(Boolean);
+    if (ips.length > 0) return ips[ips.length - 1];
+  }
+
+  return 'unknown';
+}
+
 // Create a function that checks the rate limit for a given IP
 export async function checkRateLimit(ip: string) {
   // Skip rate limiting in development
@@ -56,23 +73,12 @@ export async function checkRateLimit(ip: string) {
         }
       )
     }
-    // do expensive calculation
-    return NextResponse.json({message:"Request successful"})
+    // Within limits: return null so the caller proceeds with its own logic.
+    return null
   } catch (error) {
     console.error('Rate limit error:', error)
     // If rate limiting fails, we should allow the request to proceed
     // rather than blocking legitimate traffic
     return null
   }
-} 
-
-// handler definition
-/**
- * export default async function handler(req, res) {
-  const { success } = await rateLimit.limit(req.ip);
-  if (!success) {
-    return res.status(429).json('Too many requests');
-  }
-  res.status(200).json({ message: 'Request successful' });
 }
- */
