@@ -3,7 +3,8 @@ import "@testing-library/jest-dom";
 // Mock next-intl with a translator that resolves real English messages, so
 // components using useTranslations render the same text they show in prod.
 jest.mock("next-intl", () => {
-  const messages = jest.requireActual("./messages/en.json");
+  const messagesModule = jest.requireActual("./messages/en.json");
+  const messages = messagesModule.default ?? messagesModule;
 
   const resolve = (namespace: string | undefined, key: string) => {
     const path = namespace ? `${namespace}.${key}` : key;
@@ -23,7 +24,7 @@ jest.mock("next-intl", () => {
     const t = (key: string, values?: Record<string, string | number>) => {
       let message = resolve(namespace, key) ?? key;
       for (const [name, value] of Object.entries(values ?? {})) {
-        message = message.replace(`{${name}}`, String(value));
+        message = message.replaceAll(`{${name}}`, String(value));
       }
       return message;
     };

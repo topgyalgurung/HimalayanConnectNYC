@@ -14,8 +14,12 @@ export default function LanguageSwitcher() {
 
   const handleChange = (nextLocale: string) => {
     startTransition(async () => {
-      await setLocale(nextLocale);
-      router.refresh();
+      try {
+        await setLocale(nextLocale);
+        router.refresh();
+      } catch (error) {
+        console.error("Failed to set locale:", error);
+      }
     });
   };
 
