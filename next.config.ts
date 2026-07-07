@@ -1,8 +1,12 @@
 import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
+
+// Cookie-based i18n (en / ne / bo) via next-intl; see src/i18n/request.ts.
+const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
 const nextConfig: NextConfig = {
   /* config options here */
-  // whitelist host location of image files 
+  // whitelist host location of image files
   experimental: {
     cssChunking: 'strict', // Enables strict CSS chunking for better performance and smaller bundle sizes
   },
@@ -22,11 +26,6 @@ const nextConfig: NextConfig = {
       },
     ]
   },
-  // i18n: {
-  //   locales: ['en', 'ne'],
-  //   defaultLocale:'en',
-  // }
-
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);

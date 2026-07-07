@@ -1,0 +1,68 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "addResource": "Add Resource",
+    "login": "Login",
+    "signup": "Sign up",
+    "loginToAdd": "Please login to add a resource",
+    "language": "Language"
+  },
+  "filters": {
+    "title": "Filters",
+    "subtitle": "Refine resources by category or borough.",
+    "category": "CATEGORY",
+    "borough": "BOROUGH",
+    "clear": "Clear"
+  },
+  "categories": {
+    "Community": "Community",
+    "Legal": "Legal",
+    "Health": "Health",
+    "Education": "Education",
+    "Finance": "Finance",
+    "Real Estate": "Rental / Buying",
+    "Business": "Business",
+    "Other": "Other"
+  },
+  "boroughs": {
+    "Manhattan": "Manhattan",
+    "Brooklyn": "Brooklyn",
+    "Queens": "Queens",
+    "Bronx": "Bronx",
+    "Staten Island": "Staten Island"
+  },
+  "resources": {
+    "title": "RESOURCES",
+    "searchPlaceholder": "Search resources ...",
+    "sortLabel": "Sort resources",
+    "sortAlphabetical": "A-Z",
+    "sortNewest": "Newest",
+    "sortOldest": "Oldest",
+    "supportLocalBusiness": "Support local business",
+    "viewDetails": "View Details",
+    "borough": "Borough",
+    "address": "Address",
+    "noCategory": "no category",
+    "noAddress": "No address available"
+  },
+  "hours": {
+    "open": "Open",
+    "closed": "Closed",
+    "closes": "Closes {time}",
+    "opens": "Opens {time}"
+  },
+  "details": {
+    "address": "Address",
+    "open": "Open",
+    "hours": "Hours",
+    "website": "Website",
+    "email": "Email",
+    "phone": "Phone",
+    "suggestEdit": "Suggest Edit",
+    "loginToSuggest": "Please log in to suggest an edit."
+  },
+  "map": {
+    "getDirections": "Get Directions"
+  }
+}

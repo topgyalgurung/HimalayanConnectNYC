@@ -12,6 +12,7 @@ import Image from "next/image";
 import { Collapse } from "@mui/material";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
+import { useTranslations } from "next-intl";
 import { CATEGORY_FILTERS } from "@/app/lib/resources/filterOptions";
 
 interface CategoryFilterProps {
@@ -23,6 +24,8 @@ export default function ResourceFilter({
   onFilterChangeAction,
   selectedCategories = [],
 }: CategoryFilterProps) {
+  const t = useTranslations("filters");
+  const tCategories = useTranslations("categories");
   const [openResFilter, setOpenResFilter] = useState(true); // default: expanded
   const hasActiveFilters = selectedCategories.length > 0;
 
@@ -50,14 +53,14 @@ export default function ResourceFilter({
         <div className="mb-1.5 flex items-center justify-between gap-2">
           <div className="flex min-w-0 items-center gap-2">
             <h3 className="text-xs font-semibold tracking-[0.16em] text-gray-700">
-              CATEGORY
+              {t("category")}
             </h3>
             {hasActiveFilters ? (
               <button
                 onClick={clearFilters}
                 className="ml-auto inline-flex items-center gap-1 text-[11px] font-medium text-gray-500 transition-colors duration-200 hover:text-red-500"
               >
-                Clear
+                {t("clear")}
                 <Image
                   src="https://cdn-icons-png.flaticon.com/512/399/399274.png"
                   alt="clear"
@@ -115,7 +118,7 @@ export default function ResourceFilter({
                       className="opacity-75"
                     />
                     <ListItemText
-                      primary={cat.label}
+                      primary={tCategories(cat.name)}
                       primaryTypographyProps={{
                         className: "text-[13px] font-medium text-gray-700"
                       }}

@@ -60,8 +60,10 @@ const parseOpenDays = (openDays: string | null | undefined): Set<string> => {
 
 export interface OpenStatus {
   isOpen: boolean;
-  /** e.g. "Open · Closes 5 PM" or "Closed · Opens 9 AM" */
+  /** e.g. "Open · Closes 5 PM" or "Closed · Opens 9 AM" (English fallback) */
   label: string;
+  /** Formatted time of the next transition ("5 PM"), for localized labels. */
+  time: string;
 }
 
 /**
@@ -97,6 +99,6 @@ export function getOpenStatus(
   }
 
   return isOpen
-    ? { isOpen, label: `Open · Closes ${formatMinutes(close)}` }
-    : { isOpen, label: `Closed · Opens ${formatMinutes(open)}` };
+    ? { isOpen, label: `Open · Closes ${formatMinutes(close)}`, time: formatMinutes(close) }
+    : { isOpen, label: `Closed · Opens ${formatMinutes(open)}`, time: formatMinutes(open) };
 }

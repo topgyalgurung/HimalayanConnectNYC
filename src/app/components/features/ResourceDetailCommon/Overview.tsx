@@ -5,6 +5,7 @@ import {
   getOpenStatus,
 } from "@/app/lib/helpers/formatHours";
 import toast from "react-hot-toast";
+import { useTranslations } from "next-intl";
 
 import { type Resource, User } from "@/app/lib/types";
 import { useRouter } from "next/navigation";
@@ -26,6 +27,8 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
   // liked,
   // toggleFavorite,
 }) => {
+  const t = useTranslations("details");
+  const tHours = useTranslations("hours");
   const hours = formatTimeRange(resource.openTime, resource.closeTime);
   const openStatus = getOpenStatus(
     resource.openDays,
@@ -45,19 +48,19 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
     <hr className="my-4 border-gray-300" />
     {resource.address && (
       <p>
-        <span className="font-medium">Address:</span> {resource.address}
+        <span className="font-medium">{t("address")}:</span> {resource.address}
       </p>
     )}
     {resource.openDays && (
       <p>
-        <span className="font-medium">Open:</span>{" "}
+        <span className="font-medium">{t("open")}:</span>{" "}
         {formatOpenDays(resource.openDays || null)}
         {hours ? `, ${hours}` : ""}
       </p>
     )}
     {!resource.openDays && hours && (
       <p>
-        <span className="font-medium">Hours:</span> {hours}
+        <span className="font-medium">{t("hours")}:</span> {hours}
       </p>
     )}
     {openStatus && (
@@ -74,13 +77,15 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
               openStatus.isOpen ? "bg-green-600" : "bg-red-600"
             }`}
           />
-          {openStatus.label}
+          {openStatus.isOpen
+            ? `${tHours("open")} · ${tHours("closes", { time: openStatus.time })}`
+            : `${tHours("closed")} · ${tHours("opens", { time: openStatus.time })}`}
         </span>
       </p>
     )}
     {resource.url && (
       <p>
-        <span className="font-medium">Website:</span>{" "}
+        <span className="font-medium">{t("website")}:</span>{" "}
         <a
           href={resource.url}
           target="_blank"
@@ -93,12 +98,12 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
     )}
     {resource.email && (
       <p>
-        <span className="font-medium">Email:</span> {resource.email}
+        <span className="font-medium">{t("email")}:</span> {resource.email}
       </p>
     )}
     {resource.phone && (
       <p>
-        <span className="font-medium">Phone:</span> {resource.phone}
+        <span className="font-medium">{t("phone")}:</span> {resource.phone}
       </p>
     )}
 
@@ -108,7 +113,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
       <button
         onClick={() => {
           if (!user) {
-            toast.error("Please log in to suggest an edit.");
+            toast.error(t("loginToSuggest"));
             router.push("/login");
             return;
           }
@@ -118,7 +123,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
           user ? "bg-blue-500" : "bg-blue-500 cursor-not-allowed"
         } text-white py-2 px-3 rounded`}
       >
-        Suggest Edit
+        {t("suggestEdit")}
       </button>
     </div>
   </div>

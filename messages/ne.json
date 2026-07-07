@@ -1,0 +1,68 @@
+{
+  "nav": {
+    "home": "गृहपृष्ठ",
+    "about": "हाम्रोबारे",
+    "addResource": "स्रोत थप्नुहोस्",
+    "login": "लगइन",
+    "signup": "साइन अप",
+    "loginToAdd": "स्रोत थप्न कृपया लगइन गर्नुहोस्",
+    "language": "भाषा"
+  },
+  "filters": {
+    "title": "फिल्टरहरू",
+    "subtitle": "श्रेणी वा बरो अनुसार स्रोतहरू छान्नुहोस्।",
+    "category": "श्रेणी",
+    "borough": "बरो",
+    "clear": "हटाउनुहोस्"
+  },
+  "categories": {
+    "Community": "समुदाय",
+    "Legal": "कानुनी",
+    "Health": "स्वास्थ्य",
+    "Education": "शिक्षा",
+    "Finance": "वित्त",
+    "Real Estate": "भाडा / खरिद",
+    "Business": "व्यवसाय",
+    "Other": "अन्य"
+  },
+  "boroughs": {
+    "Manhattan": "म्यानहटन",
+    "Brooklyn": "ब्रुक्लिन",
+    "Queens": "क्विन्स",
+    "Bronx": "ब्रोन्क्स",
+    "Staten Island": "स्टेटन आइल्यान्ड"
+  },
+  "resources": {
+    "title": "स्रोतहरू",
+    "searchPlaceholder": "स्रोतहरू खोज्नुहोस् ...",
+    "sortLabel": "स्रोतहरू क्रमबद्ध गर्नुहोस्",
+    "sortAlphabetical": "A-Z",
+    "sortNewest": "नयाँ",
+    "sortOldest": "पुरानो",
+    "supportLocalBusiness": "स्थानीय व्यवसायलाई सहयोग गर्नुहोस्",
+    "viewDetails": "विवरण हेर्नुहोस्",
+    "borough": "बरो",
+    "address": "ठेगाना",
+    "noCategory": "श्रेणी छैन",
+    "noAddress": "ठेगाना उपलब्ध छैन"
+  },
+  "hours": {
+    "open": "खुला",
+    "closed": "बन्द",
+    "closes": "{time} मा बन्द हुन्छ",
+    "opens": "{time} मा खुल्छ"
+  },
+  "details": {
+    "address": "ठेगाना",
+    "open": "खुला",
+    "hours": "समय",
+    "website": "वेबसाइट",
+    "email": "इमेल",
+    "phone": "फोन",
+    "suggestEdit": "सम्पादन सुझाव दिनुहोस्",
+    "loginToSuggest": "सम्पादन सुझाव दिन कृपया लगइन गर्नुहोस्।"
+  },
+  "map": {
+    "getDirections": "दिशा निर्देशन पाउनुहोस्"
+  }
+}

@@ -10,10 +10,11 @@ import toast from "react-hot-toast";
 import { usePathname } from "next/navigation";
 import { useUser } from "@/app/context/UserProvider";
 import { usePopup } from "@/app/hooks/usePopup";
+import { useTranslations } from "next-intl";
 
 import AddResourcePopup from "@/app/components/ResourcePopup/AddResourcePopup";
 
-
+import LanguageSwitcher from "./LanguageSwitcher";
 import UserProfileMenu from "./UserProfileMenu";
 
 import AppBar from "@mui/material/AppBar";
@@ -28,14 +29,12 @@ import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
 
 
-const pages = [
-  { name: "Home", path: "/" },
-  { name: "About", path: "/about" }
-];
-
-
-
 export default function NavMenu() {
+  const t = useTranslations("nav");
+  const pages = [
+    { name: t("home"), path: "/" },
+    { name: t("about"), path: "/about" },
+  ];
   const pathname = usePathname();
   const { user } = useUser();
   const [mounted, setMounted] = useState(false);
@@ -62,7 +61,7 @@ export default function NavMenu() {
   const handleAddClick = (event: React.MouseEvent<HTMLElement>) => {
     // check if user is logged in
     if (!user) {
-      toast.error("Please login to add a resource");
+      toast.error(t("loginToAdd"));
       router.push("/login");
       return;
     }
@@ -183,7 +182,7 @@ export default function NavMenu() {
               }}
             >
               <Image src="https://cdn-icons-png.flaticon.com/512/7887/7887095.png" alt="add" width={20} height={20} style={{ marginRight: 8 }} />
-              Add Resource
+              {t("addResource")}
             </Button>
 
             <AddResourcePopup
@@ -198,8 +197,9 @@ export default function NavMenu() {
 
           </Box>
 
-          {/* Right side - User Menu */}
+          {/* Right side - Language + User Menu */}
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <LanguageSwitcher />
             {user ? (
               <UserProfileMenu />
             ) : (
@@ -221,7 +221,7 @@ export default function NavMenu() {
                 }}
 
               >
-                Login
+                {t("login")}
               </Button>
 
                <Button
@@ -240,7 +240,7 @@ export default function NavMenu() {
                   color: pathname === "/signup" ? 'white' : 'inherit',
                 }}
               >
-                Sign up
+                {t("signup")}
               </Button>
               </>
 

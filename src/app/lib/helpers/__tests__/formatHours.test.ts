@@ -35,12 +35,12 @@ describe("getOpenStatus", () => {
 
   it("is open during business hours on a listed day", () => {
     const status = getOpenStatus(days, t("09:00"), t("17:00"), nyNow("2026-07-06 10:00"));
-    expect(status).toEqual({ isOpen: true, label: "Open · Closes 5 PM" });
+    expect(status).toEqual({ isOpen: true, label: "Open · Closes 5 PM", time: "5 PM" });
   });
 
   it("is closed outside business hours", () => {
     const status = getOpenStatus(days, t("09:00"), t("17:00"), nyNow("2026-07-06 18:00"));
-    expect(status).toEqual({ isOpen: false, label: "Closed · Opens 9 AM" });
+    expect(status).toEqual({ isOpen: false, label: "Closed · Opens 9 AM", time: "9 AM" });
   });
 
   it("is closed on a day that is not listed", () => {

@@ -12,6 +12,7 @@ import {
   useMap,
 } from "@vis.gl/react-google-maps";
 import { Resource } from "@/app/lib/types";
+import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 interface MarkersProps {
@@ -19,6 +20,8 @@ interface MarkersProps {
   hoveredResourceId?: string | null;
 }
 export const Markers = ({ points, hoveredResourceId }: MarkersProps) => {
+  const tMap = useTranslations("map");
+  const tCategories = useTranslations("categories");
   // Keep track of which marker was clicked
   const [activeMarkerId, setActiveMarkerId] = useState<string | null>(null);
   const map = useMap();
@@ -303,12 +306,17 @@ export const Markers = ({ points, hoveredResourceId }: MarkersProps) => {
                     <div className="flex items-center text-sm text-gray-600">
                       <Image
                         src={getMarkerIconByCategory(resource.ResourceCategory?.name)}
-                        alt={`${resource.ResourceCategory?.name} icon`}
+                        alt={`${resource.ResourceCategory?.name || "Resource"} icon`}
                         width={16}
                         height={16}
                         className="mr-2"
                       />
-                      <span>{resource.ResourceCategory?.name}</span>
+                      <span>
+                        {resource.ResourceCategory?.name &&
+                        tCategories.has(resource.ResourceCategory.name)
+                          ? tCategories(resource.ResourceCategory.name)
+                          : resource.ResourceCategory?.name}
+                      </span>
                     </div>
                   </div>
 
@@ -334,7 +342,7 @@ export const Markers = ({ points, hoveredResourceId }: MarkersProps) => {
                         height={16}
                         className="mr-1"
                       />
-                      Get Directions
+                      {tMap("getDirections")}
                     </a>
 
                     {resource.description && (

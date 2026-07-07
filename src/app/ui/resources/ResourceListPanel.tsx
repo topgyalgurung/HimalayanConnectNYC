@@ -8,6 +8,7 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import ResourceList from "./ResourceList";
 import type { Resource } from "@/app/lib/types";
 
@@ -31,6 +32,7 @@ export default function ResourceListPanel({
   onViewDetailsAction,
   onResourceHover,
 }: ResourceListPanelProps) {
+  const t = useTranslations("resources");
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
@@ -47,12 +49,12 @@ export default function ResourceListPanel({
   return (
     <>
       <h2 className="text-lg text-center font-bold text-black mb-2 top-0 z-10 p-2 shadow bg-white">
-        RESOURCES
+        {t("title")}
       </h2>
       <div className="mb-3 flex items-center gap-2">
-        <SearchInput placeholder="Search resources ..." />
+        <SearchInput placeholder={t("searchPlaceholder")} />
         <select
-          aria-label="Sort resources"
+          aria-label={t("sortLabel")}
           value={selectedSort}
           onChange={(e) =>
             handleSortChange(
@@ -61,15 +63,15 @@ export default function ResourceListPanel({
           }
           className="min-w-[145px] rounded-md border border-gray-200 bg-white px-3 py-[9px] text-sm text-gray-700 outline-2"
         >
-          <option value="alphabetical">A-Z</option>
-          <option value="newest">Newest</option>
-          <option value="oldest">Oldest</option>
+          <option value="alphabetical">{t("sortAlphabetical")}</option>
+          <option value="newest">{t("sortNewest")}</option>
+          <option value="oldest">{t("sortOldest")}</option>
         </select>
       </div>
 
       {isBusinessFilterActive ? (
         <div className="mb-3 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm font-medium text-amber-900">
-          Support local business
+          {t("supportLocalBusiness")}
         </div>
       ) : null}
 
