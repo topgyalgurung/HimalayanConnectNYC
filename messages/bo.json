@@ -1,0 +1,68 @@
+{
+  "nav": {
+    "home": "མདུན་ངོས།",
+    "about": "ང་ཚོའི་སྐོར།",
+    "addResource": "ཐོན་ཁུངས་ཁ་སྣོན།",
+    "login": "ནང་འཛུལ།",
+    "signup": "ཐོ་འགོད།",
+    "loginToAdd": "ཐོན་ཁུངས་ཁ་སྣོན་བྱེད་པར་ནང་འཛུལ་གནང་རོགས།",
+    "language": "སྐད་ཡིག"
+  },
+  "filters": {
+    "title": "འདེམས་སྒྲུག",
+    "subtitle": "རིགས་དང་ས་ཁུལ་ལྟར་ཐོན་ཁུངས་འདེམས་རོགས།",
+    "category": "རིགས།",
+    "borough": "ས་ཁུལ།",
+    "clear": "གཙང་བཟོ།"
+  },
+  "categories": {
+    "Community": "སྤྱི་ཚོགས།",
+    "Legal": "ཁྲིམས་ལུགས།",
+    "Health": "འཕྲོད་བསྟེན།",
+    "Education": "ཤེས་ཡོན།",
+    "Finance": "དངུལ་རྩིས།",
+    "Real Estate": "ཁང་གླ / ཉོ་སྒྲུབ།",
+    "Business": "ཚོང་ལས།",
+    "Other": "གཞན།"
+  },
+  "boroughs": {
+    "Manhattan": "Manhattan",
+    "Brooklyn": "Brooklyn",
+    "Queens": "Queens",
+    "Bronx": "Bronx",
+    "Staten Island": "Staten Island"
+  },
+  "resources": {
+    "title": "ཐོན་ཁུངས།",
+    "searchPlaceholder": "ཐོན་ཁུངས་འཚོལ། ...",
+    "sortLabel": "ཐོན་ཁུངས་གོ་རིམ་སྒྲིག",
+    "sortAlphabetical": "A-Z",
+    "sortNewest": "གསར་ཤོས།",
+    "sortOldest": "རྙིང་ཤོས།",
+    "supportLocalBusiness": "ས་གནས་ཚོང་ལས་ལ་རྒྱབ་སྐྱོར་གནང་རོགས།",
+    "viewDetails": "ཞིབ་ཕྲ་ལྟ།",
+    "borough": "ས་ཁུལ།",
+    "address": "ཁ་བྱང་།",
+    "noCategory": "རིགས་མེད།",
+    "noAddress": "ཁ་བྱང་མི་འདུག"
+  },
+  "hours": {
+    "open": "སྒོ་ཕྱེ་ཡོད།",
+    "closed": "སྒོ་བརྒྱབ་ཡོད།",
+    "closes": "{time} ལ་སྒོ་རྒྱག",
+    "opens": "{time} ལ་སྒོ་ཕྱེ།"
+  },
+  "details": {
+    "address": "ཁ་བྱང་།",
+    "open": "སྒོ་ཕྱེ་དུས།",
+    "hours": "དུས་ཚོད།",
+    "website": "དྲ་ཚིགས།",
+    "email": "གློག་འཕྲིན།",
+    "phone": "ཁ་པར།",
+    "suggestEdit": "བཟོ་བཅོས་བསམ་འཆར།",
+    "loginToSuggest": "བཟོ་བཅོས་བསམ་འཆར་འདོན་པར་ནང་འཛུལ་གནང་རོགས།"
+  },
+  "map": {
+    "getDirections": "ལམ་སྟོན་ལྟ།"
+  }
+}

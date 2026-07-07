@@ -10,6 +10,7 @@
 // need to research if i can import simply Resource type from prisma
 
 import { type Resource } from "@/app/lib/types";
+import { useTranslations } from "next-intl";
 import {
   formatTimeRange,
   getOpenStatus,
@@ -26,6 +27,11 @@ export default function ResourceCard({
   onViewDetailsAction,
   onResourceHover,
 }: ResourceCardProps) {
+  const t = useTranslations("resources");
+  const tCategories = useTranslations("categories");
+  const tBoroughs = useTranslations("boroughs");
+  const tHours = useTranslations("hours");
+
   return (
     <div className="flex flex-col  justify-between space-y-4 pb-20">
       {resources
@@ -48,16 +54,23 @@ export default function ResourceCard({
             <div className="flex-1">
               <h4 className="text-lg font-bold">{resource.name}</h4>
               <p className="text-blue-500">
-                {resource.ResourceCategory?.name || "no category"}
+                {resource.ResourceCategory?.name
+                  ? tCategories.has(resource.ResourceCategory.name)
+                    ? tCategories(resource.ResourceCategory.name)
+                    : resource.ResourceCategory.name
+                  : t("noCategory")}
               </p>
               {resource.city && (
                 <p>
-                  <strong>Borough: </strong> {resource.city}
+                  <strong>{t("borough")}: </strong>{" "}
+                  {tBoroughs.has(resource.city)
+                    ? tBoroughs(resource.city)
+                    : resource.city}
                 </p>
               )}
               <p>
-                <strong>Address: </strong>
-                {resource.address ? resource.address : "No address available"}
+                <strong>{t("address")}: </strong>
+                {resource.address ? resource.address : t("noAddress")}
               </p>
               {(openStatus || hours) && (
                 <p className="mt-1 flex flex-wrap items-center gap-2">
@@ -74,7 +87,9 @@ export default function ResourceCard({
                           openStatus.isOpen ? "bg-green-600" : "bg-red-600"
                         }`}
                       />
-                      {openStatus.label}
+                      {openStatus.isOpen
+                        ? `${tHours("open")} · ${tHours("closes", { time: openStatus.time })}`
+                        : `${tHours("closed")} · ${tHours("opens", { time: openStatus.time })}`}
                     </span>
                   )}
                   {!openStatus && hours && (
@@ -89,7 +104,7 @@ export default function ResourceCard({
                 className="text-white py-2 px-3 bg-blue-600 rounded hover:bg-blue-700"
                 onClick={() => onViewDetailsAction?.(resource)}
               >
-                View Details
+                {t("viewDetails")}
               </button>
 
             </div>
