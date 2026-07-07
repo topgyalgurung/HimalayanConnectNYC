@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 interface SearchInputProps {
   placeholder?: string;
@@ -45,10 +45,18 @@ export default function SearchInput({ placeholder = "Search..." }: SearchInputPr
     return () => clearTimeout(timer);
   }, [localValue, urlQuery, handleSearch]);
 
+  const handleClear = () => {
+    setLocalValue("");
+    handleSearch("");
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
       handleSearch(localValue);
+    } else if (e.key === "Escape") {
+      e.preventDefault();
+      handleClear();
     }
   };
 
@@ -65,7 +73,9 @@ export default function SearchInput({ placeholder = "Search..." }: SearchInputPr
       </label>
       <input
         id="search"
-        className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
+        type="search"
+        autoComplete="off"
+        className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 pr-9 text-sm outline-2 placeholder:text-gray-500 [&::-webkit-search-cancel-button]:hidden"
         placeholder={placeholder}
         value={localValue}
         onChange={(e) => setLocalValue(e.target.value)}
@@ -73,6 +83,17 @@ export default function SearchInput({ placeholder = "Search..." }: SearchInputPr
         onBlur={handleBlur}
       />
       <MagnifyingGlassIcon className="absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+      {localValue && (
+        <button
+          type="button"
+          aria-label="Clear search"
+          onMouseDown={(e) => e.preventDefault()}
+          onClick={handleClear}
+          className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700"
+        >
+          <XMarkIcon className="h-4 w-4" />
+        </button>
+      )}
     </div>
   );
 }

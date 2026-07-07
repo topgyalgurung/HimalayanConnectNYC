@@ -47,7 +47,24 @@ const getCachedResources = unstable_cache(
     const GROUPS_PER_PAGE = 6;
     const skip = (page - 1) * GROUPS_PER_PAGE; // offset
     try {
-      const search = query.trim();
+      // Split the query into terms and require every term to match at least
+      // one field, so "health queens" finds health resources in Queens
+      // instead of requiring the whole phrase inside a single field.
+      const searchTerms = query.trim().split(/\s+/).filter(Boolean).slice(0, 6);
+      const matchTerm = (term: string) => ({
+        OR: [
+          { name: { contains: term, mode: "insensitive" as const } },
+          { city: { contains: term, mode: "insensitive" as const } },
+          { address: { contains: term, mode: "insensitive" as const } },
+          { description: { contains: term, mode: "insensitive" as const } },
+          {
+            ResourceCategory: {
+              name: { contains: term, mode: "insensitive" as const },
+            },
+          },
+        ],
+      });
+
       // Build where clause based on filters
       const where = {
         ...(categories && categories.length > 0 && {
@@ -62,13 +79,8 @@ const getCachedResources = unstable_cache(
             in: boroughs,
           },
         }),
-        ...(search && {
-          OR: [
-            { name: { contains: search, mode: "insensitive" as const } },
-            { city: { contains: search, mode: "insensitive" as const } },
-            { address: { contains: search, mode: "insensitive" as const } },
-            { description: { contains: search, mode: "insensitive" as const } },
-          ],
+        ...(searchTerms.length > 0 && {
+          AND: searchTerms.map(matchTerm),
         }),
         status: ResourceStatus.APPROVED, // Only show approved resources
       };

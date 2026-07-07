@@ -1,8 +1,8 @@
 'use server';
 import { revalidatePath } from 'next/cache';
 import { prisma } from '@/app/lib/prisma';
-import { ResourceStatus, Resource } from '@prisma/client';
-// import { v2 as cloudinary } from 'cloudinary';
+import { ResourceStatus, Resource, Role } from '@prisma/client';
+import { getSession } from '@/app/lib/auth-session';
 
 type ResourceUpdateData = Partial<Pick<Resource, 'name' | 'address' | 'phone' | 'url' | 'openDays' | 'openTime' | 'closeTime'>>;
 
@@ -14,6 +14,14 @@ export async function updateResourceStatus(
   resourceType: 'new' | 'edit'
 ) {
   try {
+    // Server actions are callable by any client as POST endpoints, so the
+    // admin check must live here - the dashboard hiding the buttons is not
+    // access control.
+    const session = await getSession();
+    if (!session?.userId || session.role !== Role.ADMIN) {
+      return { success: false, error: "Forbidden" };
+    }
+
     if (!["PENDING", "APPROVED", "REJECTED"].includes(newStatus)) {
       return { success: false, error: "Invalid status" };
     }

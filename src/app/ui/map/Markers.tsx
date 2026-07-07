@@ -1,6 +1,9 @@
 "use client";
 import Image from "next/image";
-import { getMarkerIconByCategory } from "./utils/markerIcons";
+import {
+  getMarkerIconByCategory,
+  getMarkerColorByCategory,
+} from "./utils/markerIcons";
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
 import {
   AdvancedMarker,
@@ -123,8 +126,11 @@ export const Markers = ({ points, hoveredResourceId }: MarkersProps) => {
         // Show InfoWindow on either hover or click
         const shouldShowInfoWindow = isHighlighted;
 
-        // Get marker icon based on resource category
+        // Get marker icon and pin color based on resource category
         const image = getMarkerIconByCategory(resource.ResourceCategory?.name);
+        const pinColor = getMarkerColorByCategory(
+          resource.ResourceCategory?.name
+        );
 
         return (
           <div
@@ -179,12 +185,8 @@ export const Markers = ({ points, hoveredResourceId }: MarkersProps) => {
                     width: isHighlighted ? 30 : 24,
                     height: isHighlighted ? 30 : 24,
                     borderRadius: "9999px",
-                    background: isHighlighted
-                      ? "rgba(37, 99, 235, 0.16)"
-                      : "rgba(37, 99, 235, 0.08)",
-                    border: isHighlighted
-                      ? "1px solid rgba(37, 99, 235, 0.28)"
-                      : "1px solid rgba(37, 99, 235, 0.12)",
+                    background: `${pinColor.base}${isHighlighted ? "29" : "14"}`,
+                    border: `1px solid ${pinColor.base}${isHighlighted ? "47" : "1f"}`,
                     boxShadow: "0 0 0 3px rgba(255,255,255,0.26)",
                     animation: isHighlighted
                       ? "marker-pulse 1.6s ease-out infinite"
@@ -202,17 +204,17 @@ export const Markers = ({ points, hoveredResourceId }: MarkersProps) => {
                     height: isHighlighted ? 24 : 20,
                     borderRadius: "9999px",
                     background: isHighlighted
-                      ? "#2563eb"
-                      : "#3b82f6",
+                      ? pinColor.highlight
+                      : pinColor.base,
                     border: "2px solid #ffffff",
                     boxShadow: isHighlighted
-                      ? "0 6px 12px rgba(37, 99, 235, 0.24)"
+                      ? "0 6px 12px rgba(15, 23, 42, 0.28)"
                       : "0 3px 8px rgba(15, 23, 42, 0.20)",
                   }}
                 >
                   <Image
                     src={image}
-                    alt={`${resource.ResourceCategory?.name} icon`}
+                    alt={`${resource.ResourceCategory?.name || "Resource"} icon`}
                     style={{
                       objectFit: "contain",
                       backgroundColor: "transparent",
@@ -232,11 +234,30 @@ export const Markers = ({ points, hoveredResourceId }: MarkersProps) => {
                     borderLeft: "5px solid transparent",
                     borderRight: "5px solid transparent",
                     borderTop: isHighlighted
-                      ? "10px solid #2563eb"
-                      : "9px solid #3b82f6",
+                      ? `10px solid ${pinColor.highlight}`
+                      : `9px solid ${pinColor.base}`,
                     filter: "drop-shadow(0 2px 3px rgba(15, 23, 42, 0.16))",
                   }}
                 />
+                {/* Name label under the pin, like native map POI labels */}
+                <span
+                  style={{
+                    marginTop: 2,
+                    maxWidth: 120,
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                    fontSize: 11,
+                    fontWeight: 600,
+                    lineHeight: "14px",
+                    color: isHighlighted ? pinColor.highlight : "#1e293b",
+                    textShadow:
+                      "0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff, 0 0 4px #fff",
+                    pointerEvents: "none",
+                  }}
+                >
+                  {resource.name}
+                </span>
               </div>
             </AdvancedMarker>
 
